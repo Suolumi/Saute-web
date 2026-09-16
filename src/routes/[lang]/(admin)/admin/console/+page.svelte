@@ -532,7 +532,7 @@
 </div>
 
 <UserPickerModal open={userPickerOpen} onClose={() => userPickerOpen = false} onSelect={onUserPicked} />
-<RecipePickerModal open={recipePickerOpen} onClose={() => recipePickerOpen = false} onSelect={onRecipePicked} />
+<RecipePickerModal open={recipePickerOpen} flat={true} onClose={() => recipePickerOpen = false} onSelect={onRecipePicked} />
 
 <Modal open={confirmOpen} onClose={() => confirmOpen = false} title={$_('admin.console.confirmTitle')} description={$_('admin.console.confirmDescription')}>
     <div class="flex justify-between">

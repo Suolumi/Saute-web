@@ -236,7 +236,8 @@
         "description": "Search for a recipe to use as an ingredient.",
         "searchPlaceholder": "Search recipes...",
         "noResults": "No recipes found",
-        "error": "Couldn't search recipes"
+        "error": "Couldn't search recipes",
+        "variationBadge": "Variation"
       },
       "refLabel": {
         "label": "Custom label (optional)",

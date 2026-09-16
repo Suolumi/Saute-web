@@ -236,7 +236,8 @@
         "description": "Recherchez une recette à utiliser comme ingrédient.",
         "searchPlaceholder": "Rechercher des recettes...",
         "noResults": "Aucune recette trouvée",
-        "error": "Impossible de rechercher des recettes"
+        "error": "Impossible de rechercher des recettes",
+        "variationBadge": "Variante"
       },
       "refLabel": {
         "label": "Libellé personnalisé (optionnel)",

@@ -236,7 +236,8 @@
         "description": "Etsi resepti käytettäväksi ainesosana.",
         "searchPlaceholder": "Etsi reseptejä...",
         "noResults": "Reseptejä ei löytynyt",
-        "error": "Reseptejä ei voitu hakea"
+        "error": "Reseptejä ei voitu hakea",
+        "variationBadge": "Versio"
       },
       "refLabel": {
         "label": "Mukautettu nimike (valinnainen)",

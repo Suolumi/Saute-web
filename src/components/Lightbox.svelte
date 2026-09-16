@@ -2,10 +2,18 @@
     import {serverUrl} from "$lib/stores";
     import {ArrowLeft, ArrowRight, X} from "@lucide/svelte";
     import {fade, scale, fly} from "svelte/transition";
+    import {_} from 'svelte-i18n';
 
-    let { open = false, pictures = [], startIndex = 0, alt = '', onClose = () => {} }: {
+    // pictureAttributions, when given, must be the same length/order as
+    // pictures - who added the picture at that index (both fields always
+    // present: the caller resolves an author-owned picture to the recipe's
+    // own author). Only the recipe detail page's main gallery passes this;
+    // step pictures and card-grid lightboxes leave it empty and show no
+    // badge, matching them never showing attribution inline either.
+    let { open = false, pictures = [], pictureAttributions = [], startIndex = 0, alt = '', onClose = () => {} }: {
         open?: boolean;
         pictures?: string[];
+        pictureAttributions?: { username: string; picture: string }[];
         startIndex?: number;
         alt?: string;
         onClose?: () => void;
@@ -155,6 +163,23 @@
         {#if hasMultiple}
             <div class="absolute bottom-4 left-1/2 -translate-x-1/2 text-white/80 text-sm bg-black/40 px-3 py-1 rounded-full">
                 {index + 1} / {pictures.length}
+            </div>
+        {/if}
+
+        {#if pictureAttributions[index]}
+            <div class="absolute bottom-4 left-4 z-10 flex items-center gap-1.5 bg-black/40 text-white rounded-full pl-1 pr-3 py-1">
+                {#if pictureAttributions[index].picture}
+                    <img
+                            src={`${$serverUrl}/pictures/${pictureAttributions[index].picture}`}
+                            alt={pictureAttributions[index].username}
+                            class="w-6 h-6 rounded-full object-cover"
+                    />
+                {:else}
+                    <div class="w-6 h-6 rounded-full bg-primary text-primary-foreground flex items-center justify-center text-xs font-medium">
+                        {pictureAttributions[index].username.charAt(0) || "?"}
+                    </div>
+                {/if}
+                <span class="text-xs font-medium whitespace-nowrap">{$_('recipe.photoAddedBy', {values: {username: pictureAttributions[index].username}})}</span>
             </div>
         {/if}
     </div>

@@ -343,32 +343,16 @@
                     {/if}
                 </div>
 
-                {#if currentPicture}
-                    <div class="absolute bottom-3 left-3 z-20 flex items-center gap-1.5 bg-black/60 text-white rounded-full pl-1 pr-3 py-1">
-                        {#if currentPicture.added_by?.picture}
-                            <img
-                                    src={`${$serverUrl}/pictures/${currentPicture.added_by.picture}`}
-                                    alt={currentPicture.added_by.username}
-                                    class="w-6 h-6 rounded-full object-cover"
-                            />
-                        {:else}
-                            <div class="w-6 h-6 rounded-full bg-primary text-primary-foreground flex items-center justify-center text-xs font-medium">
-                                {(currentPicture.added_by?.username ?? recipe.author.username).charAt(0) || "?"}
-                            </div>
-                        {/if}
-                        <span class="text-xs font-medium whitespace-nowrap">{$_('recipe.photoAddedBy', {values: {username: currentPicture.added_by?.username ?? recipe.author.username}})}</span>
-                    </div>
-                    {#if canRemovePicture(currentPicture)}
-                        <button
-                                type="button"
-                                onclick={(e) => handleRemovePicture(e, currentPicture!.filename)}
-                                class="absolute bottom-3 right-3 z-20 bg-black/60 hover:bg-black/80 text-white rounded-full p-2 hover:cursor-pointer transition-colors"
-                                aria-label={$_('recipe.removePhoto')}
-                                title={$_('recipe.removePhoto')}
-                        >
-                            <X size="16" />
-                        </button>
-                    {/if}
+                {#if currentPicture && canRemovePicture(currentPicture)}
+                    <button
+                            type="button"
+                            onclick={(e) => handleRemovePicture(e, currentPicture!.filename)}
+                            class="absolute bottom-3 right-3 z-20 bg-black/60 hover:bg-black/80 text-white rounded-full p-2 hover:cursor-pointer transition-colors"
+                            aria-label={$_('recipe.removePhoto')}
+                            title={$_('recipe.removePhoto')}
+                    >
+                        <X size="16" />
+                    </button>
                 {/if}
 
                 {#if $user}
@@ -598,9 +582,14 @@
 
     </div>
 
+    {@const author = recipe.author}
     <Lightbox
             open={lightboxOpen}
             pictures={(recipe.pictures ?? []).map(p => p.filename)}
+            pictureAttributions={(recipe.pictures ?? []).map(p => ({
+                username: p.added_by?.username ?? author.username,
+                picture: p.added_by?.picture ?? author.picture,
+            }))}
             startIndex={lightboxIndex}
             alt={recipe.title || 'Recipe Title'}
             onClose={() => lightboxOpen = false}

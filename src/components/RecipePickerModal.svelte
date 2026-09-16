@@ -21,11 +21,17 @@
         // linking a recipe as a variation).
         title?: string;
         description?: string;
+        // flat lists every matching recipe ungrouped - roots AND variations
+        // alike (own_recipes, with no author filter) - instead of the
+        // default family-collapsed listing, which never surfaces a
+        // variation at all. Used by the admin console, where a variation
+        // needs to be selectable (e.g. to detach it back to standalone).
+        flat?: boolean;
         onClose: () => void;
         onSelect: (recipe: RecipePreview) => void;
     }
 
-    let {open, excludeFamily, category, title, description, onClose, onSelect}: Props = $props();
+    let {open, excludeFamily, category, title, description, flat, onClose, onSelect}: Props = $props();
 
     let query = $state('');
     let results: RecipePreview[] = $state([]);
@@ -40,7 +46,7 @@
         const id = ++searchId;
         loading = true;
         const timeout = setTimeout(() => {
-            getRecipes({title: term || undefined, exclude_family: excludeFamily, category, locale: $locale ?? undefined, limit: 20})
+            getRecipes({title: term || undefined, exclude_family: excludeFamily, category, own_recipes: flat || undefined, locale: $locale ?? undefined, limit: 20})
                 .then(({response, data}) => {
                     if (id !== searchId)
                         return;
@@ -101,6 +107,10 @@
                     {#if !recipe.variation_of && recipe.variation_count > 0}
                         <span class="ml-auto flex-shrink-0 bg-primary/10 text-primary px-2 py-1 rounded-full text-sm font-medium whitespace-nowrap">
                             {$_('recipeCard.variationCount', {values: {count: recipe.variation_count}})}
+                        </span>
+                    {:else if recipe.variation_of}
+                        <span class="ml-auto flex-shrink-0 bg-muted text-muted-foreground px-2 py-1 rounded-full text-sm font-medium whitespace-nowrap">
+                            {$_('edit.ingredients.recipePicker.variationBadge')}
                         </span>
                     {/if}
                 </button>

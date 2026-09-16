@@ -1,5 +1,5 @@
 <script lang="ts">
-    import {favoriteRecipe, getFamily, recipeTypeColors, unfavoriteRecipe} from '$lib/recipes';
+    import {favoriteRecipe, getFamily, getRecipe, recipeTypeColors, unfavoriteRecipe} from '$lib/recipes';
     import {goto} from "$app/navigation";
     import type {RecipePreview} from "$lib/recipes";
     import emblaCarouselSvelte from "embla-carousel-svelte";
@@ -18,6 +18,10 @@
     let emblaApi: any = $state();
     let lightboxOpen = $state(false);
     let lightboxIndex = $state(0);
+    // pictureAttributions is fetched on demand when the lightbox opens - the
+    // preview this card renders from never carries per-picture attribution
+    // (kept light for listings), only the full recipe does.
+    let pictureAttributions: { username: string; picture: string }[] = $state([]);
     let heartBump = $state(false);
     let canScrollPrev = $state(false);
     let canScrollNext = $state(false);
@@ -96,6 +100,14 @@
             return;
         lightboxIndex = emblaApi ? emblaApi.selectedScrollSnap() : 0;
         lightboxOpen = true;
+        pictureAttributions = [];
+        getRecipe(recipe.id, $locale ?? undefined).then(({response, data}) => {
+            if (response.ok && data)
+                pictureAttributions = data.pictures.map(p => ({
+                    username: p.added_by?.username ?? data.author.username,
+                    picture: p.added_by?.picture ?? data.author.picture,
+                }));
+        });
     }
 
     async function toggleFavorite(e: MouseEvent) {
@@ -241,6 +253,7 @@
 <Lightbox
         open={lightboxOpen}
         pictures={recipe.pictures ?? []}
+        {pictureAttributions}
         startIndex={lightboxIndex}
         alt={recipe.title || 'Recipe Title'}
         onClose={() => lightboxOpen = false}
