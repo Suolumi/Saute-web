@@ -152,7 +152,23 @@
     "createRecipe": "Create Your First Recipe",
     "filterAll": "All",
     "filterFood": "Food",
-    "filterDiy": "DIY"
+    "filterDiy": "DIY",
+    "actions": {
+      "menu": "Actions",
+      "edit": "Edit",
+      "remove": "Remove",
+      "linkAsVariation": "Link as variation"
+    },
+    "linkVariation": {
+      "pickerTitle": "Link as a variation",
+      "pickerDescription": "Search for the recipe this one should become a variation of.",
+      "confirmTitle": "Link \"{title}\" as a variation of \"{target}\"?",
+      "confirmDescription": "This can't be undone from the website - the recipe will show up under {target}'s versions instead of on its own.",
+      "cancel": "Cancel",
+      "confirm": "Link recipe",
+      "success": "Recipe linked as a variation",
+      "error": "Couldn't link this recipe as a variation"
+    }
   },
   "recipe": {
     "back": "Back to Recipes",
@@ -173,7 +189,13 @@
     "referenceExpand": "Show ingredients",
     "referenceCollapse": "Hide ingredients",
     "keepAwakeOn": "Keep screen awake",
-    "keepAwakeOff": "Allow screen to sleep"
+    "keepAwakeOff": "Allow screen to sleep",
+    "addPhoto": "Add a photo",
+    "removePhoto": "Remove photo",
+    "photoAddedBy": "Added by {username}",
+    "addPhotoError": "Could not add the photo",
+    "removePhotoError": "Could not remove the photo",
+    "addPhotoCapReached": "You've reached the limit of {count} photos you can add to this recipe"
   },
   "edit": {
     "toasts": {

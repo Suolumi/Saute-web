@@ -13,6 +13,7 @@
         type Ingredient,
         type RecipeCategory,
         type RecipeForm,
+        type RecipePicture,
         type RecipePreview,
         RecipeTypes,
         type Step
@@ -34,6 +35,13 @@
         // passed to the recipe-reference picker so a recipe can't offer
         // itself/its own family as a reference target.
         excludeFamily?: string
+        // pictureAttribution, when non-empty, is the recipe's full picture
+        // list (with who added each one) - set only when the caller has
+        // fullPictureAccess (an admin editing a recipe they don't author),
+        // and used purely to render an attribution badge per picture in the
+        // photo step; recipe.pictures itself stays a plain filename list
+        // either way (see recipeFormFromSource in the edit page).
+        pictureAttribution?: RecipePicture[]
         // category drives the blank-form default when no recipe/cache exists
         // yet (a variation or edit's own recipe.category always wins once
         // loaded, see getRecipe/normalizeRecipe) and picks the terminology
@@ -49,6 +57,7 @@
         recipe = undefined,
         recipeId = undefined,
         excludeFamily = undefined,
+        pictureAttribution = [],
         category = 'food',
         headLabel = $_('create.headLabel'),
         commentLabel = $_('create.commentLabel'),
@@ -236,6 +245,13 @@
 
     function removePicture(index: number) {
         formData.pictures = formData.pictures.filter((_, i) => i !== index);
+    }
+
+    // attributionFor looks up a filename in pictureAttribution - only ever
+    // non-empty (and only ever contains a contributor entry) in
+    // fullPictureAccess mode, see the pictureAttribution prop doc.
+    function attributionFor(filename: string): RecipePicture | undefined {
+        return pictureAttribution.find(p => p.filename === filename);
     }
 
     // --- Step drag & drop ---------------------------------------------------
@@ -1147,12 +1163,18 @@
                     {#if hasPictures}
                       <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
                         {#each formData.pictures as image, index}
+                          {@const contributor = attributionFor(image)?.added_by}
                           <div class="relative group">
                             <img
                                 src={`${$serverUrl}/recipe-pictures/${image}`}
                                 alt={t('photos.alt', {index: index + 1})}
                                 class="w-full aspect-video object-cover rounded-lg border border-border"
                             />
+                            {#if contributor}
+                              <span class="absolute bottom-2 left-2 bg-black/60 text-white text-xs font-medium rounded-full px-2 py-1 whitespace-nowrap">
+                                {$_('recipe.photoAddedBy', {values: {username: contributor.username}})}
+                              </span>
+                            {/if}
                             <button
                                 type="button"
                                 onclick={() => removePicture(index)}

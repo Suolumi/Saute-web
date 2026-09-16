@@ -32,6 +32,15 @@ export const recipeTypeColors: {
     drink: "bg-purple-100 text-purple-800 dark:bg-purple-900/20 dark:text-purple-300",
 }
 
+// RecipePicture is one picture on a recipe's detail view. added_by is only
+// present for a contributor's picture (someone other than the recipe's
+// author); absent means the recipe's own author added it - including every
+// picture added before per-picture attribution existed.
+export type RecipePicture = {
+    filename: string
+    added_by?: User
+}
+
 export type Step = {
     title: string
     description: string
@@ -76,7 +85,7 @@ export type Recipe = {
     category: RecipeCategory
     ingredients: Ingredient[]
     steps: Step[]
-    pictures: string[]
+    pictures: RecipePicture[]
     favorite: boolean
     favorite_count: number
     // variation_of is the id of the recipe this one is a variation of, unset
@@ -310,6 +319,31 @@ export function editRecipe(recipe: RecipeForm, id: string, newPictures: File[] =
 
 export function deleteRecipe(id: string) {
     return apiFetchJson<Recipe>(`/recipes/${id}`, "DELETE", null)
+}
+
+// linkRecipeVariation turns an existing standalone recipe the caller owns
+// (or, for an admin, any recipe) into a variation of variationOf - a genuine
+// root, never auto-flattened server-side (unlike createRecipe's
+// variation_of). Irreversible through the website; only the admin console
+// can detach a recipe back to standalone.
+export function linkRecipeVariation(id: string, variationOf: string) {
+    return apiFetchJson<Recipe>(`/recipes/${id}/variation-of`, "PATCH", {variation_of: variationOf})
+}
+
+// PICTURE_CAP_PER_CONTRIBUTOR mirrors the backend's per-contributor limit
+// (recipe_service.PictureCapPerContributor) - used client-side only to hide
+// the "add a photo" affordance once a contributor has reached it; the
+// server enforces the real limit.
+export const PICTURE_CAP_PER_CONTRIBUTOR = 3
+
+export function addRecipePicture(id: string, file: File) {
+    const formData = new FormData()
+    formData.append('picture', file)
+    return apiFetchJson<Recipe>(`/recipes/${id}/pictures`, "POST", formData)
+}
+
+export function removeRecipePicture(id: string, filename: string) {
+    return apiFetchJson<Recipe>(`/recipes/${id}/pictures/${encodeURIComponent(filename)}`, "DELETE", null)
 }
 
 export function favoriteRecipe(id: string) {

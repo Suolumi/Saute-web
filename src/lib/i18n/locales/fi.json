@@ -152,7 +152,23 @@
     },
     "filterAll": "Kaikki",
     "filterFood": "Ruoka",
-    "filterDiy": "DIY"
+    "filterDiy": "DIY",
+    "actions": {
+      "menu": "Toiminnot",
+      "edit": "Muokkaa",
+      "remove": "Poista",
+      "linkAsVariation": "Linkitä versioksi"
+    },
+    "linkVariation": {
+      "pickerTitle": "Linkitä versioksi",
+      "pickerDescription": "Etsi resepti, josta tästä tulee versio.",
+      "confirmTitle": "Linkitetäänkö \"{title}\" reseptin \"{target}\" versioksi?",
+      "confirmDescription": "Tätä ei voi perua sivustolla - resepti näkyy jatkossa reseptin {target} versioiden joukossa, ei enää omana reseptinään.",
+      "cancel": "Peruuta",
+      "confirm": "Linkitä resepti",
+      "success": "Resepti linkitetty versioksi",
+      "error": "Reseptiä ei voitu linkittää versioksi"
+    }
   },
   "recipe": {
     "back": "Takaisin resepteihin",
@@ -173,7 +189,13 @@
     "referenceExpand": "Näytä ainekset",
     "referenceCollapse": "Piilota ainekset",
     "keepAwakeOn": "Estä näytön sammuminen",
-    "keepAwakeOff": "Salli näytön sammuminen"
+    "keepAwakeOff": "Salli näytön sammuminen",
+    "addPhoto": "Lisää kuva",
+    "removePhoto": "Poista kuva",
+    "photoAddedBy": "Lisännyt {username}",
+    "addPhotoError": "Kuvan lisääminen epäonnistui",
+    "removePhotoError": "Kuvan poistaminen epäonnistui",
+    "addPhotoCapReached": "Olet saavuttanut {count} kuvan rajan tälle reseptille"
   },
   "edit": {
     "toasts": {

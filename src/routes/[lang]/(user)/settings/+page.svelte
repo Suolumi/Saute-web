@@ -3,12 +3,14 @@
     import Input from '../../../../components/Input.svelte';
     import Label from '../../../../components/Label.svelte';
     import RecipeCard from '../../../../components/RecipeCard.svelte';
+    import RecipePickerModal from '../../../../components/RecipePickerModal.svelte';
     import {goto} from "$app/navigation";
-    import {getRecipes, type RecipeCategory, type RecipePreview} from "$lib/recipes";
+    import {getRecipes, linkRecipeVariation, type RecipeCategory, type RecipePreview} from "$lib/recipes";
     import {serverUrl, user} from "$lib/stores";
-    import { SquarePen, Trash, Camera } from '@lucide/svelte';
+    import { SquarePen, Trash, Camera, MoreVertical, Link2 } from '@lucide/svelte';
     import {updateSelf, updateUserPicture, type UserSettingsForm} from "$lib/user";
     import {toastError, toastSuccess} from "$lib/utils";
+    import {apiErrorMessage} from "$lib/api";
     import {locale, _} from "svelte-i18n";
     import Modal from "../../../../components/Modal.svelte";
     import {deleteRecipe} from "$lib/recipes";
@@ -34,6 +36,50 @@
         isOpen: false,
         recipeId: ""
     });
+
+    // openMenuId tracks which recipe's "..." action menu is currently open -
+    // only one at a time, closed by picking an action, clicking elsewhere, or
+    // toggling it again.
+    let openMenuId: string | null = $state(null);
+
+    let linkPicker = $state({isOpen: false, recipe: null as RecipePreview | null});
+    let linkConfirm = $state({isOpen: false, recipe: null as RecipePreview | null, target: null as RecipePreview | null});
+    let linking = $state(false);
+
+    function toggleMenu(id: string) {
+        openMenuId = openMenuId === id ? null : id;
+    }
+
+    function closeMenu() {
+        openMenuId = null;
+    }
+
+    function openLinkPicker(recipe: RecipePreview) {
+        closeMenu();
+        linkPicker = {isOpen: true, recipe};
+    }
+
+    function onLinkTargetPicked(target: RecipePreview) {
+        linkConfirm = {isOpen: true, recipe: linkPicker.recipe, target};
+    }
+
+    function confirmLinkVariation() {
+        const {recipe, target} = linkConfirm;
+        if (!recipe || !target)
+            return;
+        linking = true;
+        linkRecipeVariation(recipe.id, target.id).then(({response, data}) => {
+            if (response.ok) {
+                toastSuccess($_('settings.linkVariation.success'));
+                userRecipes = userRecipes.filter(r => r.id !== recipe.id);
+                linkConfirm = {isOpen: false, recipe: null, target: null};
+            } else {
+                toastError(apiErrorMessage(data, $_('settings.linkVariation.error')));
+            }
+        }).finally(() => {
+            linking = false;
+        });
+    }
 
     function updateProfile(event: Event) {
         event.preventDefault();
@@ -106,6 +152,8 @@
         }
     }
 </script>
+
+<svelte:window onclick={closeMenu} />
 
 <div class="max-w-5xl mx-auto px-4 py-8">
     <div class="mb-8">
@@ -213,24 +261,44 @@
                 {#each filteredRecipes as recipe}
                     <div class="relative h-full">
                         <RecipeCard {recipe} disabled={false} />
-                        <Button
-                                variant="outline"
-                                size="sm"
-                                onclick={() => editRecipe(recipe.id)}
-                                class="absolute top-2 right-14 p-2 bg-card/90 hover:bg-card border border-border"
-                                aria-label="Edit recipe"
-                        >
-                            <SquarePen class="text-black dark:text-white" size="16" />
-                        </Button>
-                        <Button
-                                variant="destructive"
-                                size="sm"
-                                onclick={() => modal = {isOpen: true, recipeId: recipe.id}}
-                                class="absolute top-2 right-2 p-2 bg-card/90 hover:bg-card"
-                                aria-label="Delete recipe"
-                        >
-                            <Trash size="16" />
-                        </Button>
+                        <div class="absolute top-2 right-2">
+                            <button
+                                    type="button"
+                                    onclick={(e: MouseEvent) => { e.stopPropagation(); toggleMenu(recipe.id); }}
+                                    class="p-2 rounded-lg bg-card/90 hover:bg-card border border-border hover:cursor-pointer"
+                                    aria-label={$_('settings.actions.menu')}
+                            >
+                                <MoreVertical class="text-black dark:text-white" size="16" />
+                            </button>
+                            {#if openMenuId === recipe.id}
+                                <div class="absolute right-0 mt-1 w-48 rounded-lg border border-border bg-card shadow-lg py-1 z-10">
+                                    <button
+                                            type="button"
+                                            onclick={() => { closeMenu(); editRecipe(recipe.id); }}
+                                            class="flex w-full items-center gap-2 px-3 py-2 text-sm text-card-foreground hover:bg-muted hover:cursor-pointer"
+                                    >
+                                        <SquarePen size="16" />
+                                        {$_('settings.actions.edit')}
+                                    </button>
+                                    <button
+                                            type="button"
+                                            onclick={() => openLinkPicker(recipe)}
+                                            class="flex w-full items-center gap-2 px-3 py-2 text-sm text-card-foreground hover:bg-muted hover:cursor-pointer"
+                                    >
+                                        <Link2 size="16" />
+                                        {$_('settings.actions.linkAsVariation')}
+                                    </button>
+                                    <button
+                                            type="button"
+                                            onclick={() => { closeMenu(); modal = {isOpen: true, recipeId: recipe.id}; }}
+                                            class="flex w-full items-center gap-2 px-3 py-2 text-sm text-destructive hover:bg-muted hover:cursor-pointer"
+                                    >
+                                        <Trash size="16" />
+                                        {$_('settings.actions.remove')}
+                                    </button>
+                                </div>
+                            {/if}
+                        </div>
                     </div>
                 {/each}
             </div>
@@ -260,6 +328,41 @@
                     class="bg-primary"
             >
                 {$_('settings.delete.confirm')}
+            </Button>
+        </div>
+    </Modal>
+
+    <RecipePickerModal
+            open={linkPicker.isOpen}
+            excludeFamily={linkPicker.recipe?.variation_of ?? linkPicker.recipe?.id}
+            category={linkPicker.recipe?.category}
+            title={$_('settings.linkVariation.pickerTitle')}
+            description={$_('settings.linkVariation.pickerDescription')}
+            onClose={() => linkPicker = {isOpen: false, recipe: null}}
+            onSelect={onLinkTargetPicked}
+    />
+
+    <Modal
+            open={linkConfirm.isOpen}
+            title={$_('settings.linkVariation.confirmTitle', {values: {title: linkConfirm.recipe?.title ?? '', target: linkConfirm.target?.title ?? ''}})}
+            description={$_('settings.linkVariation.confirmDescription', {values: {target: linkConfirm.target?.title ?? ''}})}
+            onClose={() => linkConfirm = {isOpen: false, recipe: null, target: null}}
+    >
+        <div class="flex justify-between">
+            <Button
+                    variant="outline"
+                    size="md"
+                    onclick={() => linkConfirm = {isOpen: false, recipe: null, target: null}}
+            >
+                {$_('settings.linkVariation.cancel')}
+            </Button>
+            <Button
+                    variant="primary"
+                    size="md"
+                    disabled={linking}
+                    onclick={confirmLinkVariation}
+            >
+                {$_('settings.linkVariation.confirm')}
             </Button>
         </div>
     </Modal>

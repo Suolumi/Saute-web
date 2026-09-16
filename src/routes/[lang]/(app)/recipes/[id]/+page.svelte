@@ -2,9 +2,23 @@
     import {goto} from "$app/navigation";
     import {page} from "$app/state";
     import {browser} from "$app/environment";
-    import {favoriteRecipe, getFamily, getIngredientName, getRecipe, groupIngredients, type Recipe, type RecipePreview, recipeTypeColors, unfavoriteRecipe} from "$lib/recipes";
+    import {
+        addRecipePicture,
+        favoriteRecipe,
+        getFamily,
+        getIngredientName,
+        getRecipe,
+        groupIngredients,
+        PICTURE_CAP_PER_CONTRIBUTOR,
+        type Recipe,
+        type RecipePicture,
+        type RecipePreview,
+        recipeTypeColors,
+        removeRecipePicture,
+        unfavoriteRecipe
+    } from "$lib/recipes";
     import emblaCarouselSvelte from "embla-carousel-svelte";
-    import {FileText, List, Users, Wind, Flame, Clock, ArrowLeft, ArrowRight, Heart, Minus, Plus, Coffee} from "@lucide/svelte";
+    import {FileText, List, Users, Wind, Flame, Clock, ArrowLeft, ArrowRight, Heart, Minus, Plus, Coffee, Camera, X} from "@lucide/svelte";
     import {serverUrl, user} from "$lib/stores";
     import {_, locale} from "svelte-i18n";
     import {toastError} from "$lib/utils";
@@ -72,10 +86,12 @@
     let heartBump = $state(false);
     let canScrollPrev = $state(false);
     let canScrollNext = $state(false);
+    let currentSlideIndex = $state(0);
 
     function updateScrollState() {
         canScrollPrev = emblaApi ? emblaApi.canScrollPrev() : false;
         canScrollNext = emblaApi ? emblaApi.canScrollNext() : false;
+        currentSlideIndex = emblaApi ? emblaApi.selectedScrollSnap() : 0;
     }
 
     function emblaInit(e: CustomEvent) {
@@ -84,6 +100,19 @@
         emblaApi.on('select', updateScrollState);
         emblaApi.on('reInit', updateScrollState);
     }
+
+    // Embla scans its slide DOM once at init; adding/removing a picture
+    // changes the {#each recipe.pictures} list under it without Embla
+    // noticing on its own, so canScrollNext/currentSlideIndex would stay
+    // stuck on whatever they were before the change. Re-scan explicitly
+    // whenever the picture count changes.
+    $effect(() => {
+        void recipe?.pictures.length;
+        if (emblaApi) {
+            emblaApi.reInit();
+            updateScrollState();
+        }
+    });
 
     function next(e: MouseEvent) {
         e.stopPropagation();
@@ -126,6 +155,73 @@
             toastError($_('recipeCard.favoriteError'));
         }
     }
+
+    let pictureInput: HTMLInputElement = $state()!;
+    let addingPicture = $state(false);
+
+    const isAuthor = $derived(!!$user && !!recipe && $user.id === recipe.author.id);
+    // A contributor's own count toward PictureCapPerContributor; meaningless
+    // (and unused) for the author, who has no cap.
+    const myPictureCount = $derived(
+        $user && recipe ? recipe.pictures.filter(p => p.added_by?.id === $user!.id).length : 0
+    );
+    const reachedPictureCap = $derived(!isAuthor && myPictureCount >= PICTURE_CAP_PER_CONTRIBUTOR);
+
+    function canRemovePicture(picture: RecipePicture): boolean {
+        if (!$user || !recipe)
+            return false;
+        if ($user.admin || isAuthor)
+            return true;
+        return picture.added_by?.id === $user.id;
+    }
+
+    function triggerAddPicture() {
+        pictureInput?.click();
+    }
+
+    async function handlePictureSelected(event: Event) {
+        const target = event.target as HTMLInputElement;
+        const file = target.files?.[0];
+        target.value = '';
+        if (!file || !recipe)
+            return;
+        addingPicture = true;
+        try {
+            const {response, data} = await addRecipePicture(recipe.id, file);
+            if (response.ok && data)
+                recipe = data;
+            else if (response.status === 409)
+                toastError($_('recipe.addPhotoCapReached', {values: {count: PICTURE_CAP_PER_CONTRIBUTOR}}));
+            else
+                toastError($_('recipe.addPhotoError'));
+        } catch {
+            toastError($_('recipe.addPhotoError'));
+        } finally {
+            addingPicture = false;
+        }
+    }
+
+    async function handleRemovePicture(e: MouseEvent, filename: string) {
+        e.stopPropagation();
+        if (!recipe)
+            return;
+        const previous = recipe;
+        recipe = {...recipe, pictures: recipe.pictures.filter(p => p.filename !== filename)};
+        try {
+            const {response, data} = await removeRecipePicture(previous.id, filename);
+            if (response.ok && data)
+                recipe = data;
+            else {
+                recipe = previous;
+                toastError($_('recipe.removePhotoError'));
+            }
+        } catch {
+            recipe = previous;
+            toastError($_('recipe.removePhotoError'));
+        }
+    }
+
+    const currentPicture = $derived(recipe?.pictures?.[currentSlideIndex]);
 
     const typeColorClass = $derived(recipeTypeColors[(recipe ?? {kind: ''}).kind] || "bg-gray-100 text-gray-800 dark:bg-gray-900/20 dark:text-gray-300");
 
@@ -193,7 +289,7 @@
 
     <meta property="og:title" content={recipe?.title} />
     <meta property="og:description" content={recipe?.description} />
-    <meta property="og:image" content={recipe?.pictures && recipe.pictures.length > 0 ? `${$serverUrl}/recipe-pictures/${recipe.pictures[0]}` : ""} />
+    <meta property="og:image" content={recipe?.pictures && recipe.pictures.length > 0 ? `${$serverUrl}/recipe-pictures/${recipe.pictures[0].filename}` : ""} />
     <meta property="og:url" content={`https://recipes.suolumi.fr/${$locale}/recipes/${recipe?.id}`} />
     <meta property="og:type" content="website">
 </svelte:head>
@@ -236,7 +332,7 @@
                         <div class="embla__container flex">
                             {#each recipe.pictures as picture}
                                 <img
-                                        src={`${$serverUrl}/recipe-pictures/${picture}`}
+                                        src={`${$serverUrl}/recipe-pictures/${picture.filename}`}
                                         alt={recipe.title || 'Recipe Title'}
                                         class="embla__slide__img aspect-video object-cover cursor-zoom-in hover:scale-105 transition-transform duration-300"
                                 />
@@ -246,6 +342,54 @@
                         <p class="embla__slide flex items-center justify-center h-full border-b border-b-border">{$_('recipeCard.noPicture')}</p>
                     {/if}
                 </div>
+
+                {#if currentPicture}
+                    <div class="absolute bottom-3 left-3 z-20 flex items-center gap-1.5 bg-black/60 text-white rounded-full pl-1 pr-3 py-1">
+                        {#if currentPicture.added_by?.picture}
+                            <img
+                                    src={`${$serverUrl}/pictures/${currentPicture.added_by.picture}`}
+                                    alt={currentPicture.added_by.username}
+                                    class="w-6 h-6 rounded-full object-cover"
+                            />
+                        {:else}
+                            <div class="w-6 h-6 rounded-full bg-primary text-primary-foreground flex items-center justify-center text-xs font-medium">
+                                {(currentPicture.added_by?.username ?? recipe.author.username).charAt(0) || "?"}
+                            </div>
+                        {/if}
+                        <span class="text-xs font-medium whitespace-nowrap">{$_('recipe.photoAddedBy', {values: {username: currentPicture.added_by?.username ?? recipe.author.username}})}</span>
+                    </div>
+                    {#if canRemovePicture(currentPicture)}
+                        <button
+                                type="button"
+                                onclick={(e) => handleRemovePicture(e, currentPicture!.filename)}
+                                class="absolute bottom-3 right-3 z-20 bg-black/60 hover:bg-black/80 text-white rounded-full p-2 hover:cursor-pointer transition-colors"
+                                aria-label={$_('recipe.removePhoto')}
+                                title={$_('recipe.removePhoto')}
+                        >
+                            <X size="16" />
+                        </button>
+                    {/if}
+                {/if}
+
+                {#if $user}
+                    <button
+                            type="button"
+                            onclick={triggerAddPicture}
+                            disabled={reachedPictureCap || addingPicture}
+                            class="absolute top-3 right-3 z-20 bg-black/60 hover:bg-black/80 disabled:opacity-50 disabled:cursor-not-allowed text-white rounded-full p-2 hover:cursor-pointer transition-colors"
+                            aria-label={$_('recipe.addPhoto')}
+                            title={reachedPictureCap ? $_('recipe.addPhotoCapReached', {values: {count: PICTURE_CAP_PER_CONTRIBUTOR}}) : $_('recipe.addPhoto')}
+                    >
+                        <Camera size="18" />
+                    </button>
+                    <input
+                            bind:this={pictureInput}
+                            type="file"
+                            accept="image/*"
+                            class="hidden"
+                            onchange={handlePictureSelected}
+                    />
+                {/if}
             </div>
 
             <div class="p-8">
@@ -456,7 +600,7 @@
 
     <Lightbox
             open={lightboxOpen}
-            pictures={recipe.pictures ?? []}
+            pictures={(recipe.pictures ?? []).map(p => p.filename)}
             startIndex={lightboxIndex}
             alt={recipe.title || 'Recipe Title'}
             onClose={() => lightboxOpen = false}

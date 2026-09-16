@@ -1,6 +1,6 @@
 <script lang="ts">
     import Modal from './Modal.svelte';
-    import {getRecipes, type RecipePreview} from '$lib/recipes';
+    import {getRecipes, type RecipeCategory, type RecipePreview} from '$lib/recipes';
     import {serverUrl} from '$lib/stores';
     import {locale, _} from 'svelte-i18n';
     import {toastError} from '$lib/utils';
@@ -11,11 +11,21 @@
         // a recipe can't offer itself or its own family as a reference
         // target. UX nicety only; the server is the authoritative check.
         excludeFamily?: string;
+        // category, when set, restricts results to that category (e.g. the
+        // "link as variation" flow only offers same-category targets). Also
+        // a UX nicety - the server is the authoritative check wherever one
+        // applies.
+        category?: RecipeCategory;
+        // title/description override the default ingredient-picker copy for
+        // a caller using this same picker for a different purpose (e.g.
+        // linking a recipe as a variation).
+        title?: string;
+        description?: string;
         onClose: () => void;
         onSelect: (recipe: RecipePreview) => void;
     }
 
-    let {open, excludeFamily, onClose, onSelect}: Props = $props();
+    let {open, excludeFamily, category, title, description, onClose, onSelect}: Props = $props();
 
     let query = $state('');
     let results: RecipePreview[] = $state([]);
@@ -30,7 +40,7 @@
         const id = ++searchId;
         loading = true;
         const timeout = setTimeout(() => {
-            getRecipes({title: term || undefined, exclude_family: excludeFamily, locale: $locale ?? undefined, limit: 20})
+            getRecipes({title: term || undefined, exclude_family: excludeFamily, category, locale: $locale ?? undefined, limit: 20})
                 .then(({response, data}) => {
                     if (id !== searchId)
                         return;
@@ -53,8 +63,8 @@
 
 <Modal
         {open}
-        title={$_('edit.ingredients.recipePicker.title')}
-        description={$_('edit.ingredients.recipePicker.description')}
+        title={title ?? $_('edit.ingredients.recipePicker.title')}
+        description={description ?? $_('edit.ingredients.recipePicker.description')}
         {onClose}
 >
     <input

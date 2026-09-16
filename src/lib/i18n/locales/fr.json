@@ -152,7 +152,23 @@
     },
     "filterAll": "Tout",
     "filterFood": "Cuisine",
-    "filterDiy": "Bricolage"
+    "filterDiy": "Bricolage",
+    "actions": {
+      "menu": "Actions",
+      "edit": "Modifier",
+      "remove": "Supprimer",
+      "linkAsVariation": "Lier comme variante"
+    },
+    "linkVariation": {
+      "pickerTitle": "Lier comme variante",
+      "pickerDescription": "Recherchez la recette dont celle-ci doit devenir une variante.",
+      "confirmTitle": "Lier « {title} » comme variante de « {target} » ?",
+      "confirmDescription": "Cette action est irréversible depuis le site - la recette apparaîtra parmi les versions de {target} au lieu d'exister seule.",
+      "cancel": "Annuler",
+      "confirm": "Lier la recette",
+      "success": "Recette liée comme variante",
+      "error": "Impossible de lier cette recette comme variante"
+    }
   },
   "recipe": {
     "back": "Retour aux recettes",
@@ -173,7 +189,13 @@
     "referenceExpand": "Afficher les ingrédients",
     "referenceCollapse": "Masquer les ingrédients",
     "keepAwakeOn": "Empêcher la mise en veille de l'écran",
-    "keepAwakeOff": "Autoriser la mise en veille de l'écran"
+    "keepAwakeOff": "Autoriser la mise en veille de l'écran",
+    "addPhoto": "Ajouter une photo",
+    "removePhoto": "Supprimer la photo",
+    "photoAddedBy": "Ajoutée par {username}",
+    "addPhotoError": "Impossible d'ajouter la photo",
+    "removePhotoError": "Impossible de supprimer la photo",
+    "addPhotoCapReached": "Vous avez atteint la limite de {count} photos pour cette recette"
   },
   "edit": {
     "toasts": {

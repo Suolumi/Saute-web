@@ -1,7 +1,7 @@
 <script lang="ts">
     import {favoriteRecipe, getFamily, recipeTypeColors, unfavoriteRecipe} from '$lib/recipes';
     import {goto} from "$app/navigation";
-    import type {Recipe, RecipePreview} from "$lib/recipes";
+    import type {RecipePreview} from "$lib/recipes";
     import emblaCarouselSvelte from "embla-carousel-svelte";
     import {ArrowLeft, ArrowRight, Heart, Plus} from "@lucide/svelte";
     import {serverUrl, user} from "$lib/stores";
@@ -24,7 +24,7 @@
 
     let pickerOpen = $state(false);
     let pickerLoading = $state(false);
-    let familyRoot: Recipe | null = $state(null);
+    let familyRoot: RecipePreview | null = $state(null);
     let familyVariations: RecipePreview[] = $state([]);
 
     function viewRecipe(id: string) {
@@ -50,7 +50,9 @@
         try {
             const {root, variations} = await getFamily(recipe.id, $locale ?? undefined);
             if (root.response.ok && root.data && variations.response.ok && variations.data) {
-                familyRoot = root.data;
+                // The picker's own card only ever needs preview-shaped
+                // fields; drop the detail-only picture attribution.
+                familyRoot = {...root.data, pictures: root.data.pictures.map(p => p.filename)};
                 familyVariations = variations.data.items;
             } else
                 toastError($_('variationPicker.error'));
