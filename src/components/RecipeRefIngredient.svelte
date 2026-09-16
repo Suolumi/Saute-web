@@ -60,11 +60,16 @@
             selectedRecipe = data;
     }
 
-    // The reference's own (already parent-scaled) quantity, against the
-    // selected sub-recipe's own base yield - e.g. a reference of "0.5 batch"
-    // shows the dough's ingredients at half its usual quantities. A
-    // reference with no quantity set means "use the whole recipe as-is".
+    // When the reference has a unit (e.g. "20g of sauce"), that amount is
+    // a portion of the sub-recipe, not a multiple of it - there's no
+    // weight/yield on a recipe to divide by, so the sub-recipe's own
+    // ingredients just scale with the parent's serving scaler like any
+    // other ingredient, same as if the reference had no quantity at all.
+    // Without a unit, quantity is a count of whole batches (e.g. "2" sauce
+    // recipes) - scale by that count against the sub-recipe's own base yield.
     const subRatio = $derived.by(() => {
+        if (ingredient.unit && ingredient.unit !== '')
+            return ratio;
         if (!selectedRecipe || !ingredient.quantity || ingredient.quantity <= 0 || selectedRecipe.quantity <= 0)
             return 1;
         return (ingredient.quantity * ratio) / selectedRecipe.quantity;
