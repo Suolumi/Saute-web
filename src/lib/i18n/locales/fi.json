@@ -22,6 +22,8 @@
     "description": "Siirrä kehystä vetämällä, tarkenna liukusäätimellä.",
     "zoom": "Zoomaus",
     "dragHint": "Vedä siirtääksesi rajausaluetta",
+    "rotateCcw": "Kierrä vasemmalle",
+    "rotateCw": "Kierrä oikealle",
     "cancel": "Peruuta",
     "confirm": "Käytä kuvaa"
   },

@@ -22,6 +22,8 @@
     "description": "Drag the frame to reposition it, use the slider to zoom.",
     "zoom": "Zoom",
     "dragHint": "Drag to reposition the crop area",
+    "rotateCcw": "Rotate left",
+    "rotateCw": "Rotate right",
     "cancel": "Cancel",
     "confirm": "Use photo"
   },

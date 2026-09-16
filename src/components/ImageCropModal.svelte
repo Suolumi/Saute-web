@@ -2,7 +2,15 @@
     import Modal from './Modal.svelte';
     import Button from './Button.svelte';
     import {_} from 'svelte-i18n';
-    import {cropImageToFile, MIN_CROP_OUTPUT_WIDTH, RECIPE_CARD_ASPECT_RATIO, type CropRect} from '$lib/imageCrop';
+    import {RotateCcw, RotateCw} from '@lucide/svelte';
+    import {
+        cropImageToFile,
+        createRotatedCanvas,
+        MIN_CROP_OUTPUT_WIDTH,
+        RECIPE_CARD_ASPECT_RATIO,
+        type CropRect,
+        type Rotation,
+    } from '$lib/imageCrop';
 
     interface Props {
         file: File | null;
@@ -23,16 +31,22 @@
     let zoom = $state(1);
     let centerFracX = $state(0.5);
     let centerFracY = $state(0.5);
+    let rotation = $state<Rotation>(0);
 
     function clamp(value: number, min: number, max: number) {
         return Math.min(max, Math.max(min, value));
     }
 
-    $effect(() => {
-        const currentFile = file;
+    function resetCrop() {
         zoom = 1;
         centerFracX = 0.5;
         centerFracY = 0.5;
+    }
+
+    $effect(() => {
+        const currentFile = file;
+        resetCrop();
+        rotation = 0;
         naturalWidth = 0;
         naturalHeight = 0;
 
@@ -52,13 +66,30 @@
         naturalHeight = imgEl.naturalHeight;
     }
 
+    function rotateBy(delta: 90 | -90) {
+        rotation = ((rotation + delta + 360) % 360) as Rotation;
+        resetCrop();
+    }
+
+    // Rotation swaps which of the source image's own axes maps to the display's
+    // width/height — everything below (display box, crop rect, etc.) is computed
+    // in this rotated bounding-box space.
+    let rotationSwapped = $derived(rotation === 90 || rotation === 270);
+    let rotatedNaturalWidth = $derived(rotationSwapped ? naturalHeight : naturalWidth);
+    let rotatedNaturalHeight = $derived(rotationSwapped ? naturalWidth : naturalHeight);
+
     let displayScale = $derived(
-        naturalWidth && naturalHeight && measureWidth
-            ? Math.min(measureWidth / naturalWidth, MAX_DISPLAY_HEIGHT / naturalHeight)
+        rotatedNaturalWidth && rotatedNaturalHeight && measureWidth
+            ? Math.min(measureWidth / rotatedNaturalWidth, MAX_DISPLAY_HEIGHT / rotatedNaturalHeight)
             : 0
     );
-    let displayWidth = $derived(naturalWidth * displayScale);
-    let displayHeight = $derived(naturalHeight * displayScale);
+    let displayWidth = $derived(rotatedNaturalWidth * displayScale);
+    let displayHeight = $derived(rotatedNaturalHeight * displayScale);
+
+    // The <img> keeps its own (unrotated) aspect ratio; it's centered in the
+    // rotated display box above and spun onto it with a CSS transform.
+    let imgDisplayWidth = $derived(rotationSwapped ? displayHeight : displayWidth);
+    let imgDisplayHeight = $derived(rotationSwapped ? displayWidth : displayHeight);
 
     let baseRectWidth = $derived(
         displayHeight > 0 && displayWidth / displayHeight > RECIPE_CARD_ASPECT_RATIO
@@ -153,15 +184,18 @@
     }
 
     async function handleConfirm() {
-        if (!file || !imgEl || !naturalWidth || !displayWidth) return;
-        const scale = naturalWidth / displayWidth;
+        if (!file || !imgEl || !naturalWidth || !displayScale) return;
+        const scale = 1 / displayScale;
         const crop: CropRect = {
             x: rectX * scale,
             y: rectY * scale,
             width: rectWidth * scale,
             height: rectHeight * scale,
         };
-        const cropped = await cropImageToFile(imgEl, crop, file.name, file.type || 'image/jpeg');
+        const source = rotation === 0
+            ? imgEl
+            : createRotatedCanvas(imgEl, naturalWidth, naturalHeight, rotation);
+        const cropped = await cropImageToFile(source, crop, file.name, file.type || 'image/jpeg');
         onConfirm(cropped);
     }
 </script>
@@ -186,8 +220,8 @@
                         onload={handleImageLoad}
                         alt=""
                         draggable="false"
-                        class="absolute top-0 left-0 pointer-events-none select-none"
-                        style="width:{displayWidth}px; height:{displayHeight}px"
+                        class="absolute top-1/2 left-1/2 pointer-events-none select-none"
+                        style="width:{imgDisplayWidth}px; height:{imgDisplayHeight}px; transform: translate(-50%, -50%) rotate({rotation}deg);"
                 />
                 {#if naturalWidth}
                     <!-- svelte-ignore a11y_no_noninteractive_tabindex -->
@@ -239,6 +273,24 @@
                 disabled={maxZoom <= 1.001}
                 class="flex-1"
         />
+        <div class="flex items-center gap-1">
+            <button
+                    type="button"
+                    onclick={() => rotateBy(-90)}
+                    aria-label={$_('imageCrop.rotateCcw')}
+                    class="p-2 rounded-md hover:bg-accent hover:text-accent-foreground hover:cursor-pointer"
+            >
+                <RotateCcw class="w-4 h-4" />
+            </button>
+            <button
+                    type="button"
+                    onclick={() => rotateBy(90)}
+                    aria-label={$_('imageCrop.rotateCw')}
+                    class="p-2 rounded-md hover:bg-accent hover:text-accent-foreground hover:cursor-pointer"
+            >
+                <RotateCw class="w-4 h-4" />
+            </button>
+        </div>
     </div>
 
     {#snippet footer()}

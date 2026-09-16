@@ -15,6 +15,31 @@ export interface CropRect {
     height: number
 }
 
+export type Rotation = 0 | 90 | 180 | 270
+
+// Draws `source` onto a new canvas rotated by `rotationDeg` (clockwise), so callers
+// can treat the result as a plain axis-aligned image at the rotated dimensions —
+// e.g. to crop it as if it had always been rotated.
+export function createRotatedCanvas(
+    source: CanvasImageSource,
+    sourceWidth: number,
+    sourceHeight: number,
+    rotationDeg: Rotation,
+): HTMLCanvasElement {
+    const swapped = rotationDeg === 90 || rotationDeg === 270
+    const canvas = document.createElement('canvas')
+    canvas.width = swapped ? sourceHeight : sourceWidth
+    canvas.height = swapped ? sourceWidth : sourceHeight
+    const ctx = canvas.getContext('2d')
+    if (!ctx)
+        throw new Error('Could not get canvas context')
+
+    ctx.translate(canvas.width / 2, canvas.height / 2)
+    ctx.rotate((rotationDeg * Math.PI) / 180)
+    ctx.drawImage(source, -sourceWidth / 2, -sourceHeight / 2, sourceWidth, sourceHeight)
+    return canvas
+}
+
 export async function cropImageToFile(
     source: CanvasImageSource,
     crop: CropRect,

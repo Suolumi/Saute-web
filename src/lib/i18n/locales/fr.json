@@ -22,6 +22,8 @@
     "description": "Faites glisser le cadre pour le repositionner, utilisez le curseur pour zoomer.",
     "zoom": "Zoom",
     "dragHint": "Glissez pour repositionner la zone de recadrage",
+    "rotateCcw": "Pivoter à gauche",
+    "rotateCw": "Pivoter à droite",
     "cancel": "Annuler",
     "confirm": "Utiliser la photo"
   },
