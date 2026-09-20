@@ -8,6 +8,7 @@
     "register": "Inscription",
     "settings": "Paramètres",
     "myRecipes": "Mes recettes",
+    "myFavorites": "Mes favoris",
     "logout": "Déconnexion",
     "diy": "Bricolage",
     "admin": "Administration",
@@ -731,7 +732,7 @@
       },
       "favorites": {
         "title": "Favoris",
-        "description": "Mettez en favori n'importe quelle recette ou projet DIY grâce à l'icône cœur, puis retrouvez-les tous dans Paramètres › Mes favoris."
+        "description": "Mettez en favori n'importe quelle recette ou projet de bricolage grâce à l'icône cœur, puis retrouvez-les tous dans Paramètres › Mes favoris."
       },
       "linkVariation": {
         "title": "Lier une recette existante comme variation",

@@ -145,6 +145,12 @@
                                 >
                                     {$_('header.myRecipes')}
                                 </button>
+                                <button
+                                        onclick={() => { goto(`/${$locale}/settings/favorites/recipes`); showProfileDropdown = false; }}
+                                        class="block w-full text-left px-4 py-2 text-sm text-foreground transition-colors hover:cursor-pointer hover:bg-gray-200 dark:hover:bg-gray-800"
+                                >
+                                    {$_('header.myFavorites')}
+                                </button>
                                 {#if $user.admin}
                                     <button
                                             onclick={() => { goto(`/${$locale}/admin`); showProfileDropdown = false; }}
@@ -251,6 +257,12 @@
                                                             class="block w-full text-left px-6 py-3 text-foreground hover:bg-muted transition-colors font-medium"
                                                     >
                                                         {$_('header.myRecipes')}
+                                                    </button>
+                                                    <button
+                                                            onclick={() => { goto(`/${$locale}/settings/favorites/recipes`); drawerOpen = false; }}
+                                                            class="block w-full text-left px-6 py-3 text-foreground hover:bg-muted transition-colors font-medium"
+                                                    >
+                                                        {$_('header.myFavorites')}
                                                     </button>
                                                     {#if $user.admin}
                                                         <button
