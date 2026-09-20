@@ -4,6 +4,14 @@
 
 @custom-variant dark (&:is(.dark *));
 
+@utility scrollbar-hide {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    &::-webkit-scrollbar {
+        display: none;
+    }
+}
+
 :root {
     /* Updated color tokens to match the recipes website design brief */
     --background: oklch(1 0 0);

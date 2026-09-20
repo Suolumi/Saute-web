@@ -46,16 +46,6 @@
     let authorFieldRef: HTMLDivElement | undefined = $state();
     let authorSearchId = 0;
     let ingredientInput = $state('');
-    let typeScrollEl: HTMLDivElement | undefined = $state();
-    let typeCanScrollLeft = $state(false);
-    let typeCanScrollRight = $state(false);
-
-    function updateTypeScrollShadows() {
-        if (!typeScrollEl)
-            return
-        typeCanScrollLeft = typeScrollEl.scrollLeft > 4
-        typeCanScrollRight = typeScrollEl.scrollLeft + typeScrollEl.clientWidth < typeScrollEl.scrollWidth - 4
-    }
 
     const hasActiveFilters = $derived(
         (showKind && selectedType !== 'all') || author.length > 0 || ingredients.length > 0 || (showTime && timeTarget !== 'any')
@@ -139,19 +129,6 @@
         return () => document.removeEventListener('click', onClickOutside)
     })
 
-    $effect(() => {
-        if (!typeScrollEl)
-            return
-        updateTypeScrollShadows()
-        const observer = new ResizeObserver(updateTypeScrollShadows)
-        observer.observe(typeScrollEl)
-        typeScrollEl.addEventListener('scroll', updateTypeScrollShadows)
-        return () => {
-            observer.disconnect()
-            typeScrollEl?.removeEventListener('scroll', updateTypeScrollShadows)
-        }
-    })
-
     const recipeTypes = $derived([{
         value: 'all',
         label: $_('recipes.types.all'),
@@ -183,26 +160,19 @@
     </div>
 
     {#if showKind}
-        <div class="relative mt-4">
-            <div
-                    bind:this={typeScrollEl}
-                    class="flex flex-wrap gap-2 md:flex-nowrap md:overflow-x-auto md:pb-1"
-            >
-                {#each recipeTypes as type}
-                    <button
-                            type="button"
-                            onclick={() => selectedType = type.value}
-                            class="flex-none px-4 py-2 rounded-full text-sm font-medium whitespace-nowrap border-2 transition-colors
-                                {type.value === 'all'
-                                    ? (selectedType === 'all' ? 'bg-primary text-primary-foreground border-primary' : 'bg-background text-foreground border-border')
-                                    : (recipeTypeColors[type.value] + (selectedType === type.value ? ' border-current' : ' border-transparent'))}"
-                    >
-                        {type.label}
-                    </button>
-                {/each}
-            </div>
-            <div class="pointer-events-none absolute inset-y-0 left-0 w-8 bg-gradient-to-r from-card to-transparent transition-opacity {typeCanScrollLeft ? 'opacity-100' : 'opacity-0'}"></div>
-            <div class="pointer-events-none absolute inset-y-0 right-0 w-8 bg-gradient-to-l from-card to-transparent transition-opacity {typeCanScrollRight ? 'opacity-100' : 'opacity-0'}"></div>
+        <div class="flex flex-wrap gap-2 mt-4">
+            {#each recipeTypes as type}
+                <button
+                        type="button"
+                        onclick={() => selectedType = type.value}
+                        class="flex-none px-4 py-2 rounded-full text-sm font-medium whitespace-nowrap border-2 transition-colors
+                            {type.value === 'all'
+                                ? (selectedType === 'all' ? 'bg-primary text-primary-foreground border-primary' : 'bg-background text-foreground border-border')
+                                : (recipeTypeColors[type.value] + (selectedType === type.value ? ' border-current' : ' border-transparent'))}"
+                >
+                    {type.label}
+                </button>
+            {/each}
         </div>
     {/if}
 

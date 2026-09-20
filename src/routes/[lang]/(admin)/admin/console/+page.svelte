@@ -342,7 +342,7 @@
     <div class="md:col-span-1 space-y-3">
         <h1 class="text-2xl font-bold text-foreground">{$_('admin.console.title')}</h1>
         <Input type="search" bind:value={filter} placeholder={$_('admin.console.filterPlaceholder')} />
-        <div class="bg-card rounded-lg border border-border divide-y divide-border max-h-[70vh] overflow-y-auto">
+        <div class="bg-card rounded-lg border border-border divide-y divide-border max-h-[70vh] overflow-y-auto scrollbar-hide">
             {#if filteredRoutes.length === 0}
                 <p class="p-3 text-muted-foreground text-sm">{$_('admin.console.none')}</p>
             {/if}
