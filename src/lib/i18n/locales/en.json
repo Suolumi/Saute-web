@@ -11,7 +11,7 @@
     "logout": "Logout",
     "diy": "DIY",
     "admin": "Admin",
-    "faq": "FAQ"
+    "about": "About"
   },
   "fileUpload": {
     "click": "Click to upload",
@@ -166,6 +166,20 @@
       "success": "Recipe successfully deleted"
     },
     "submit": "Update profile",
+    "tabs": {
+      "myRecipes": "My Recipes",
+      "myFavorites": "My Favorites"
+    },
+    "favoritesTabs": {
+      "recipes": "Recipes",
+      "diy": "DIY"
+    },
+    "favorites": {
+      "empty": {
+        "title": "No favorites yet",
+        "description": "Recipes and DIY projects you favorite will show up here."
+      }
+    },
     "recipeCount": "Your Recipes",
     "noRecipes": "You haven't created any recipes yet.",
     "createRecipe": "Create Your First Recipe",
@@ -247,8 +261,6 @@
       "label": "Rest Time"
     },
     "ingredients": {
-      "add": "Add Ingredient",
-      "addToSection": "Add ingredient to {section}",
       "addRecipeRef": "Add recipe as ingredient",
       "recipePicker": {
         "title": "Choose a recipe",
@@ -285,7 +297,6 @@
       "remove": "Remove ingredient"
     },
     "instructions": {
-      "add": "Add step",
       "title": {
         "label": "Step Title",
         "placeholder": "e.g. Preheat the oven"
@@ -308,10 +319,6 @@
       "stepLabel": "Step {current} of {total}",
       "next": "Next",
       "back": "Back",
-      "empty": {
-        "ingredients": "No ingredients yet. Add your first one below.",
-        "instructions": "No steps yet. Add your first one below."
-      },
       "basics": {
         "name": "Basics",
         "hint": "Give your recipe a name, a short description and its timing."
@@ -527,8 +534,7 @@
       "name": {
         "label": "Material",
         "placeholder": "e.g. Lye, Olive oil, Essential oil"
-      },
-      "add": "Add Material"
+      }
     },
     "instructions": {
       "title": {
@@ -695,45 +701,45 @@
       }
     }
   },
-  "faq": {
+  "about": {
     "meta": {
-      "title": "FAQ",
-      "description": "Answers to the recipe and DIY features that aren't obvious at first glance."
+      "title": "About",
+      "description": "A quick tour of what Sauté can do — recipe and DIY features you might not have noticed yet."
     },
-    "headLabel": "Frequently Asked Questions",
-    "commentLabel": "A few features that aren't obvious just from looking around the app.",
+    "headLabel": "What Sauté Can Do",
+    "commentLabel": "A quick tour of features that aren't always obvious just from looking around the app.",
     "items": {
       "variations": {
-        "question": "What are recipe variations?",
-        "answer": "If you cook someone else's recipe your own way — a different spice, a swapped ingredient, a whole different technique — you don't need to post a brand new recipe. Submit it as a variation instead, and it'll show up alongside the original and everyone else's take, so people can pick whichever version suits them."
+        "title": "Recipe Variations",
+        "description": "Cooked someone else's recipe your own way? Hit \"Submit a variation\" on that recipe's page, and it shows up alongside the original instead of as a brand-new post."
       },
       "recipeRef": {
-        "question": "Can an ingredient link to another recipe?",
-        "answer": "Yes. When an ingredient is really a recipe of its own — a sauce, a dough, a pickle — you can link to that recipe instead of typing it out as plain text. It shows up as a clickable ingredient, so anyone following along can jump straight to how to make it."
+        "title": "Recipe-Linked Ingredients",
+        "description": "An ingredient that's really its own recipe — a sauce, a dough, a pickle — can link straight to that recipe: use \"Add recipe as ingredient\" while creating or editing a recipe."
       },
       "photos": {
-        "question": "Can I add photos to a recipe I didn't create?",
-        "answer": "Yes — anyone can add a photo to any recipe, not just the person who posted it. It's a nice way to show how a dish turned out when you made it. Your photos are credited to you, separate from the author's own pictures, and you can remove any photo you added yourself."
+        "title": "Community Photos",
+        "description": "Anyone can add a photo to any recipe, not just its author — look for \"Add a photo\" on the recipe's page to show how it turned out for you."
       },
       "diy": {
-        "question": "Is everything on Sauté food?",
-        "answer": "No — Sauté also hosts DIY projects: handmade soap, home remedies, household fixes, anything with steps and materials rather than ingredients. Look for the DIY tab in the navigation to browse those separately from food recipes."
+        "title": "DIY Projects",
+        "description": "Sauté isn't just food — browse handmade soap, home remedies, and household fixes under the DIY tab."
       },
       "stepPhotos": {
-        "question": "Can individual steps have their own photos?",
-        "answer": "Yes — beyond the main recipe photos, each step can carry its own picture, so a tricky step can show exactly what it should look like at that point."
+        "title": "Photos on Every Step",
+        "description": "Beyond the main recipe photos, each instruction step has its own \"Photo\" field when creating or editing a recipe, to show exactly what a tricky step should look like."
       },
       "favorites": {
-        "question": "What does favoriting a recipe do?",
-        "answer": "Favoriting a recipe bookmarks it and bumps it to the top when you browse, so the recipes you actually cook aren't buried under everything else."
+        "title": "Favorites",
+        "description": "Favoriting a recipe bookmarks it and bumps it to the top when you browse, so it doesn't get buried."
       },
       "linkVariation": {
-        "question": "I already posted a recipe separately — can I turn it into a variation now?",
-        "answer": "Yes. From Settings › My Recipes, use the menu on one of your own recipes to link it as a variation of another recipe, even if you posted them separately and months apart. There's no way to undo this yourself from the site — an admin would need to detach it."
+        "title": "Link an Existing Recipe as a Variation",
+        "description": "Posted a recipe separately and want it folded into a family later? Link it as a variation from Settings › My Recipes."
       },
       "mcp": {
-        "question": "Can I connect an AI assistant to my recipes?",
-        "answer": "Yes — from the Connect to AI page you can generate a personal access token that lets an AI tool read, search, and create recipes on your account for you."
+        "title": "Connect an AI Assistant",
+        "description": "Generate a personal access token from the Connect to AI page so an AI tool can read, search, and create recipes on your account for you."
       }
     }
   }

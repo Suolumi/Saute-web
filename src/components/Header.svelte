@@ -80,11 +80,11 @@
                         {$_('header.diy')}
                     </button>
                     <button
-                        onclick={() => goto(`/${$locale}/faq`)}
+                        onclick={() => goto(`/${$locale}/about`)}
                         class="text-foreground hover:text-primary transition-colors font-medium hover:cursor-pointer"
-                        aria-label="FAQ"
+                        aria-label="About"
                     >
-                        {$_('header.faq')}
+                        {$_('header.about')}
                     </button>
                     <button
                             onclick={() => goto(`/${$locale}/connect-ai`)}
@@ -212,10 +212,10 @@
                                                 {$_('header.diy')}
                                             </button>
                                             <button
-                                                    onclick={() => {drawerOpen = false; goto(`/${$locale}/faq`)}}
+                                                    onclick={() => {drawerOpen = false; goto(`/${$locale}/about`)}}
                                                     class="block w-full text-left px-6 py-3 text-foreground hover:bg-muted transition-colors font-medium"
                                             >
-                                                {$_('header.faq')}
+                                                {$_('header.about')}
                                             </button>
                                             <button
                                                     onclick={() => {drawerOpen = false; goto(`/${$locale}/connect-ai`)}}

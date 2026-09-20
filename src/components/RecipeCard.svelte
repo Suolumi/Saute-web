@@ -14,7 +14,11 @@
     // suppressPicker forces a direct navigation on click, bypassing the
     // variation picker below - used for cards rendered inside the picker
     // modal itself, so picking the root there doesn't recursively reopen it.
-    let { recipe, disabled = false, suppressPicker = false }: { recipe: RecipePreview, disabled?: boolean, suppressPicker?: boolean } = $props();
+    // onFavoriteChange, when given, fires after a successful favorite toggle
+    // - the My Favorites tab uses it to drop a card the moment it's
+    // unfavorited, since this component only updates its own local copy of
+    // `recipe` and never mutates the parent's list itself.
+    let { recipe, disabled = false, suppressPicker = false, onFavoriteChange }: { recipe: RecipePreview, disabled?: boolean, suppressPicker?: boolean, onFavoriteChange?: (favorite: boolean) => void } = $props();
     let emblaApi: any = $state();
     let lightboxOpen = $state(false);
     let lightboxIndex = $state(0);
@@ -119,6 +123,7 @@
             const {response} = wasFavorite ? await unfavoriteRecipe(recipe.id) : await favoriteRecipe(recipe.id);
             if (!response.ok)
                 throw new Error('favorite request failed');
+            onFavoriteChange?.(!wasFavorite);
         } catch {
             recipe = {...recipe, favorite: wasFavorite, favorite_count: recipe.favorite_count + (wasFavorite ? 1 : -1)};
             toastError($_('recipeCard.favoriteError'));

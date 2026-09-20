@@ -11,7 +11,7 @@
     "logout": "Kirjaudu ulos",
     "diy": "DIY",
     "admin": "Ylläpito",
-    "faq": "UKK"
+    "about": "Tietoa"
   },
   "fileUpload": {
     "click": "Klikkaa ladataksesi",
@@ -160,6 +160,20 @@
       "placeholder": "Syötä uusi salasana"
     },
     "submit": "Päivitä profiili",
+    "tabs": {
+      "myRecipes": "Omat reseptit",
+      "myFavorites": "Omat suosikit"
+    },
+    "favoritesTabs": {
+      "recipes": "Reseptit",
+      "diy": "DIY"
+    },
+    "favorites": {
+      "empty": {
+        "title": "Ei vielä suosikkeja",
+        "description": "Suosikeiksi merkitsemäsi reseptit ja DIY-projektit näkyvät täällä."
+      }
+    },
     "recipeCount": "Reseptisi",
     "noRecipes": "Et ole vielä luonut reseptejä.",
     "createRecipe": "Luo ensimmäinen reseptisi",
@@ -247,8 +261,6 @@
       "label": "Lepoaika"
     },
     "ingredients": {
-      "add": "Lisää ainesosa",
-      "addToSection": "Lisää ainesosa osioon {section}",
       "addRecipeRef": "Lisää resepti ainesosaksi",
       "recipePicker": {
         "title": "Valitse resepti",
@@ -285,7 +297,6 @@
       "remove": "Poista ainesosa"
     },
     "instructions": {
-      "add": "Lisää vaihe",
       "title": {
         "label": "Vaiheen otsikko",
         "placeholder": "esim. Esilämmitä uuni"
@@ -308,10 +319,6 @@
       "stepLabel": "Vaihe {current} / {total}",
       "next": "Seuraava",
       "back": "Takaisin",
-      "empty": {
-        "ingredients": "Ei vielä ainesosia. Lisää ensimmäinen alta.",
-        "instructions": "Ei vielä vaiheita. Lisää ensimmäinen alta."
-      },
       "basics": {
         "name": "Perustiedot",
         "hint": "Anna reseptille nimi, lyhyt kuvaus ja ajat."
@@ -527,8 +534,7 @@
       "name": {
         "label": "Materiaali",
         "placeholder": "esim. Lipeä, Oliiviöljy, Eteerinen öljy"
-      },
-      "add": "Lisää materiaali"
+      }
     },
     "instructions": {
       "title": {
@@ -695,45 +701,45 @@
       }
     }
   },
-  "faq": {
+  "about": {
     "meta": {
-      "title": "UKK",
-      "description": "Vastauksia resepti- ja DIY-ominaisuuksiin, jotka eivät ole heti ilmeisiä."
+      "title": "Tietoa",
+      "description": "Nopea katsaus siihen, mitä Sauté osaa — resepti- ja DIY-ominaisuuksia, joita et ehkä ole vielä huomannut."
     },
-    "headLabel": "Usein kysytyt kysymykset",
-    "commentLabel": "Muutamia ominaisuuksia, jotka eivät ole itsestäänselviä pelkästään sovellusta selaamalla.",
+    "headLabel": "Mitä Sauté osaa",
+    "commentLabel": "Nopea katsaus ominaisuuksiin, jotka eivät ole aina itsestäänselviä pelkästään sovellusta selaamalla.",
     "items": {
       "variations": {
-        "question": "Mitä reseptien versiot (variaatiot) ovat?",
-        "answer": "Jos valmistat jonkun toisen reseptin omalla tavallasi — eri mauste, vaihdettu raaka-aine tai kokonaan erilainen tekniikka — sinun ei tarvitse julkaista uutta reseptiä. Lähetä se sen sijaan versiona: se näkyy alkuperäisen reseptin ja muiden versioiden rinnalla, jotta kaikki voivat valita itselleen sopivan."
+        "title": "Reseptien versiot",
+        "description": "Valmistitko jonkun toisen reseptin omalla tavallasi? Käytä reseptin sivulla \"Ehdota muunnelmaa\", niin se näkyy alkuperäisen rinnalla uuden julkaisun sijaan."
       },
       "recipeRef": {
-        "question": "Voiko raaka-aine linkittyä toiseen reseptiin?",
-        "answer": "Kyllä. Kun raaka-aine on itse asiassa oma reseptinsä — kastike, taikina, suolavesi — voit linkittää siihen vapaan tekstin sijaan. Se näkyy klikattavana raaka-aineena, jotta kuka tahansa pääsee suoraan sen valmistusohjeisiin."
+        "title": "Reseptiin linkitetyt raaka-aineet",
+        "description": "Raaka-aine, joka on itse asiassa oma reseptinsä — kastike, taikina, suolavesi — voidaan linkittää suoraan siihen reseptiin: käytä \"Lisää resepti ainesosaksi\" reseptiä luodessa tai muokatessa."
       },
       "photos": {
-        "question": "Voinko lisätä kuvia reseptiin, jota en ole itse luonut?",
-        "answer": "Kyllä — kuka tahansa voi lisätä kuvan mihin tahansa reseptiin, ei vain sen julkaisija. Se on mukava tapa näyttää, miltä ruoka näytti, kun valmistit sen. Kuvasi näkyvät sinun nimissäsi, erillisinä reseptin tekijän omista kuvista, ja voit poistaa itse lisäämäsi kuvat."
+        "title": "Yhteisön kuvat",
+        "description": "Kuka tahansa voi lisätä kuvan mihin tahansa reseptiin, ei vain sen julkaisija — etsi \"Lisää kuva\" reseptin sivulta näyttääksesi, miltä lopputulos näytti."
       },
       "diy": {
-        "question": "Onko Sautéssa kaikki ruokaa?",
-        "answer": "Ei — Sautéssa on myös DIY-projekteja: itse tehty saippua, kotikonstit, pienet korjaukset — mitä tahansa, jossa on vaiheita ja materiaaleja raaka-aineiden sijaan. Etsi DIY-välilehti valikosta selataksesi niitä erikseen ruokaresepteistä."
+        "title": "DIY-projektit",
+        "description": "Sauté ei ole vain ruokaa — selaa itse tehtyä saippuaa, kotikonsteja ja pieniä korjauksia DIY-välilehdeltä."
       },
       "stepPhotos": {
-        "question": "Voiko yksittäisillä vaiheilla olla omat kuvansa?",
-        "answer": "Kyllä — pääkuvien lisäksi jokaisella vaiheella voi olla oma kuvansa, jotta hankala vaihe voi näyttää tarkalleen, miltä sen pitäisi näyttää juuri sillä hetkellä."
+        "title": "Kuva jokaisesta vaiheesta",
+        "description": "Pääkuvien lisäksi jokaisella vaiheella on oma \"Kuva\"-kenttänsä reseptiä luodessa tai muokatessa, joka näyttää tarkalleen, miltä hankalan vaiheen pitäisi näyttää."
       },
       "favorites": {
-        "question": "Mitä reseptin suosikiksi merkitseminen tekee?",
-        "answer": "Suosikiksi merkitseminen tallentaa reseptin ja nostaa sen listan kärkeen selatessasi, jotta resepteistä, joita oikeasti valmistat, ei huku muiden joukkoon."
+        "title": "Suosikit",
+        "description": "Suosikiksi merkitseminen tallentaa reseptin ja nostaa sen listan kärkeen selatessasi, jotta se ei huku muiden joukkoon."
       },
       "linkVariation": {
-        "question": "Julkaisin jo reseptin erikseen — voinko muuttaa sen versioksi jälkikäteen?",
-        "answer": "Kyllä. Kohdasta Asetukset › Omat reseptit voit käyttää jonkin oman reseptisi valikkoa linkittääksesi sen toisen reseptin versioksi, vaikka olisit julkaissut ne erikseen ja kuukausien välein. Tätä ei voi peruuttaa itse sivustolla — ylläpitäjän täytyy irrottaa se."
+        "title": "Linkitä olemassa oleva resepti versioksi",
+        "description": "Julkaisitko reseptin erikseen ja haluat liittää sen perheeseen myöhemmin? Linkitä se versioksi kohdasta Asetukset › Omat reseptit."
       },
       "mcp": {
-        "question": "Voinko yhdistää tekoälyavustajan resepteihini?",
-        "answer": "Kyllä — Yhdistä tekoäly -sivulta voit luoda henkilökohtaisen käyttöoikeustunnuksen, jonka avulla tekoälytyökalu voi lukea, hakea ja luoda reseptejä tilillesi puolestasi."
+        "title": "Yhdistä tekoälyavustaja",
+        "description": "Luo henkilökohtainen käyttöoikeustunnus Yhdistä tekoäly -sivulta, jotta tekoälytyökalu voi lukea, hakea ja luoda reseptejä tilillesi puolestasi."
       }
     }
   }

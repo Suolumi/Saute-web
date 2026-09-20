@@ -192,9 +192,29 @@
         return normalizeRecipe($createRecipeCache && !isBlank($createRecipeCache) ? $createRecipeCache : (recipeProps ?? r))
     }
 
-    function addStep() {
-        stepRows = [...stepRows, {uid: nextStepUid(), title: '', description: '', picture: ''}];
+    // A step counts as blank only once it has no title, no description, and no
+    // photo (pending or already saved) - a photo alone is deliberate content.
+    function isEmptyStep(row: EditStep): boolean {
+        return !row.title.trim() && !row.description.trim() && !row.picture && !stepPendingPictures[row.uid];
     }
+
+    // Keeps exactly one blank trailing step: the current trailing row is left
+    // alone while still blank (same object, so it never loses focus mid-type),
+    // any interior row that goes blank is dropped and the list re-collapses,
+    // and a fresh blank row is appended once the trailing one gets content.
+    function normalizeStepRows(list: EditStep[]): EditStep[] {
+        const trailingBlank = list.length > 0 && isEmptyStep(list[list.length - 1]) ? list[list.length - 1] : null;
+        const bodySource = trailingBlank ? list.slice(0, -1) : list;
+        const body = bodySource.filter(row => !isEmptyStep(row));
+        if (trailingBlank && body.length === bodySource.length) return list;
+        const placeholder = trailingBlank ?? {uid: nextStepUid(), title: '', description: '', picture: ''};
+        return [...body, placeholder];
+    }
+
+    $effect(() => {
+        const normalized = normalizeStepRows(stepRows);
+        if (normalized !== stepRows) stepRows = normalized;
+    });
 
     function removeStep(uid: string) {
         clearStepPendingPicture(uid);
@@ -234,13 +254,20 @@
             if (nb < 0)
                 return toastError($_('create.toasts.negativeNumber'))
         }
+        // The trailing blank ingredient/step that auto-grow always leaves in
+        // place must never reach the API - strip it (and any other blank row)
+        // from the outgoing payload only, leaving the on-screen form as-is.
+        const cleanedIngredients = formData.ingredients.filter(i => i.name.trim() || i.recipe_ref);
+        const cleanedStepRows = stepRows.filter(row => !isEmptyStep(row));
+        const cleanedSteps: Step[] = cleanedStepRows.map(({title, description, picture}) => picture ? {title, description, picture} : {title, description});
+
         const newStepPictures: Record<number, File> = {};
-        stepRows.forEach((row, index) => {
+        cleanedStepRows.forEach((row, index) => {
             const pending = stepPendingPictures[row.uid];
             if (pending)
                 newStepPictures[index] = pending.file;
         });
-        onSubmit(formData, pendingPictures.map(picture => picture.file), newStepPictures);
+        onSubmit({...formData, ingredients: cleanedIngredients, steps: cleanedSteps}, pendingPictures.map(picture => picture.file), newStepPictures);
     }
 
     function removePicture(index: number) {
@@ -388,15 +415,55 @@
         formData.ingredients = flattenSections(sections);
     });
 
+    // An ingredient counts as blank only once none of its fields carry
+    // anything - a recipe reference, or any of name/quantity/unit, all count.
+    function isEmptyIngredient(ingredient: Ingredient): boolean {
+        return !ingredient.name.trim() && !ingredient.recipe_ref && !ingredient.quantity && !(ingredient.unit ?? '').trim();
+    }
+
+    function makeBlankIngredient(sectionName: string | null): Ingredient {
+        return {name: '', quantity: 0, unit: '', label: sectionName ?? ''};
+    }
+
+    // Same collapse-and-append invariant as normalizeStepRows, applied per
+    // section: exactly one blank trailing ingredient row at all times.
+    function normalizeSectionIngredients(section: EditSection): Ingredient[] {
+        const list = section.ingredients;
+        const trailingBlank = list.length > 0 && isEmptyIngredient(list[list.length - 1]) ? list[list.length - 1] : null;
+        const bodySource = trailingBlank ? list.slice(0, -1) : list;
+        const body = bodySource.filter(i => !isEmptyIngredient(i));
+        if (trailingBlank && body.length === bodySource.length) return list;
+        const placeholder = trailingBlank ?? makeBlankIngredient(section.name);
+        return [...body, placeholder];
+    }
+
+    $effect(() => {
+        let changed = false;
+        const normalized = sections.map(s => {
+            const ingredients = normalizeSectionIngredients(s);
+            if (ingredients === s.ingredients) return s;
+            changed = true;
+            return {...s, ingredients};
+        });
+        if (changed) sections = normalized;
+    });
+
     let editingSectionId = $state<string | null>(null);
     let editingSectionName = $state('');
     let openMenuFor = $state<Ingredient | null>(null);
 
-    function addCategory() {
-        const id = nextSectionId();
-        sections = [...sections, {id, name: '', ingredients: []}];
-        editingSectionId = id;
-        editingSectionName = '';
+    // The always-present blank "new category" slot at the bottom of the
+    // sections list; committing it (blur/Enter) turns it into a real section
+    // and clears the slot so it's ready for the next one.
+    let newCategoryName = $state('');
+
+    function commitNewCategory() {
+        const trimmed = newCategoryName.trim();
+        newCategoryName = '';
+        if (!trimmed) return;
+        const exists = sections.some(s => s.name !== null && s.name.toLowerCase() === trimmed.toLowerCase());
+        if (exists) return;
+        sections = [...sections, {id: nextSectionId(), name: trimmed, ingredients: []}];
     }
 
     function startRename(section: EditSection) {
@@ -459,20 +526,25 @@
         }
     }
 
-    function addIngredientToSection(sectionId: string) {
-        sections = sections.map(s => s.id === sectionId
-            ? {...s, ingredients: [...s.ingredients, {name: '', quantity: 0, unit: '', label: s.name ?? ''}]}
-            : s);
-    }
-
+    // Fills the section's current blank trailing row instead of inserting a
+    // new one, so picking a recipe reference behaves like typing would: the
+    // list never grows by more than the one fresh blank row auto-grow adds.
     function addRecipeRefToSection(sectionId: string, recipe: RecipePreview) {
-        sections = sections.map(s => s.id === sectionId
-            ? {...s, ingredients: [...s.ingredients, {
+        sections = sections.map(s => {
+            if (s.id !== sectionId) return s;
+            const ingredients = s.ingredients.slice();
+            const lastIdx = ingredients.length - 1;
+            const refIngredient: Ingredient = {
                 name: '', quantity: 1, unit: '', label: s.name ?? '',
                 recipe_ref: recipe.id, ref_label: '', resolved_ref_title: recipe.title,
                 variation_count: recipe.variation_count,
-            }]}
-            : s);
+            };
+            if (lastIdx >= 0 && isEmptyIngredient(ingredients[lastIdx]))
+                ingredients[lastIdx] = refIngredient;
+            else
+                ingredients.push(refIngredient);
+            return {...s, ingredients};
+        });
     }
 
     function removeIngredientFromSection(sectionId: string, ingredient: Ingredient) {
@@ -791,12 +863,6 @@
                 <!-- Step 2: Ingredients -->
                 {#if currentStep === 1}
                   <div>
-                    {#if formData.ingredients.length === 0}
-                      <div class="text-center py-8 px-4 rounded-lg border border-dashed border-border bg-muted/30 mb-4">
-                        <p class="text-sm text-muted-foreground">{$_('edit.wizard.empty.ingredients')}</p>
-                      </div>
-                    {/if}
-
                     <p class="text-sm text-muted-foreground mb-4">{$_('edit.ingredients.dragHint')}</p>
 
                     <div class="space-y-5">
@@ -870,6 +936,7 @@
                               class="flex flex-col gap-3 min-h-[2.5rem] rounded-lg border-2 border-dashed transition-colors {isSectionEmptyDropTarget(section) ? 'bg-primary/5 border-primary' : 'border-transparent'}"
                           >
                             {#each section.ingredients as ingredient, rowIndex (ingredient)}
+                              {@const isPlaceholder = rowIndex === section.ingredients.length - 1 && isEmptyIngredient(ingredient)}
                               <div>
                                 {#if isRowDropAbove(section, ingredient)}
                                   <div class="h-0.5 bg-primary rounded mb-1.5"></div>
@@ -881,17 +948,21 @@
                                     data-row-index={rowIndex}
                                     class="grid grid-cols-12 gap-2 items-center p-2 rounded-lg border border-border bg-card transition-opacity touch-none {isRowDragged(ingredient) ? 'opacity-35' : ''}"
                                 >
-                                  <button
-                                      type="button"
-                                      onpointerdown={(e) => startIngredientDrag(e, section.id, ingredient)}
-                                      onpointermove={handleDragPointerMove}
-                                      onpointerup={handleDragPointerUp}
-                                      onpointercancel={handleDragPointerUp}
-                                      class="col-span-1 flex items-center justify-center w-8 h-8 rounded-md text-muted-foreground hover:text-foreground hover:bg-accent cursor-grab touch-none transition-colors"
-                                      aria-label="Reorder ingredient"
-                                  >
-                                    <GripVertical class="w-4 h-4" />
-                                  </button>
+                                  {#if isPlaceholder}
+                                    <div class="col-span-1"></div>
+                                  {:else}
+                                    <button
+                                        type="button"
+                                        onpointerdown={(e) => startIngredientDrag(e, section.id, ingredient)}
+                                        onpointermove={handleDragPointerMove}
+                                        onpointerup={handleDragPointerUp}
+                                        onpointercancel={handleDragPointerUp}
+                                        class="col-span-1 flex items-center justify-center w-8 h-8 rounded-md text-muted-foreground hover:text-foreground hover:bg-accent cursor-grab touch-none transition-colors"
+                                        aria-label="Reorder ingredient"
+                                    >
+                                      <GripVertical class="w-4 h-4" />
+                                    </button>
+                                  {/if}
 
                                   {#if ingredient.recipe_ref}
                                     <div class="col-span-5 flex flex-col gap-1 self-end">
@@ -997,26 +1068,18 @@
                             {/each}
                           </div>
 
-                          <div class="mt-3 flex gap-2">
-                            <Button
-                                variant="outline"
-                                class="flex-1"
-                                size="sm"
-                                onclick={() => addIngredientToSection(section.id)}
-                            >
-                              {section.name ? $_('edit.ingredients.addToSection', {values: {section: section.name}}) : t('ingredients.add')}
-                            </Button>
-                            {#if formData.category !== 'diy'}
+                          {#if formData.category !== 'diy'}
+                            <div class="mt-3">
                               <Button
                                   variant="outline"
-                                  class="flex-1"
+                                  class="w-full"
                                   size="sm"
                                   onclick={() => openRecipePicker(section.id)}
                               >
                                 {t('ingredients.addRecipeRef')}
                               </Button>
-                            {/if}
-                          </div>
+                            </div>
+                          {/if}
 
                           {#if isSectionDropBelow(section)}
                             <div class="h-0.5 bg-primary rounded mt-2"></div>
@@ -1025,29 +1088,31 @@
                       {/each}
                     </div>
 
-                    <Button
-                        variant="outline"
-                        class="w-full mt-4 border-dashed"
-                        size="md"
-                        onclick={addCategory}
-                    >
-                      <Plus class="w-4 h-4 mr-1" />
-                      {$_('edit.ingredients.addCategory')}
-                    </Button>
+                    <div class="mt-4 flex items-center gap-2 rounded-lg border-2 border-dashed border-border px-3 py-2">
+                      <Plus class="w-4 h-4 text-muted-foreground flex-shrink-0" />
+                      <Input
+                          value={newCategoryName}
+                          oninput={(e: Event) => newCategoryName = (e.target as HTMLInputElement).value}
+                          onblur={commitNewCategory}
+                          onkeydown={(e: KeyboardEvent) => {
+                              if (e.key === 'Enter') (e.target as HTMLInputElement).blur();
+                              if (e.key === 'Escape') newCategoryName = '';
+                          }}
+                          placeholder={$_('edit.ingredients.addCategory')}
+                          aria-label={$_('edit.ingredients.addCategory')}
+                          class="flex-1 py-1.5 px-2 text-sm font-semibold border-0 bg-transparent focus:ring-0"
+                      />
+                    </div>
                   </div>
                 {/if}
 
                 <!-- Step 3: Instructions -->
                 {#if currentStep === 2}
                   <div>
-                    {#if stepRows.length === 0}
-                      <div class="text-center py-8 px-4 rounded-lg border border-dashed border-border bg-muted/30 mb-4">
-                        <p class="text-sm text-muted-foreground">{$_('edit.wizard.empty.instructions')}</p>
-                      </div>
-                    {/if}
                     <div class="space-y-3">
                       {#each stepRows as row, index (row.uid)}
                         {@const pendingPic = stepPendingPictures[row.uid]}
+                        {@const isPlaceholder = index === stepRows.length - 1 && isEmptyStep(row)}
                         <div>
                           {#if stepDropIndicator?.beforeUid === row.uid && stepDropIndicator.before}
                             <div class="h-0.5 bg-primary rounded mb-1.5"></div>
@@ -1057,17 +1122,21 @@
                               data-step-uid={row.uid}
                               class="flex gap-3 items-start rounded-lg border border-border p-4 touch-none transition-opacity {draggingStepUid === row.uid ? 'opacity-35' : ''}"
                           >
-                            <button
-                                type="button"
-                                onpointerdown={(e) => startStepDrag(e, row.uid)}
-                                onpointermove={handleStepDragPointerMove}
-                                onpointerup={handleStepDragPointerUp}
-                                onpointercancel={handleStepDragPointerUp}
-                                class="flex items-center justify-center w-8 h-8 rounded-md text-muted-foreground hover:text-foreground hover:bg-accent cursor-grab touch-none transition-colors flex-shrink-0 mt-1"
-                                aria-label={$_('edit.instructions.reorder')}
-                            >
-                              <GripVertical class="w-4 h-4" />
-                            </button>
+                            {#if isPlaceholder}
+                              <div class="w-8 h-8 flex-shrink-0 mt-1"></div>
+                            {:else}
+                              <button
+                                  type="button"
+                                  onpointerdown={(e) => startStepDrag(e, row.uid)}
+                                  onpointermove={handleStepDragPointerMove}
+                                  onpointerup={handleStepDragPointerUp}
+                                  onpointercancel={handleStepDragPointerUp}
+                                  class="flex items-center justify-center w-8 h-8 rounded-md text-muted-foreground hover:text-foreground hover:bg-accent cursor-grab touch-none transition-colors flex-shrink-0 mt-1"
+                                  aria-label={$_('edit.instructions.reorder')}
+                              >
+                                <GripVertical class="w-4 h-4" />
+                              </button>
+                            {/if}
                             <span class="bg-primary text-primary-foreground w-8 h-8 rounded-full text-sm font-semibold flex items-center justify-center flex-shrink-0 mt-1">
                                         {index + 1}
                                     </span>
@@ -1141,16 +1210,6 @@
                           {/if}
                         </div>
                       {/each}
-                    </div>
-                    <div class="mt-4">
-                      <Button
-                          variant="outline"
-                          class="w-full"
-                          size="md"
-                          onclick={addStep}
-                      >
-                        {$_('edit.instructions.add')}
-                      </Button>
                     </div>
                   </div>
                 {/if}

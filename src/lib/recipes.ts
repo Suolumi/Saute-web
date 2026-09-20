@@ -149,6 +149,13 @@ export type GetRecipesRequest = {
     // variations alike, no collapsing) - only the Settings "My Recipes" view
     // sets this.
     own_recipes?: boolean
+    // favorites_only lists only recipes the caller has favorited - flat, the
+    // exact recipe/variation favorited (not collapsed to its family root),
+    // sorted alphabetically by default. Unlike own_recipes, category here
+    // always narrows (matches the default listing's food-excludes-diy
+    // behavior) since the Settings "My Favorites" view is split into
+    // separate Recipes/DIY sub-tabs, each setting this.
+    favorites_only?: boolean
     // exclude_family hides that root id from a listing - used by the "add
     // recipe as ingredient" picker so a recipe can't offer itself/its own
     // family as a reference target.

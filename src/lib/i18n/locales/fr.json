@@ -11,7 +11,7 @@
     "logout": "Déconnexion",
     "diy": "Bricolage",
     "admin": "Administration",
-    "faq": "FAQ"
+    "about": "À propos"
   },
   "fileUpload": {
     "click": "Cliquez pour ajouter",
@@ -160,6 +160,20 @@
       "placeholder": "Entre votre nouveau mot de passe"
     },
     "submit": "Mettre à jour le profil",
+    "tabs": {
+      "myRecipes": "Mes recettes",
+      "myFavorites": "Mes favoris"
+    },
+    "favoritesTabs": {
+      "recipes": "Recettes",
+      "diy": "Bricolage"
+    },
+    "favorites": {
+      "empty": {
+        "title": "Aucun favori pour le moment",
+        "description": "Les recettes et projets de bricolage que vous mettez en favori apparaîtront ici."
+      }
+    },
     "recipeCount": "Vos recettes",
     "noRecipes": "Vous n'avez pas encore créé de recettes.",
     "createRecipe": "Créez votre première recette",
@@ -247,8 +261,6 @@
       "label": "Repos"
     },
     "ingredients": {
-      "add": "Ajouter un ingrédient",
-      "addToSection": "Ajouter un ingrédient à {section}",
       "addRecipeRef": "Ajouter une recette comme ingrédient",
       "recipePicker": {
         "title": "Choisir une recette",
@@ -285,7 +297,6 @@
       "remove": "Supprimer l'ingrédient"
     },
     "instructions": {
-      "add": "Ajouter une étape",
       "title": {
         "label": "Titre",
         "placeholder": "ex. Préchauffer le four"
@@ -308,10 +319,6 @@
       "stepLabel": "Étape {current} sur {total}",
       "next": "Suivant",
       "back": "Retour",
-      "empty": {
-        "ingredients": "Aucun ingrédient pour le moment. Ajoutez le premier ci-dessous.",
-        "instructions": "Aucune étape pour le moment. Ajoutez la première ci-dessous."
-      },
       "basics": {
         "name": "Bases",
         "hint": "Donnez un nom, une courte description et les temps à votre recette."
@@ -527,8 +534,7 @@
       "name": {
         "label": "Matériau",
         "placeholder": "ex. Soude, Huile d'olive, Huile essentielle"
-      },
-      "add": "Ajouter un matériau"
+      }
     },
     "instructions": {
       "title": {
@@ -695,45 +701,45 @@
       }
     }
   },
-  "faq": {
+  "about": {
     "meta": {
-      "title": "FAQ",
-      "description": "Les fonctionnalités de recettes et de bricolage qui ne sautent pas aux yeux au premier abord."
+      "title": "À propos",
+      "description": "Un aperçu rapide de ce que Sauté permet de faire — des fonctionnalités de recettes et de bricolage que vous n'avez peut-être pas encore remarquées."
     },
-    "headLabel": "Questions fréquentes",
-    "commentLabel": "Quelques fonctionnalités qui ne sont pas évidentes en regardant simplement l'application.",
+    "headLabel": "Ce que Sauté permet de faire",
+    "commentLabel": "Un aperçu rapide de fonctionnalités qui ne sont pas toujours évidentes en regardant simplement l'application.",
     "items": {
       "variations": {
-        "question": "Qu'est-ce qu'une variation de recette ?",
-        "answer": "Si vous cuisinez la recette de quelqu'un d'autre à votre façon — une épice différente, un ingrédient changé, une technique complètement différente — inutile de publier une toute nouvelle recette. Soumettez-la plutôt comme variation : elle apparaîtra aux côtés de l'originale et des autres versions, pour que chacun puisse choisir celle qui lui convient."
+        "title": "Variations de recette",
+        "description": "Vous avez cuisiné la recette de quelqu'un d'autre à votre façon ? Utilisez « Proposer une variante » sur la page de cette recette : elle apparaîtra aux côtés de l'originale plutôt que comme une nouvelle publication."
       },
       "recipeRef": {
-        "question": "Un ingrédient peut-il pointer vers une autre recette ?",
-        "answer": "Oui. Quand un ingrédient est en réalité une recette à part entière — une sauce, une pâte, une saumure — vous pouvez le lier à cette recette plutôt que de le taper en texte libre. Il apparaît alors comme un ingrédient cliquable, pour que chacun puisse accéder directement à sa préparation."
+        "title": "Ingrédients liés à une recette",
+        "description": "Un ingrédient qui est en réalité une recette à part entière — une sauce, une pâte, une saumure — peut être lié directement à cette recette : utilisez « Ajouter une recette comme ingrédient » lors de la création ou de la modification d'une recette."
       },
       "photos": {
-        "question": "Puis-je ajouter des photos à une recette que je n'ai pas créée ?",
-        "answer": "Oui — tout le monde peut ajouter une photo à n'importe quelle recette, pas seulement la personne qui l'a publiée. C'est une bonne façon de montrer le résultat quand vous l'avez préparée. Vos photos vous sont créditées, séparément de celles de l'auteur, et vous pouvez supprimer toute photo que vous avez ajoutée vous-même."
+        "title": "Photos de la communauté",
+        "description": "Tout le monde peut ajouter une photo à n'importe quelle recette, pas seulement son auteur — cherchez « Ajouter une photo » sur la page de la recette pour montrer le résultat obtenu."
       },
       "diy": {
-        "question": "Tout, sur Sauté, concerne la cuisine ?",
-        "answer": "Non — Sauté héberge aussi des projets de bricolage : savon fait maison, remèdes naturels, petites réparations — tout ce qui a des étapes et du matériel plutôt que des ingrédients. Cherchez l'onglet Bricolage dans la navigation pour les parcourir séparément des recettes de cuisine."
+        "title": "Projets de bricolage",
+        "description": "Sauté, ce n'est pas que de la cuisine — parcourez savon fait maison, remèdes naturels et petites réparations dans l'onglet Bricolage."
       },
       "stepPhotos": {
-        "question": "Les étapes peuvent-elles avoir leur propre photo ?",
-        "answer": "Oui — en plus des photos principales de la recette, chaque étape peut avoir sa propre image, pour qu'une étape délicate montre exactement à quoi elle doit ressembler à ce moment-là."
+        "title": "Une photo à chaque étape",
+        "description": "En plus des photos principales, chaque étape dispose de son propre champ « Photo » lors de la création ou de la modification d'une recette, pour montrer exactement à quoi une étape délicate doit ressembler."
       },
       "favorites": {
-        "question": "À quoi sert de mettre une recette en favori ?",
-        "answer": "Mettre une recette en favori la marque et la fait remonter en haut de la liste lors de vos recherches, pour que les recettes que vous cuisinez vraiment ne soient pas noyées parmi les autres."
+        "title": "Favoris",
+        "description": "Mettre une recette en favori la marque et la fait remonter en haut de la liste lors de vos recherches, pour qu'elle ne se perde pas parmi les autres."
       },
       "linkVariation": {
-        "question": "J'ai déjà publié une recette séparément — puis-je la transformer en variation maintenant ?",
-        "answer": "Oui. Depuis Paramètres › Mes recettes, utilisez le menu de l'une de vos recettes pour la lier comme variation d'une autre, même si vous les avez publiées séparément et à des mois d'écart. Il n'est pas possible d'annuler cela vous-même depuis le site — un administrateur devrait la détacher."
+        "title": "Lier une recette existante comme variation",
+        "description": "Vous avez publié une recette séparément et voulez la rattacher à une famille plus tard ? Liez-la comme variation depuis Paramètres › Mes recettes."
       },
       "mcp": {
-        "question": "Puis-je connecter un assistant IA à mes recettes ?",
-        "answer": "Oui — depuis la page Connecter une IA, vous pouvez générer un jeton d'accès personnel permettant à un outil d'IA de lire, rechercher et créer des recettes sur votre compte, pour vous."
+        "title": "Connecter un assistant IA",
+        "description": "Générez un jeton d'accès personnel depuis la page Connecter une IA pour qu'un outil d'IA puisse lire, rechercher et créer des recettes sur votre compte, pour vous."
       }
     }
   }

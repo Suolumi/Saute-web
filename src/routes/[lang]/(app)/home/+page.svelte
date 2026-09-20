@@ -20,12 +20,6 @@
 
     let recipes: RecipePreview[] = $state([])
     let totalCount: number | undefined = $state(undefined);
-    // Offset into the non-favorited remainder only (see recipes.ts / the API's
-    // `favorite=true` contract): every favorited-matching recipe comes back
-    // once, unpaginated, on the offset-0 request, so it must not count toward
-    // the offset that pages through the rest — otherwise each page would
-    // shift by however many favorites were already shown.
-    let restOffset = $state(0);
     let hasMore = $state(true);
     let loading = $state(false);
     let sentinel: HTMLDivElement | undefined = $state();
@@ -53,7 +47,6 @@
         request.search_locale = $locale ?? 'en'
         request.limit = PAGE_SIZE
         request.offset = offset
-        request.favorite = true
         return request
     }
 
@@ -68,8 +61,6 @@
                 return
             recipes = replace ? data.items : [...recipes, ...data.items]
             totalCount = data.length
-            const nonFavoritedInPage = data.items.filter(item => !item.favorite).length
-            restOffset = replace ? nonFavoritedInPage : restOffset + nonFavoritedInPage
             hasMore = recipes.length < data.length
             requestAnimationFrame(fillViewport)
         })
@@ -78,7 +69,7 @@
     function loadMore() {
         if (loading || !hasMore)
             return
-        fetchPage(restOffset, false)
+        fetchPage(recipes.length, false)
     }
 
     function fillViewport() {
