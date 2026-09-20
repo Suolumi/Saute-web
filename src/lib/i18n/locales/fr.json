@@ -10,7 +10,8 @@
     "myRecipes": "Mes recettes",
     "logout": "Déconnexion",
     "diy": "Bricolage",
-    "admin": "Administration"
+    "admin": "Administration",
+    "faq": "FAQ"
   },
   "fileUpload": {
     "click": "Cliquez pour ajouter",
@@ -66,7 +67,11 @@
     "activeAuthor": "de",
     "activeTimePrep": "{time} (préparation)",
     "activeTimeTotal": "{time} (total)",
-    "resultCount": "{count} recettes trouvées"
+    "resultCount": "{count} recettes trouvées",
+    "meta": {
+      "title": "Recettes",
+      "description": "Parcourez et recherchez les recettes partagées par la communauté Sauté."
+    }
   },
   "login": {
     "errors": {
@@ -75,6 +80,10 @@
     "toasts": {
       "success": "Connexion réussie.",
       "error": "Échec de la connexion."
+    },
+    "meta": {
+      "title": "Connexion",
+      "description": "Connectez-vous à votre compte Sauté."
     },
     "signIn": "Se connecter à Sauté",
     "welcome": "Bon retour ! Veuillez vous connecter à votre compte",
@@ -100,6 +109,10 @@
     "toasts": {
       "success": "Inscription réussie !",
       "error": "Échec de l'inscription."
+    },
+    "meta": {
+      "title": "Inscription",
+      "description": "Créez un compte Sauté pour commencer à partager des recettes."
     },
     "join": "Rejoindre Sauté",
     "create": "Créez votre compte pour commencer à partager des recettes",
@@ -128,6 +141,10 @@
       "update": "Erreur lors de la mise à jour du profil.",
       "getRecipes": "Erreur serveur, impossible de récupérer les recettes.",
       "delete": "Erreur lors de la suppression de la recette"
+    },
+    "meta": {
+      "title": "Paramètres",
+      "description": "Gérez votre compte et vos recettes Sauté."
     },
     "info": "Profil",
     "username": {
@@ -319,6 +336,10 @@
       "noAccount": "Vous devez d'abord créer un compte",
       "negativeNumber": "Les quantités / durées ne peuvent pas être négatives"
     },
+    "meta": {
+      "title": "Créer une recette",
+      "description": "Partagez une nouvelle recette avec la communauté Sauté."
+    },
     "headLabel": "Créer",
     "commentLabel": "Aujourd'hui je vais les surprendre avec...",
     "noIngredient": "Aucun ingrédient ajouté pour le moment...",
@@ -331,6 +352,10 @@
     }
   },
   "connectAi": {
+    "meta": {
+      "title": "Connecter une IA",
+      "description": "Connectez un assistant IA à vos recettes Sauté via MCP."
+    },
     "headLabel": "Connecter une IA",
     "commentLabel": "Laissez un assistant IA vous aider avec vos recettes",
     "toasts": {
@@ -361,17 +386,8 @@
       },
       "examples": {
         "title": "Exemples",
-        "claude": {
-          "title": "Claude (web ou bureau)",
-          "one": "Allez dans Paramètres → Connecteurs, puis « Ajouter un connecteur personnalisé ».",
-          "two": "Collez l'adresse dans le champ URL.",
-          "three": "S'il demande un jeton d'accès ou une clé API, collez-y le code de connexion."
-        },
-        "chatgpt": {
-          "title": "ChatGPT (web ou application)",
-          "one": "Allez dans Paramètres → Connecteurs → Paramètres avancés, et activez le mode développeur s'il ne l'est pas déjà.",
-          "two": "Créez un nouveau connecteur et collez l'adresse dans le champ d'URL du serveur.",
-          "three": "Réglez l'authentification sur « Jeton d'accès » (ou équivalent) et collez le code de connexion."
+        "cliTools": {
+          "title": "Outils en ligne de commande"
         },
         "claudeCli": {
           "title": "Claude Code (CLI)",
@@ -380,6 +396,22 @@
         "chatgptCli": {
           "title": "ChatGPT (Codex CLI)",
           "intro": "Ajoutez ceci à votre configuration Codex (généralement ~/.codex/config.toml) :"
+        },
+        "opencode": {
+          "title": "opencode",
+          "intro": "opencode est une application d'assistant IA gratuite avec une interface de discussion conviviale — une bonne option si vous préférez ne pas utiliser un outil en ligne de commande directement.",
+          "tabs": {
+            "macLinux": "macOS / Linux",
+            "windows": "Windows"
+          },
+          "steps": {
+            "download": "Téléchargez et installez opencode pour votre système depuis",
+            "node": "opencode a aussi besoin de Node.js — téléchargez-le depuis",
+            "nodeMacLinuxAlt": "Ou, si vous utilisez Homebrew : brew install node.",
+            "installCli": "Ouvrez un terminal et exécutez :",
+            "config": "Ouvrez les paramètres d'opencode et collez ceci dans son fichier de configuration MCP :",
+            "windowsRename": "Sous Windows, opencode peut ne pas prendre en compte un fichier .jsonc — renommez-le en .json après l'avoir collé."
+          }
         },
         "note": "Les noms de menus, options et fichiers de configuration changent parfois avec les mises à jour de ces applications — cherchez tout ce qui concerne les connecteurs, les outils ou les serveurs MCP si cela ne correspond pas exactement, ou consultez la documentation/--help de l'application."
       }
@@ -410,6 +442,10 @@
     "h": "h"
   },
   "forgot": {
+    "meta": {
+      "title": "Mot de passe oublié",
+      "description": "Réinitialisez le mot de passe de votre compte Sauté."
+    },
     "reset": "Réinitialisez votre mot de passe",
     "resetDesc": "Entrez votre adresse mail ou nom d'utilisateur et nous vous enverrons un mail pour réinitialiser votre mot de passe, si votre compte existe",
     "id": {
@@ -423,6 +459,10 @@
     "failed": "Erreur lors de l'envoi du mail"
   },
   "reset": {
+    "meta": {
+      "title": "Réinitialiser le mot de passe",
+      "description": "Choisissez un nouveau mot de passe pour votre compte Sauté."
+    },
     "create": "Réinitialisation de mot de passe",
     "enter": "Entrez votre nouveau mot de passe",
     "new": {
@@ -438,6 +478,10 @@
     "error": "Erreur lors de la réinitialisation de mot de passe"
   },
   "diyHome": {
+    "meta": {
+      "title": "Projets DIY",
+      "description": "Savon fait maison, remèdes maison, astuces du quotidien - parcourez des projets à faire soi-même."
+    },
     "mainText": "Au-delà de la cuisine",
     "secondaryText": "Savon fait maison, remèdes maison, astuces du quotidien - des projets à faire soi-même.",
     "createProject": "Nouveau projet",
@@ -454,6 +498,10 @@
     "back": "Retour au DIY"
   },
   "diyEdit": {
+    "meta": {
+      "title": "Créer un projet DIY",
+      "description": "Partagez un nouveau projet DIY avec la communauté Sauté."
+    },
     "headLabel": "Nouveau projet",
     "commentLabel": "Aujourd’hui, je fabrique...",
     "editHeadLabel": "Modifier le projet",
@@ -624,6 +672,48 @@
         "searchPlaceholder": "Rechercher des utilisateurs...",
         "noResults": "Aucun utilisateur trouvé",
         "error": "Impossible de rechercher des utilisateurs"
+      }
+    }
+  },
+  "faq": {
+    "meta": {
+      "title": "FAQ",
+      "description": "Les fonctionnalités de recettes et de bricolage qui ne sautent pas aux yeux au premier abord."
+    },
+    "headLabel": "Questions fréquentes",
+    "commentLabel": "Quelques fonctionnalités qui ne sont pas évidentes en regardant simplement l'application.",
+    "items": {
+      "variations": {
+        "question": "Qu'est-ce qu'une variation de recette ?",
+        "answer": "Si vous cuisinez la recette de quelqu'un d'autre à votre façon — une épice différente, un ingrédient changé, une technique complètement différente — inutile de publier une toute nouvelle recette. Soumettez-la plutôt comme variation : elle apparaîtra aux côtés de l'originale et des autres versions, pour que chacun puisse choisir celle qui lui convient."
+      },
+      "recipeRef": {
+        "question": "Un ingrédient peut-il pointer vers une autre recette ?",
+        "answer": "Oui. Quand un ingrédient est en réalité une recette à part entière — une sauce, une pâte, une saumure — vous pouvez le lier à cette recette plutôt que de le taper en texte libre. Il apparaît alors comme un ingrédient cliquable, pour que chacun puisse accéder directement à sa préparation."
+      },
+      "photos": {
+        "question": "Puis-je ajouter des photos à une recette que je n'ai pas créée ?",
+        "answer": "Oui — tout le monde peut ajouter une photo à n'importe quelle recette, pas seulement la personne qui l'a publiée. C'est une bonne façon de montrer le résultat quand vous l'avez préparée. Vos photos vous sont créditées, séparément de celles de l'auteur, et vous pouvez supprimer toute photo que vous avez ajoutée vous-même."
+      },
+      "diy": {
+        "question": "Tout, sur Sauté, concerne la cuisine ?",
+        "answer": "Non — Sauté héberge aussi des projets de bricolage : savon fait maison, remèdes naturels, petites réparations — tout ce qui a des étapes et du matériel plutôt que des ingrédients. Cherchez l'onglet Bricolage dans la navigation pour les parcourir séparément des recettes de cuisine."
+      },
+      "stepPhotos": {
+        "question": "Les étapes peuvent-elles avoir leur propre photo ?",
+        "answer": "Oui — en plus des photos principales de la recette, chaque étape peut avoir sa propre image, pour qu'une étape délicate montre exactement à quoi elle doit ressembler à ce moment-là."
+      },
+      "favorites": {
+        "question": "À quoi sert de mettre une recette en favori ?",
+        "answer": "Mettre une recette en favori la marque et la fait remonter en haut de la liste lors de vos recherches, pour que les recettes que vous cuisinez vraiment ne soient pas noyées parmi les autres."
+      },
+      "linkVariation": {
+        "question": "J'ai déjà publié une recette séparément — puis-je la transformer en variation maintenant ?",
+        "answer": "Oui. Depuis Paramètres › Mes recettes, utilisez le menu de l'une de vos recettes pour la lier comme variation d'une autre, même si vous les avez publiées séparément et à des mois d'écart. Il n'est pas possible d'annuler cela vous-même depuis le site — un administrateur devrait la détacher."
+      },
+      "mcp": {
+        "question": "Puis-je connecter un assistant IA à mes recettes ?",
+        "answer": "Oui — depuis la page Connecter une IA, vous pouvez générer un jeton d'accès personnel permettant à un outil d'IA de lire, rechercher et créer des recettes sur votre compte, pour vous."
       }
     }
   }

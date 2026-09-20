@@ -2,6 +2,7 @@
     import Button from '../../../../components/Button.svelte';
     import Input from '../../../../components/Input.svelte';
     import Label from '../../../../components/Label.svelte';
+    import PageMeta from '../../../../components/PageMeta.svelte';
     import {accessToken, refreshToken} from '$lib/stores';
 
     import {goto} from "$app/navigation";
@@ -54,6 +55,8 @@
         }
     }
 </script>
+
+<PageMeta title={$_('register.meta.title')} description={$_('register.meta.description')} />
 
 <div class="min-h-screen flex items-center justify-center bg-background px-4">
     <div class="max-w-md w-full space-y-8">

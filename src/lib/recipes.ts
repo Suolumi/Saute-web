@@ -197,12 +197,16 @@ export function groupIngredients(ingredients: Ingredient[]): IngredientGroup[] {
     return result
 }
 
-// Friendly fractions to snap a scaled quantity's fractional part to, so
-// scaled amounts read like a normal recipe (e.g. "1 + 1/2 cups") instead of
-// a raw decimal (e.g. "1.5 cups").
-const FRIENDLY_FRACTIONS: [numerator: number, denominator: number][] = [
-    [1, 8], [1, 4], [1, 3], [3, 8], [1, 2], [5, 8], [2, 3], [3, 4], [7, 8],
+// NICE_FRACTIONS are the only fractional parts ever displayed as a fraction
+// (e.g. "1/2") - only when the quantity is between 0 and 1 and its
+// fractional part exactly matches one of these (no snapping to "close
+// enough"). Anything else - a non-matching fraction like 3/8, or any
+// quantity >= 1 even with a matching fraction - is shown as a plain
+// 2-decimal number (e.g. "1.50", "0.38").
+const NICE_FRACTIONS: [numerator: number, denominator: number][] = [
+    [1, 4], [1, 3], [1, 2], [2, 3], [3, 4],
 ]
+const NICE_FRACTION_EPSILON = 1e-9
 const FRACTION_ROUND_EPSILON = 1 / 32
 
 export function formatScaledQuantity(quantity: number): string {
@@ -214,19 +218,24 @@ export function formatScaledQuantity(quantity: number): string {
     if (1 - frac < FRACTION_ROUND_EPSILON)
         return String(whole + 1)
 
-    let [bestNumerator, bestDenominator] = FRIENDLY_FRACTIONS[0]
-    let bestDiff = Math.abs(frac - bestNumerator / bestDenominator)
-    for (const [numerator, denominator] of FRIENDLY_FRACTIONS.slice(1)) {
-        const diff = Math.abs(frac - numerator / denominator)
-        if (diff < bestDiff) {
-            bestDiff = diff
-            bestNumerator = numerator
-            bestDenominator = denominator
+    if (whole === 0) {
+        for (const [numerator, denominator] of NICE_FRACTIONS) {
+            if (Math.abs(frac - numerator / denominator) < NICE_FRACTION_EPSILON)
+                return `${numerator}/${denominator}`
         }
     }
 
-    const fractionText = `${bestNumerator}/${bestDenominator}`
-    return whole > 0 ? `${whole} + ${fractionText}` : fractionText
+    return quantity.toFixed(2)
+}
+
+// formatDuration renders a minute count as "1h 40min" (or just "40min"
+// under an hour). Math.floor keeps the hour part a whole number even when
+// minutes isn't an exact multiple of 60 - the naive `minutes / 60` used to
+// render as an unbounded repeating decimal (e.g. "1.6666666666666667h").
+export function formatDuration(minutes: number, hourUnit: string, minuteUnit: string): string {
+    const hours = Math.floor(minutes / 60)
+    const remainder = minutes % 60
+    return hours > 0 ? `${hours}${hourUnit} ${remainder}${minuteUnit}` : `${remainder}${minuteUnit}`
 }
 
 // `ratio` scales the ingredient's stored quantity (e.g. selected servings /

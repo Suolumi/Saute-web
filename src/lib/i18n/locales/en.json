@@ -10,7 +10,8 @@
     "myRecipes": "My recipes",
     "logout": "Logout",
     "diy": "DIY",
-    "admin": "Admin"
+    "admin": "Admin",
+    "faq": "FAQ"
   },
   "fileUpload": {
     "click": "Click to upload",
@@ -66,7 +67,11 @@
     "activeAuthor": "by",
     "activeTimePrep": "{time} (prep)",
     "activeTimeTotal": "{time} (total)",
-    "resultCount": "{count} recipes found"
+    "resultCount": "{count} recipes found",
+    "meta": {
+      "title": "Recipes",
+      "description": "Browse and search recipes shared by the Sauté community."
+    }
   },
   "login": {
     "errors": {
@@ -75,6 +80,10 @@
     "toasts": {
       "success": "Successfully logged in.",
       "error": "Failed to login."
+    },
+    "meta": {
+      "title": "Login",
+      "description": "Sign in to your Sauté account."
     },
     "signIn": "Sign in to Sauté",
     "welcome": "Welcome back! Please sign in to your account",
@@ -100,6 +109,10 @@
     "toasts": {
       "success": "Successfully registered !",
       "error": "Failed to register."
+    },
+    "meta": {
+      "title": "Register",
+      "description": "Create a Sauté account to start sharing recipes."
     },
     "join": "Join Sauté",
     "create": "Create your account to start sharing recipes",
@@ -128,6 +141,10 @@
       "update": "Error while updating profile.",
       "getRecipes": "Server error, couldn't get recipes.",
       "delete": "Error while deleting recipe"
+    },
+    "meta": {
+      "title": "Settings",
+      "description": "Manage your Sauté account and recipes."
     },
     "info": "Profile",
     "username": {
@@ -319,6 +336,10 @@
       "noAccount": "You need to create an account first",
       "negativeNumber": "Quantities / times can't be negative"
     },
+    "meta": {
+      "title": "Create a Recipe",
+      "description": "Share a new recipe with the Sauté community."
+    },
     "headLabel": "Create",
     "commentLabel": "Today I will surprise everyone with...",
     "noIngredient": "No ingredients added yet...",
@@ -331,6 +352,10 @@
     }
   },
   "connectAi": {
+    "meta": {
+      "title": "Connect to AI",
+      "description": "Connect an AI assistant to your Sauté recipes over MCP."
+    },
     "headLabel": "Connect to AI",
     "commentLabel": "Let an AI assistant help you with your recipes",
     "toasts": {
@@ -361,17 +386,8 @@
       },
       "examples": {
         "title": "Examples",
-        "claude": {
-          "title": "Claude (web or desktop)",
-          "one": "Go to Settings → Connectors, then \"Add custom connector\".",
-          "two": "Paste the address into the URL field.",
-          "three": "If it asks for an access token or API key, paste the connection code there."
-        },
-        "chatgpt": {
-          "title": "ChatGPT (web or app)",
-          "one": "Go to Settings → Connectors → Advanced settings, and turn on developer mode if it's not already on.",
-          "two": "Create a new connector and paste the address into the server URL field.",
-          "three": "Set authentication to \"Access token\" (or similar) and paste the connection code."
+        "cliTools": {
+          "title": "CLI tools"
         },
         "claudeCli": {
           "title": "Claude Code (CLI)",
@@ -380,6 +396,22 @@
         "chatgptCli": {
           "title": "ChatGPT (Codex CLI)",
           "intro": "Add this to your Codex config (usually ~/.codex/config.toml):"
+        },
+        "opencode": {
+          "title": "opencode",
+          "intro": "opencode is a free AI assistant app with a friendly chat interface — a good option if you'd rather not use a command-line tool directly.",
+          "tabs": {
+            "macLinux": "macOS / Linux",
+            "windows": "Windows"
+          },
+          "steps": {
+            "download": "Download and install opencode for your OS from",
+            "node": "opencode also needs Node.js installed — get it from",
+            "nodeMacLinuxAlt": "Or, if you use Homebrew: brew install node.",
+            "installCli": "Open a terminal and run:",
+            "config": "Open opencode's settings and paste this into its MCP config file:",
+            "windowsRename": "On Windows, opencode may not pick up a .jsonc file — rename it to .json after pasting."
+          }
         },
         "note": "Menu, flag, and config names change from time to time as these apps update — look for anything about connectors, tools, or MCP servers if these don't match exactly, or check the app's own docs/--help."
       }
@@ -410,6 +442,10 @@
     "h": "h"
   },
   "forgot": {
+    "meta": {
+      "title": "Forgot Password",
+      "description": "Reset your Sauté account password."
+    },
     "reset": "Reset your password",
     "resetDesc": "Enter your email address or username and we'll send you instructions to reset your password if your account exists",
     "id": {
@@ -423,6 +459,10 @@
     "failed": "Error while sending the mail"
   },
   "reset": {
+    "meta": {
+      "title": "Reset Password",
+      "description": "Choose a new password for your Sauté account."
+    },
     "create": "Create a new password",
     "enter": "Enter your new password below",
     "new": {
@@ -438,6 +478,10 @@
     "error": "Error while trying to reset the password"
   },
   "diyHome": {
+    "meta": {
+      "title": "DIY Projects",
+      "description": "Handmade soap, home remedies, household fixes - browse projects worth doing yourself."
+    },
     "mainText": "Beyond the kitchen",
     "secondaryText": "Handmade soap, home remedies, household fixes - projects worth doing yourself.",
     "createProject": "New Project",
@@ -454,6 +498,10 @@
     "back": "Back to DIY"
   },
   "diyEdit": {
+    "meta": {
+      "title": "Create a DIY Project",
+      "description": "Share a new DIY project with the Sauté community."
+    },
     "headLabel": "New Project",
     "commentLabel": "Today I'm making...",
     "editHeadLabel": "Edit Project",
@@ -624,6 +672,48 @@
         "searchPlaceholder": "Search users...",
         "noResults": "No users found",
         "error": "Couldn't search users"
+      }
+    }
+  },
+  "faq": {
+    "meta": {
+      "title": "FAQ",
+      "description": "Answers to the recipe and DIY features that aren't obvious at first glance."
+    },
+    "headLabel": "Frequently Asked Questions",
+    "commentLabel": "A few features that aren't obvious just from looking around the app.",
+    "items": {
+      "variations": {
+        "question": "What are recipe variations?",
+        "answer": "If you cook someone else's recipe your own way — a different spice, a swapped ingredient, a whole different technique — you don't need to post a brand new recipe. Submit it as a variation instead, and it'll show up alongside the original and everyone else's take, so people can pick whichever version suits them."
+      },
+      "recipeRef": {
+        "question": "Can an ingredient link to another recipe?",
+        "answer": "Yes. When an ingredient is really a recipe of its own — a sauce, a dough, a pickle — you can link to that recipe instead of typing it out as plain text. It shows up as a clickable ingredient, so anyone following along can jump straight to how to make it."
+      },
+      "photos": {
+        "question": "Can I add photos to a recipe I didn't create?",
+        "answer": "Yes — anyone can add a photo to any recipe, not just the person who posted it. It's a nice way to show how a dish turned out when you made it. Your photos are credited to you, separate from the author's own pictures, and you can remove any photo you added yourself."
+      },
+      "diy": {
+        "question": "Is everything on Sauté food?",
+        "answer": "No — Sauté also hosts DIY projects: handmade soap, home remedies, household fixes, anything with steps and materials rather than ingredients. Look for the DIY tab in the navigation to browse those separately from food recipes."
+      },
+      "stepPhotos": {
+        "question": "Can individual steps have their own photos?",
+        "answer": "Yes — beyond the main recipe photos, each step can carry its own picture, so a tricky step can show exactly what it should look like at that point."
+      },
+      "favorites": {
+        "question": "What does favoriting a recipe do?",
+        "answer": "Favoriting a recipe bookmarks it and bumps it to the top when you browse, so the recipes you actually cook aren't buried under everything else."
+      },
+      "linkVariation": {
+        "question": "I already posted a recipe separately — can I turn it into a variation now?",
+        "answer": "Yes. From Settings › My Recipes, use the menu on one of your own recipes to link it as a variation of another recipe, even if you posted them separately and months apart. There's no way to undo this yourself from the site — an admin would need to detach it."
+      },
+      "mcp": {
+        "question": "Can I connect an AI assistant to my recipes?",
+        "answer": "Yes — from the Connect to AI page you can generate a personal access token that lets an AI tool read, search, and create recipes on your account for you."
       }
     }
   }

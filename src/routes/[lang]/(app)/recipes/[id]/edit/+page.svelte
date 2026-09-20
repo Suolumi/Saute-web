@@ -7,7 +7,8 @@
     import {toastError} from "$lib/utils";
     import {apiErrorMessage} from "$lib/api";
     import {locale, _} from "svelte-i18n";
-    import {editRecipeCache, user} from "$lib/stores";
+    import {editRecipeCache, serverUrl, user} from "$lib/stores";
+    import PageMeta from "../../../../../../components/PageMeta.svelte";
 
     const id = page.params.id ?? ''
     let recipe: RecipeForm | undefined = $state(undefined);
@@ -64,6 +65,12 @@
         })
     })
 </script>
+
+<PageMeta
+        title={recipe?.title ?? (recipe?.category === 'diy' ? $_('diyEdit.editHeadLabel') : $_('edit.headLabel'))}
+        description={recipe?.description}
+        image={recipe?.pictures && recipe.pictures.length > 0 ? `${$serverUrl}/recipe-pictures/${recipe.pictures[0]}` : undefined}
+/>
 
 <RecipeEdit
         onSubmit={submit}

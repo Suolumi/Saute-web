@@ -3,6 +3,7 @@
     import RecipeCard from '../../../../components/RecipeCard.svelte';
     import RecipeFilters from '../../../../components/RecipeFilters.svelte';
     import Button from '../../../../components/Button.svelte';
+    import PageMeta from '../../../../components/PageMeta.svelte';
     import {getRecipes, type GetRecipesRequest, type RecipePreview} from "$lib/recipes";
     import { _, locale } from 'svelte-i18n';
     import { goto } from '$app/navigation';
@@ -95,6 +96,8 @@
         return () => observer.disconnect()
     })
 </script>
+
+<PageMeta title={$_('diyHome.meta.title')} description={$_('diyHome.meta.description')} />
 
 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
     <div class="mb-8 flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4">

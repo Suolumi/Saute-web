@@ -10,7 +10,8 @@
     "myRecipes": "Minun reseptini",
     "logout": "Kirjaudu ulos",
     "diy": "DIY",
-    "admin": "Ylläpito"
+    "admin": "Ylläpito",
+    "faq": "UKK"
   },
   "fileUpload": {
     "click": "Klikkaa ladataksesi",
@@ -66,7 +67,11 @@
     "activeAuthor": "tekijältä",
     "activeTimePrep": "{time} (valmistelu)",
     "activeTimeTotal": "{time} (yhteensä)",
-    "resultCount": "{count} reseptiä löytyi"
+    "resultCount": "{count} reseptiä löytyi",
+    "meta": {
+      "title": "Reseptit",
+      "description": "Selaa ja hae Sauté-yhteisön jakamia reseptejä."
+    }
   },
   "login": {
     "errors": {
@@ -75,6 +80,10 @@
     "toasts": {
       "success": "Kirjautuminen onnistui.",
       "error": "Kirjautuminen epäonnistui."
+    },
+    "meta": {
+      "title": "Kirjaudu sisään",
+      "description": "Kirjaudu sisään Sauté-tilillesi."
     },
     "signIn": "Kirjaudu sisään Sauté-sovellukseen",
     "welcome": "Tervetuloa takaisin! Kirjaudu tilillesi",
@@ -100,6 +109,10 @@
     "toasts": {
       "success": "Rekisteröinti onnistui!",
       "error": "Rekisteröinti epäonnistui."
+    },
+    "meta": {
+      "title": "Rekisteröidy",
+      "description": "Luo Sauté-tili ja ala jakaa reseptejä."
     },
     "join": "Liity Sauté-sovellukseen",
     "create": "Luo tili ja ala jakaa reseptejä",
@@ -128,6 +141,10 @@
       "update": "Virhe profiilia päivitettäessä.",
       "getRecipes": "Palvelinvirhe, reseptejä ei voitu hakea.",
       "delete": "Virhe reseptiä poistettaessa"
+    },
+    "meta": {
+      "title": "Asetukset",
+      "description": "Hallinnoi Sauté-tiliäsi ja reseptejäsi."
     },
     "info": "Profiili",
     "username": {
@@ -319,6 +336,10 @@
       "noAccount": "Sinun täytyy ensin luoda tili",
       "negativeNumber": "Määrät / ajat eivät voi olla negatiivisia"
     },
+    "meta": {
+      "title": "Luo resepti",
+      "description": "Jaa uusi resepti Sauté-yhteisön kanssa."
+    },
     "headLabel": "Luo",
     "commentLabel": "Tänään yllätän kaikki...",
     "noIngredient": "Ainesosia ei ole vielä lisätty...",
@@ -331,6 +352,10 @@
     }
   },
   "connectAi": {
+    "meta": {
+      "title": "Yhdistä tekoäly",
+      "description": "Yhdistä tekoälyavustaja Sauté-resepteihisi MCP:n kautta."
+    },
     "headLabel": "Yhdistä tekoäly",
     "commentLabel": "Anna tekoälyavustajan auttaa reseptiesi kanssa",
     "toasts": {
@@ -361,17 +386,8 @@
       },
       "examples": {
         "title": "Esimerkkejä",
-        "claude": {
-          "title": "Claude (verkossa tai työpöytäsovelluksena)",
-          "one": "Siirry kohtaan Asetukset → Liittimet ja valitse \"Lisää mukautettu liitin\".",
-          "two": "Liitä osoite URL-kenttään.",
-          "three": "Jos sovellus kysyy käyttöoikeustunnusta tai API-avainta, liitä yhteyskoodi siihen."
-        },
-        "chatgpt": {
-          "title": "ChatGPT (verkossa tai sovelluksena)",
-          "one": "Siirry kohtaan Asetukset → Liittimet → Lisäasetukset ja ota kehittäjätila käyttöön, jos se ei ole jo päällä.",
-          "two": "Luo uusi liitin ja liitä osoite palvelimen URL-kenttään.",
-          "three": "Aseta todennukseksi \"Käyttöoikeustunnus\" (tai vastaava) ja liitä yhteyskoodi."
+        "cliTools": {
+          "title": "Komentorivityökalut"
         },
         "claudeCli": {
           "title": "Claude Code (CLI)",
@@ -380,6 +396,22 @@
         "chatgptCli": {
           "title": "ChatGPT (Codex CLI)",
           "intro": "Lisää tämä Codex-asetuksiisi (yleensä ~/.codex/config.toml):"
+        },
+        "opencode": {
+          "title": "opencode",
+          "intro": "opencode on ilmainen tekoälyavustinsovellus, jossa on ystävällinen keskusteluliittymä — hyvä vaihtoehto, jos et halua käyttää komentorivityökalua suoraan.",
+          "tabs": {
+            "macLinux": "macOS / Linux",
+            "windows": "Windows"
+          },
+          "steps": {
+            "download": "Lataa ja asenna opencode käyttöjärjestelmällesi osoitteesta",
+            "node": "opencode tarvitsee myös Node.js:n — hae se osoitteesta",
+            "nodeMacLinuxAlt": "Tai, jos käytät Homebrew'ta: brew install node.",
+            "installCli": "Avaa pääte ja aja:",
+            "config": "Avaa opencoden asetukset ja liitä tämä sen MCP-asetustiedostoon:",
+            "windowsRename": "Windowsilla opencode ei välttämättä tunnista .jsonc-tiedostoa — nimeä se .json-tiedostoksi liittämisen jälkeen."
+          }
         },
         "note": "Valikkojen, valintojen ja asetustiedostojen nimet muuttuvat toisinaan sovellusten päivittyessä — etsi mitä tahansa liittimiin, työkaluihin tai MCP-palvelimiin liittyvää, jos nämä eivät täsmää täysin, tai tarkista sovelluksen omat ohjeet/--help."
       }
@@ -410,6 +442,10 @@
     "h": "t"
   },
   "forgot": {
+    "meta": {
+      "title": "Unohditko salasanan",
+      "description": "Nollaa Sauté-tilisi salasana."
+    },
     "reset": "Nollaa salasanasi",
     "resetDesc": "Syötä sähköpostisi tai käyttäjänimesi, niin lähetämme ohjeet salasanan palauttamiseksi, jos tilisi löytyy",
     "id": {
@@ -423,6 +459,10 @@
     "failed": "Virhe sähköpostia lähettäessä"
   },
   "reset": {
+    "meta": {
+      "title": "Nollaa salasana",
+      "description": "Valitse uusi salasana Sauté-tilillesi."
+    },
     "create": "Luo uusi salasana",
     "enter": "Syötä uusi salasana alle",
     "new": {
@@ -438,6 +478,10 @@
     "error": "Virhe salasanaa nollattaessa"
   },
   "diyHome": {
+    "meta": {
+      "title": "DIY-projektit",
+      "description": "Käsintehty saippua, kotikonstit, askareet - selaa projekteja, jotka kannattaa tehdä itse."
+    },
     "mainText": "Muutakin kuin ruokaa",
     "secondaryText": "Käsintehty saippua, kotikonstit, askareet - projekteja, jotka kannattaa tehdä itse.",
     "createProject": "Uusi projekti",
@@ -454,6 +498,10 @@
     "back": "Takaisin DIY:hen"
   },
   "diyEdit": {
+    "meta": {
+      "title": "Luo DIY-projekti",
+      "description": "Jaa uusi DIY-projekti Sauté-yhteisön kanssa."
+    },
     "headLabel": "Uusi projekti",
     "commentLabel": "Tänään teen...",
     "editHeadLabel": "Muokkaa projektia",
@@ -624,6 +672,48 @@
         "searchPlaceholder": "Hae käyttäjiä...",
         "noResults": "Käyttäjiä ei löytynyt",
         "error": "Käyttäjien haku epäonnistui"
+      }
+    }
+  },
+  "faq": {
+    "meta": {
+      "title": "UKK",
+      "description": "Vastauksia resepti- ja DIY-ominaisuuksiin, jotka eivät ole heti ilmeisiä."
+    },
+    "headLabel": "Usein kysytyt kysymykset",
+    "commentLabel": "Muutamia ominaisuuksia, jotka eivät ole itsestäänselviä pelkästään sovellusta selaamalla.",
+    "items": {
+      "variations": {
+        "question": "Mitä reseptien versiot (variaatiot) ovat?",
+        "answer": "Jos valmistat jonkun toisen reseptin omalla tavallasi — eri mauste, vaihdettu raaka-aine tai kokonaan erilainen tekniikka — sinun ei tarvitse julkaista uutta reseptiä. Lähetä se sen sijaan versiona: se näkyy alkuperäisen reseptin ja muiden versioiden rinnalla, jotta kaikki voivat valita itselleen sopivan."
+      },
+      "recipeRef": {
+        "question": "Voiko raaka-aine linkittyä toiseen reseptiin?",
+        "answer": "Kyllä. Kun raaka-aine on itse asiassa oma reseptinsä — kastike, taikina, suolavesi — voit linkittää siihen vapaan tekstin sijaan. Se näkyy klikattavana raaka-aineena, jotta kuka tahansa pääsee suoraan sen valmistusohjeisiin."
+      },
+      "photos": {
+        "question": "Voinko lisätä kuvia reseptiin, jota en ole itse luonut?",
+        "answer": "Kyllä — kuka tahansa voi lisätä kuvan mihin tahansa reseptiin, ei vain sen julkaisija. Se on mukava tapa näyttää, miltä ruoka näytti, kun valmistit sen. Kuvasi näkyvät sinun nimissäsi, erillisinä reseptin tekijän omista kuvista, ja voit poistaa itse lisäämäsi kuvat."
+      },
+      "diy": {
+        "question": "Onko Sautéssa kaikki ruokaa?",
+        "answer": "Ei — Sautéssa on myös DIY-projekteja: itse tehty saippua, kotikonstit, pienet korjaukset — mitä tahansa, jossa on vaiheita ja materiaaleja raaka-aineiden sijaan. Etsi DIY-välilehti valikosta selataksesi niitä erikseen ruokaresepteistä."
+      },
+      "stepPhotos": {
+        "question": "Voiko yksittäisillä vaiheilla olla omat kuvansa?",
+        "answer": "Kyllä — pääkuvien lisäksi jokaisella vaiheella voi olla oma kuvansa, jotta hankala vaihe voi näyttää tarkalleen, miltä sen pitäisi näyttää juuri sillä hetkellä."
+      },
+      "favorites": {
+        "question": "Mitä reseptin suosikiksi merkitseminen tekee?",
+        "answer": "Suosikiksi merkitseminen tallentaa reseptin ja nostaa sen listan kärkeen selatessasi, jotta resepteistä, joita oikeasti valmistat, ei huku muiden joukkoon."
+      },
+      "linkVariation": {
+        "question": "Julkaisin jo reseptin erikseen — voinko muuttaa sen versioksi jälkikäteen?",
+        "answer": "Kyllä. Kohdasta Asetukset › Omat reseptit voit käyttää jonkin oman reseptisi valikkoa linkittääksesi sen toisen reseptin versioksi, vaikka olisit julkaissut ne erikseen ja kuukausien välein. Tätä ei voi peruuttaa itse sivustolla — ylläpitäjän täytyy irrottaa se."
+      },
+      "mcp": {
+        "question": "Voinko yhdistää tekoälyavustajan resepteihini?",
+        "answer": "Kyllä — Yhdistä tekoäly -sivulta voit luoda henkilökohtaisen käyttöoikeustunnuksen, jonka avulla tekoälytyökalu voi lukea, hakea ja luoda reseptejä tilillesi puolestasi."
       }
     }
   }

@@ -4,6 +4,7 @@
     import Label from '../../../../components/Label.svelte';
     import RecipeCard from '../../../../components/RecipeCard.svelte';
     import RecipePickerModal from '../../../../components/RecipePickerModal.svelte';
+    import PageMeta from '../../../../components/PageMeta.svelte';
     import {goto} from "$app/navigation";
     import {getRecipes, linkRecipeVariation, type RecipeCategory, type RecipePreview} from "$lib/recipes";
     import {serverUrl, user} from "$lib/stores";
@@ -71,7 +72,9 @@
         linkRecipeVariation(recipe.id, target.id).then(({response, data}) => {
             if (response.ok) {
                 toastSuccess($_('settings.linkVariation.success'));
-                userRecipes = userRecipes.filter(r => r.id !== recipe.id);
+                userRecipes = userRecipes.map(r =>
+                    r.id === recipe.id ? {...r, variation_of: target.id} : r
+                );
                 linkConfirm = {isOpen: false, recipe: null, target: null};
             } else {
                 toastError(apiErrorMessage(data, $_('settings.linkVariation.error')));
@@ -152,6 +155,8 @@
         }
     }
 </script>
+
+<PageMeta title={$_('settings.meta.title')} description={$_('settings.meta.description')} />
 
 <svelte:window onclick={closeMenu} />
 

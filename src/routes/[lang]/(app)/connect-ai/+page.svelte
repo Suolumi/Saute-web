@@ -1,6 +1,7 @@
 <script lang="ts">
     import Button from "../../../../components/Button.svelte";
     import Modal from "../../../../components/Modal.svelte";
+    import PageMeta from "../../../../components/PageMeta.svelte";
     import {goto} from "$app/navigation";
     import {onMount} from "svelte";
     import {accessToken, serverUrl} from "$lib/stores";
@@ -14,11 +15,39 @@
     let generating = $state(false);
     let disconnecting = $state(false);
     let confirmDisconnect = $state(false);
-    let copiedField: 'url' | 'token' | 'claudeCli' | 'chatgptCli' | null = $state(null);
+    let copiedField: 'url' | 'token' | 'claudeCli' | 'chatgptCli' | 'opencodeBrew' | 'opencodeNpmInstall' | 'opencodeConfig' | null = $state(null);
+    let opencodeOs: 'macLinux' | 'windows' = $state('macLinux');
+    const opencodeBrewCommand = 'brew install node';
+    const opencodeNpmInstallCommand = 'npm install -g @opencode/cli';
 
     let mcpUrl = $derived($serverUrl.replace(/\/api\/v1\/?$/, '') + '/mcp');
     let claudeCliCommand = $derived(`claude mcp add --transport http recipes ${mcpUrl} --header "Authorization: Bearer ${token}"`);
     let chatgptCliConfig = $derived(`[mcp_servers.recipes]\nurl = "${mcpUrl}"\nbearer_token = "${token}"`);
+    let opencodeConfig = $derived(JSON.stringify({
+        "$schema": "https://opencode.ai/config.json",
+        mcp: {
+            servers: {
+                recipes: {
+                    type: "local",
+                    command: [
+                        "npx",
+                        "-y",
+                        "mcp-remote@latest",
+                        mcpUrl,
+                        "--transport",
+                        "http-only",
+                        "--protocol",
+                        "auto",
+                        "--header",
+                        "Authorization: ${AUTH_HEADER}"
+                    ],
+                    environment: {
+                        AUTH_HEADER: `Bearer ${token}`
+                    }
+                }
+            }
+        }
+    }, null, 2));
 
     onMount(() => {
         if (!$accessToken || $accessToken === "") {
@@ -49,7 +78,7 @@
             toastError(apiErrorMessage(data, $_('connectAi.toasts.disconnectError')))
     }
 
-    async function copy(text: string, field: 'url' | 'token' | 'claudeCli' | 'chatgptCli') {
+    async function copy(text: string, field: 'url' | 'token' | 'claudeCli' | 'chatgptCli' | 'opencodeBrew' | 'opencodeNpmInstall' | 'opencodeConfig') {
         await navigator.clipboard.writeText(text)
         copiedField = field
         setTimeout(() => {
@@ -58,6 +87,8 @@
         }, 1500)
     }
 </script>
+
+<PageMeta title={$_('connectAi.meta.title')} description={$_('connectAi.meta.description')} />
 
 <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
     <div class="mb-8">
@@ -121,23 +152,9 @@
 
                     <div class="pt-2">
                         <h3 class="text-lg font-semibold text-card-foreground mb-3">{$_('connectAi.generate.examples.title')}</h3>
-                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                            <div class="bg-muted rounded-lg p-4">
-                                <p class="font-medium text-foreground mb-2">{$_('connectAi.generate.examples.claude.title')}</p>
-                                <ol class="space-y-1 list-decimal list-inside text-sm text-foreground">
-                                    <li>{$_('connectAi.generate.examples.claude.one')}</li>
-                                    <li>{$_('connectAi.generate.examples.claude.two')}</li>
-                                    <li>{$_('connectAi.generate.examples.claude.three')}</li>
-                                </ol>
-                            </div>
-                            <div class="bg-muted rounded-lg p-4">
-                                <p class="font-medium text-foreground mb-2">{$_('connectAi.generate.examples.chatgpt.title')}</p>
-                                <ol class="space-y-1 list-decimal list-inside text-sm text-foreground">
-                                    <li>{$_('connectAi.generate.examples.chatgpt.one')}</li>
-                                    <li>{$_('connectAi.generate.examples.chatgpt.two')}</li>
-                                    <li>{$_('connectAi.generate.examples.chatgpt.three')}</li>
-                                </ol>
-                            </div>
+
+                        <h4 class="text-sm font-semibold text-muted-foreground uppercase tracking-wide mb-3">{$_('connectAi.generate.examples.cliTools.title')}</h4>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
                             <div class="bg-muted rounded-lg p-4">
                                 <p class="font-medium text-foreground mb-2">{$_('connectAi.generate.examples.claudeCli.title')}</p>
                                 <p class="text-sm text-foreground mb-2">{$_('connectAi.generate.examples.claudeCli.intro')}</p>
@@ -167,6 +184,82 @@
                                 </div>
                             </div>
                         </div>
+
+                        <h4 class="text-sm font-semibold text-muted-foreground uppercase tracking-wide mb-3">{$_('connectAi.generate.examples.opencode.title')}</h4>
+                        <div class="bg-muted rounded-lg p-4">
+                            <p class="text-sm text-foreground mb-3">{$_('connectAi.generate.examples.opencode.intro')}</p>
+
+                            <div class="inline-flex rounded-lg border border-border p-1 mb-4 bg-background">
+                                <button
+                                        type="button"
+                                        class="px-3 py-1 text-sm rounded-md transition-colors {opencodeOs === 'macLinux' ? 'bg-card text-foreground shadow-sm' : 'text-muted-foreground'}"
+                                        onclick={() => opencodeOs = 'macLinux'}
+                                >
+                                    {$_('connectAi.generate.examples.opencode.tabs.macLinux')}
+                                </button>
+                                <button
+                                        type="button"
+                                        class="px-3 py-1 text-sm rounded-md transition-colors {opencodeOs === 'windows' ? 'bg-card text-foreground shadow-sm' : 'text-muted-foreground'}"
+                                        onclick={() => opencodeOs = 'windows'}
+                                >
+                                    {$_('connectAi.generate.examples.opencode.tabs.windows')}
+                                </button>
+                            </div>
+
+                            <ol class="space-y-3 list-decimal list-inside text-sm text-foreground">
+                                <li>
+                                    {$_('connectAi.generate.examples.opencode.steps.download')}
+                                    {' '}<a href="https://opencode.ai/download" target="_blank" rel="noopener noreferrer" class="text-ai-accent underline">opencode.ai/download</a>
+                                </li>
+                                <li>
+                                    {$_('connectAi.generate.examples.opencode.steps.node')}
+                                    {' '}<a href="https://nodejs.org/en/download" target="_blank" rel="noopener noreferrer" class="text-ai-accent underline">nodejs.org</a>.
+                                    {#if opencodeOs === 'macLinux'}
+                                        {$_('connectAi.generate.examples.opencode.steps.nodeMacLinuxAlt')}
+                                        <div class="relative mt-1">
+                                            <pre class="overflow-x-auto bg-background rounded-lg pl-3 pr-10 py-2 text-xs text-foreground"><code>{opencodeBrewCommand}</code></pre>
+                                            <button type="button" class="absolute top-1/2 right-2 -translate-y-1/2 p-1.5 rounded-md text-muted-foreground hover:text-foreground hover:bg-accent transition-colors" onclick={() => copy(opencodeBrewCommand, 'opencodeBrew')} aria-label="Copy command">
+                                                {#if copiedField === 'opencodeBrew'}
+                                                    <Check class="w-4 h-4" />
+                                                {:else}
+                                                    <Copy class="w-4 h-4" />
+                                                {/if}
+                                            </button>
+                                        </div>
+                                    {/if}
+                                </li>
+                                <li>
+                                    {$_('connectAi.generate.examples.opencode.steps.installCli')}
+                                    <div class="relative mt-1">
+                                        <pre class="overflow-x-auto bg-background rounded-lg pl-3 pr-10 py-2 text-xs text-foreground"><code>{opencodeNpmInstallCommand}</code></pre>
+                                        <button type="button" class="absolute top-1/2 right-2 -translate-y-1/2 p-1.5 rounded-md text-muted-foreground hover:text-foreground hover:bg-accent transition-colors" onclick={() => copy(opencodeNpmInstallCommand, 'opencodeNpmInstall')} aria-label="Copy command">
+                                            {#if copiedField === 'opencodeNpmInstall'}
+                                                <Check class="w-4 h-4" />
+                                            {:else}
+                                                <Copy class="w-4 h-4" />
+                                            {/if}
+                                        </button>
+                                    </div>
+                                </li>
+                                <li>
+                                    {$_('connectAi.generate.examples.opencode.steps.config')}
+                                    {#if opencodeOs === 'windows'}
+                                        <p class="text-xs text-muted-foreground mt-1">{$_('connectAi.generate.examples.opencode.steps.windowsRename')}</p>
+                                    {/if}
+                                    <div class="relative mt-1">
+                                        <pre class="overflow-x-auto bg-background rounded-lg pl-3 pr-10 py-2 text-xs text-foreground"><code>{opencodeConfig}</code></pre>
+                                        <button type="button" class="absolute top-2 right-2 p-1.5 rounded-md text-muted-foreground hover:text-foreground hover:bg-accent transition-colors" onclick={() => copy(opencodeConfig, 'opencodeConfig')} aria-label="Copy config">
+                                            {#if copiedField === 'opencodeConfig'}
+                                                <Check class="w-4 h-4" />
+                                            {:else}
+                                                <Copy class="w-4 h-4" />
+                                            {/if}
+                                        </button>
+                                    </div>
+                                </li>
+                            </ol>
+                        </div>
+
                         <p class="text-xs text-muted-foreground mt-3">{$_('connectAi.generate.examples.note')}</p>
                     </div>
 

@@ -80,6 +80,13 @@
                         {$_('header.diy')}
                     </button>
                     <button
+                        onclick={() => goto(`/${$locale}/faq`)}
+                        class="text-foreground hover:text-primary transition-colors font-medium hover:cursor-pointer"
+                        aria-label="FAQ"
+                    >
+                        {$_('header.faq')}
+                    </button>
+                    <button
                             onclick={() => goto(`/${$locale}/connect-ai`)}
                             class="text-ai-accent hover:text-ai-accent/80 transition-colors text-sm font-medium hover:cursor-pointer"
                             aria-label="Connect to AI"
@@ -203,6 +210,12 @@
                                                     class="block w-full text-left px-6 py-3 text-foreground hover:bg-muted transition-colors font-medium"
                                             >
                                                 {$_('header.diy')}
+                                            </button>
+                                            <button
+                                                    onclick={() => {drawerOpen = false; goto(`/${$locale}/faq`)}}
+                                                    class="block w-full text-left px-6 py-3 text-foreground hover:bg-muted transition-colors font-medium"
+                                            >
+                                                {$_('header.faq')}
                                             </button>
                                             <button
                                                     onclick={() => {drawerOpen = false; goto(`/${$locale}/connect-ai`)}}

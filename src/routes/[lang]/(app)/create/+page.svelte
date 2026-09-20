@@ -5,6 +5,7 @@
     import RecipeEdit from "../../../../components/RecipeEdit.svelte";
     import Modal from "../../../../components/Modal.svelte";
     import Button from "../../../../components/Button.svelte";
+    import PageMeta from "../../../../components/PageMeta.svelte";
     import {onMount} from "svelte";
     import {accessToken, createRecipeCache} from "$lib/stores";
     import {toastError} from "$lib/utils";
@@ -91,6 +92,11 @@
         }
     })
 </script>
+
+<PageMeta
+        title={effectiveCategory === 'diy' ? $_('diyEdit.meta.title') : $_('create.meta.title')}
+        description={effectiveCategory === 'diy' ? $_('diyEdit.meta.description') : $_('create.meta.description')}
+/>
 
 <Modal
         open={variationOf !== undefined && !choiceMade}

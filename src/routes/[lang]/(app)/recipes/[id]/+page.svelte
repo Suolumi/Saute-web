@@ -5,6 +5,7 @@
     import {
         addRecipePicture,
         favoriteRecipe,
+        formatDuration,
         getFamily,
         getIngredientName,
         getRecipe,
@@ -25,6 +26,7 @@
     import Lightbox from "../../../../../components/Lightbox.svelte";
     import RecipeCard from "../../../../../components/RecipeCard.svelte";
     import RecipeRefIngredient from "../../../../../components/RecipeRefIngredient.svelte";
+    import PageMeta from "../../../../../components/PageMeta.svelte";
 
     let id = $derived(page.params.id)
     const { data } = $props()
@@ -284,15 +286,11 @@
     }
 </script>
 
-<svelte:head>
-    <title>{recipe?.title}</title>
-
-    <meta property="og:title" content={recipe?.title} />
-    <meta property="og:description" content={recipe?.description} />
-    <meta property="og:image" content={recipe?.pictures && recipe.pictures.length > 0 ? `${$serverUrl}/recipe-pictures/${recipe.pictures[0].filename}` : ""} />
-    <meta property="og:url" content={`https://recipes.suolumi.fr/${$locale}/recipes/${recipe?.id}`} />
-    <meta property="og:type" content="website">
-</svelte:head>
+<PageMeta
+        title={recipe?.title ?? (recipe === null ? t('notFound') : undefined)}
+        description={recipe?.description}
+        image={recipe?.pictures && recipe.pictures.length > 0 ? `${$serverUrl}/recipe-pictures/${recipe.pictures[0].filename}` : undefined}
+/>
 {#if recipe}
     <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <button
@@ -447,15 +445,15 @@
                     <div class="grid grid-cols-2 sm:flex sm:flex-nowrap sm:items-center gap-3 sm:gap-4 lg:gap-6 text-muted-foreground text-sm sm:text-base">
                         <div class="flex items-center">
                             <Clock size="20" class="mr-2 text-black dark:text-current" />
-                            <span class="whitespace-nowrap">{$_('recipe.prep')}: {recipe.preparation_time >= 60 ? `${recipe.preparation_time / 60}${$_('recipes.h')} ` : ''}{recipe.preparation_time % 60}{$_('recipes.min')}</span>
+                            <span class="whitespace-nowrap">{$_('recipe.prep')}: {formatDuration(recipe.preparation_time, $_('recipes.h'), $_('recipes.min'))}</span>
                         </div>
                         <div class="flex items-center">
                             <Flame size="20" class="mr-2 text-black dark:text-current" />
-                            <span class="whitespace-nowrap">{t('cook')}: {recipe.cooking_time >= 60 ? `${recipe.cooking_time / 60}${$_('recipes.h')} ` : ''}{recipe.cooking_time % 60}{$_('recipes.min')}</span>
+                            <span class="whitespace-nowrap">{t('cook')}: {formatDuration(recipe.cooking_time, $_('recipes.h'), $_('recipes.min'))}</span>
                         </div>
                         <div class="flex items-center">
                             <Wind size="20" class="mr-2 text-black dark:text-current" />
-                            <span class="whitespace-nowrap">{t('rest')}: {recipe.resting_time >= 60 ? `${recipe.resting_time / 60}${$_('recipes.h')} ` : ''}{recipe.resting_time % 60}{$_('recipes.min')}</span>
+                            <span class="whitespace-nowrap">{t('rest')}: {formatDuration(recipe.resting_time, $_('recipes.h'), $_('recipes.min'))}</span>
                         </div>
                         <div class="flex items-center">
                             <Users size="20" class="mr-2 text-black dark:text-current" />

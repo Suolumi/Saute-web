@@ -1,5 +1,5 @@
 <script lang="ts">
-    import {favoriteRecipe, getFamily, getRecipe, recipeTypeColors, unfavoriteRecipe} from '$lib/recipes';
+    import {favoriteRecipe, formatDuration, getFamily, getRecipe, recipeTypeColors, unfavoriteRecipe} from '$lib/recipes';
     import {goto} from "$app/navigation";
     import type {RecipePreview} from "$lib/recipes";
     import emblaCarouselSvelte from "embla-carousel-svelte";
@@ -237,7 +237,7 @@
           <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
           </svg>
-            {totalTime >= 60 ? `${Math.floor(totalTime / 60)}${$_('recipes.h')}` : ''}{totalTime % 60}{$_('recipes.min')}
+            {formatDuration(totalTime, $_('recipes.h'), $_('recipes.min'))}
         </span>
         {/if}
             <span class="flex items-center">
