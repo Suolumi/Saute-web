@@ -572,6 +572,7 @@
       "dashboard": "Kojelauta",
       "users": "Käyttäjät",
       "recipes": "Reseptit",
+      "diy": "DIY",
       "console": "Konsoli"
     },
     "errors": {
@@ -585,6 +586,8 @@
       "deleteUser": "Käyttäjän poistaminen epäonnistui",
       "loadRecipes": "Reseptien lataaminen epäonnistui",
       "deleteRecipe": "Reseptin poistaminen epäonnistui",
+      "loadDiy": "DIY-projektien lataaminen epäonnistui",
+      "deleteDiy": "DIY-projektin poistaminen epäonnistui",
       "retranslate": "Uudelleenkäännöksen ajoitus epäonnistui"
     },
     "dashboard": {
@@ -638,6 +641,23 @@
       "cancel": "Peruuta",
       "confirmDelete": "Poista",
       "deleted": "Resepti poistettu",
+      "retranslateScheduled": "Uudelleenkäännös ajoitettu"
+    },
+    "diy": {
+      "title": "DIY",
+      "searchPlaceholder": "Hae DIY-projekteja...",
+      "variationBadge": "Muunnelma",
+      "edit": "Muokkaa",
+      "retranslate": "Käännä uudelleen",
+      "delete": "Poista",
+      "none": "DIY-projekteja ei löytynyt",
+      "prev": "Edellinen",
+      "next": "Seuraava",
+      "deleteConfirmTitle": "Poistetaanko tämä DIY-projekti?",
+      "deleteConfirmDescription": "Tämä poistaa pysyvästi projektin ”{title}”.",
+      "cancel": "Peruuta",
+      "confirmDelete": "Poista",
+      "deleted": "DIY-projekti poistettu",
       "retranslateScheduled": "Uudelleenkäännös ajoitettu"
     },
     "console": {

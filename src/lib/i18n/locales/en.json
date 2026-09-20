@@ -572,6 +572,7 @@
       "dashboard": "Dashboard",
       "users": "Users",
       "recipes": "Recipes",
+      "diy": "DIY",
       "console": "Console"
     },
     "errors": {
@@ -585,6 +586,8 @@
       "deleteUser": "Couldn't delete this user",
       "loadRecipes": "Couldn't load recipes",
       "deleteRecipe": "Couldn't delete this recipe",
+      "loadDiy": "Couldn't load DIY projects",
+      "deleteDiy": "Couldn't delete this DIY project",
       "retranslate": "Couldn't schedule retranslation"
     },
     "dashboard": {
@@ -638,6 +641,23 @@
       "cancel": "Cancel",
       "confirmDelete": "Delete",
       "deleted": "Recipe deleted",
+      "retranslateScheduled": "Retranslation scheduled"
+    },
+    "diy": {
+      "title": "DIY",
+      "searchPlaceholder": "Search DIY projects...",
+      "variationBadge": "Variation",
+      "edit": "Edit",
+      "retranslate": "Retranslate",
+      "delete": "Delete",
+      "none": "No DIY projects found",
+      "prev": "Previous",
+      "next": "Next",
+      "deleteConfirmTitle": "Delete this DIY project?",
+      "deleteConfirmDescription": "This permanently deletes \"{title}\".",
+      "cancel": "Cancel",
+      "confirmDelete": "Delete",
+      "deleted": "DIY project deleted",
       "retranslateScheduled": "Retranslation scheduled"
     },
     "console": {

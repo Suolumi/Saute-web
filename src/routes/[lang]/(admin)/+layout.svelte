@@ -15,6 +15,7 @@
         ['admin.nav.dashboard', ''],
         ['admin.nav.users', '/users'],
         ['admin.nav.recipes', '/recipes'],
+        ['admin.nav.diy', '/diy'],
         ['admin.nav.console', '/console'],
     ] as const;
 

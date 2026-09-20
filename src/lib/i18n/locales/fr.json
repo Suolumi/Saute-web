@@ -572,6 +572,7 @@
       "dashboard": "Tableau de bord",
       "users": "Utilisateurs",
       "recipes": "Recettes",
+      "diy": "Bricolage",
       "console": "Console"
     },
     "errors": {
@@ -585,6 +586,8 @@
       "deleteUser": "Impossible de supprimer cet utilisateur",
       "loadRecipes": "Impossible de charger les recettes",
       "deleteRecipe": "Impossible de supprimer cette recette",
+      "loadDiy": "Impossible de charger les projets bricolage",
+      "deleteDiy": "Impossible de supprimer ce projet bricolage",
       "retranslate": "Impossible de programmer la retraduction"
     },
     "dashboard": {
@@ -638,6 +641,23 @@
       "cancel": "Annuler",
       "confirmDelete": "Supprimer",
       "deleted": "Recette supprimée",
+      "retranslateScheduled": "Retraduction programmée"
+    },
+    "diy": {
+      "title": "Bricolage",
+      "searchPlaceholder": "Rechercher des projets bricolage...",
+      "variationBadge": "Variation",
+      "edit": "Modifier",
+      "retranslate": "Retraduire",
+      "delete": "Supprimer",
+      "none": "Aucun projet bricolage trouvé",
+      "prev": "Précédent",
+      "next": "Suivant",
+      "deleteConfirmTitle": "Supprimer ce projet bricolage ?",
+      "deleteConfirmDescription": "Ceci supprime définitivement « {title} ».",
+      "cancel": "Annuler",
+      "confirmDelete": "Supprimer",
+      "deleted": "Projet bricolage supprimé",
       "retranslateScheduled": "Retraduction programmée"
     },
     "console": {
