@@ -1,6 +1,8 @@
 <script lang="ts">
     import Modal from './Modal.svelte';
-    import {getRecipes, type RecipeCategory, type RecipePreview} from '$lib/recipes';
+    import Button from './Button.svelte';
+    import Checkbox from './Checkbox.svelte';
+    import {getFamily, getRecipes, type RecipeCategory, type RecipePreview} from '$lib/recipes';
     import {serverUrl} from '$lib/stores';
     import {locale, _} from 'svelte-i18n';
     import {toastError} from '$lib/utils';
@@ -27,17 +29,40 @@
         // variation at all. Used by the admin console, where a variation
         // needs to be selectable (e.g. to detach it back to standalone).
         flat?: boolean;
+        // excludeRecipeIds hides these exact recipe/variation ids from
+        // results and from a family's drill-in list - used by the shopping
+        // list picker so a recipe already on the list can't be
+        // accidentally re-picked and replaced (losing an edited servings
+        // count). A root whose id isn't itself excluded still appears even
+        // if one of its variations is, so the other variations stay
+        // reachable.
+        excludeRecipeIds?: string[];
+        // multiSelect switches from "pick one, close immediately" to
+        // checkbox selection across possibly multiple searches, confirmed
+        // via a footer button. A family (root with variations) drills into
+        // its own variation-picking view instead of being added directly,
+        // since each variation can have different ingredients.
+        multiSelect?: boolean;
         onClose: () => void;
-        onSelect: (recipe: RecipePreview) => void;
+        onSelect?: (recipe: RecipePreview) => void;
+        onConfirm?: (recipes: RecipePreview[]) => void;
     }
 
-    let {open, excludeFamily, category, title, description, flat, onClose, onSelect}: Props = $props();
+    let {open, excludeFamily, category, title, description, flat, excludeRecipeIds, multiSelect, onClose, onSelect, onConfirm}: Props = $props();
 
     let query = $state('');
     let results: RecipePreview[] = $state([]);
     let loading = $state(false);
     let searched = $state(false);
     let searchId = 0;
+
+    let selected: Map<string, RecipePreview> = $state(new Map());
+
+    let drillRoot: RecipePreview | null = $state(null);
+    let drillVariations: RecipePreview[] = $state([]);
+    let drillLoading = $state(false);
+
+    const excluded = $derived(new Set(excludeRecipeIds ?? []));
 
     $effect(() => {
         if (!open)
@@ -61,17 +86,128 @@
         return () => clearTimeout(timeout);
     });
 
+    $effect(() => {
+        if (!open) {
+            selected = new Map();
+            drillRoot = null;
+            drillVariations = [];
+        }
+    });
+
     function select(recipe: RecipePreview) {
-        onSelect(recipe);
+        onSelect?.(recipe);
+        onClose();
+    }
+
+    function isSelected(recipe: RecipePreview): boolean {
+        return selected.has(recipe.id);
+    }
+
+    function toggleSelected(recipe: RecipePreview) {
+        const next = new Map(selected);
+        if (next.has(recipe.id))
+            next.delete(recipe.id);
+        else
+            next.set(recipe.id, recipe);
+        selected = next;
+    }
+
+    function handleRowClick(recipe: RecipePreview) {
+        if (!multiSelect) {
+            select(recipe);
+            return;
+        }
+        if (!recipe.variation_of && recipe.variation_count > 0) {
+            openDrill(recipe);
+            return;
+        }
+        toggleSelected(recipe);
+    }
+
+    async function openDrill(root: RecipePreview) {
+        drillRoot = root;
+        drillVariations = [];
+        drillLoading = true;
+        try {
+            const {root: rootRes, variations} = await getFamily(root.id, $locale ?? undefined);
+            if (rootRes.response.ok && rootRes.data && variations.response.ok && variations.data) {
+                drillVariations = variations.data.items;
+            } else {
+                toastError($_('edit.ingredients.recipePicker.error'));
+            }
+        } finally {
+            drillLoading = false;
+        }
+    }
+
+    function closeDrill() {
+        drillRoot = null;
+        drillVariations = [];
+    }
+
+    function confirmSelection() {
+        onConfirm?.([...selected.values()]);
         onClose();
     }
 </script>
 
+{#snippet recipeRow(recipe: RecipePreview, opts: {selectable: boolean, isSelected: boolean, onClick: () => void})}
+    <button
+            type="button"
+            onclick={opts.onClick}
+            disabled={!opts.selectable}
+            class="flex items-center gap-3 rounded-lg p-2 text-left transition-colors {opts.selectable ? 'hover:bg-muted hover:cursor-pointer' : 'opacity-50 cursor-not-allowed'}"
+    >
+        {#if multiSelect}
+            <Checkbox checked={opts.isSelected} disabled={!opts.selectable} decorative />
+        {/if}
+        {#if recipe.pictures?.[0]}
+            <img
+                    src={`${$serverUrl}/recipe-pictures/${recipe.pictures[0]}`}
+                    alt={recipe.title}
+                    class="w-12 h-12 rounded-md object-cover flex-shrink-0"
+            />
+        {:else}
+            <div class="w-12 h-12 rounded-md bg-muted flex-shrink-0"></div>
+        {/if}
+        <div class="min-w-0 flex-1">
+            <p class="font-medium text-card-foreground truncate">{recipe.title}</p>
+            <p class="text-xs text-muted-foreground truncate">{$_('recipeCard.by')} {recipe.author?.username}</p>
+        </div>
+        {#if !opts.selectable}
+            <span class="ml-auto flex-shrink-0 bg-muted text-muted-foreground px-2 py-1 rounded-full text-sm font-medium whitespace-nowrap">
+                {$_('edit.ingredients.recipePicker.alreadyAdded')}
+            </span>
+        {:else if !recipe.variation_of && recipe.variation_count > 0}
+            <span class="ml-auto flex-shrink-0 bg-primary/10 text-primary px-2 py-1 rounded-full text-sm font-medium whitespace-nowrap">
+                {$_('recipeCard.variationCount', {values: {count: recipe.variation_count}})}
+            </span>
+        {:else if recipe.variation_of}
+            <span class="ml-auto flex-shrink-0 bg-muted text-muted-foreground px-2 py-1 rounded-full text-sm font-medium whitespace-nowrap">
+                {$_('edit.ingredients.recipePicker.variationBadge')}
+            </span>
+        {/if}
+    </button>
+{/snippet}
+
+{#snippet pickerFooter()}
+    <Button variant="outline" onclick={onClose}>{$_('edit.ingredients.recipePicker.cancel')}</Button>
+    <Button disabled={selected.size === 0} onclick={confirmSelection}>
+        {$_('edit.ingredients.recipePicker.addSelected', {values: {count: selected.size}})}
+    </Button>
+{/snippet}
+
+{#snippet drillFooter()}
+    <Button variant="outline" onclick={onClose}>{$_('edit.ingredients.recipePicker.cancel')}</Button>
+    <Button onclick={closeDrill}>{$_('edit.ingredients.recipePicker.backToList')}</Button>
+{/snippet}
+
 <Modal
-        {open}
+        open={open && !drillRoot}
         title={title ?? $_('edit.ingredients.recipePicker.title')}
         description={description ?? $_('edit.ingredients.recipePicker.description')}
         {onClose}
+        footer={multiSelect ? pickerFooter : undefined}
 >
     <input
             type="text"
@@ -82,39 +218,40 @@
     <div class="mt-3 max-h-[50vh] overflow-y-auto flex flex-col gap-1">
         {#if loading}
             <div class="py-8 text-center text-muted-foreground">…</div>
-        {:else if searched && results.length === 0}
+        {:else if searched && results.filter(r => !excluded.has(r.id)).length === 0}
             <div class="py-8 text-center text-muted-foreground">{$_('edit.ingredients.recipePicker.noResults')}</div>
         {:else}
-            {#each results as recipe (recipe.id)}
-                <button
-                        type="button"
-                        onclick={() => select(recipe)}
-                        class="flex items-center gap-3 rounded-lg p-2 text-left hover:bg-muted transition-colors hover:cursor-pointer"
-                >
-                    {#if recipe.pictures?.[0]}
-                        <img
-                                src={`${$serverUrl}/recipe-pictures/${recipe.pictures[0]}`}
-                                alt={recipe.title}
-                                class="w-12 h-12 rounded-md object-cover flex-shrink-0"
-                        />
-                    {:else}
-                        <div class="w-12 h-12 rounded-md bg-muted flex-shrink-0"></div>
-                    {/if}
-                    <div class="min-w-0 flex-1">
-                        <p class="font-medium text-card-foreground truncate">{recipe.title}</p>
-                        <p class="text-xs text-muted-foreground truncate">{$_('recipeCard.by')} {recipe.author?.username}</p>
-                    </div>
-                    {#if !recipe.variation_of && recipe.variation_count > 0}
-                        <span class="ml-auto flex-shrink-0 bg-primary/10 text-primary px-2 py-1 rounded-full text-sm font-medium whitespace-nowrap">
-                            {$_('recipeCard.variationCount', {values: {count: recipe.variation_count}})}
-                        </span>
-                    {:else if recipe.variation_of}
-                        <span class="ml-auto flex-shrink-0 bg-muted text-muted-foreground px-2 py-1 rounded-full text-sm font-medium whitespace-nowrap">
-                            {$_('edit.ingredients.recipePicker.variationBadge')}
-                        </span>
-                    {/if}
-                </button>
+            {#each results.filter(r => !excluded.has(r.id)) as recipe (recipe.id)}
+                {@render recipeRow(recipe, {selectable: true, isSelected: isSelected(recipe), onClick: () => handleRowClick(recipe)})}
             {/each}
         {/if}
     </div>
 </Modal>
+
+{#if multiSelect}
+    <Modal
+            open={open && !!drillRoot}
+            title={$_('edit.ingredients.recipePicker.chooseVariation')}
+            description={$_('edit.ingredients.recipePicker.chooseVariationDescription')}
+            onClose={closeDrill}
+            footer={drillFooter}
+    >
+        <button
+                type="button"
+                onclick={closeDrill}
+                class="mb-3 text-sm text-muted-foreground hover:text-foreground transition-colors hover:cursor-pointer"
+        >
+            &larr; {$_('edit.ingredients.recipePicker.back')}
+        </button>
+        <div class="max-h-[50vh] overflow-y-auto flex flex-col gap-1">
+            {#if drillLoading}
+                <div class="py-8 text-center text-muted-foreground">…</div>
+            {:else if drillRoot}
+                {@render recipeRow(drillRoot, {selectable: !excluded.has(drillRoot.id), isSelected: isSelected(drillRoot), onClick: () => toggleSelected(drillRoot!)})}
+                {#each drillVariations as variation (variation.id)}
+                    {@render recipeRow(variation, {selectable: !excluded.has(variation.id), isSelected: isSelected(variation), onClick: () => toggleSelected(variation)})}
+                {/each}
+            {/if}
+        </div>
+    </Modal>
+{/if}

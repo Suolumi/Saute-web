@@ -5,9 +5,13 @@
     import Button from '../../../../components/Button.svelte';
     import PageMeta from '../../../../components/PageMeta.svelte';
     import {getRecipes, type GetRecipesRequest, type RecipePreview, type RecipeType, type TimePreset} from "$lib/recipes";
+    import { shoppingList } from '$lib/shoppingList';
+    import { user } from '$lib/stores';
     import { _, locale } from 'svelte-i18n';
     import { goto } from '$app/navigation';
-    import { Plus, SearchX } from '@lucide/svelte';
+    import { Plus, SearchX, ShoppingCart } from '@lucide/svelte';
+
+    let shoppingListRecipeCount = $derived(new Set($shoppingList.map(e => e.recipeId)).size);
 
     const PAGE_SIZE = 24;
 
@@ -17,6 +21,7 @@
     let ingredients: string[] = $state([]);
     let timeBasis: 'prep' | 'total' = $state('total');
     let timeTarget: TimePreset = $state('any');
+    let popular = $state(false);
 
     let recipes: RecipePreview[] = $state([])
     let totalCount: number | undefined = $state(undefined);
@@ -36,7 +41,9 @@
             request.author = author
         if (ingredients.length > 0)
             request.ingredients = ingredients
-        if (timeTarget === 'quick') {
+        if (popular) {
+            request.popular = true
+        } else if (timeTarget === 'quick') {
             if (timeBasis === 'prep')
                 request.quickest_prep = true
             else
@@ -85,7 +92,7 @@
     }
 
     $effect(() => {
-        searchTerm; selectedType; $locale; author; ingredients; timeBasis; timeTarget;
+        searchTerm; selectedType; $locale; author; ingredients; timeBasis; timeTarget; popular;
         untrack(() => {
             recipes = []
             hasMore = true
@@ -113,10 +120,27 @@
             <h1 class="text-4xl font-bold text-foreground mb-4 text-balance">{$_('home.mainText')}</h1>
             <p class="text-xl text-muted-foreground text-pretty">{$_('home.secondaryText')}</p>
         </div>
-        <Button onclick={() => goto(`/${$locale}/create`)} class="flex items-center gap-2 whitespace-nowrap">
-            <Plus class="w-4 h-4" />
-            {$_('header.createRecipe')}
-        </Button>
+        <div class="flex items-center gap-3 flex-wrap">
+            {#if $user}
+                <Button
+                        variant="outline"
+                        onclick={() => goto(`/${$locale}/shopping-list`)}
+                        class="flex items-center gap-2 whitespace-nowrap"
+                >
+                    <ShoppingCart class="w-4 h-4" />
+                    {$_('shoppingList.navButton')}
+                    {#if shoppingListRecipeCount > 0}
+                        <span class="bg-primary/10 text-primary rounded-full px-2 py-0.5 text-xs font-semibold">
+                            {shoppingListRecipeCount}
+                        </span>
+                    {/if}
+                </Button>
+            {/if}
+            <Button onclick={() => goto(`/${$locale}/create`)} class="flex items-center gap-2 whitespace-nowrap">
+                <Plus class="w-4 h-4" />
+                {$_('header.createRecipe')}
+            </Button>
+        </div>
     </div>
 
     <RecipeFilters
@@ -126,6 +150,7 @@
             bind:ingredients
             bind:timeBasis
             bind:timeTarget
+            bind:popular
             searchPlaceholder={$_('home.search')}
             ingredientsLabel={$_('home.ingredients')}
             ingredientsPlaceholder={$_('home.ingredientsPlaceholder')}

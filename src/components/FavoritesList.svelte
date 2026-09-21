@@ -32,6 +32,7 @@
     let ingredients: string[] = $state([]);
     let timeBasis: 'prep' | 'total' = $state('total');
     let timeTarget: TimePreset = $state('any');
+    let popular = $state(false);
 
     let recipes: RecipePreview[] = $state([])
     let totalCount: number | undefined = $state(undefined);
@@ -51,7 +52,9 @@
             request.author = author
         if (ingredients.length > 0)
             request.ingredients = ingredients
-        if (showTime && timeTarget === 'quick') {
+        if (popular) {
+            request.popular = true
+        } else if (showTime && timeTarget === 'quick') {
             if (timeBasis === 'prep')
                 request.quickest_prep = true
             else
@@ -108,7 +111,7 @@
     }
 
     $effect(() => {
-        category; searchTerm; selectedType; $locale; author; ingredients; timeBasis; timeTarget;
+        category; searchTerm; selectedType; $locale; author; ingredients; timeBasis; timeTarget; popular;
         untrack(() => {
             recipes = []
             hasMore = true
@@ -137,6 +140,7 @@
         bind:ingredients
         bind:timeBasis
         bind:timeTarget
+        bind:popular
         {searchPlaceholder}
         {ingredientsLabel}
         {ingredientsPlaceholder}

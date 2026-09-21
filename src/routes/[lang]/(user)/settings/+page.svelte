@@ -1,11 +1,12 @@
 <script lang="ts">
     import Button from '../../../../components/Button.svelte';
     import RecipeCard from '../../../../components/RecipeCard.svelte';
+    import RecipeFilters from '../../../../components/RecipeFilters.svelte';
     import RecipePickerModal from '../../../../components/RecipePickerModal.svelte';
     import {goto} from "$app/navigation";
-    import {getRecipes, linkRecipeVariation, type RecipeCategory, type RecipePreview} from "$lib/recipes";
+    import {getRecipes, linkRecipeVariation, type GetRecipesRequest, type RecipeCategory, type RecipePreview, type RecipeType, type TimePreset} from "$lib/recipes";
     import {user} from "$lib/stores";
-    import { SquarePen, Trash, MoreVertical, Link2 } from '@lucide/svelte';
+    import { SquarePen, Trash, MoreVertical, Link2, SearchX } from '@lucide/svelte';
     import {toastError, toastSuccess} from "$lib/utils";
     import {apiErrorMessage} from "$lib/api";
     import {locale, _} from "svelte-i18n";
@@ -13,14 +14,21 @@
     import {deleteRecipe} from "$lib/recipes";
 
     let userRecipes: RecipePreview[] = $state([])
+    let loading = $state(false)
+    let searchTerm = $state('')
+    let selectedType = $state('all')
+    let ingredients: string[] = $state([])
+    let timeBasis: 'prep' | 'total' = $state('total')
+    let timeTarget: TimePreset = $state('any')
+    let popular = $state(false)
     let categoryFilter: 'all' | RecipeCategory = $state('all')
-    // A recipe with no category at all predates this field and counts as
-    // food (see the backend's own $ne-based default-listing filter) -
-    // otherwise legacy recipes would vanish from the "Food" tab.
+    // The backend's own_recipes listing only narrows server-side for an
+    // explicit "diy" category (see GetRecipesRequest.Category) - "food"
+    // still needs a client-side pass, since a recipe predating the category
+    // field counts as food (matching the backend's own $ne-based default-
+    // listing filter) and the server has no way to express that as a query.
     const matchesCategoryFilter = (r: RecipePreview) =>
-        categoryFilter === 'all' ||
-        (categoryFilter === 'food' && (!r.category || r.category === 'food')) ||
-        r.category === categoryFilter
+        categoryFilter !== 'food' || !r.category || r.category === 'food'
     let filteredRecipes = $derived(userRecipes.filter(matchesCategoryFilter))
     let modal = $state({
         isOpen: false,
@@ -89,13 +97,46 @@
         })
     }
 
-    $effect(() => {
-        getRecipes({
+    function buildRequest(): GetRecipesRequest {
+        const request: GetRecipesRequest = {
             author: $user?.username ?? '',
             own_recipes: true,
-            limit: 100,
-            locale: $locale ?? 'en'
-        }).then(({response, data}) => {
+            // Only "diy" narrows server-side (see matchesCategoryFilter) -
+            // "all"/"food" both fetch every category and let the client
+            // filter handle "food".
+            category: categoryFilter === 'diy' ? 'diy' : undefined,
+        }
+        if (selectedType !== 'all')
+            request.kind = selectedType as RecipeType
+        if (searchTerm.length > 0)
+            request.title = searchTerm
+        if (ingredients.length > 0)
+            request.ingredients = ingredients
+        if (popular) {
+            request.popular = true
+        } else if (timeTarget === 'quick') {
+            if (timeBasis === 'prep')
+                request.quickest_prep = true
+            else
+                request.quickest_total = true
+        } else if (timeTarget !== 'any') {
+            const minutes = Number(timeTarget)
+            if (timeBasis === 'prep')
+                request.preparation_time = minutes
+            else
+                request.total_time = minutes
+        }
+        request.locale = $locale ?? 'en'
+        request.search_locale = $locale ?? 'en'
+        request.limit = 100
+        return request
+    }
+
+    $effect(() => {
+        categoryFilter; searchTerm; selectedType; ingredients; timeBasis; timeTarget; popular; $locale;
+        loading = true
+        getRecipes(buildRequest()).then(({response, data}) => {
+            loading = false
             if (response.ok && data)
                 userRecipes = data.items
             else
@@ -110,78 +151,105 @@
 
 <svelte:window onclick={closeMenu} />
 
-<!-- User's Recipes -->
-<div class="bg-card rounded-lg border border-border p-6">
-    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-4">
-        <h2 class="text-xl font-semibold text-card-foreground">{$_('settings.recipeCount')} ({filteredRecipes.length})</h2>
-        <div class="inline-flex rounded-lg border border-border p-1 self-start">
-            {#each [['all', 'settings.filterAll'], ['food', 'settings.filterFood'], ['diy', 'settings.filterDiy']] as [value, key] (value)}
+<div class="inline-flex rounded-lg border border-border p-1 mb-6">
+    {#each [['all', 'settings.filterAll'], ['food', 'settings.filterFood'], ['diy', 'settings.filterDiy']] as [value, key] (value)}
+        <button
+                type="button"
+                onclick={() => categoryFilter = value as 'all' | RecipeCategory}
+                class="px-3 py-1.5 text-sm font-medium rounded-md transition-colors hover:cursor-pointer {categoryFilter === value ? 'bg-primary text-primary-foreground' : 'text-muted-foreground hover:text-foreground'}"
+        >
+            {$_(key)}
+        </button>
+    {/each}
+</div>
+
+<RecipeFilters
+        bind:searchTerm
+        bind:selectedType
+        bind:ingredients
+        bind:timeBasis
+        bind:timeTarget
+        bind:popular
+        author=""
+        showAuthor={false}
+        searchPlaceholder={$_('home.search')}
+        ingredientsLabel={$_('home.ingredients')}
+        ingredientsPlaceholder={$_('home.ingredientsPlaceholder')}
+/>
+
+{#if !loading}
+    <p class="text-sm text-muted-foreground mb-4">{$_('home.resultCount', {values: {count: filteredRecipes.length}})}</p>
+{/if}
+
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+    {#each filteredRecipes as recipe}
+        <div class="relative h-full">
+            <RecipeCard {recipe} disabled={false} />
+            <div class="absolute top-2 right-2">
                 <button
                         type="button"
-                        onclick={() => categoryFilter = value as 'all' | RecipeCategory}
-                        class="px-3 py-1.5 text-sm font-medium rounded-md transition-colors hover:cursor-pointer {categoryFilter === value ? 'bg-primary text-primary-foreground' : 'text-muted-foreground hover:text-foreground'}"
+                        onclick={(e: MouseEvent) => { e.stopPropagation(); toggleMenu(recipe.id); }}
+                        class="p-2 rounded-lg bg-card/90 hover:bg-card border border-border hover:cursor-pointer"
+                        aria-label={$_('settings.actions.menu')}
                 >
-                    {$_(key)}
+                    <MoreVertical class="text-black dark:text-white" size="16" />
                 </button>
-            {/each}
-        </div>
-    </div>
-
-    {#if filteredRecipes.length > 0}
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {#each filteredRecipes as recipe}
-                <div class="relative h-full">
-                    <RecipeCard {recipe} disabled={false} />
-                    <div class="absolute top-2 right-2">
+                {#if openMenuId === recipe.id}
+                    <div class="absolute right-0 mt-1 w-48 rounded-lg border border-border bg-card shadow-lg py-1 z-10">
                         <button
                                 type="button"
-                                onclick={(e: MouseEvent) => { e.stopPropagation(); toggleMenu(recipe.id); }}
-                                class="p-2 rounded-lg bg-card/90 hover:bg-card border border-border hover:cursor-pointer"
-                                aria-label={$_('settings.actions.menu')}
+                                onclick={() => { closeMenu(); editRecipe(recipe.id); }}
+                                class="flex w-full items-center gap-2 px-3 py-2 text-sm text-card-foreground hover:bg-muted hover:cursor-pointer"
                         >
-                            <MoreVertical class="text-black dark:text-white" size="16" />
+                            <SquarePen size="16" />
+                            {$_('settings.actions.edit')}
                         </button>
-                        {#if openMenuId === recipe.id}
-                            <div class="absolute right-0 mt-1 w-48 rounded-lg border border-border bg-card shadow-lg py-1 z-10">
-                                <button
-                                        type="button"
-                                        onclick={() => { closeMenu(); editRecipe(recipe.id); }}
-                                        class="flex w-full items-center gap-2 px-3 py-2 text-sm text-card-foreground hover:bg-muted hover:cursor-pointer"
-                                >
-                                    <SquarePen size="16" />
-                                    {$_('settings.actions.edit')}
-                                </button>
-                                <button
-                                        type="button"
-                                        onclick={() => openLinkPicker(recipe)}
-                                        class="flex w-full items-center gap-2 px-3 py-2 text-sm text-card-foreground hover:bg-muted hover:cursor-pointer"
-                                >
-                                    <Link2 size="16" />
-                                    {$_('settings.actions.linkAsVariation')}
-                                </button>
-                                <button
-                                        type="button"
-                                        onclick={() => { closeMenu(); modal = {isOpen: true, recipeId: recipe.id}; }}
-                                        class="flex w-full items-center gap-2 px-3 py-2 text-sm text-destructive hover:bg-muted hover:cursor-pointer"
-                                >
-                                    <Trash size="16" />
-                                    {$_('settings.actions.remove')}
-                                </button>
-                            </div>
-                        {/if}
+                        <button
+                                type="button"
+                                onclick={() => openLinkPicker(recipe)}
+                                class="flex w-full items-center gap-2 px-3 py-2 text-sm text-card-foreground hover:bg-muted hover:cursor-pointer"
+                        >
+                            <Link2 size="16" />
+                            {$_('settings.actions.linkAsVariation')}
+                        </button>
+                        <button
+                                type="button"
+                                onclick={() => { closeMenu(); modal = {isOpen: true, recipeId: recipe.id}; }}
+                                class="flex w-full items-center gap-2 px-3 py-2 text-sm text-destructive hover:bg-muted hover:cursor-pointer"
+                        >
+                            <Trash size="16" />
+                            {$_('settings.actions.remove')}
+                        </button>
                     </div>
-                </div>
-            {/each}
+                {/if}
+            </div>
         </div>
-    {:else}
-        <div class="text-center py-8">
+    {/each}
+</div>
+
+{#if !loading && filteredRecipes.length === 0}
+    {#if userRecipes.length === 0 && searchTerm.length === 0 && categoryFilter === 'all'}
+        <div class="text-center py-12">
             <p class="text-muted-foreground mb-4">{$_('settings.noRecipes')}</p>
             <Button onclick={() => goto(`/${$locale}/create`)}>
                 {$_('settings.createRecipe')}
             </Button>
         </div>
+    {:else}
+        <div class="text-center py-12">
+            <SearchX class="mx-auto w-16 h-16 text-muted-foreground mb-4" />
+            <h3 class="text-xl font-semibold text-foreground mb-2">{$_('home.notFound')}</h3>
+            <p class="text-muted-foreground">{$_('home.adjustSearch')}</p>
+        </div>
     {/if}
-</div>
+{/if}
+
+{#if loading}
+    <div class="flex justify-center py-8">
+        <div class="w-8 h-8 border-2 border-border border-t-foreground rounded-full animate-spin"></div>
+    </div>
+{/if}
+
 <Modal open={modal.isOpen} onClose={() => modal.isOpen = false} title={$_('settings.delete.title')}>
     <div class="flex justify-between">
         <Button

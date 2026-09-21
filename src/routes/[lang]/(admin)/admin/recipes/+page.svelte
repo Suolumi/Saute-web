@@ -19,6 +19,7 @@
     let ingredients: string[] = $state([]);
     let timeBasis: 'prep' | 'total' = $state('total');
     let timeTarget: TimePreset = $state('any');
+    let popular = $state(false);
 
     let recipes: RecipePreview[] = $state([]);
     let total = $state(0);
@@ -31,10 +32,11 @@
             author: author || undefined,
             kind: selectedType !== 'all' ? (selectedType as RecipeType) : undefined,
             ingredients: ingredients.length > 0 ? ingredients : undefined,
-            quickest_prep: timeTarget === 'quick' && timeBasis === 'prep' ? true : undefined,
-            quickest_total: timeTarget === 'quick' && timeBasis === 'total' ? true : undefined,
-            preparation_time: timeTarget !== 'any' && timeTarget !== 'quick' && timeBasis === 'prep' ? Number(timeTarget) : undefined,
-            total_time: timeTarget !== 'any' && timeTarget !== 'quick' && timeBasis === 'total' ? Number(timeTarget) : undefined,
+            popular: popular || undefined,
+            quickest_prep: !popular && timeTarget === 'quick' && timeBasis === 'prep' ? true : undefined,
+            quickest_total: !popular && timeTarget === 'quick' && timeBasis === 'total' ? true : undefined,
+            preparation_time: !popular && timeTarget !== 'any' && timeTarget !== 'quick' && timeBasis === 'prep' ? Number(timeTarget) : undefined,
+            total_time: !popular && timeTarget !== 'any' && timeTarget !== 'quick' && timeBasis === 'total' ? Number(timeTarget) : undefined,
             limit: PAGE_SIZE, offset, locale: $locale ?? undefined,
         }).then(({response, data}) => {
             if (response.ok && data) {
@@ -47,7 +49,7 @@
     }
 
     $effect(() => {
-        searchTerm; selectedType; author; ingredients; timeBasis; timeTarget;
+        searchTerm; selectedType; author; ingredients; timeBasis; timeTarget; popular;
         untrack(() => {
             offset = 0;
             load();
@@ -91,6 +93,7 @@
             bind:ingredients
             bind:timeBasis
             bind:timeTarget
+            bind:popular
             searchPlaceholder={$_('admin.recipes.searchPlaceholder')}
             ingredientsLabel={$_('home.ingredients')}
             ingredientsPlaceholder={$_('home.ingredientsPlaceholder')}

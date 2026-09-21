@@ -13,7 +13,7 @@
     let familyRoot: Recipe | null = $state(null);
     let familyVariations: RecipePreview[] = $state([]);
     let selectedId: string | null = $state(null);
-    let selectedRecipe: Recipe | null = $state(null);
+    let selectedRecipe = $state<Recipe | null>(null);
     let variantChosen = $state(false);
 
     const refId = $derived(ingredient.recipe_ref!);

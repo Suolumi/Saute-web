@@ -123,6 +123,35 @@
         <h2 class="text-xl font-semibold text-card-foreground mb-4">{$_('settings.info')}</h2>
 
         <form class="space-y-4" onsubmit={updateProfile}>
+            <div>
+                <Label>{$_('settings.picture.label')}</Label>
+                <div class="flex items-center gap-3 mt-1">
+                    <button
+                            type="button"
+                            onclick={triggerFileInput}
+                            class="relative group cursor-pointer shrink-0"
+                            aria-label="Upload profile picture"
+                    >
+                        {#if $user && $user.picture}
+                            <img
+                                    src={`${$serverUrl}/pictures/${$user.picture}` || "/placeholder.svg"}
+                                    alt="{$user.username} profile"
+                                    class="w-12 h-12 rounded-full object-cover transition-colors"
+                            />
+                        {:else}
+                            <div class="w-12 h-12 rounded-full bg-primary text-primary-foreground flex items-center justify-center text-lg font-medium">
+                                {($user?.username ?? '?').charAt(0)}
+                            </div>
+                        {/if}
+                        <span class="absolute inset-0 rounded-full bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                            <Camera size="16" color="white" />
+                        </span>
+                    </button>
+                    <Button type="button" variant="outline" size="sm" onclick={triggerFileInput}>
+                        {$_('settings.picture.change')}
+                    </Button>
+                </div>
+            </div>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                     <Label for="username" required>{$_('settings.username.label')}</Label>
@@ -146,14 +175,16 @@
                 </div>
             </div>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <Label for="email" required>{$_('settings.password.label')}</Label>
-                <Input
-                        id="password"
-                        type="password"
-                        bind:value={userForm.password}
-                        required
-                        placeholder={$_('settings.password.placeholder')}
-                />
+                <div>
+                    <Label for="password" required>{$_('settings.password.label')}</Label>
+                    <Input
+                            id="password"
+                            type="password"
+                            bind:value={userForm.password}
+                            required
+                            placeholder={$_('settings.password.placeholder')}
+                    />
+                </div>
             </div>
             <Button type="submit">
                 {$_('settings.submit')}

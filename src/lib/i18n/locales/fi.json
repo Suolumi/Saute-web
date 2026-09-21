@@ -62,6 +62,7 @@
     "totalTime": "Kokonaisaika",
     "closestMatch": "Lähimmät tulokset näytetään ensin",
     "quickestMatch": "Nopeimmat reseptit näytetään ensin",
+    "mostPopular": "Suosituimmat",
     "clearAll": "Tyhjennä kaikki",
     "timeAny": "Mikä tahansa aika",
     "timeQuick": "Nopein",
@@ -150,6 +151,10 @@
       "description": "Hallinnoi Sauté-tiliäsi ja reseptejäsi."
     },
     "info": "Profiili",
+    "picture": {
+      "label": "Profiilikuva",
+      "change": "Vaihda kuva"
+    },
     "username": {
       "label": "Käyttäjänimi",
       "placeholder": "esim. jane_meikalainen"
@@ -177,7 +182,6 @@
         "description": "Suosikeiksi merkitsemäsi reseptit ja DIY-projektit näkyvät täällä."
       }
     },
-    "recipeCount": "Reseptisi",
     "noRecipes": "Et ole vielä luonut reseptejä.",
     "createRecipe": "Luo ensimmäinen reseptisi",
     "delete": {
@@ -217,15 +221,26 @@
     "ingredients": "Ainekset",
     "instructions": "Ohjeet",
     "stepPhoto": "Vaiheen {step} kuva",
+    "stepDone": "Merkitse vaihe {step} valmiiksi",
     "notFound": "Reseptiä ei löytynyt",
     "variations": "Muunnelmat",
     "variationBanner": "Tämä on muunnelma toisesta reseptistä.",
     "viewOriginal": "Näytä alkuperäinen resepti",
     "submitVariation": "Ehdota muunnelmaa",
+    "share": "Jaa",
+    "linkCopied": "Linkki kopioitu leikepöydälle",
+    "shareError": "Reseptin jakaminen epäonnistui",
     "referenceExpand": "Näytä ainekset",
     "referenceCollapse": "Piilota ainekset",
     "keepAwakeOn": "Estä näytön sammuminen",
     "keepAwakeOff": "Salli näytön sammuminen",
+    "cookMode": "Kokkaustila",
+    "cookModeExit": "Poistu kokkaustilasta",
+    "cookModeStepOf": "Vaihe {current}/{total}",
+    "cookModePrevStep": "Edellinen vaihe",
+    "cookModeNextStep": "Seuraava vaihe",
+    "cookModeGoToStep": "Siirry vaiheeseen {step}",
+    "cookModeIngredients": "Ainekset",
     "addPhoto": "Lisää kuva",
     "removePhoto": "Poista kuva",
     "photoAddedBy": "Lisännyt {username}",
@@ -271,7 +286,14 @@
         "searchPlaceholder": "Etsi reseptejä...",
         "noResults": "Reseptejä ei löytynyt",
         "error": "Reseptejä ei voitu hakea",
-        "variationBadge": "Versio"
+        "variationBadge": "Versio",
+        "cancel": "Peruuta",
+        "alreadyAdded": "Jo listallasi",
+        "addSelected": "Lisää {count} valittua",
+        "chooseVariation": "Valitse versio",
+        "chooseVariationDescription": "Tällä reseptillä on useita versioita - valitse lisättävä(t).",
+        "back": "Takaisin",
+        "backToList": "Takaisin listaan"
       },
       "refLabel": {
         "label": "Mukautettu nimike (valinnainen)",
@@ -744,6 +766,33 @@
         "title": "Yhdistä tekoälyavustaja",
         "description": "Luo henkilökohtainen käyttöoikeustunnus Yhdistä tekoäly -sivulta, jotta tekoälytyökalu voi lukea, hakea ja luoda reseptejä tilillesi puolestasi."
       }
+    }
+  },
+  "shoppingList": {
+    "navButton": "Ostoslista",
+    "meta": {
+      "title": "Ostoslista",
+      "description": "Valitsemiesi reseptien ainekset yhdistettynä yhdeksi ostoslistaksi."
+    },
+    "title": "Ostoslista",
+    "addRecipes": "Lisää reseptejä",
+    "addError": "Reseptin lisääminen ostoslistalle epäonnistui",
+    "clearAll": "Tyhjennä kaikki",
+    "clearChecked": "Poista merkityt",
+    "removeRecipe": "Poista resepti",
+    "recipesTitle": "Listan reseptit",
+    "ingredientsTitle": "Ainekset",
+    "empty": {
+      "title": "Ostoslistasi on tyhjä",
+      "description": "Lisää reseptejä koostaaksesi yhdistetyn ainesosalistan kauppaa varten."
+    },
+    "unauthorized": {
+      "title": "Kirjaudu sisään käyttääksesi ostoslistaa",
+      "description": "Kirjaudu sisään aloittaaksesi ostoslistan kokoamisen suosikkiresepteistäsi."
+    },
+    "picker": {
+      "title": "Lisää reseptejä ostoslistalle",
+      "description": "Hae ja valitse reseptejä - valitse tietty versio resepteille, joilla on useita muunnelmia."
     }
   }
 }

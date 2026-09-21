@@ -62,6 +62,7 @@
     "totalTime": "Total time",
     "closestMatch": "Closest matches shown first",
     "quickestMatch": "Fastest recipes shown first",
+    "mostPopular": "Most Popular",
     "clearAll": "Clear all",
     "timeAny": "Any time",
     "timeQuick": "Quickest",
@@ -150,6 +151,10 @@
       "description": "Manage your Sauté account and recipes."
     },
     "info": "Profile",
+    "picture": {
+      "label": "Profile picture",
+      "change": "Change photo"
+    },
     "username": {
       "label": "Username",
       "placeholder": "e.g. jane_doe"
@@ -183,7 +188,6 @@
         "description": "Recipes and DIY projects you favorite will show up here."
       }
     },
-    "recipeCount": "Your Recipes",
     "noRecipes": "You haven't created any recipes yet.",
     "createRecipe": "Create Your First Recipe",
     "filterAll": "All",
@@ -217,15 +221,26 @@
     "ingredients": "Ingredients",
     "instructions": "Instructions",
     "stepPhoto": "Step {step} photo",
+    "stepDone": "Mark step {step} as done",
     "notFound": "Recipe not found",
     "variations": "Variations",
     "variationBanner": "This is a variation of another recipe.",
     "viewOriginal": "View the original",
     "submitVariation": "Submit a variation",
+    "share": "Share",
+    "linkCopied": "Link copied to clipboard",
+    "shareError": "Could not share this recipe",
     "referenceExpand": "Show ingredients",
     "referenceCollapse": "Hide ingredients",
     "keepAwakeOn": "Keep screen awake",
     "keepAwakeOff": "Allow screen to sleep",
+    "cookMode": "Cook",
+    "cookModeExit": "Exit cook mode",
+    "cookModeStepOf": "Step {current} of {total}",
+    "cookModePrevStep": "Previous step",
+    "cookModeNextStep": "Next step",
+    "cookModeGoToStep": "Go to step {step}",
+    "cookModeIngredients": "Ingredients",
     "addPhoto": "Add a photo",
     "removePhoto": "Remove photo",
     "photoAddedBy": "Added by {username}",
@@ -271,7 +286,14 @@
         "searchPlaceholder": "Search recipes...",
         "noResults": "No recipes found",
         "error": "Couldn't search recipes",
-        "variationBadge": "Variation"
+        "variationBadge": "Variation",
+        "cancel": "Cancel",
+        "alreadyAdded": "Already on your list",
+        "addSelected": "Add {count} selected",
+        "chooseVariation": "Choose a version",
+        "chooseVariationDescription": "This recipe has multiple versions - pick which one(s) to add.",
+        "back": "Back",
+        "backToList": "Back to list"
       },
       "refLabel": {
         "label": "Custom label (optional)",
@@ -744,6 +766,33 @@
         "title": "Connect an AI Assistant",
         "description": "Generate a personal access token from the Connect to AI page so an AI tool can read, search, and create recipes on your account for you."
       }
+    }
+  },
+  "shoppingList": {
+    "navButton": "Shopping List",
+    "meta": {
+      "title": "Shopping List",
+      "description": "Ingredients from the recipes you've picked, merged into one list for grocery shopping."
+    },
+    "title": "Shopping List",
+    "addRecipes": "Add recipes",
+    "addError": "Couldn't add this recipe to your shopping list",
+    "clearAll": "Clear all",
+    "clearChecked": "Clear checked",
+    "removeRecipe": "Remove recipe",
+    "recipesTitle": "Recipes in this list",
+    "ingredientsTitle": "Ingredients",
+    "empty": {
+      "title": "Your shopping list is empty",
+      "description": "Add recipes to build a merged ingredient list for grocery shopping."
+    },
+    "unauthorized": {
+      "title": "Log in to use your shopping list",
+      "description": "Log in to start building a shopping list from your favorite recipes."
+    },
+    "picker": {
+      "title": "Add recipes to your shopping list",
+      "description": "Search and select recipes - pick a specific version for recipes with multiple variations."
     }
   }
 }

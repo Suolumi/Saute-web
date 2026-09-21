@@ -4,7 +4,7 @@ import { env } from '$env/dynamic/public';
 import type {User} from "$lib/user";
 import type {RecipeForm} from "$lib/recipes";
 
-const jsonParser = {
+export const jsonParser = {
     parse: (text: any) => {
         try {
             return JSON.parse(text);

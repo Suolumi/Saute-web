@@ -62,6 +62,7 @@
     "totalTime": "Temps total",
     "closestMatch": "Résultats les plus proches affichés en premier",
     "quickestMatch": "Recettes les plus rapides affichées en premier",
+    "mostPopular": "Les plus populaires",
     "clearAll": "Tout effacer",
     "timeAny": "N'importe quand",
     "timeQuick": "Le plus rapide",
@@ -150,6 +151,10 @@
       "description": "Gérez votre compte et vos recettes Sauté."
     },
     "info": "Profil",
+    "picture": {
+      "label": "Photo de profil",
+      "change": "Changer la photo"
+    },
     "username": {
       "label": "Nom d'utilisateur",
       "placeholder": "ex. jane_dupont"
@@ -177,7 +182,6 @@
         "description": "Les recettes et projets de bricolage que vous mettez en favori apparaîtront ici."
       }
     },
-    "recipeCount": "Vos recettes",
     "noRecipes": "Vous n'avez pas encore créé de recettes.",
     "createRecipe": "Créez votre première recette",
     "delete": {
@@ -217,15 +221,26 @@
     "ingredients": "Ingrédients",
     "instructions": "Instructions",
     "stepPhoto": "Photo de l'étape {step}",
+    "stepDone": "Marquer l'étape {step} comme terminée",
     "notFound": "Recette non trouvée",
     "variations": "Variantes",
     "variationBanner": "Ceci est une variante d'une autre recette.",
     "viewOriginal": "Voir la recette originale",
     "submitVariation": "Proposer une variante",
+    "share": "Partager",
+    "linkCopied": "Lien copié dans le presse-papiers",
+    "shareError": "Impossible de partager cette recette",
     "referenceExpand": "Afficher les ingrédients",
     "referenceCollapse": "Masquer les ingrédients",
     "keepAwakeOn": "Empêcher la mise en veille de l'écran",
     "keepAwakeOff": "Autoriser la mise en veille de l'écran",
+    "cookMode": "Cuisiner",
+    "cookModeExit": "Quitter le mode cuisine",
+    "cookModeStepOf": "Étape {current} sur {total}",
+    "cookModePrevStep": "Étape précédente",
+    "cookModeNextStep": "Étape suivante",
+    "cookModeGoToStep": "Aller à l'étape {step}",
+    "cookModeIngredients": "Ingrédients",
     "addPhoto": "Ajouter une photo",
     "removePhoto": "Supprimer la photo",
     "photoAddedBy": "Ajoutée par {username}",
@@ -271,7 +286,14 @@
         "searchPlaceholder": "Rechercher des recettes...",
         "noResults": "Aucune recette trouvée",
         "error": "Impossible de rechercher des recettes",
-        "variationBadge": "Variante"
+        "variationBadge": "Variante",
+        "cancel": "Annuler",
+        "alreadyAdded": "Déjà dans votre liste",
+        "addSelected": "Ajouter {count} sélection(s)",
+        "chooseVariation": "Choisir une version",
+        "chooseVariationDescription": "Cette recette a plusieurs versions - choisissez celle(s) à ajouter.",
+        "back": "Retour",
+        "backToList": "Retour à la liste"
       },
       "refLabel": {
         "label": "Libellé personnalisé (optionnel)",
@@ -744,6 +766,33 @@
         "title": "Connecter un assistant IA",
         "description": "Générez un jeton d'accès personnel depuis la page Connecter une IA pour qu'un outil d'IA puisse lire, rechercher et créer des recettes sur votre compte, pour vous."
       }
+    }
+  },
+  "shoppingList": {
+    "navButton": "Liste de courses",
+    "meta": {
+      "title": "Liste de courses",
+      "description": "Les ingrédients des recettes choisies, réunis en une seule liste pour faire les courses."
+    },
+    "title": "Liste de courses",
+    "addRecipes": "Ajouter des recettes",
+    "addError": "Impossible d'ajouter cette recette à la liste de courses",
+    "clearAll": "Tout effacer",
+    "clearChecked": "Effacer les éléments cochés",
+    "removeRecipe": "Retirer la recette",
+    "recipesTitle": "Recettes de cette liste",
+    "ingredientsTitle": "Ingrédients",
+    "empty": {
+      "title": "Votre liste de courses est vide",
+      "description": "Ajoutez des recettes pour créer une liste d'ingrédients fusionnée pour faire les courses."
+    },
+    "unauthorized": {
+      "title": "Connectez-vous pour utiliser votre liste de courses",
+      "description": "Connectez-vous pour commencer à créer une liste de courses à partir de vos recettes préférées."
+    },
+    "picker": {
+      "title": "Ajouter des recettes à la liste de courses",
+      "description": "Recherchez et sélectionnez des recettes - choisissez une version précise pour les recettes à variations."
     }
   }
 }

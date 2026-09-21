@@ -19,14 +19,17 @@
         unfavoriteRecipe
     } from "$lib/recipes";
     import emblaCarouselSvelte from "embla-carousel-svelte";
-    import {FileText, List, Users, Wind, Flame, Clock, ArrowLeft, ArrowRight, Heart, Minus, Plus, Coffee, Camera, X} from "@lucide/svelte";
+    import {FileText, List, Users, Wind, Flame, Clock, ArrowLeft, ArrowRight, Heart, Minus, Plus, Coffee, Camera, Share2, X, ChefHat} from "@lucide/svelte";
     import {serverUrl, user} from "$lib/stores";
     import {_, locale} from "svelte-i18n";
-    import {toastError} from "$lib/utils";
+    import {toastError, toastSuccess} from "$lib/utils";
     import Lightbox from "../../../../../components/Lightbox.svelte";
     import RecipeCard from "../../../../../components/RecipeCard.svelte";
     import RecipeRefIngredient from "../../../../../components/RecipeRefIngredient.svelte";
     import PageMeta from "../../../../../components/PageMeta.svelte";
+    import CookMode from "../../../../../components/CookMode.svelte";
+    import Checkbox from "../../../../../components/Checkbox.svelte";
+    import {recipeStepProgress, isStepDone, toggleStepDone} from "$lib/recipeProgress";
 
     let id = $derived(page.params.id)
     const { data } = $props()
@@ -67,6 +70,30 @@
     function submitVariation() {
         if (rootId)
             goto(`/${$locale}/create?variation_of=${rootId}`)
+    }
+
+    async function shareRecipe() {
+        if (!recipe)
+            return
+        const shareData = {
+            title: recipe.title,
+            text: recipe.description,
+            url: page.url.href,
+        };
+        if (navigator.share && navigator.canShare?.(shareData)) {
+            try {
+                await navigator.share(shareData);
+            } catch (e) {
+                if ((e as Error).name !== 'AbortError') toastError($_('recipe.shareError'));
+            }
+        } else {
+            try {
+                await navigator.clipboard.writeText(page.url.href);
+                toastSuccess($_('recipe.linkCopied'));
+            } catch (e) {
+                toastError($_('recipe.shareError'));
+            }
+        }
     }
 
     let ingredientGroups = $derived(groupIngredients(recipe?.ingredients ?? []));
@@ -273,6 +300,64 @@
         };
     });
 
+    // Cook mode's open/step state lives in the URL (?cookStep=<n>, 1-indexed)
+    // rather than local state, so a reload or shared link reopens it at the
+    // same step. Entering pushes one history entry; every step change after
+    // that replaces it in place (never pushes), so a single browser back
+    // press always exits cook mode outright, from any step. +page.server.ts
+    // only reads params (not searchParams), so these navigations never
+    // re-fetch the recipe.
+    const cookStepParam = $derived(page.url.searchParams.get('cookStep'));
+    const cookModeOpen = $derived(cookStepParam !== null && !!recipe && recipe.steps.length > 0);
+    const cookModeStartIndex = $derived.by(() => {
+        const total = recipe?.steps.length ?? 0;
+        if (total === 0)
+            return 0;
+        const requested = cookStepParam ? parseInt(cookStepParam, 10) : 1;
+        const step = Number.isFinite(requested) ? Math.min(Math.max(requested, 1), total) : 1;
+        return step - 1;
+    });
+
+    // Tracks whether *this* page instance pushed the cook-mode history entry
+    // (via the Cook button) as opposed to cook mode having been open on
+    // arrival (deep link / reload) - only then is it safe for the explicit
+    // close control to pop it with history.back() instead of replacing it.
+    let cookModeEnteredViaPush = $state(false);
+
+    $effect(() => {
+        if (!cookModeOpen)
+            cookModeEnteredViaPush = false;
+    });
+
+    function cookStepUrl(step: number | null): string {
+        const url = new URL(page.url);
+        if (step === null)
+            url.searchParams.delete('cookStep');
+        else
+            url.searchParams.set('cookStep', String(step));
+        return `${url.pathname}${url.search}`;
+    }
+
+    function openCookMode() {
+        if (!recipe || recipe.steps.length === 0)
+            return;
+        cookModeEnteredViaPush = true;
+        goto(cookStepUrl(1), {replaceState: false, noScroll: true, keepFocus: true});
+    }
+
+    function setCookModeStep(index: number) {
+        goto(cookStepUrl(index + 1), {replaceState: true, noScroll: true, keepFocus: true});
+    }
+
+    function closeCookMode() {
+        if (cookModeEnteredViaPush) {
+            cookModeEnteredViaPush = false;
+            history.back();
+        } else {
+            goto(cookStepUrl(null), {replaceState: true, noScroll: true, keepFocus: true});
+        }
+    }
+
     // Terminology lookup: for a diy-category recipe, tries `diyRecipe.<key>`
     // first and falls back to `recipe.<key>` when no diy-specific override
     // exists (svelte-i18n returns the key itself on a miss).
@@ -405,6 +490,14 @@
                                 {/if}
                             </button>
                         {/if}
+                        <button
+                                onclick={shareRecipe}
+                                class="bg-background hover:cursor-pointer hover:bg-accent border-2 border-primary text-primary hover:text-primary px-3 py-2 rounded-lg transition-all flex items-center gap-2 shadow-sm hover:shadow-md whitespace-nowrap"
+                                aria-label={$_('recipe.share')}
+                                title={$_('recipe.share')}
+                        >
+                            <Share2 size="20" />
+                        </button>
                         {#if $user}
                             <button
                                     onclick={submitVariation}
@@ -523,23 +616,45 @@
                             <List class="mr-3 text-primary" />
                             {$_('recipe.instructions')}
                         </h2>
-                        {#if wakeLockSupported}
-                            <button
-                                    onclick={toggleWakeLock}
-                                    class="hover:cursor-pointer border-2 px-3 py-2 rounded-lg transition-all flex items-center gap-2 shadow-sm hover:shadow-md whitespace-nowrap {wakeLockActive ? 'bg-primary text-primary-foreground border-primary' : 'bg-background hover:bg-accent border-primary text-primary'}"
-                                    aria-pressed={wakeLockActive}
-                                    aria-label={$_(wakeLockActive ? 'recipe.keepAwakeOff' : 'recipe.keepAwakeOn')}
-                                    title={$_(wakeLockActive ? 'recipe.keepAwakeOff' : 'recipe.keepAwakeOn')}
-                            >
-                                <Coffee size="18" fill={wakeLockActive ? 'currentColor' : 'none'} />
-                                <span class="text-sm font-medium">{$_(wakeLockActive ? 'recipe.keepAwakeOff' : 'recipe.keepAwakeOn')}</span>
-                            </button>
-                        {/if}
+                        <div class="flex items-center gap-2 flex-wrap">
+                            {#if recipe.steps.length > 0}
+                                <button
+                                        type="button"
+                                        onclick={openCookMode}
+                                        class="hover:cursor-pointer border-2 border-primary bg-primary text-primary-foreground px-3 py-2 rounded-lg transition-all flex items-center gap-2 shadow-sm hover:shadow-md hover:bg-primary/90 whitespace-nowrap"
+                                        aria-label={t('cookMode')}
+                                        title={t('cookMode')}
+                                >
+                                    <ChefHat size="18" />
+                                    <span class="hidden sm:inline text-sm font-medium">{t('cookMode')}</span>
+                                </button>
+                            {/if}
+                            {#if wakeLockSupported}
+                                <button
+                                        onclick={toggleWakeLock}
+                                        class="hover:cursor-pointer border-2 px-3 py-2 rounded-lg transition-all flex items-center gap-2 shadow-sm hover:shadow-md whitespace-nowrap {wakeLockActive ? 'bg-primary text-primary-foreground border-primary' : 'bg-background hover:bg-accent border-primary text-primary'}"
+                                        aria-pressed={wakeLockActive}
+                                        aria-label={$_(wakeLockActive ? 'recipe.keepAwakeOff' : 'recipe.keepAwakeOn')}
+                                        title={$_(wakeLockActive ? 'recipe.keepAwakeOff' : 'recipe.keepAwakeOn')}
+                                >
+                                    <Coffee size="18" fill={wakeLockActive ? 'currentColor' : 'none'} />
+                                    <span class="text-sm font-medium">{$_(wakeLockActive ? 'recipe.keepAwakeOff' : 'recipe.keepAwakeOn')}</span>
+                                </button>
+                            {/if}
+                        </div>
                     </div>
 
                     <div class="space-y-4">
                         {#each recipe.steps as step, index}
+                            {@const done = isStepDone($recipeStepProgress, recipe.id, index)}
                             <div class="flex gap-4">
+                                <div class="pt-1 flex-shrink-0">
+                                    <Checkbox
+                                            checked={done}
+                                            onchange={() => toggleStepDone(recipe!.id, index)}
+                                            ariaLabel={$_('recipe.stepDone', {values: {step: index + 1}})}
+                                    />
+                                </div>
                                 {#if step.picture}
                                     <button
                                             type="button"
@@ -550,15 +665,15 @@
                                         <img
                                                 src={`${$serverUrl}/recipe-pictures/${step.picture}`}
                                                 alt={step.title || `Step ${index + 1}`}
-                                                class="w-20 h-20 sm:w-24 sm:h-24 object-cover rounded-lg border border-border hover:scale-105 transition-transform"
+                                                class="w-20 h-20 sm:w-24 sm:h-24 object-cover rounded-lg border border-border hover:scale-105 transition-transform {done ? 'opacity-50' : ''}"
                                         />
                                     </button>
                                 {/if}
-                                <div class="flex-1 min-w-0">
+                                <div class="flex-1 min-w-0 {done ? 'opacity-50' : ''}">
                                     <div class="font-bold text-sm">
                                         {step.title || `Step ${index + 1}`}
                                     </div>
-                                    <p class="text-card-foreground leading-relaxed pl-4 whitespace-pre-line">{step.description}</p>
+                                    <p class="text-card-foreground leading-relaxed pl-4 whitespace-pre-line {done ? 'line-through' : ''}">{step.description}</p>
                                 </div>
                             </div>
                         {/each}
@@ -599,6 +714,22 @@
             alt={recipe.title || 'Recipe Title'}
             onClose={() => stepLightboxPicture = null}
     />
+
+    {#if cookModeOpen}
+        <CookMode
+                recipeTitle={recipe.title}
+                steps={recipe.steps}
+                startIndex={cookModeStartIndex}
+                ingredients={recipe.ingredients}
+                {servingsRatio}
+                {wakeLockSupported}
+                {wakeLockActive}
+                {requestWakeLock}
+                {releaseWakeLock}
+                onStepChange={setCookModeStep}
+                onClose={closeCookMode}
+        />
+    {/if}
 {:else if recipe === null}
 <!--    @TODO skeleton loading-->
 {:else}

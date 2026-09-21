@@ -3,7 +3,7 @@
     import {serverUrl} from "$lib/stores";
     import {recipeTypeColors, RecipeTypes, TIME_PRESETS, type RecipeType, type TimePreset} from "$lib/recipes";
     import {_} from 'svelte-i18n';
-    import {Search, SlidersHorizontal, ChevronDown, User, X} from '@lucide/svelte';
+    import {Search, SlidersHorizontal, ChevronDown, User, X, Flame} from '@lucide/svelte';
 
     interface Props {
         searchTerm: string;
@@ -14,12 +14,23 @@
         // timeBasis/timeTarget are only read/written when showTime is true.
         timeBasis?: 'prep' | 'total';
         timeTarget?: TimePreset;
+        // popular sorts by favorite count descending instead of newest-first.
+        // Mutually exclusive with the ready-in time sort (see togglePopular/
+        // selectTimeTarget) - both are single "what order are results in"
+        // choices, so only one can be active.
+        popular?: boolean;
         // showKind hides the kind-pill row entirely when false (the diy
         // browse page doesn't filter by kind).
         showKind?: boolean;
         // showTime hides the "ready in" time filter entirely when false (the
         // diy browse page has no time filter - see current-state notes).
         showTime?: boolean;
+        // showAuthor hides the author sub-filter entirely when false - Settings'
+        // "My Recipes" always narrows to the caller's own username server-side,
+        // so exposing a free-text author filter there would let it be pointed at
+        // someone else's recipes while still showing owner-only actions (edit/
+        // remove/link) that only work on the caller's own.
+        showAuthor?: boolean;
         searchPlaceholder: string;
         ingredientsLabel: string;
         ingredientsPlaceholder: string;
@@ -32,8 +43,10 @@
         ingredients = $bindable([]),
         timeBasis = $bindable('total'),
         timeTarget = $bindable('any'),
+        popular = $bindable(false),
         showKind = true,
         showTime = true,
+        showAuthor = true,
         searchPlaceholder,
         ingredientsLabel,
         ingredientsPlaceholder,
@@ -48,8 +61,19 @@
     let ingredientInput = $state('');
 
     const hasActiveFilters = $derived(
-        (showKind && selectedType !== 'all') || author.length > 0 || ingredients.length > 0 || (showTime && timeTarget !== 'any')
+        (showKind && selectedType !== 'all') || (showAuthor && author.length > 0) || ingredients.length > 0 || (showTime && timeTarget !== 'any') || popular
     );
+
+    function togglePopular() {
+        popular = !popular
+        if (popular)
+            timeTarget = 'any'
+    }
+
+    function selectTimeTarget(preset: TimePreset) {
+        timeTarget = preset
+        popular = false
+    }
 
     function timeLabel(preset: TimePreset): string {
         if (preset === 'any') return $_('home.timeAny')
@@ -93,11 +117,13 @@
     function clearAllFilters() {
         if (showKind)
             selectedType = 'all'
-        clearAuthor()
+        if (showAuthor)
+            clearAuthor()
         ingredients = []
         ingredientInput = ''
         if (showTime)
             timeTarget = 'any'
+        popular = false
     }
 
     $effect(() => {
@@ -150,6 +176,16 @@
 
         <button
                 type="button"
+                onclick={togglePopular}
+                class="flex items-center justify-center gap-2 px-4 py-3 rounded-lg border-2 text-sm font-medium whitespace-nowrap transition-colors
+                    {popular ? 'bg-primary text-primary-foreground border-primary' : 'bg-background text-foreground border-border hover:bg-accent hover:text-accent-foreground'}"
+        >
+            <Flame class="w-4 h-4" />
+            {$_('home.mostPopular')}
+        </button>
+
+        <button
+                type="button"
                 onclick={() => filtersOpen = !filtersOpen}
                 class="flex items-center justify-center gap-2 px-4 py-3 rounded-lg border text-sm font-medium whitespace-nowrap transition-colors
                     {filtersOpen ? 'border-primary text-primary bg-background' : 'border-border text-foreground bg-background hover:bg-accent hover:text-accent-foreground'}"
@@ -179,6 +215,7 @@
 
     {#if filtersOpen}
         <div class="mt-4 pt-4 border-t border-border flex flex-wrap gap-6">
+            {#if showAuthor}
             <div class="flex flex-col gap-2 min-w-[220px] flex-1">
                 <label class="text-sm font-medium text-foreground" for="author-filter">{$_('home.author')}</label>
                 <div class="relative" bind:this={authorFieldRef}>
@@ -232,6 +269,7 @@
                     {/if}
                 </div>
             </div>
+            {/if}
 
             <div class="flex flex-col gap-2 min-w-[220px] flex-1">
                 <label class="text-sm font-medium text-foreground" for="ingredient-filter">{ingredientsLabel}</label>
@@ -286,7 +324,7 @@
                     {#each TIME_PRESETS as preset}
                         <button
                                 type="button"
-                                onclick={() => timeTarget = preset}
+                                onclick={() => selectTimeTarget(preset)}
                                 class="px-4 py-2 rounded-full text-sm font-medium border transition-colors
                                     {timeTarget === preset
                                         ? 'bg-primary text-primary-foreground border-primary'
@@ -317,7 +355,7 @@
                 </button>
             </span>
         {/if}
-        {#if author.length > 0}
+        {#if showAuthor && author.length > 0}
             <span class="inline-flex items-center gap-1.5 pl-3 pr-2 py-1.5 rounded-full bg-card border border-border text-sm text-foreground">
                 {$_('home.activeAuthor')}
                 <User class="w-3.5 h-3.5" />
@@ -339,6 +377,14 @@
             <span class="inline-flex items-center gap-1.5 pl-3 pr-2 py-1.5 rounded-full bg-card border border-border text-sm text-foreground">
                 {$_(timeBasis === 'prep' ? 'home.activeTimePrep' : 'home.activeTimeTotal', {values: {time: timeLabel(timeTarget)}})}
                 <button type="button" onclick={() => timeTarget = 'any'} class="p-1.5 -m-1.5 text-muted-foreground hover:text-foreground">
+                    <X class="w-3.5 h-3.5" />
+                </button>
+            </span>
+        {/if}
+        {#if popular}
+            <span class="inline-flex items-center gap-1.5 pl-3 pr-2 py-1.5 rounded-full bg-card border border-border text-sm text-foreground">
+                {$_('home.mostPopular')}
+                <button type="button" onclick={() => popular = false} class="p-1.5 -m-1.5 text-muted-foreground hover:text-foreground">
                     <X class="w-3.5 h-3.5" />
                 </button>
             </span>

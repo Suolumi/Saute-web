@@ -143,6 +143,10 @@ export type GetRecipesRequest = {
     // sends one or the other, never both, for a given basis.
     quickest_prep?: boolean
     quickest_total?: boolean
+    // popular sorts by favorite count descending ("Most Popular") instead of
+    // newest-first. Mutually exclusive with the ready-in time sort in
+    // practice - the filter UI only ever sends one of these sort choices.
+    popular?: boolean
     ingredients?: string[]
     kind?: RecipeType
     // category, omitted, lists the food feed (server excludes diy by

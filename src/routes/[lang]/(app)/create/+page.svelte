@@ -19,7 +19,7 @@
     // wrong category by an untrusted query param.
     let categoryParam = $derived((page.url.searchParams.get('category') as RecipeCategory | null) ?? 'food')
     let choiceMade = $state(false)
-    let seedRecipe: RecipeForm | undefined = $state(undefined)
+    let seedRecipe = $state<RecipeForm | undefined>(undefined)
     // Plain create (no variation_of) never needs a choice; a variation
     // target blocks rendering the form until "start blank"/"start from a
     // copy" is picked.
