@@ -1,6 +1,6 @@
 import {persisted} from 'svelte-persisted-store';
 import type {Ingredient} from '$lib/recipes';
-import {getIngredientName, getReferenceQuantity} from '$lib/recipes';
+import {getReferenceQuantity} from '$lib/recipes';
 import {jsonParser} from '$lib/stores';
 
 // One entry per (recipe, ingredient) added to the list. Entries are the
@@ -18,6 +18,10 @@ export type ShoppingListEntry = {
     // detail page's servings stepper works (selectedServings / recipe.quantity)
     // to compute this entry's scaling ratio.
     recipeQuantity: number
+    // recipePicture is the recipe's first picture filename at add-time (if
+    // it has one) - shown as a thumbnail in the "Recipes in this list"
+    // panel, same source as RecipeCard's own image.
+    recipePicture?: string
     ingredient: Ingredient
     servings: number
     checked: boolean
@@ -36,7 +40,7 @@ export function entryRatio(entry: ShoppingListEntry): number {
 // re-adding a recipe already on the list overwrites its prior entries
 // rather than duplicating them. In practice the recipe picker hides
 // recipes already on the list, so this mostly matters as a safety net.
-export function addRecipeToShoppingList(recipeId: string, recipeTitle: string, recipeQuantity: number, ingredients: Ingredient[]) {
+export function addRecipeToShoppingList(recipeId: string, recipeTitle: string, recipeQuantity: number, recipePicture: string | undefined, ingredients: Ingredient[]) {
     shoppingList.update(entries => [
         ...entries.filter(e => e.recipeId !== recipeId),
         ...ingredients.map(ingredient => ({
@@ -44,6 +48,7 @@ export function addRecipeToShoppingList(recipeId: string, recipeTitle: string, r
             recipeId,
             recipeTitle,
             recipeQuantity,
+            recipePicture,
             ingredient,
             servings: recipeQuantity,
             checked: false,
@@ -76,6 +81,7 @@ export type ShoppingListRecipeSummary = {
     recipeId: string
     recipeTitle: string
     recipeQuantity: number
+    recipePicture?: string
     servings: number
 }
 
@@ -90,10 +96,19 @@ export function buildRecipeSummaries(entries: ShoppingListEntry[]): ShoppingList
                 recipeId: entry.recipeId,
                 recipeTitle: entry.recipeTitle,
                 recipeQuantity: entry.recipeQuantity,
+                recipePicture: entry.recipePicture,
                 servings: entry.servings,
             })
     }
     return [...summaries.values()]
+}
+
+// capitalizeIngredientHeading normalizes a group heading's casing (shown
+// above its sub-lines when an ingredient has more than one unit variant,
+// e.g. "Flour" over "2 cups" / "4dl") - first letter uppercase, the rest
+// lowercase, regardless of how each contributing recipe typed the name.
+export function capitalizeIngredientHeading(name: string): string {
+    return name.length === 0 ? name : name.charAt(0).toUpperCase() + name.slice(1).toLowerCase()
 }
 
 export type ShoppingListSubLine = {
@@ -111,14 +126,10 @@ export type ShoppingListSubLine = {
 
 export type ShoppingListGroup = {
     key: string
-    // name is the heading text, only shown when subLines.length > 1.
+    // name is the ingredient name - rendered as a heading above subLines
+    // when there's more than one unit variant, or next to the single
+    // subLine's quantity badge otherwise (see the shopping-list page).
     name: string
-    // singleLineText is the fully-formatted single line ("2 cups flour"),
-    // set only when there's exactly one non-reference unit variant for this
-    // ingredient - avoids a redundant heading + one sub-line for the common
-    // case. null for reference ingredients (rendered with a recipe link
-    // instead) or when multiple unit variants exist (rendered as a heading).
-    singleLineText: string | null
     subLines: ShoppingListSubLine[]
 }
 
@@ -205,9 +216,10 @@ export function buildShoppingListGroups(entries: ShoppingListEntry[]): ShoppingL
 
     return [...groups.entries()]
         .sort(([a], [b]) => (firstSeenAt.get(a) ?? 0) - (firstSeenAt.get(b) ?? 0))
-        .map(([key, group]) => {
-            const rawSubLines = [...group.subLines.values()]
-            const subLines: ShoppingListSubLine[] = rawSubLines.map(sub => ({
+        .map(([key, group]) => ({
+            key,
+            name: group.name,
+            subLines: [...group.subLines.values()].map(sub => ({
                 key: sub.key,
                 text: sub.isReference
                     ? getReferenceQuantity({...sub.referenceIngredient!, quantity: sub.hasQuantity ? sub.quantity : 0}, 1)
@@ -217,15 +229,6 @@ export function buildShoppingListGroups(entries: ShoppingListEntry[]): ShoppingL
                 recipes: sub.recipes,
                 isReference: sub.isReference,
                 referenceId: sub.referenceId,
-            }))
-            const single = rawSubLines.length === 1 ? rawSubLines[0] : null
-            return {
-                key,
-                name: group.name,
-                singleLineText: single && !single.isReference
-                    ? getIngredientName({name: group.name, label: '', unit: single.unit, quantity: single.hasQuantity ? single.quantity : 0}, 1)
-                    : null,
-                subLines,
-            }
-        })
+            })),
+        }))
 }

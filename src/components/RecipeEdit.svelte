@@ -161,11 +161,15 @@
 
     // A cache entry that has no content is indistinguishable from the blank
     // bootstrap value written before the real recipe has loaded; treat it as
-    // "no draft" so it never shadows freshly-fetched data.
+    // "no draft" so it never shadows freshly-fetched data. The auto-grow
+    // wizard steps always leave one trailing placeholder ingredient/step in
+    // formData even when nothing's been typed, so a plain length check
+    // never sees that bootstrap value as blank - each list must be checked
+    // for actual content instead.
     function isBlank(data: RecipeForm): boolean {
         return !data.title && !data.description &&
-            (data.ingredients?.length ?? 0) === 0 &&
-            (data.steps?.length ?? 0) === 0 &&
+            (data.ingredients ?? []).every(isEmptyIngredient) &&
+            (data.steps ?? []).every(s => !s.title.trim() && !s.description.trim() && !s.picture) &&
             (data.pictures?.length ?? 0) === 0
     }
 
@@ -946,54 +950,56 @@
                                     data-row
                                     data-section={section.id}
                                     data-row-index={rowIndex}
-                                    class="grid grid-cols-12 gap-2 items-center p-2 rounded-lg border border-border bg-card transition-opacity touch-none {isRowDragged(ingredient) ? 'opacity-35' : ''}"
+                                    class="flex flex-col sm:grid sm:grid-cols-12 gap-2 sm:items-center p-2 rounded-lg border border-border bg-card transition-opacity touch-none {isRowDragged(ingredient) ? 'opacity-35' : ''}"
                                 >
-                                  {#if isPlaceholder}
-                                    <div class="col-span-1"></div>
-                                  {:else}
-                                    <button
-                                        type="button"
-                                        onpointerdown={(e) => startIngredientDrag(e, section.id, ingredient)}
-                                        onpointermove={handleDragPointerMove}
-                                        onpointerup={handleDragPointerUp}
-                                        onpointercancel={handleDragPointerUp}
-                                        class="col-span-1 flex items-center justify-center w-8 h-8 rounded-md text-muted-foreground hover:text-foreground hover:bg-accent cursor-grab touch-none transition-colors"
-                                        aria-label="Reorder ingredient"
-                                    >
-                                      <GripVertical class="w-4 h-4" />
-                                    </button>
-                                  {/if}
+                                  <div class="flex items-center gap-2 sm:contents">
+                                    {#if isPlaceholder}
+                                      <div class="w-8 h-8 flex-shrink-0 sm:col-span-1"></div>
+                                    {:else}
+                                      <button
+                                          type="button"
+                                          onpointerdown={(e) => startIngredientDrag(e, section.id, ingredient)}
+                                          onpointermove={handleDragPointerMove}
+                                          onpointerup={handleDragPointerUp}
+                                          onpointercancel={handleDragPointerUp}
+                                          class="flex-shrink-0 sm:col-span-1 flex items-center justify-center w-8 h-8 rounded-md text-muted-foreground hover:text-foreground hover:bg-accent cursor-grab touch-none transition-colors"
+                                          aria-label="Reorder ingredient"
+                                      >
+                                        <GripVertical class="w-4 h-4" />
+                                      </button>
+                                    {/if}
 
-                                  {#if ingredient.recipe_ref}
-                                    <div class="col-span-5 flex flex-col gap-1 self-end">
-                                      <div class="flex items-center gap-1 text-sm font-medium text-card-foreground">
-                                        <Link2 class="w-3.5 h-3.5 text-muted-foreground flex-shrink-0" />
-                                        <span class="truncate">{ingredient.ref_label || ingredient.resolved_ref_title}</span>
-                                        {#if ingredient.variation_count && ingredient.variation_count > 0}
-                                            <span class="ml-auto flex-shrink-0 bg-primary/10 text-primary px-2 py-1 rounded-full text-sm font-medium whitespace-nowrap">
-                                                {$_('recipeCard.variationCount', {values: {count: ingredient.variation_count}})}
-                                            </span>
-                                        {/if}
+                                    {#if ingredient.recipe_ref}
+                                      <div class="flex-1 min-w-0 sm:col-span-5 flex flex-col gap-1 sm:self-end">
+                                        <div class="flex items-center gap-1 text-sm font-medium text-card-foreground">
+                                          <Link2 class="w-3.5 h-3.5 text-muted-foreground flex-shrink-0" />
+                                          <span class="truncate">{ingredient.ref_label || ingredient.resolved_ref_title}</span>
+                                          {#if ingredient.variation_count && ingredient.variation_count > 0}
+                                              <span class="ml-auto flex-shrink-0 bg-primary/10 text-primary px-2 py-1 rounded-full text-sm font-medium whitespace-nowrap">
+                                                  {$_('recipeCard.variationCount', {values: {count: ingredient.variation_count}})}
+                                              </span>
+                                          {/if}
+                                        </div>
+                                        <Input
+                                            type="text"
+                                            bind:value={() => ingredient.ref_label ?? '', (v) => ingredient.ref_label = v}
+                                            placeholder={$_('edit.ingredients.refLabel.placeholder')}
+                                            aria-label={$_('edit.ingredients.refLabel.label')}
+                                        />
                                       </div>
-                                      <Input
-                                          type="text"
-                                          bind:value={() => ingredient.ref_label ?? '', (v) => ingredient.ref_label = v}
-                                          placeholder={$_('edit.ingredients.refLabel.placeholder')}
-                                          aria-label={$_('edit.ingredients.refLabel.label')}
-                                      />
-                                    </div>
-                                  {:else}
-                                    <div class="col-span-5 self-end">
-                                      <Input
-                                          type="text"
-                                          bind:value={ingredient.name}
-                                          placeholder={t('ingredients.name.placeholder')}
-                                          required
-                                          aria-label={t('ingredients.name.label')}
-                                      />
-                                    </div>
-                                  {/if}
-                                  <div class="col-span-6 self-end flex items-center gap-2">
+                                    {:else}
+                                      <div class="flex-1 min-w-0 sm:col-span-5 sm:self-end">
+                                        <Input
+                                            type="text"
+                                            bind:value={ingredient.name}
+                                            placeholder={t('ingredients.name.placeholder')}
+                                            required
+                                            aria-label={t('ingredients.name.label')}
+                                        />
+                                      </div>
+                                    {/if}
+                                  </div>
+                                  <div class="flex items-center gap-2 sm:col-span-6 sm:self-end">
                                     <div class="flex-[2]">
                                       <Input
                                           type="number"
@@ -1140,7 +1146,7 @@
                             <span class="bg-primary text-primary-foreground w-8 h-8 rounded-full text-sm font-semibold flex items-center justify-center flex-shrink-0 mt-1">
                                         {index + 1}
                                     </span>
-                            <div class="flex-1 flex gap-3 items-start">
+                            <div class="flex-1 flex flex-col sm:flex-row gap-3 items-stretch sm:items-start">
                               <div class="flex-1 min-w-0 space-y-2">
                                 <div>
                                   <Label for={`step-title-${row.uid}`}>{$_('edit.instructions.title.label')}</Label>

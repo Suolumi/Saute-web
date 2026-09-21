@@ -1,5 +1,5 @@
 import {describe, expect, it} from 'vitest';
-import {buildRecipeSummaries, buildShoppingListGroups, entryRatio, type ShoppingListEntry} from './shoppingList';
+import {buildRecipeSummaries, buildShoppingListGroups, capitalizeIngredientHeading, entryRatio, type ShoppingListEntry} from './shoppingList';
 import type {Ingredient} from './recipes';
 
 function ingredient(overrides: Partial<Ingredient> = {}): Ingredient {
@@ -43,6 +43,12 @@ describe('buildRecipeSummaries', () => {
         const summaries = buildRecipeSummaries(entries);
         expect(summaries.map(s => s.recipeId)).toEqual(['a', 'b']);
     });
+
+    it('carries the recipe picture from its entries', () => {
+        const entries = [entry({recipePicture: 'pancakes.jpg'})];
+        const summaries = buildRecipeSummaries(entries);
+        expect(summaries[0].recipePicture).toBe('pancakes.jpg');
+    });
 });
 
 describe('buildShoppingListGroups', () => {
@@ -54,7 +60,8 @@ describe('buildShoppingListGroups', () => {
         const groups = buildShoppingListGroups(entries);
         expect(groups).toHaveLength(1);
         expect(groups[0].subLines).toHaveLength(1);
-        expect(groups[0].singleLineText).toBe('3 cups - Flour');
+        expect(groups[0].name).toBe('Flour');
+        expect(groups[0].subLines[0].text).toBe('3 cups');
         expect(groups[0].subLines[0].recipes.map(r => r.recipeId).sort()).toEqual(['a', 'b']);
     });
 
@@ -66,7 +73,6 @@ describe('buildShoppingListGroups', () => {
         const groups = buildShoppingListGroups(entries);
         expect(groups).toHaveLength(1);
         expect(groups[0].name).toBe('Flour');
-        expect(groups[0].singleLineText).toBeNull();
         expect(groups[0].subLines.map(s => s.text).sort()).toEqual(['2 cups', '4 dl']);
     });
 
@@ -92,7 +98,8 @@ describe('buildShoppingListGroups', () => {
             entry({recipeId: 'a', recipeQuantity: 4, servings: 8, ingredient: ingredient({name: 'Sugar', quantity: 1, unit: 'cup'})}),
         ];
         const groups = buildShoppingListGroups(entries);
-        expect(groups[0].singleLineText).toBe('2 cup - Sugar');
+        expect(groups[0].name).toBe('Sugar');
+        expect(groups[0].subLines[0].text).toBe('2 cup');
     });
 
     it('checks a merged line only when every contributing entry is checked', () => {
@@ -117,6 +124,20 @@ describe('buildShoppingListGroups', () => {
     it('still lists an ingredient with no quantity, without a scaled amount', () => {
         const entries = [entry({ingredient: ingredient({name: 'Salt to taste', quantity: 0, unit: ''})})];
         const groups = buildShoppingListGroups(entries);
-        expect(groups[0].singleLineText).toBe('Salt to taste');
+        expect(groups[0].name).toBe('Salt to taste');
+        expect(groups[0].subLines[0].text).toBe('');
+    });
+});
+
+describe('capitalizeIngredientHeading', () => {
+    it('uppercases only the first letter, regardless of input casing', () => {
+        expect(capitalizeIngredientHeading('flour')).toBe('Flour');
+        expect(capitalizeIngredientHeading('FLOUR')).toBe('Flour');
+        expect(capitalizeIngredientHeading('fLOUR')).toBe('Flour');
+        expect(capitalizeIngredientHeading('all-purpose flour')).toBe('All-purpose flour');
+    });
+
+    it('leaves an empty name as-is', () => {
+        expect(capitalizeIngredientHeading('')).toBe('');
     });
 });

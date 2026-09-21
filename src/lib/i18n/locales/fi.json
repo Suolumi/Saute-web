@@ -12,7 +12,11 @@
     "logout": "Kirjaudu ulos",
     "diy": "DIY",
     "admin": "Ylläpito",
-    "about": "Tietoa"
+    "about": "Tietoa",
+    "browse": "Selaa",
+    "aiTools": "Tekoälytyökalut",
+    "account": "Tili",
+    "viewProfile": "Näytä profiili"
   },
   "fileUpload": {
     "click": "Klikkaa ladataksesi",
@@ -237,10 +241,11 @@
     "cookMode": "Kokkaustila",
     "cookModeExit": "Poistu kokkaustilasta",
     "cookModeStepOf": "Vaihe {current}/{total}",
+    "cookModeStep": "Vaihe {step}",
     "cookModePrevStep": "Edellinen vaihe",
     "cookModeNextStep": "Seuraava vaihe",
-    "cookModeGoToStep": "Siirry vaiheeseen {step}",
     "cookModeIngredients": "Ainekset",
+    "cookModeIngredientChecked": "Merkitse {name} käytetyksi",
     "addPhoto": "Lisää kuva",
     "removePhoto": "Poista kuva",
     "photoAddedBy": "Lisännyt {username}",
@@ -765,6 +770,18 @@
       "mcp": {
         "title": "Yhdistä tekoälyavustaja",
         "description": "Luo henkilökohtainen käyttöoikeustunnus Yhdistä tekoäly -sivulta, jotta tekoälytyökalu voi lukea, hakea ja luoda reseptejä tilillesi puolestasi."
+      },
+      "cookMode": {
+        "title": "Kokkaustila",
+        "description": "Käy reseptin ohjeet läpi vaihe kerrallaan, suurella tekstillä, näytön pysyessä automaattisesti päällä — paina \"Kokkaa\" ohjeiden yläpuolella minkä tahansa reseptin sivulla."
+      },
+      "share": {
+        "title": "Jaa resepti",
+        "description": "Jaa mikä tahansa resepti suoraan sen sivulta, laitteesi jakovalikon tai kopioidun linkin kautta — esikatselu (otsikko, kuva, kuvaus) tulee mukana automaattisesti."
+      },
+      "shoppingList": {
+        "title": "Ostoslista",
+        "description": "Lisää reseptejä ostoslistallesi etusivulta, ja niiden raaka-aineet yhdistyvät yhdeksi tarkistuslistaksi kaikkien reseptien kesken — merkitse asioita ostetuiksi kaupassa."
       }
     }
   },
@@ -793,6 +810,7 @@
     "picker": {
       "title": "Lisää reseptejä ostoslistalle",
       "description": "Hae ja valitse reseptejä - valitse tietty versio resepteille, joilla on useita muunnelmia."
-    }
+    },
+    "summary": "{recipes} reseptia · {items} ainesosaa"
   }
 }

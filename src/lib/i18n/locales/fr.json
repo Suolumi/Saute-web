@@ -12,7 +12,11 @@
     "logout": "Déconnexion",
     "diy": "Bricolage",
     "admin": "Administration",
-    "about": "À propos"
+    "about": "À propos",
+    "browse": "Parcourir",
+    "aiTools": "Outils IA",
+    "account": "Compte",
+    "viewProfile": "Voir le profil"
   },
   "fileUpload": {
     "click": "Cliquez pour ajouter",
@@ -237,10 +241,11 @@
     "cookMode": "Cuisiner",
     "cookModeExit": "Quitter le mode cuisine",
     "cookModeStepOf": "Étape {current} sur {total}",
+    "cookModeStep": "Étape {step}",
     "cookModePrevStep": "Étape précédente",
     "cookModeNextStep": "Étape suivante",
-    "cookModeGoToStep": "Aller à l'étape {step}",
     "cookModeIngredients": "Ingrédients",
+    "cookModeIngredientChecked": "Marquer {name} comme utilisé",
     "addPhoto": "Ajouter une photo",
     "removePhoto": "Supprimer la photo",
     "photoAddedBy": "Ajoutée par {username}",
@@ -765,6 +770,18 @@
       "mcp": {
         "title": "Connecter un assistant IA",
         "description": "Générez un jeton d'accès personnel depuis la page Connecter une IA pour qu'un outil d'IA puisse lire, rechercher et créer des recettes sur votre compte, pour vous."
+      },
+      "cookMode": {
+        "title": "Mode cuisine",
+        "description": "Parcourez les instructions d'une recette une étape à la fois, en gros caractères, avec l'écran maintenu allumé automatiquement — cliquez sur « Cuisiner » au-dessus des instructions, sur la page de n'importe quelle recette."
+      },
+      "share": {
+        "title": "Partager une recette",
+        "description": "Partagez n'importe quelle recette directement depuis sa page, via la feuille de partage de votre appareil ou un lien copié — l'aperçu qui s'affiche de l'autre côté (titre, photo, description) est inclus automatiquement."
+      },
+      "shoppingList": {
+        "title": "Liste de courses",
+        "description": "Ajoutez des recettes à votre liste de courses depuis la page d'accueil : leurs ingrédients se regroupent en une seule liste à cocher, toutes recettes confondues."
       }
     }
   },
@@ -793,6 +810,7 @@
     "picker": {
       "title": "Ajouter des recettes à la liste de courses",
       "description": "Recherchez et sélectionnez des recettes - choisissez une version précise pour les recettes à variations."
-    }
+    },
+    "summary": "{recipes} recettes · {items} ingrédients"
   }
 }

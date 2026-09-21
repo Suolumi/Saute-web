@@ -1,7 +1,7 @@
 <script lang="ts">
     import PageMeta from "../../../../components/PageMeta.svelte";
     import { _ } from "svelte-i18n";
-    import { GitBranch, Link, Camera, Hammer, Image, Heart, Link2, Sparkles } from "@lucide/svelte";
+    import { GitBranch, Link, Camera, Hammer, Image, Heart, Link2, Sparkles, ChefHat, Share2, ShoppingCart } from "@lucide/svelte";
     import type { Component } from "svelte";
 
     const items: { key: string; icon: Component }[] = [
@@ -13,6 +13,9 @@
         { key: "favorites", icon: Heart },
         { key: "linkVariation", icon: Link2 },
         { key: "mcp", icon: Sparkles },
+        { key: "cookMode", icon: ChefHat },
+        { key: "share", icon: Share2 },
+        { key: "shoppingList", icon: ShoppingCart },
     ];
 </script>
 

@@ -502,9 +502,11 @@
                             <button
                                     onclick={submitVariation}
                                     class="bg-background hover:cursor-pointer hover:bg-accent border-2 border-primary text-primary px-3 py-2 rounded-lg transition-all flex items-center gap-2 shadow-sm hover:shadow-md whitespace-nowrap"
+                                    aria-label={$_('recipe.submitVariation')}
+                                    title={$_('recipe.submitVariation')}
                             >
                                 <Plus size="20" />
-                                <span class="text-sm font-semibold">{$_('recipe.submitVariation')}</span>
+                                <span class="hidden sm:inline text-sm font-semibold">{$_('recipe.submitVariation')}</span>
                             </button>
                         {/if}
                     </div>

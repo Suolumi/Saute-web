@@ -1,12 +1,14 @@
 <script lang="ts">
     import {user, darkMode, accessToken, refreshToken, serverUrl} from '$lib/stores';
     import {goto} from "$app/navigation";
+    import {page} from "$app/state";
     import Button from "./Button.svelte";
     import {onDestroy, onMount} from "svelte";
     import {browser} from "$app/environment";
     import {_, locale} from "svelte-i18n";
     import LanguageSelect from "./LanguageSelect.svelte";
     import {Drawer} from "vaul-svelte";
+    import {Home, Wrench, Info, Sparkles, Settings, BookOpen, Heart, ShieldCheck, LogOut, ChevronRight, X} from "@lucide/svelte";
 
     function toggleDarkMode(): void {
         darkMode.update((mode: boolean) => {
@@ -23,6 +25,20 @@
     let showProfileDropdown: boolean = $state(false);
     let dropdownRef: HTMLElement | undefined = $state();
     let drawerOpen: boolean | undefined = $state();
+
+    let pathSegment = $derived(page.url.pathname.split('/').filter(Boolean)[1]);
+
+    function navRowClass(active: boolean): string {
+        return `flex w-full items-center gap-3 rounded-2xl px-2 py-2.5 text-left transition-colors ${active ? 'bg-primary/10' : 'hover:bg-muted'}`;
+    }
+
+    function navChipClass(active: boolean): string {
+        return `flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full ${active ? 'bg-primary/15 text-primary' : 'bg-foreground/10 text-foreground'}`;
+    }
+
+    function navLabelClass(active: boolean): string {
+        return `text-[15px] ${active ? 'font-semibold text-primary' : 'font-medium text-foreground'}`;
+    }
 
     function toggleProfileDropdown(e: MouseEvent): void {
         if (dropdownRef && !dropdownRef.contains(e.target as Node) && showProfileDropdown) {
@@ -197,90 +213,179 @@
                         <Drawer.Portal>
                             <Drawer.Overlay class="fixed inset-0 bg-black/40 z-50" />
                             <Drawer.Content
-                                    class="fixed bottom-0 right-0 top-0 z-50 flex w-[60%] max-w-xs rounded-l-[10px] bg-card border-l border-border shadow-xl"
+                                    class="fixed bottom-0 right-0 top-0 z-50 flex w-[78%] max-w-sm flex-col overflow-hidden rounded-l-[20px] bg-card shadow-xl"
                             >
-                                <div class="flex items-center justify-center ml-1.5">
-                                    <div class="h-12 w-1.5 flex-shrink-0 rounded-full bg-zinc-300 items-center"></div>
-                                </div>
-                                <div class="flex flex-col h-full w-full mt-5">
-                                    <!-- Menu items -->
-                                    <div class="flex-1 overflow-y-auto py-4">
-                                            <button
-                                                    onclick={() => {drawerOpen = false; goto(`/${$locale}/home`)}}
-                                                    class="block w-full text-left px-6 py-3 text-foreground hover:bg-muted transition-colors font-medium"
-                                            >
-                                                {$_('header.allRecipes')}
-                                            </button>
-                                            <button
-                                                    onclick={() => {drawerOpen = false; goto(`/${$locale}/diy`)}}
-                                                    class="block w-full text-left px-6 py-3 text-foreground hover:bg-muted transition-colors font-medium"
-                                            >
-                                                {$_('header.diy')}
-                                            </button>
-                                            <button
-                                                    onclick={() => {drawerOpen = false; goto(`/${$locale}/about`)}}
-                                                    class="block w-full text-left px-6 py-3 text-foreground hover:bg-muted transition-colors font-medium"
-                                            >
-                                                {$_('header.about')}
-                                            </button>
-                                            <button
-                                                    onclick={() => {drawerOpen = false; goto(`/${$locale}/connect-ai`)}}
-                                                    class="block w-full text-left px-6 py-2 text-ai-accent hover:bg-muted transition-colors text-sm font-medium"
-                                            >
-                                                {$_('header.connectAI')}
-                                            </button>
-                                            {#if !$user}
-                                                <div class="border-t border-border mt-4 pt-4 px-6 space-y-2">
-                                                    <button
-                                                            onclick={() => {drawerOpen = false; goto(`/${$locale}/login`)}}
-                                                            class="block w-full px-4 py-2 text-sm font-medium text-foreground hover:text-primary transition-colors border border-border rounded-lg"
-                                                    >
-                                                        {$_('header.login')}
-                                                    </button>
-                                                    <button
-                                                            onclick={() => {drawerOpen = false; goto(`/${$locale}/register`)}}
-                                                            class="block w-full px-4 py-2 text-sm font-medium bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-colors"
-                                                    >
-                                                        {$_('header.register')}
-                                                    </button>
-                                                </div>
+                                {#if $user}
+                                    <div class="relative flex-shrink-0 border-b border-primary/20 bg-primary/10 px-5 py-4">
+                                        <button
+                                                onclick={() => drawerOpen = false}
+                                                aria-label="Close menu"
+                                                class="absolute right-3.5 top-3.5 flex h-8 w-8 items-center justify-center rounded-full text-foreground hover:bg-foreground/10"
+                                        >
+                                            <X class="w-4 h-4" />
+                                        </button>
+                                        <button
+                                                onclick={() => { drawerOpen = false; goto(`/${$locale}/settings`); }}
+                                                class="mt-2.5 flex w-full items-center gap-3 text-left"
+                                        >
+                                            {#if $user.picture}
+                                                <img src={`${$serverUrl}/pictures/${$user.picture}`} alt="" class="h-11 w-11 flex-shrink-0 rounded-full object-cover" />
                                             {:else}
-                                                <div class="border-t border-border mt-4 pt-4">
-                                                    <button
-                                                            onclick={() => { goto(`/${$locale}/settings`); drawerOpen = false; }}
-                                                            class="block w-full text-left px-6 py-3 text-foreground hover:bg-muted transition-colors font-medium"
-                                                    >
-                                                        {$_('header.settings')}
-                                                    </button>
-                                                    <button
-                                                            onclick={() => { goto(`/${$locale}/settings`); drawerOpen = false; }}
-                                                            class="block w-full text-left px-6 py-3 text-foreground hover:bg-muted transition-colors font-medium"
-                                                    >
-                                                        {$_('header.myRecipes')}
-                                                    </button>
-                                                    <button
-                                                            onclick={() => { goto(`/${$locale}/settings/favorites/recipes`); drawerOpen = false; }}
-                                                            class="block w-full text-left px-6 py-3 text-foreground hover:bg-muted transition-colors font-medium"
-                                                    >
-                                                        {$_('header.myFavorites')}
-                                                    </button>
-                                                    {#if $user.admin}
-                                                        <button
-                                                                onclick={() => { drawerOpen = false; goto(`/${$locale}/admin`) }}
-                                                                class="block w-full text-left px-6 py-3 text-foreground hover:bg-muted transition-colors font-medium"
-                                                        >
-                                                            {$_('header.admin')}
-                                                        </button>
-                                                    {/if}
-                                                    <button
-                                                            onclick={logout}
-                                                            class="block w-full text-left px-6 py-3 text-foreground hover:bg-muted transition-colors font-medium"
-                                                    >
-                                                        {$_('header.logout')}
-                                                    </button>
+                                                <div class="flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-full bg-primary text-[17px] font-bold text-primary-foreground">
+                                                    {$user.username?.charAt(0) || '?'}
                                                 </div>
                                             {/if}
+                                            <div class="flex min-w-0 flex-col gap-0.5">
+                                                <div class="truncate text-[15px] font-semibold text-foreground">{$user.username}</div>
+                                                <div class="flex items-center gap-0.5 text-xs text-muted-foreground">
+                                                    {$_('header.viewProfile')}
+                                                    <ChevronRight class="w-3 h-3" />
+                                                </div>
+                                            </div>
+                                        </button>
                                     </div>
+                                {:else}
+                                    <div class="flex flex-shrink-0 items-center justify-end px-4 py-3">
+                                        <button
+                                                onclick={() => drawerOpen = false}
+                                                aria-label="Close menu"
+                                                class="flex h-8 w-8 items-center justify-center rounded-full text-foreground hover:bg-muted"
+                                        >
+                                            <X class="w-4 h-4" />
+                                        </button>
+                                    </div>
+                                {/if}
+
+                                <div class="flex flex-1 flex-col overflow-y-auto pb-3">
+                                    <div class="px-5 pb-1.5 pt-4 text-[11px] font-bold uppercase tracking-wide text-muted-foreground/80">
+                                        {$_('header.browse')}
+                                    </div>
+                                    <div class="flex flex-col gap-0.5 px-3">
+                                        <button
+                                                onclick={() => {drawerOpen = false; goto(`/${$locale}/home`)}}
+                                                class={navRowClass(pathSegment === 'home')}
+                                        >
+                                            <div class={navChipClass(pathSegment === 'home')}>
+                                                <Home class="w-4 h-4" />
+                                            </div>
+                                            <div class={navLabelClass(pathSegment === 'home')}>{$_('header.allRecipes')}</div>
+                                            {#if pathSegment === 'home'}
+                                                <div class="ml-auto mr-1.5 h-1.5 w-1.5 rounded-full bg-primary"></div>
+                                            {/if}
+                                        </button>
+                                        <button
+                                                onclick={() => {drawerOpen = false; goto(`/${$locale}/diy`)}}
+                                                class={navRowClass(pathSegment === 'diy')}
+                                        >
+                                            <div class={navChipClass(pathSegment === 'diy')}>
+                                                <Wrench class="w-4 h-4" />
+                                            </div>
+                                            <div class={navLabelClass(pathSegment === 'diy')}>{$_('header.diy')}</div>
+                                            {#if pathSegment === 'diy'}
+                                                <div class="ml-auto mr-1.5 h-1.5 w-1.5 rounded-full bg-primary"></div>
+                                            {/if}
+                                        </button>
+                                        <button
+                                                onclick={() => {drawerOpen = false; goto(`/${$locale}/about`)}}
+                                                class={navRowClass(pathSegment === 'about')}
+                                        >
+                                            <div class={navChipClass(pathSegment === 'about')}>
+                                                <Info class="w-4 h-4" />
+                                            </div>
+                                            <div class={navLabelClass(pathSegment === 'about')}>{$_('header.about')}</div>
+                                            {#if pathSegment === 'about'}
+                                                <div class="ml-auto mr-1.5 h-1.5 w-1.5 rounded-full bg-primary"></div>
+                                            {/if}
+                                        </button>
+                                    </div>
+
+                                    <div class="px-5 pb-1.5 pt-4 text-[11px] font-bold uppercase tracking-wide text-muted-foreground/80">
+                                        {$_('header.aiTools')}
+                                    </div>
+                                    <div class="px-3">
+                                        <button
+                                                onclick={() => {drawerOpen = false; goto(`/${$locale}/connect-ai`)}}
+                                                class="flex w-full items-center gap-3 rounded-2xl px-2 py-2.5 text-left hover:bg-ai-accent/5"
+                                        >
+                                            <div class="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full bg-ai-accent/15 text-ai-accent">
+                                                <Sparkles class="w-4 h-4" />
+                                            </div>
+                                            <div class="text-[15px] font-medium text-ai-accent">{$_('header.connectAI')}</div>
+                                            <div class="ml-auto mr-1.5 rounded-full bg-ai-accent/15 px-2 py-0.5 text-[10px] font-bold tracking-wide text-ai-accent">AI</div>
+                                        </button>
+                                    </div>
+
+                                    {#if $user}
+                                        <div class="px-5 pb-1.5 pt-4 text-[11px] font-bold uppercase tracking-wide text-muted-foreground/80">
+                                            {$_('header.account')}
+                                        </div>
+                                        <div class="flex flex-col gap-0.5 px-3">
+                                            <button
+                                                    onclick={() => { goto(`/${$locale}/settings`); drawerOpen = false; }}
+                                                    class={navRowClass(false)}
+                                            >
+                                                <div class={navChipClass(false)}>
+                                                    <Settings class="w-4 h-4" />
+                                                </div>
+                                                <div class={navLabelClass(false)}>{$_('header.settings')}</div>
+                                            </button>
+                                            <button
+                                                    onclick={() => { goto(`/${$locale}/settings`); drawerOpen = false; }}
+                                                    class={navRowClass(false)}
+                                            >
+                                                <div class={navChipClass(false)}>
+                                                    <BookOpen class="w-4 h-4" />
+                                                </div>
+                                                <div class={navLabelClass(false)}>{$_('header.myRecipes')}</div>
+                                            </button>
+                                            <button
+                                                    onclick={() => { goto(`/${$locale}/settings/favorites/recipes`); drawerOpen = false; }}
+                                                    class={navRowClass(false)}
+                                            >
+                                                <div class={navChipClass(false)}>
+                                                    <Heart class="w-4 h-4" />
+                                                </div>
+                                                <div class={navLabelClass(false)}>{$_('header.myFavorites')}</div>
+                                            </button>
+                                            {#if $user.admin}
+                                                <button
+                                                        onclick={() => { drawerOpen = false; goto(`/${$locale}/admin`) }}
+                                                        class={navRowClass(false)}
+                                                >
+                                                    <div class={navChipClass(false)}>
+                                                        <ShieldCheck class="w-4 h-4" />
+                                                    </div>
+                                                    <div class={navLabelClass(false)}>{$_('header.admin')}</div>
+                                                </button>
+                                            {/if}
+                                        </div>
+
+                                        <div class="flex-1"></div>
+
+                                        <button
+                                                onclick={logout}
+                                                class="mx-4 mb-4 mt-4 flex items-center justify-center gap-2 rounded-xl border-[1.5px] border-destructive px-3 py-3 text-sm font-semibold text-destructive hover:bg-destructive/5"
+                                        >
+                                            <LogOut class="w-4 h-4" />
+                                            {$_('header.logout')}
+                                        </button>
+                                    {:else}
+                                        <div class="flex-1"></div>
+                                        <div class="space-y-2 px-6 pb-2 pt-4">
+                                            <button
+                                                    onclick={() => {drawerOpen = false; goto(`/${$locale}/login`)}}
+                                                    class="block w-full px-4 py-2 text-sm font-medium text-foreground hover:text-primary transition-colors border border-border rounded-lg"
+                                            >
+                                                {$_('header.login')}
+                                            </button>
+                                            <button
+                                                    onclick={() => {drawerOpen = false; goto(`/${$locale}/register`)}}
+                                                    class="block w-full px-4 py-2 text-sm font-medium bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-colors"
+                                            >
+                                                {$_('header.register')}
+                                            </button>
+                                        </div>
+                                    {/if}
                                 </div>
                             </Drawer.Content>
                         </Drawer.Portal>

@@ -12,7 +12,11 @@
     "logout": "Logout",
     "diy": "DIY",
     "admin": "Admin",
-    "about": "About"
+    "about": "About",
+    "browse": "Browse",
+    "aiTools": "AI Tools",
+    "account": "Account",
+    "viewProfile": "View profile"
   },
   "fileUpload": {
     "click": "Click to upload",
@@ -237,10 +241,11 @@
     "cookMode": "Cook",
     "cookModeExit": "Exit cook mode",
     "cookModeStepOf": "Step {current} of {total}",
+    "cookModeStep": "Step {step}",
     "cookModePrevStep": "Previous step",
     "cookModeNextStep": "Next step",
-    "cookModeGoToStep": "Go to step {step}",
     "cookModeIngredients": "Ingredients",
+    "cookModeIngredientChecked": "Mark {name} as used",
     "addPhoto": "Add a photo",
     "removePhoto": "Remove photo",
     "photoAddedBy": "Added by {username}",
@@ -765,6 +770,18 @@
       "mcp": {
         "title": "Connect an AI Assistant",
         "description": "Generate a personal access token from the Connect to AI page so an AI tool can read, search, and create recipes on your account for you."
+      },
+      "cookMode": {
+        "title": "Cook Mode",
+        "description": "Step through a recipe's instructions one at a time, in large type, with your screen kept awake automatically — hit \"Cook\" above the instructions on any recipe's page."
+      },
+      "share": {
+        "title": "Share a Recipe",
+        "description": "Share any recipe straight from its page, via your device's share sheet or a copied link — the preview that shows up on the other end (title, photo, description) comes along for free."
+      },
+      "shoppingList": {
+        "title": "Shopping List",
+        "description": "Add recipes to your shopping list from the home page, and their ingredients merge into one checklist across every recipe — check things off as you shop."
       }
     }
   },
@@ -793,6 +810,7 @@
     "picker": {
       "title": "Add recipes to your shopping list",
       "description": "Search and select recipes - pick a specific version for recipes with multiple variations."
-    }
+    },
+    "summary": "{recipes} recipes · {items} items"
   }
 }
