@@ -13,7 +13,10 @@ export const RecipeCategories: RecipeCategory[] = ["food", "diy"]
 
 // TIME_PRESETS/TimePreset back the "ready in" filter shared by the recipe
 // search filter UI (home, diy, and the admin back-office's recipe browse).
-export const TIME_PRESETS = ['any', '15', '30', '45', '60'] as const
+// 'quick' is the "Quickest" preset: sort by actual time ascending instead of
+// closeness to a target minutes value, so a 10-minute recipe is never
+// out-ranked by one that merely sits closer to a fixed preset like '15'.
+export const TIME_PRESETS = ['any', 'quick', '15', '30', '45', '60'] as const
 
 export type TimePreset = typeof TIME_PRESETS[number]
 
@@ -134,6 +137,12 @@ export type GetRecipesRequest = {
     title?: string
     preparation_time?: number
     total_time?: number
+    // quickest_prep/quickest_total back the "Quickest" ready-in preset: sort
+    // by actual time ascending instead of closeness to preparation_time/
+    // total_time. Mutually exclusive with those in practice - the filter UI
+    // sends one or the other, never both, for a given basis.
+    quickest_prep?: boolean
+    quickest_total?: boolean
     ingredients?: string[]
     kind?: RecipeType
     // category, omitted, lists the food feed (server excludes diy by

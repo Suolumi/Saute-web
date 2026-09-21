@@ -31,8 +31,10 @@
             author: author || undefined,
             kind: selectedType !== 'all' ? (selectedType as RecipeType) : undefined,
             ingredients: ingredients.length > 0 ? ingredients : undefined,
-            preparation_time: timeTarget !== 'any' && timeBasis === 'prep' ? Number(timeTarget) : undefined,
-            total_time: timeTarget !== 'any' && timeBasis === 'total' ? Number(timeTarget) : undefined,
+            quickest_prep: timeTarget === 'quick' && timeBasis === 'prep' ? true : undefined,
+            quickest_total: timeTarget === 'quick' && timeBasis === 'total' ? true : undefined,
+            preparation_time: timeTarget !== 'any' && timeTarget !== 'quick' && timeBasis === 'prep' ? Number(timeTarget) : undefined,
+            total_time: timeTarget !== 'any' && timeTarget !== 'quick' && timeBasis === 'total' ? Number(timeTarget) : undefined,
             limit: PAGE_SIZE, offset, locale: $locale ?? undefined,
         }).then(({response, data}) => {
             if (response.ok && data) {

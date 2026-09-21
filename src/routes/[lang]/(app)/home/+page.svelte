@@ -36,7 +36,12 @@
             request.author = author
         if (ingredients.length > 0)
             request.ingredients = ingredients
-        if (timeTarget !== 'any') {
+        if (timeTarget === 'quick') {
+            if (timeBasis === 'prep')
+                request.quickest_prep = true
+            else
+                request.quickest_total = true
+        } else if (timeTarget !== 'any') {
             const minutes = Number(timeTarget)
             if (timeBasis === 'prep')
                 request.preparation_time = minutes

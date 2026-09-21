@@ -53,6 +53,7 @@
 
     function timeLabel(preset: TimePreset): string {
         if (preset === 'any') return $_('home.timeAny')
+        if (preset === 'quick') return $_('home.timeQuick')
         if (preset === '60') return $_('home.timeHour')
         return $_('home.timeMinutes', {values: {minutes: preset}})
     }
@@ -295,7 +296,9 @@
                         </button>
                     {/each}
                 </div>
-                {#if timeTarget !== 'any'}
+                {#if timeTarget === 'quick'}
+                    <p class="text-xs text-muted-foreground">{$_('home.quickestMatch')}</p>
+                {:else if timeTarget !== 'any'}
                     <p class="text-xs text-muted-foreground">{$_('home.closestMatch')}</p>
                 {/if}
             </div>
