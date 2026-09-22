@@ -251,7 +251,16 @@
     "photoAddedBy": "Added by {username}",
     "addPhotoError": "Could not add the photo",
     "removePhotoError": "Could not remove the photo",
-    "addPhotoCapReached": "You've reached the limit of {count} photos you can add to this recipe"
+    "addPhotoCapReached": "You've reached the limit of {count} photos you can add to this recipe",
+    "suggestFix": "Suggest a fix",
+    "suggestFixTitle": "Suggest a translation fix",
+    "suggestFixIntro": "Propose a correction to this recipe's translation. Only the text needs fixing - ingredients and steps stay in the same order and count.",
+    "suggestFixDisclaimer": "This fix may be overwritten if the original recipe changes in the same spot later on.",
+    "suggestFixSectionLabel": "Section (optional)",
+    "suggestFixSubmit": "Submit fix",
+    "suggestFixSuccess": "Thanks! Your fix has been submitted for review.",
+    "suggestFixError": "Could not submit your fix",
+    "suggestFixDuplicate": "You already have a pending suggestion for this recipe and locale"
   },
   "edit": {
     "toasts": {
@@ -263,6 +272,15 @@
     "title": {
       "label": "Recipe Title",
       "placeholder": "e.g. Grandma's Apple Pie"
+    },
+    "duplicateNudge": {
+      "title": "Found something similar - did you mean to submit a variation?",
+      "dismiss": "Dismiss",
+      "viewMatch": "View {title}",
+      "confirmTitle": "Discard this draft?",
+      "confirmDescription": "Submitting a variation starts a new form from that recipe - the description, ingredients, steps, and photos you've entered here will be lost.",
+      "confirmCancel": "Keep editing",
+      "confirmContinue": "Submit a variation instead"
     },
     "type": {
       "label": "Type"
@@ -609,6 +627,7 @@
       "users": "Users",
       "recipes": "Recipes",
       "diy": "DIY",
+      "translations": "Translations",
       "console": "Console"
     },
     "errors": {
@@ -624,7 +643,9 @@
       "deleteRecipe": "Couldn't delete this recipe",
       "loadDiy": "Couldn't load DIY projects",
       "deleteDiy": "Couldn't delete this DIY project",
-      "retranslate": "Couldn't schedule retranslation"
+      "retranslate": "Couldn't schedule retranslation",
+      "loadTranslations": "Couldn't load translation suggestions",
+      "resolveTranslation": "Couldn't resolve this suggestion"
     },
     "dashboard": {
       "title": "Dashboard",
@@ -696,6 +717,26 @@
       "deleted": "DIY project deleted",
       "retranslateScheduled": "Retranslation scheduled"
     },
+    "translations": {
+      "title": "Translations",
+      "statusLabel": "Status",
+      "statusPending": "Pending",
+      "statusApproved": "Approved",
+      "statusRejected": "Rejected",
+      "statusStale": "Stale",
+      "none": "No suggestions found",
+      "prev": "Previous",
+      "next": "Next",
+      "current": "Current translation",
+      "suggested": "Suggested fix",
+      "submittedBy": "Submitted by {username}",
+      "approve": "Approve",
+      "reject": "Reject",
+      "approved": "Suggestion approved",
+      "rejected": "Suggestion rejected",
+      "staleError": "This recipe has changed since the suggestion was submitted",
+      "pendingBadge": "{count} pending translation suggestion(s)"
+    },
     "console": {
       "loadError": "Couldn't load the list of admin routes",
       "title": "Console",
@@ -704,6 +745,7 @@
       "categories": {
         "users": "Users",
         "recipes": "Recipes",
+        "translations": "Translations",
         "system": "System"
       },
       "select": "Select",
@@ -782,6 +824,10 @@
       "shoppingList": {
         "title": "Shopping List",
         "description": "Add recipes to your shopping list from the home page, and their ingredients merge into one checklist across every recipe — check things off as you shop."
+      },
+      "translationFix": {
+        "title": "Suggest a Translation Fix",
+        "description": "Spot an awkward machine-translated line? Hit the pencil icon next to a translated recipe's title to propose a fix — an admin reviews it before it goes live."
       }
     }
   },

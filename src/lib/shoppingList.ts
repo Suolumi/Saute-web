@@ -1,6 +1,6 @@
 import {persisted} from 'svelte-persisted-store';
 import type {Ingredient} from '$lib/recipes';
-import {getReferenceQuantity} from '$lib/recipes';
+import {formatScaledQuantity} from '$lib/recipes';
 import {jsonParser} from '$lib/stores';
 
 // One entry per (recipe, ingredient) added to the list. Entries are the
@@ -133,6 +133,19 @@ export type ShoppingListGroup = {
     subLines: ShoppingListSubLine[]
 }
 
+// formatSubQuantity mirrors the recipe detail page's own scaled-quantity
+// formatting (fractions under 1, otherwise a 2-decimal max via
+// formatScaledQuantity) - a sub-line's quantity is always a computed sum
+// (possibly across recipes and servings ratios), never a single authored
+// value, so unlike getIngredientName/getReferenceQuantity it always runs
+// through formatScaledQuantity, even when the effective ratio is 1.
+function formatSubQuantity(hasQuantity: boolean, quantity: number, unit: string): string {
+    if (!hasQuantity)
+        return ''
+    const formatted = formatScaledQuantity(quantity)
+    return unit ? `${formatted} ${unit}` : formatted
+}
+
 function groupKey(entry: ShoppingListEntry): string {
     // Reference ingredients are never merged with anything, even each
     // other - their blank `name` would otherwise collide across unrelated
@@ -165,7 +178,6 @@ export function buildShoppingListGroups(entries: ShoppingListEntry[]): ShoppingL
         entryIds: string[]
         recipes: { recipeId: string; recipeTitle: string }[]
         isReference: boolean
-        referenceIngredient?: Ingredient
         referenceId?: string
     }
     type BuildingGroup = { name: string; subLines: Map<string, BuildingSubLine> }
@@ -198,7 +210,6 @@ export function buildShoppingListGroups(entries: ShoppingListEntry[]): ShoppingL
                 entryIds: [],
                 recipes: [],
                 isReference,
-                referenceIngredient: isReference ? entry.ingredient : undefined,
                 referenceId: isReference ? entry.ingredient.recipe_ref : undefined,
             }
             group.subLines.set(unitKey, sub)
@@ -221,9 +232,7 @@ export function buildShoppingListGroups(entries: ShoppingListEntry[]): ShoppingL
             name: group.name,
             subLines: [...group.subLines.values()].map(sub => ({
                 key: sub.key,
-                text: sub.isReference
-                    ? getReferenceQuantity({...sub.referenceIngredient!, quantity: sub.hasQuantity ? sub.quantity : 0}, 1)
-                    : getReferenceQuantity({name: '', label: '', unit: sub.unit, quantity: sub.hasQuantity ? sub.quantity : 0}, 1),
+                text: formatSubQuantity(sub.hasQuantity, sub.quantity, sub.unit),
                 checked: sub.checked,
                 entryIds: sub.entryIds,
                 recipes: sub.recipes,

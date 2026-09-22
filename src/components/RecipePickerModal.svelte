@@ -50,11 +50,16 @@
 
     let {open, excludeFamily, category, title, description, flat, excludeRecipeIds, multiSelect, onClose, onSelect, onConfirm}: Props = $props();
 
+    const PAGE_SIZE = 20;
+
     let query = $state('');
     let results: RecipePreview[] = $state([]);
     let loading = $state(false);
+    let loadingMore = $state(false);
+    let hasMore = $state(true);
     let searched = $state(false);
     let searchId = 0;
+    let resultsSentinel: HTMLDivElement | undefined = $state();
 
     let selected: Map<string, RecipePreview> = $state(new Map());
 
@@ -64,26 +69,60 @@
 
     const excluded = $derived(new Set(excludeRecipeIds ?? []));
 
+    function fetchPage(term: string, offset: number, replace: boolean) {
+        const id = ++searchId;
+        if (replace)
+            loading = true;
+        else
+            loadingMore = true;
+        getRecipes({title: term || undefined, exclude_family: excludeFamily, category, own_recipes: flat || undefined, locale: $locale ?? undefined, search_locale: $locale ?? undefined, limit: PAGE_SIZE, offset})
+            .then(({response, data}) => {
+                if (id !== searchId)
+                    return;
+                loading = false;
+                loadingMore = false;
+                searched = true;
+                if (response.ok && data) {
+                    results = replace ? data.items : [...results, ...data.items];
+                    hasMore = results.length < data.length;
+                } else {
+                    hasMore = false;
+                    toastError($_('edit.ingredients.recipePicker.error'));
+                }
+            });
+    }
+
+    function loadMore() {
+        if (loading || loadingMore || !hasMore)
+            return;
+        fetchPage(query.trim(), results.length, false);
+    }
+
     $effect(() => {
+        // Read synchronously so a locale change alone (not just a query
+        // edit) re-triggers the search - the actual fetch happens inside
+        // the debounce timeout below, whose reactive reads aren't tracked.
+        $locale;
         if (!open)
             return;
         const term = query.trim();
-        const id = ++searchId;
-        loading = true;
         const timeout = setTimeout(() => {
-            getRecipes({title: term || undefined, exclude_family: excludeFamily, category, own_recipes: flat || undefined, locale: $locale ?? undefined, limit: 20})
-                .then(({response, data}) => {
-                    if (id !== searchId)
-                        return;
-                    loading = false;
-                    searched = true;
-                    if (response.ok && data)
-                        results = data.items;
-                    else
-                        toastError($_('edit.ingredients.recipePicker.error'));
-                });
+            results = [];
+            hasMore = true;
+            fetchPage(term, 0, true);
         }, 250);
         return () => clearTimeout(timeout);
+    });
+
+    $effect(() => {
+        if (!resultsSentinel)
+            return;
+        const observer = new IntersectionObserver((entries) => {
+            if (entries[0].isIntersecting)
+                loadMore();
+        });
+        observer.observe(resultsSentinel);
+        return () => observer.disconnect();
     });
 
     $effect(() => {
@@ -224,6 +263,12 @@
             {#each results.filter(r => !excluded.has(r.id)) as recipe (recipe.id)}
                 {@render recipeRow(recipe, {selectable: true, isSelected: isSelected(recipe), onClick: () => handleRowClick(recipe)})}
             {/each}
+            {#if searched && hasMore}
+                <div bind:this={resultsSentinel} class="h-1"></div>
+            {/if}
+            {#if loadingMore}
+                <div class="py-3 text-center text-muted-foreground">…</div>
+            {/if}
         {/if}
     </div>
 </Modal>

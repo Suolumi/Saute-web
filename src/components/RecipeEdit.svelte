@@ -20,6 +20,7 @@
     } from "$lib/recipes";
     import FileUpload from "./FileUpload.svelte";
     import ImageCropModal from "./ImageCropModal.svelte";
+    import DuplicateNudge from "./DuplicateNudge.svelte";
     import {createRecipeCache, editRecipeCache, serverUrl, user} from "$lib/stores";
     import {untrack} from "svelte";
     import {_} from 'svelte-i18n'
@@ -377,6 +378,20 @@
     }
 
     let hasPictures = $derived(((formData.pictures?.length ?? 0) > 0 && !formData.pictures[0].includes('placeholder')) || pendingPictures.length > 0);
+
+    // hasOtherDraftContent is true once the draft has anything beyond a
+    // bare title - description text, a real ingredient/step, or a staged
+    // photo (servings/kind/prep-cook-rest time don't count: those refill in
+    // seconds, unlike ingredients/steps/photos). Drives whether clicking a
+    // DuplicateNudge match needs to confirm before navigating away, since
+    // that navigation discards the current draft.
+    let hasOtherDraftContent = $derived(
+        !!formData.description.trim() ||
+        formData.ingredients.some(i => !isEmptyIngredient(i)) ||
+        stepRows.some(row => !isEmptyStep(row)) ||
+        pendingPictures.length > 0 ||
+        (formData.pictures?.length ?? 0) > 0
+    );
 
     let previewIngredientGroups = $derived(groupIngredients(formData.ingredients.filter(i => i.name.trim() || i.recipe_ref)));
 
@@ -819,6 +834,9 @@
                             bind:value={formData.title}
                             placeholder={t('title.placeholder')}
                         />
+                        {#if recipeId === undefined && excludeFamily === undefined}
+                          <DuplicateNudge title={formData.title} category={formData.category} hasOtherContent={hasOtherDraftContent} />
+                        {/if}
                       </div>
                       {#if formData.category !== 'diy'}
                         <div>
@@ -952,9 +970,13 @@
                                     data-row-index={rowIndex}
                                     class="flex flex-col sm:grid sm:grid-cols-12 gap-2 sm:items-center p-2 rounded-lg border border-border bg-card transition-opacity touch-none {isRowDragged(ingredient) ? 'opacity-35' : ''}"
                                 >
-                                  <div class="flex items-center gap-2 sm:contents">
+                                  <!-- Mobile-only control bar: keeps the drag handle/menu/remove off the
+                                       name and quantity rows below, instead of squeezing every row to
+                                       match the drag handle's indent (see git history for the layout
+                                       this replaced). -->
+                                  <div class="flex sm:hidden items-center gap-2">
                                     {#if isPlaceholder}
-                                      <div class="w-8 h-8 flex-shrink-0 sm:col-span-1"></div>
+                                      <div class="w-8 h-8 flex-shrink-0"></div>
                                     {:else}
                                       <button
                                           type="button"
@@ -962,7 +984,60 @@
                                           onpointermove={handleDragPointerMove}
                                           onpointerup={handleDragPointerUp}
                                           onpointercancel={handleDragPointerUp}
-                                          class="flex-shrink-0 sm:col-span-1 flex items-center justify-center w-8 h-8 rounded-md text-muted-foreground hover:text-foreground hover:bg-accent cursor-grab touch-none transition-colors"
+                                          class="flex-shrink-0 flex items-center justify-center w-8 h-8 rounded-md text-muted-foreground hover:text-foreground hover:bg-accent cursor-grab touch-none transition-colors"
+                                          aria-label="Reorder ingredient"
+                                      >
+                                        <GripVertical class="w-4 h-4" />
+                                      </button>
+                                    {/if}
+                                    <div class="flex-1"></div>
+                                    <div class="flex-none flex justify-center relative" data-keep-menu>
+                                      <button
+                                          type="button"
+                                          onclick={(e) => { e.stopPropagation(); openMenuFor = openMenuFor === ingredient ? null : ingredient; }}
+                                          class="flex items-center justify-center w-8 h-8 rounded-lg text-muted-foreground hover:text-foreground hover:bg-accent transition-colors"
+                                          aria-label={$_('edit.ingredients.moveTo')}
+                                      >
+                                        <EllipsisVertical class="w-4 h-4" />
+                                      </button>
+                                      {#if openMenuFor === ingredient}
+                                        <div data-keep-menu class="absolute right-0 top-9 z-30 min-w-[180px] bg-card border border-border rounded-lg shadow-lg p-1.5 flex flex-col gap-0.5">
+                                          <div class="text-xs font-semibold uppercase tracking-wide text-muted-foreground px-2 pt-1 pb-0.5">
+                                            {$_('edit.ingredients.moveTo')}
+                                          </div>
+                                          {#each sections.filter(s => s.id !== section.id) as target (target.id)}
+                                            <button
+                                                type="button"
+                                                onclick={() => moveIngredientToSection(ingredient, section.id, target.id)}
+                                                class="text-left px-2 py-1.5 text-sm rounded-md hover:bg-accent hover:text-accent-foreground text-foreground"
+                                            >
+                                              {target.name ?? $_('edit.ingredients.uncategorized')}
+                                            </button>
+                                          {/each}
+                                        </div>
+                                      {/if}
+                                    </div>
+                                    <button
+                                        type="button"
+                                        onclick={() => removeIngredientFromSection(section.id, ingredient)}
+                                        aria-label={$_('edit.ingredients.remove')}
+                                        class="flex items-center justify-center w-8 h-8 rounded-lg text-muted-foreground hover:text-destructive hover:bg-destructive/10 transition-colors"
+                                    >
+                                      <Trash2 class="w-4 h-4" />
+                                    </button>
+                                  </div>
+
+                                  <div class="flex items-center gap-2 sm:contents">
+                                    {#if isPlaceholder}
+                                      <div class="hidden sm:block w-8 h-8 flex-shrink-0 sm:col-span-1"></div>
+                                    {:else}
+                                      <button
+                                          type="button"
+                                          onpointerdown={(e) => startIngredientDrag(e, section.id, ingredient)}
+                                          onpointermove={handleDragPointerMove}
+                                          onpointerup={handleDragPointerUp}
+                                          onpointercancel={handleDragPointerUp}
+                                          class="hidden sm:flex flex-shrink-0 sm:col-span-1 items-center justify-center w-8 h-8 rounded-md text-muted-foreground hover:text-foreground hover:bg-accent cursor-grab touch-none transition-colors"
                                           aria-label="Reorder ingredient"
                                       >
                                         <GripVertical class="w-4 h-4" />
@@ -1017,7 +1092,7 @@
                                       />
                                     </div>
 
-                                    <div class="flex-none flex justify-center relative" data-keep-menu>
+                                    <div class="hidden sm:flex flex-none justify-center relative" data-keep-menu>
                                       <button
                                           type="button"
                                           onclick={(e) => { e.stopPropagation(); openMenuFor = openMenuFor === ingredient ? null : ingredient; }}
@@ -1044,7 +1119,7 @@
                                       {/if}
                                     </div>
 
-                                    <div class="flex-none flex justify-center">
+                                    <div class="hidden sm:flex flex-none justify-center">
                                       <button
                                           type="button"
                                           onclick={() => removeIngredientFromSection(section.id, ingredient)}
@@ -1126,27 +1201,38 @@
                           <div
                               data-step-row
                               data-step-uid={row.uid}
-                              class="flex gap-3 items-start rounded-lg border border-border p-4 touch-none transition-opacity {draggingStepUid === row.uid ? 'opacity-35' : ''}"
+                              class="rounded-lg border border-border p-4 touch-none transition-opacity {draggingStepUid === row.uid ? 'opacity-35' : ''}"
                           >
-                            {#if isPlaceholder}
-                              <div class="w-8 h-8 flex-shrink-0 mt-1"></div>
-                            {:else}
+                            <div class="flex items-center gap-2 mb-3">
+                              {#if isPlaceholder}
+                                <div class="w-8 h-8 flex-shrink-0"></div>
+                              {:else}
+                                <button
+                                    type="button"
+                                    onpointerdown={(e) => startStepDrag(e, row.uid)}
+                                    onpointermove={handleStepDragPointerMove}
+                                    onpointerup={handleStepDragPointerUp}
+                                    onpointercancel={handleStepDragPointerUp}
+                                    class="flex items-center justify-center w-8 h-8 rounded-md text-muted-foreground hover:text-foreground hover:bg-accent cursor-grab touch-none transition-colors flex-shrink-0"
+                                    aria-label={$_('edit.instructions.reorder')}
+                                >
+                                  <GripVertical class="w-4 h-4" />
+                                </button>
+                              {/if}
+                              <span class="bg-primary text-primary-foreground w-8 h-8 rounded-full text-sm font-semibold flex items-center justify-center flex-shrink-0">
+                                  {index + 1}
+                              </span>
+                              <div class="flex-1"></div>
                               <button
                                   type="button"
-                                  onpointerdown={(e) => startStepDrag(e, row.uid)}
-                                  onpointermove={handleStepDragPointerMove}
-                                  onpointerup={handleStepDragPointerUp}
-                                  onpointercancel={handleStepDragPointerUp}
-                                  class="flex items-center justify-center w-8 h-8 rounded-md text-muted-foreground hover:text-foreground hover:bg-accent cursor-grab touch-none transition-colors flex-shrink-0 mt-1"
-                                  aria-label={$_('edit.instructions.reorder')}
+                                  onclick={() => removeStep(row.uid)}
+                                  aria-label={$_('edit.instructions.remove')}
+                                  class="flex items-center justify-center w-8 h-8 rounded-lg text-muted-foreground hover:text-destructive hover:bg-destructive/10 transition-colors focus:outline-none focus:ring-2 focus:ring-ring flex-shrink-0"
                               >
-                                <GripVertical class="w-4 h-4" />
+                                <Trash2 class="w-4 h-4" />
                               </button>
-                            {/if}
-                            <span class="bg-primary text-primary-foreground w-8 h-8 rounded-full text-sm font-semibold flex items-center justify-center flex-shrink-0 mt-1">
-                                        {index + 1}
-                                    </span>
-                            <div class="flex-1 flex flex-col sm:flex-row gap-3 items-stretch sm:items-start">
+                            </div>
+                            <div class="flex flex-col sm:flex-row gap-3 items-stretch sm:items-start">
                               <div class="flex-1 min-w-0 space-y-2">
                                 <div>
                                   <Label for={`step-title-${row.uid}`}>{$_('edit.instructions.title.label')}</Label>
@@ -1202,14 +1288,6 @@
                                 {/if}
                               </div>
                             </div>
-                            <button
-                                type="button"
-                                onclick={() => removeStep(row.uid)}
-                                aria-label={$_('edit.instructions.remove')}
-                                class="flex items-center justify-center w-10 h-10 rounded-lg text-muted-foreground hover:text-destructive hover:bg-destructive/10 transition-colors focus:outline-none focus:ring-2 focus:ring-ring flex-shrink-0 mt-1"
-                            >
-                              <Trash2 class="w-4 h-4" />
-                            </button>
                           </div>
                           {#if stepDropIndicator?.beforeUid === row.uid && !stepDropIndicator.before}
                             <div class="h-0.5 bg-primary rounded mt-1.5"></div>

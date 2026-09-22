@@ -251,7 +251,16 @@
     "photoAddedBy": "Lisännyt {username}",
     "addPhotoError": "Kuvan lisääminen epäonnistui",
     "removePhotoError": "Kuvan poistaminen epäonnistui",
-    "addPhotoCapReached": "Olet saavuttanut {count} kuvan rajan tälle reseptille"
+    "addPhotoCapReached": "Olet saavuttanut {count} kuvan rajan tälle reseptille",
+    "suggestFix": "Ehdota korjausta",
+    "suggestFixTitle": "Ehdota käännöskorjausta",
+    "suggestFixIntro": "Ehdota korjausta tämän reseptin käännökseen. Vain tekstiä tarvitsee korjata - ainesosat ja vaiheet pysyvät samassa järjestyksessä ja määrässä.",
+    "suggestFixDisclaimer": "Tämä korjaus voidaan korvata, jos alkuperäinen resepti myöhemmin muuttuu samasta kohdasta.",
+    "suggestFixSectionLabel": "Osio (valinnainen)",
+    "suggestFixSubmit": "Lähetä korjaus",
+    "suggestFixSuccess": "Kiitos! Korjauksesi on lähetetty tarkistettavaksi.",
+    "suggestFixError": "Korjauksen lähettäminen epäonnistui",
+    "suggestFixDuplicate": "Sinulla on jo odottava ehdotus tälle reseptille ja kielelle"
   },
   "edit": {
     "toasts": {
@@ -263,6 +272,15 @@
     "title": {
       "label": "Reseptin otsikko",
       "placeholder": "esim. Mummon omenapiirakka"
+    },
+    "duplicateNudge": {
+      "title": "Löysimme jotain samankaltaista - tarkoititko lisätä muunnelman?",
+      "dismiss": "Hylkää",
+      "viewMatch": "Näytä {title}",
+      "confirmTitle": "Hylätäänkö tämä luonnos?",
+      "confirmDescription": "Muunnelman lisääminen avaa uuden lomakkeen tästä reseptistä - tähän jo kirjoitettu kuvaus, ainesosat, vaiheet ja kuvat menetetään.",
+      "confirmCancel": "Jatka muokkausta",
+      "confirmContinue": "Lisää muunnelma sen sijaan"
     },
     "type": {
       "label": "Tyyppi"
@@ -609,6 +627,7 @@
       "users": "Käyttäjät",
       "recipes": "Reseptit",
       "diy": "DIY",
+      "translations": "Käännökset",
       "console": "Konsoli"
     },
     "errors": {
@@ -624,7 +643,9 @@
       "deleteRecipe": "Reseptin poistaminen epäonnistui",
       "loadDiy": "DIY-projektien lataaminen epäonnistui",
       "deleteDiy": "DIY-projektin poistaminen epäonnistui",
-      "retranslate": "Uudelleenkäännöksen ajoitus epäonnistui"
+      "retranslate": "Uudelleenkäännöksen ajoitus epäonnistui",
+      "loadTranslations": "Käännösehdotusten lataaminen epäonnistui",
+      "resolveTranslation": "Ehdotuksen käsittely epäonnistui"
     },
     "dashboard": {
       "title": "Kojelauta",
@@ -696,6 +717,26 @@
       "deleted": "DIY-projekti poistettu",
       "retranslateScheduled": "Uudelleenkäännös ajoitettu"
     },
+    "translations": {
+      "title": "Käännökset",
+      "statusLabel": "Tila",
+      "statusPending": "Odottaa",
+      "statusApproved": "Hyväksytty",
+      "statusRejected": "Hylätty",
+      "statusStale": "Vanhentunut",
+      "none": "Ehdotuksia ei löytynyt",
+      "prev": "Edellinen",
+      "next": "Seuraava",
+      "current": "Nykyinen käännös",
+      "suggested": "Ehdotettu korjaus",
+      "submittedBy": "Ehdottanut {username}",
+      "approve": "Hyväksy",
+      "reject": "Hylkää",
+      "approved": "Ehdotus hyväksytty",
+      "rejected": "Ehdotus hylätty",
+      "staleError": "Tämä resepti on muuttunut sen jälkeen, kun ehdotus lähetettiin",
+      "pendingBadge": "{count} odottavaa käännösehdotusta"
+    },
     "console": {
       "loadError": "Ylläpitotoimintojen listaa ei voitu ladata",
       "title": "Konsoli",
@@ -704,6 +745,7 @@
       "categories": {
         "users": "Käyttäjät",
         "recipes": "Reseptit",
+        "translations": "Käännökset",
         "system": "Järjestelmä"
       },
       "select": "Valitse",
@@ -782,6 +824,10 @@
       "shoppingList": {
         "title": "Ostoslista",
         "description": "Lisää reseptejä ostoslistallesi etusivulta, ja niiden raaka-aineet yhdistyvät yhdeksi tarkistuslistaksi kaikkien reseptien kesken — merkitse asioita ostetuiksi kaupassa."
+      },
+      "translationFix": {
+        "title": "Ehdota käännöskorjausta",
+        "description": "Kuulostaako konekäännetty rivi kömpelöltä? Napsauta käännetyn reseptin otsikon vieressä olevaa kynäkuvaketta ehdottaaksesi korjausta — ylläpitäjä tarkistaa sen ennen julkaisua."
       }
     }
   },

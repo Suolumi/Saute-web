@@ -1,6 +1,7 @@
+import {writable} from "svelte/store";
 import {apiFetchJson} from "$lib/api";
 import type {User} from "$lib/user";
-import type {GetRecipesRequest, RecipePreview} from "$lib/recipes";
+import type {GetRecipesRequest, RecipePreview, Ingredient, Step, TranslationSuggestion} from "$lib/recipes";
 
 // AdminUser is the full user document the back-office sees (unlike the
 // public User type, which the API redacts for non-admin callers).
@@ -39,7 +40,7 @@ export type AdminRouteParam = {
     label: string
 }
 
-export type AdminRouteCategory = 'users' | 'recipes' | 'system'
+export type AdminRouteCategory = 'users' | 'recipes' | 'system' | 'translations'
 
 export type AdminRouteDescriptor = {
     id: string
@@ -107,6 +108,70 @@ export function getAdminStats() {
 
 export function cleanupImages() {
     return apiFetchJson<CleanupImagesResult>('/admin/system/cleanup-images', 'POST')
+}
+
+// TranslationSuggestionView is one row in the admin review list: the
+// suggestion's own content plus its resolved recipe title/submitter
+// username, and the *current* live translation it would replace - so the
+// tab can render an old-vs-suggested comparison per field without a second
+// request.
+export type TranslationSuggestionView = {
+    id: string
+    recipe_id: string
+    recipe_title: string
+    locale: string
+    submitted_by: string
+    submitted_by_username: string
+    status: 'pending' | 'approved' | 'rejected' | 'stale'
+    created_at: string
+    reviewed_at?: string
+    suggested_title: string
+    suggested_description: string
+    suggested_ingredients: Ingredient[]
+    suggested_steps: Step[]
+    current_title: string
+    current_description: string
+    current_ingredients: Ingredient[]
+    current_steps: Step[]
+}
+
+export type ListTranslationSuggestionsResponse = {
+    length: number
+    items: TranslationSuggestionView[]
+}
+
+export function getTranslationSuggestions(status?: string, limit?: number) {
+    const params: Record<string, unknown> = {};
+    if (status) params.status = status;
+    if (limit) params.limit = limit;
+    return apiFetchJson<ListTranslationSuggestionsResponse>('/admin/translation-suggestions', 'GET', null, Object.keys(params).length > 0 ? params : null)
+}
+
+export function approveTranslationSuggestion(id: string) {
+    return apiFetchJson<TranslationSuggestion>(`/admin/translation-suggestions/${id}/approve`, 'POST')
+}
+
+export function rejectTranslationSuggestion(id: string) {
+    return apiFetchJson<TranslationSuggestion>(`/admin/translation-suggestions/${id}/reject`, 'POST')
+}
+
+// Durable-override view/clear actions (admin.translations.listOverrides/
+// clearOverride) are deliberately not wired here - they're used through the
+// generic manifest console instead (see admin/console), consistent with how
+// this feature's suggestion-review routes are console-usable too.
+
+// pendingTranslationSuggestionCount backs the notification badge on the
+// admin nav's "Translations" tab (see (admin)/+layout.svelte, which owns
+// polling it) - a plain runtime store, not persisted, since it's just a
+// cheap reflection of server state. limit: 1 keeps the request light; the
+// response's `length` is still the true total count (CountDocuments over
+// the full filter), not the page size.
+export const pendingTranslationSuggestionCount = writable(0);
+
+export async function refreshPendingTranslationSuggestionCount() {
+    const {response, data} = await getTranslationSuggestions('pending', 1);
+    if (response.ok && data)
+        pendingTranslationSuggestionCount.set(data.length);
 }
 
 // callAdminRoute fires an arbitrary route from the manifest. pathAndQuery is

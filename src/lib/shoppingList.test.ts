@@ -102,6 +102,22 @@ describe('buildShoppingListGroups', () => {
         expect(groups[0].subLines[0].text).toBe('2 cup');
     });
 
+    it('formats a scaled quantity as a fraction, same as the recipe page, even at an effective ratio of 1', () => {
+        const entries = [
+            entry({recipeQuantity: 4, servings: 2, ingredient: ingredient({name: 'Butter', quantity: 1, unit: 'cup'})}),
+        ];
+        const groups = buildShoppingListGroups(entries);
+        expect(groups[0].subLines[0].text).toBe('1/2 cup');
+    });
+
+    it('caps a scaled quantity at 2 decimals, same as the recipe page', () => {
+        const entries = [
+            entry({recipeQuantity: 3, servings: 5, ingredient: ingredient({name: 'Milk', quantity: 1, unit: 'cup'})}),
+        ];
+        const groups = buildShoppingListGroups(entries);
+        expect(groups[0].subLines[0].text).toBe('1.67 cup');
+    });
+
     it('checks a merged line only when every contributing entry is checked', () => {
         const entries = [
             entry({id: 'e1', recipeId: 'a', checked: true, ingredient: ingredient({name: 'Salt', quantity: 1, unit: 'tsp'})}),

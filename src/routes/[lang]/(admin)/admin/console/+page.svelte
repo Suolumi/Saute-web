@@ -14,7 +14,7 @@
     import {apiErrorMessage} from '$lib/api';
     import {Search, Image as ImageIcon} from '@lucide/svelte';
 
-    const CATEGORY_ORDER: AdminRouteCategory[] = ['users', 'recipes', 'system'];
+    const CATEGORY_ORDER: AdminRouteCategory[] = ['users', 'recipes', 'translations', 'system'];
 
     // Sensible client-side defaults for common query params, applied when a
     // route is selected. Unrecognized params just start empty. These are
@@ -68,7 +68,7 @@
         routes.filter(r => (r.label + ' ' + r.id).toLowerCase().includes(filter.toLowerCase()))
     );
     let groupedRoutes = $derived.by(() => {
-        const groups: Record<AdminRouteCategory, AdminRouteDescriptor[]> = {users: [], recipes: [], system: []};
+        const groups: Record<AdminRouteCategory, AdminRouteDescriptor[]> = {users: [], recipes: [], translations: [], system: []};
         for (const route of filteredRoutes)
             groups[route.category]?.push(route);
         return groups;

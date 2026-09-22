@@ -3,6 +3,10 @@
     import {_, locale} from 'svelte-i18n';
     import {page} from '$app/stores';
     import {goto} from '$app/navigation';
+    // pendingTranslationSuggestionCount is polled globally by Header.svelte
+    // (mounted on every page, so an admin sees the badge site-wide, not just
+    // inside /admin) - this layout just reads the same store, no second poll.
+    import {pendingTranslationSuggestionCount} from '$lib/admin';
 
     let { children } = $props();
 
@@ -16,6 +20,7 @@
         ['admin.nav.users', '/users'],
         ['admin.nav.recipes', '/recipes'],
         ['admin.nav.diy', '/diy'],
+        ['admin.nav.translations', '/translations'],
         ['admin.nav.console', '/console'],
     ] as const;
 
@@ -41,9 +46,17 @@
                 <button
                         type="button"
                         onclick={() => goto(tabHref(suffix))}
-                        class="px-3 py-2 text-sm font-medium border-b-2 transition-colors hover:cursor-pointer {isActive(suffix) ? 'border-primary text-primary' : 'border-transparent text-muted-foreground hover:text-foreground'}"
+                        class="px-3 py-2 text-sm font-medium border-b-2 transition-colors hover:cursor-pointer flex items-center gap-1.5 {isActive(suffix) ? 'border-primary text-primary' : 'border-transparent text-muted-foreground hover:text-foreground'}"
                 >
                     {$_(key)}
+                    {#if suffix === '/translations' && $pendingTranslationSuggestionCount > 0}
+                        <span
+                                class="bg-destructive text-destructive-foreground rounded-full px-1.5 py-0.5 text-xs font-semibold leading-none"
+                                title={$_('admin.translations.pendingBadge', {values: {count: $pendingTranslationSuggestionCount}})}
+                        >
+                            {$pendingTranslationSuggestionCount}
+                        </span>
+                    {/if}
                 </button>
             {/each}
         </nav>

@@ -19,7 +19,7 @@
         unfavoriteRecipe
     } from "$lib/recipes";
     import emblaCarouselSvelte from "embla-carousel-svelte";
-    import {FileText, List, Users, Wind, Flame, Clock, ArrowLeft, ArrowRight, Heart, Minus, Plus, Coffee, Camera, Share2, X, ChefHat} from "@lucide/svelte";
+    import {FileText, List, Users, Wind, Flame, Clock, ArrowLeft, ArrowRight, Heart, Minus, Plus, Coffee, Camera, Share2, X, ChefHat, Pencil} from "@lucide/svelte";
     import {serverUrl, user} from "$lib/stores";
     import {_, locale} from "svelte-i18n";
     import {toastError, toastSuccess} from "$lib/utils";
@@ -70,6 +70,11 @@
     function submitVariation() {
         if (rootId)
             goto(`/${$locale}/create?variation_of=${rootId}`)
+    }
+
+    function suggestTranslationFix() {
+        if (id)
+            goto(`/${$locale}/recipes/${id}/suggest-fix`)
     }
 
     async function shareRecipe() {
@@ -462,7 +467,7 @@
             <div class="p-8">
                 <div class="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4 mb-4">
                     <h1 class="text-3xl sm:text-4xl font-bold text-card-foreground text-balance">{recipe.title}</h1>
-                    <div class="flex items-center gap-2 sm:gap-3 flex-shrink-0">
+                    <div class="flex items-center justify-between sm:justify-start w-full sm:w-auto gap-2 sm:gap-3 sm:flex-shrink-0">
                         {#if recipe.category === 'diy'}
                             <span class="bg-muted text-muted-foreground px-3 py-2 rounded-full text-sm font-medium whitespace-nowrap ml-4">
                                 {$_('recipeCard.diyBadge')}
@@ -507,6 +512,16 @@
                             >
                                 <Plus size="20" />
                                 <span class="hidden sm:inline text-sm font-semibold">{$_('recipe.submitVariation')}</span>
+                            </button>
+                        {/if}
+                        {#if $user && recipe.locale !== recipe.source_locale}
+                            <button
+                                    onclick={suggestTranslationFix}
+                                    class="bg-background hover:cursor-pointer hover:bg-accent border-2 border-primary text-primary px-3 py-2 rounded-lg transition-all flex items-center gap-2 shadow-sm hover:shadow-md whitespace-nowrap"
+                                    aria-label={$_('recipe.suggestFix')}
+                                    title={$_('recipe.suggestFix')}
+                            >
+                                <Pencil size="20" />
                             </button>
                         {/if}
                     </div>

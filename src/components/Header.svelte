@@ -9,6 +9,7 @@
     import LanguageSelect from "./LanguageSelect.svelte";
     import {Drawer} from "vaul-svelte";
     import {Home, Wrench, Info, Sparkles, Settings, BookOpen, Heart, ShieldCheck, LogOut, ChevronRight, X} from "@lucide/svelte";
+    import {pendingTranslationSuggestionCount, refreshPendingTranslationSuggestionCount} from "$lib/admin";
 
     function toggleDarkMode(): void {
         darkMode.update((mode: boolean) => {
@@ -27,6 +28,19 @@
     let drawerOpen: boolean | undefined = $state();
 
     let pathSegment = $derived(page.url.pathname.split('/').filter(Boolean)[1]);
+
+    // Polled here (mounted on every page, not just /admin) so an admin sees
+    // the pending-translation-suggestion badge from anywhere in the site,
+    // not only while already inside the back-office; (admin)/+layout.svelte
+    // reads the same store rather than polling a second time.
+    const PENDING_TRANSLATIONS_POLL_MS = 30_000;
+    $effect(() => {
+        if (!$user?.admin)
+            return;
+        refreshPendingTranslationSuggestionCount();
+        const interval = setInterval(refreshPendingTranslationSuggestionCount, PENDING_TRANSLATIONS_POLL_MS);
+        return () => clearInterval(interval);
+    });
 
     function navRowClass(active: boolean): string {
         return `flex w-full items-center gap-3 rounded-2xl px-2 py-2.5 text-left transition-colors ${active ? 'bg-primary/10' : 'hover:bg-muted'}`;
@@ -135,7 +149,7 @@
                         <button
                                 onclick={() => showProfileDropdown = true}
                                 bind:this={dropdownRef}
-                                class="flex items-center space-x-2 p-1 rounded-full hover:bg-muted transition-colors hover:cursor-pointer"
+                                class="relative flex items-center space-x-2 p-1 rounded-full hover:bg-muted transition-colors hover:cursor-pointer"
                                 aria-label="Profile menu"
                         >
                             {#if $user.picture}
@@ -144,6 +158,12 @@
                                 <div class="w-8 h-8 rounded-full bg-primary text-primary-foreground flex items-center justify-center text-sm font-medium">
                                     {$user.username?.charAt(0) || '?'}
                                 </div>
+                            {/if}
+                            {#if $user.admin && $pendingTranslationSuggestionCount > 0}
+                                <span
+                                        class="absolute top-0 right-0 w-2.5 h-2.5 rounded-full bg-destructive ring-2 ring-background"
+                                        title={$_('admin.translations.pendingBadge', {values: {count: $pendingTranslationSuggestionCount}})}
+                                ></span>
                             {/if}
                         </button>
 
@@ -170,9 +190,14 @@
                                 {#if $user.admin}
                                     <button
                                             onclick={() => { goto(`/${$locale}/admin`); showProfileDropdown = false; }}
-                                            class="block w-full text-left px-4 py-2 text-sm text-foreground transition-colors hover:cursor-pointer hover:bg-gray-200 dark:hover:bg-gray-800"
+                                            class="w-full flex items-center justify-between gap-2 px-4 py-2 text-sm text-foreground transition-colors hover:cursor-pointer hover:bg-gray-200 dark:hover:bg-gray-800"
                                     >
                                         {$_('header.admin')}
+                                        {#if $pendingTranslationSuggestionCount > 0}
+                                            <span class="bg-destructive text-destructive-foreground rounded-full px-1.5 py-0.5 text-xs font-semibold leading-none">
+                                                {$pendingTranslationSuggestionCount}
+                                            </span>
+                                        {/if}
                                     </button>
                                 {/if}
                                 <button
@@ -299,21 +324,23 @@
                                         </button>
                                     </div>
 
-                                    <div class="px-5 pb-1.5 pt-4 text-[11px] font-bold uppercase tracking-wide text-muted-foreground/80">
-                                        {$_('header.aiTools')}
-                                    </div>
-                                    <div class="px-3">
-                                        <button
-                                                onclick={() => {drawerOpen = false; goto(`/${$locale}/connect-ai`)}}
-                                                class="flex w-full items-center gap-3 rounded-2xl px-2 py-2.5 text-left hover:bg-ai-accent/5"
-                                        >
-                                            <div class="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full bg-ai-accent/15 text-ai-accent">
-                                                <Sparkles class="w-4 h-4" />
-                                            </div>
-                                            <div class="text-[15px] font-medium text-ai-accent">{$_('header.connectAI')}</div>
-                                            <div class="ml-auto mr-1.5 rounded-full bg-ai-accent/15 px-2 py-0.5 text-[10px] font-bold tracking-wide text-ai-accent">AI</div>
-                                        </button>
-                                    </div>
+                                    {#if !$user}
+                                        <div class="px-5 pb-1.5 pt-4 text-[11px] font-bold uppercase tracking-wide text-muted-foreground/80">
+                                            {$_('header.aiTools')}
+                                        </div>
+                                        <div class="px-3">
+                                            <button
+                                                    onclick={() => {drawerOpen = false; goto(`/${$locale}/connect-ai`)}}
+                                                    class="flex w-full items-center gap-3 rounded-2xl px-2 py-2.5 text-left hover:bg-ai-accent/5"
+                                            >
+                                                <div class="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full bg-ai-accent/15 text-ai-accent">
+                                                    <Sparkles class="w-4 h-4" />
+                                                </div>
+                                                <div class="text-[15px] font-medium text-ai-accent">{$_('header.connectAI')}</div>
+                                                <div class="ml-auto mr-1.5 rounded-full bg-ai-accent/15 px-2 py-0.5 text-[10px] font-bold tracking-wide text-ai-accent">AI</div>
+                                            </button>
+                                        </div>
+                                    {/if}
 
                                     {#if $user}
                                         <div class="px-5 pb-1.5 pt-4 text-[11px] font-bold uppercase tracking-wide text-muted-foreground/80">
@@ -356,8 +383,23 @@
                                                         <ShieldCheck class="w-4 h-4" />
                                                     </div>
                                                     <div class={navLabelClass(false)}>{$_('header.admin')}</div>
+                                                    {#if $pendingTranslationSuggestionCount > 0}
+                                                        <span class="ml-auto bg-destructive text-destructive-foreground rounded-full px-1.5 py-0.5 text-xs font-semibold leading-none">
+                                                            {$pendingTranslationSuggestionCount}
+                                                        </span>
+                                                    {/if}
                                                 </button>
                                             {/if}
+                                            <button
+                                                    onclick={() => {drawerOpen = false; goto(`/${$locale}/connect-ai`)}}
+                                                    class="flex w-full items-center gap-3 rounded-2xl px-2 py-2.5 text-left hover:bg-ai-accent/5"
+                                            >
+                                                <div class="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full bg-ai-accent/15 text-ai-accent">
+                                                    <Sparkles class="w-4 h-4" />
+                                                </div>
+                                                <div class="text-[15px] font-medium text-ai-accent">{$_('header.connectAI')}</div>
+                                                <div class="ml-auto mr-1.5 rounded-full bg-ai-accent/15 px-2 py-0.5 text-[10px] font-bold tracking-wide text-ai-accent">AI</div>
+                                            </button>
                                         </div>
 
                                         <div class="flex-1"></div>

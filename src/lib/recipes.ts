@@ -96,6 +96,13 @@ export type Recipe = {
     // root has (always 0 for a variation itself).
     variation_of?: string
     variation_count: number
+    // locale is the language this recipe is currently rendered in (the
+    // requested locale when a current translation exists, else source_locale);
+    // source_locale is the language the recipe was originally authored in.
+    // A recipe is showing translated content - and can take a "Suggest a
+    // fix" submission - exactly when locale !== source_locale.
+    locale: string
+    source_locale: string
 }
 
 export type RecipePreview = {
@@ -357,6 +364,28 @@ export function deleteRecipe(id: string) {
 // can detach a recipe back to standalone.
 export function linkRecipeVariation(id: string, variationOf: string) {
     return apiFetchJson<Recipe>(`/recipes/${id}/variation-of`, "PATCH", {variation_of: variationOf})
+}
+
+// TranslationSuggestionRequest is the body a "Suggest a fix" submission sends
+// - the whole translatable subset (structure/order must match the recipe's
+// own ingredients/steps exactly; only the text is meant to change).
+export type TranslationSuggestionRequest = {
+    locale: string
+    title: string
+    description: string
+    ingredients: Ingredient[]
+    steps: Step[]
+}
+
+export type TranslationSuggestion = {
+    id: string
+    recipe_id: string
+    locale: string
+    status: 'pending' | 'approved' | 'rejected' | 'stale'
+}
+
+export function submitTranslationSuggestion(id: string, body: TranslationSuggestionRequest) {
+    return apiFetchJson<TranslationSuggestion>(`/recipes/${id}/translation-suggestions`, "POST", body)
 }
 
 // PICTURE_CAP_PER_CONTRIBUTOR mirrors the backend's per-contributor limit

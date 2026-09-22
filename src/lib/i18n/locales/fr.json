@@ -251,7 +251,16 @@
     "photoAddedBy": "Ajoutée par {username}",
     "addPhotoError": "Impossible d'ajouter la photo",
     "removePhotoError": "Impossible de supprimer la photo",
-    "addPhotoCapReached": "Vous avez atteint la limite de {count} photos pour cette recette"
+    "addPhotoCapReached": "Vous avez atteint la limite de {count} photos pour cette recette",
+    "suggestFix": "Proposer une correction",
+    "suggestFixTitle": "Proposer une correction de traduction",
+    "suggestFixIntro": "Proposez une correction à la traduction de cette recette. Seul le texte doit être corrigé - les ingrédients et les étapes gardent le même ordre et le même nombre.",
+    "suggestFixDisclaimer": "Cette correction peut être écrasée si la recette d'origine change au même endroit par la suite.",
+    "suggestFixSectionLabel": "Section (optionnel)",
+    "suggestFixSubmit": "Envoyer la correction",
+    "suggestFixSuccess": "Merci ! Votre correction a été envoyée pour révision.",
+    "suggestFixError": "Impossible d'envoyer votre correction",
+    "suggestFixDuplicate": "Vous avez déjà une proposition en attente pour cette recette et cette langue"
   },
   "edit": {
     "toasts": {
@@ -263,6 +272,15 @@
     "title": {
       "label": "Titre de la recette",
       "placeholder": "ex. Tarte aux pommes de mamie"
+    },
+    "duplicateNudge": {
+      "title": "Nous avons trouvé quelque chose de similaire - vouliez-vous proposer une variante ?",
+      "dismiss": "Ignorer",
+      "viewMatch": "Voir {title}",
+      "confirmTitle": "Abandonner ce brouillon ?",
+      "confirmDescription": "Proposer une variante démarre un nouveau formulaire à partir de cette recette - la description, les ingrédients, les étapes et les photos déjà saisis ici seront perdus.",
+      "confirmCancel": "Continuer l'édition",
+      "confirmContinue": "Proposer une variante à la place"
     },
     "type": {
       "label": "Type"
@@ -609,6 +627,7 @@
       "users": "Utilisateurs",
       "recipes": "Recettes",
       "diy": "Bricolage",
+      "translations": "Traductions",
       "console": "Console"
     },
     "errors": {
@@ -624,7 +643,9 @@
       "deleteRecipe": "Impossible de supprimer cette recette",
       "loadDiy": "Impossible de charger les projets bricolage",
       "deleteDiy": "Impossible de supprimer ce projet bricolage",
-      "retranslate": "Impossible de programmer la retraduction"
+      "retranslate": "Impossible de programmer la retraduction",
+      "loadTranslations": "Impossible de charger les propositions de traduction",
+      "resolveTranslation": "Impossible de traiter cette proposition"
     },
     "dashboard": {
       "title": "Tableau de bord",
@@ -696,6 +717,26 @@
       "deleted": "Projet bricolage supprimé",
       "retranslateScheduled": "Retraduction programmée"
     },
+    "translations": {
+      "title": "Traductions",
+      "statusLabel": "Statut",
+      "statusPending": "En attente",
+      "statusApproved": "Approuvée",
+      "statusRejected": "Rejetée",
+      "statusStale": "Obsolète",
+      "none": "Aucune proposition trouvée",
+      "prev": "Précédent",
+      "next": "Suivant",
+      "current": "Traduction actuelle",
+      "suggested": "Correction proposée",
+      "submittedBy": "Proposée par {username}",
+      "approve": "Approuver",
+      "reject": "Rejeter",
+      "approved": "Proposition approuvée",
+      "rejected": "Proposition rejetée",
+      "staleError": "Cette recette a changé depuis l'envoi de cette proposition",
+      "pendingBadge": "{count} proposition(s) de traduction en attente"
+    },
     "console": {
       "loadError": "Impossible de charger la liste des actions d'administration",
       "title": "Console",
@@ -704,6 +745,7 @@
       "categories": {
         "users": "Utilisateurs",
         "recipes": "Recettes",
+        "translations": "Traductions",
         "system": "Système"
       },
       "select": "Sélectionner",
@@ -782,6 +824,10 @@
       "shoppingList": {
         "title": "Liste de courses",
         "description": "Ajoutez des recettes à votre liste de courses depuis la page d'accueil : leurs ingrédients se regroupent en une seule liste à cocher, toutes recettes confondues."
+      },
+      "translationFix": {
+        "title": "Proposer une correction de traduction",
+        "description": "Une phrase traduite automatiquement sonne mal ? Cliquez sur l'icône crayon à côté du titre d'une recette traduite pour proposer une correction — un administrateur la valide avant qu'elle soit publiée."
       }
     }
   },
