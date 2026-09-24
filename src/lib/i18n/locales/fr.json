@@ -687,6 +687,7 @@
       "title": "Recettes",
       "searchPlaceholder": "Rechercher des recettes...",
       "variationBadge": "Variation",
+      "favorites": "{count} favoris",
       "edit": "Modifier",
       "retranslate": "Retraduire",
       "delete": "Supprimer",
@@ -704,6 +705,7 @@
       "title": "Bricolage",
       "searchPlaceholder": "Rechercher des projets bricolage...",
       "variationBadge": "Variation",
+      "favorites": "{count} favoris",
       "edit": "Modifier",
       "retranslate": "Retraduire",
       "delete": "Supprimer",
@@ -716,6 +718,14 @@
       "confirmDelete": "Supprimer",
       "deleted": "Projet bricolage supprimé",
       "retranslateScheduled": "Retraduction programmée"
+    },
+    "favoritesModal": {
+      "title": "Ajouté aux favoris par",
+      "description": "Utilisateurs ayant ajouté « {title} » à leurs favoris.",
+      "none": "Personne n'a encore ajouté ceci aux favoris.",
+      "prev": "Précédent",
+      "next": "Suivant",
+      "loadError": "Impossible de charger les favoris"
     },
     "translations": {
       "title": "Traductions",
@@ -803,7 +813,7 @@
       },
       "favorites": {
         "title": "Favoris",
-        "description": "Mettez en favori n'importe quelle recette ou projet de bricolage grâce à l'icône cœur, puis retrouvez-les tous dans Paramètres › Mes favoris."
+        "description": "Mettez en favori autant de recettes ou de projets de bricolage que vous voulez grâce à l'icône cœur — c'est privé et cela n'affecte jamais le classement d'une recette pour les autres — puis retrouvez-les tous, un aperçu de vos goûts, dans Paramètres › Mes favoris."
       },
       "linkVariation": {
         "title": "Lier une recette existante comme variation",

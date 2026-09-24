@@ -29,6 +29,7 @@
     import PageMeta from "../../../../../components/PageMeta.svelte";
     import CookMode from "../../../../../components/CookMode.svelte";
     import Checkbox from "../../../../../components/Checkbox.svelte";
+    import ImageCropModal from "../../../../../components/ImageCropModal.svelte";
     import {recipeStepProgress, isStepDone, toggleStepDone} from "$lib/recipeProgress";
 
     let id = $derived(page.params.id)
@@ -213,11 +214,14 @@
         pictureInput?.click();
     }
 
-    async function handlePictureSelected(event: Event) {
-        const target = event.target as HTMLInputElement;
-        const file = target.files?.[0];
-        target.value = '';
-        if (!file || !recipe)
+    // A contributor adding a photo to someone else's recipe goes through the
+    // same crop/rotate step RecipeEdit uses, so community photos land at a
+    // consistent size/orientation; the author uploading to their own recipe
+    // skips straight to upload.
+    let cropFile = $state<File | null>(null);
+
+    async function uploadPicture(file: File) {
+        if (!recipe)
             return;
         addingPicture = true;
         try {
@@ -233,6 +237,27 @@
         } finally {
             addingPicture = false;
         }
+    }
+
+    async function handlePictureSelected(event: Event) {
+        const target = event.target as HTMLInputElement;
+        const file = target.files?.[0];
+        target.value = '';
+        if (!file || !recipe)
+            return;
+        if (isAuthor)
+            await uploadPicture(file);
+        else
+            cropFile = file;
+    }
+
+    async function onPictureCropConfirm(croppedFile: File) {
+        cropFile = null;
+        await uploadPicture(croppedFile);
+    }
+
+    function onPictureCropCancel() {
+        cropFile = null;
     }
 
     async function handleRemovePicture(e: MouseEvent, filename: string) {
@@ -461,6 +486,7 @@
                             class="hidden"
                             onchange={handlePictureSelected}
                     />
+                    <ImageCropModal file={cropFile} onConfirm={onPictureCropConfirm} onCancel={onPictureCropCancel} />
                 {/if}
             </div>
 

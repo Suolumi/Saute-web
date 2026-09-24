@@ -84,7 +84,7 @@
                 searched = true;
                 if (response.ok && data) {
                     results = replace ? data.items : [...results, ...data.items];
-                    hasMore = results.length < data.length;
+                    hasMore = data.items.length === PAGE_SIZE;
                 } else {
                     hasMore = false;
                     toastError($_('edit.ingredients.recipePicker.error'));

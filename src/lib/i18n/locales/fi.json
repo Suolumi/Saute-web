@@ -687,6 +687,7 @@
       "title": "Reseptit",
       "searchPlaceholder": "Hae reseptejä...",
       "variationBadge": "Muunnelma",
+      "favorites": "{count} suosikkia",
       "edit": "Muokkaa",
       "retranslate": "Käännä uudelleen",
       "delete": "Poista",
@@ -704,6 +705,7 @@
       "title": "DIY",
       "searchPlaceholder": "Hae DIY-projekteja...",
       "variationBadge": "Muunnelma",
+      "favorites": "{count} suosikkia",
       "edit": "Muokkaa",
       "retranslate": "Käännä uudelleen",
       "delete": "Poista",
@@ -716,6 +718,14 @@
       "confirmDelete": "Poista",
       "deleted": "DIY-projekti poistettu",
       "retranslateScheduled": "Uudelleenkäännös ajoitettu"
+    },
+    "favoritesModal": {
+      "title": "Suosikkeihin lisänneet",
+      "description": "Käyttäjät, jotka ovat lisänneet kohteen ”{title}” suosikkeihin.",
+      "none": "Kukaan ei ole vielä lisännyt tätä suosikkeihin.",
+      "prev": "Edellinen",
+      "next": "Seuraava",
+      "loadError": "Suosikkeja ei voitu ladata"
     },
     "translations": {
       "title": "Käännökset",
@@ -803,7 +813,7 @@
       },
       "favorites": {
         "title": "Suosikit",
-        "description": "Merkitse mikä tahansa resepti tai DIY-projekti suosikiksi sydän-kuvakkeesta ja löydä ne kaikki kohdasta Asetukset › Omat suosikit."
+        "description": "Merkitse suosikiksi niin monta reseptiä tai DIY-projektia kuin haluat sydän-kuvakkeesta — se on yksityistä eikä vaikuta koskaan reseptin sijoitukseen muille — ja löydä ne kaikki, katsaus omaan makuusi, kohdasta Asetukset › Omat suosikit."
       },
       "linkVariation": {
         "title": "Linkitä olemassa oleva resepti versioksi",

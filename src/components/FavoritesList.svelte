@@ -84,7 +84,7 @@
                 return
             recipes = replace ? data.items : [...recipes, ...data.items]
             totalCount = data.length
-            hasMore = recipes.length < data.length
+            hasMore = data.items.length === PAGE_SIZE
             requestAnimationFrame(fillViewport)
         })
     }

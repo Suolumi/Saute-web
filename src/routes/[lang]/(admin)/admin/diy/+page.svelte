@@ -2,8 +2,10 @@
     import { untrack } from 'svelte';
     import {_, locale} from 'svelte-i18n';
     import {goto} from '$app/navigation';
+    import {Heart} from '@lucide/svelte';
     import Button from '../../../../../components/Button.svelte';
     import Modal from '../../../../../components/Modal.svelte';
+    import RecipeFavoritesModal from '../../../../../components/RecipeFavoritesModal.svelte';
     import RecipeFilters from '../../../../../components/RecipeFilters.svelte';
     import {getAdminRecipes, retranslateRecipe} from '$lib/admin';
     import {deleteRecipe, type RecipePreview} from '$lib/recipes';
@@ -21,6 +23,7 @@
     let total = $state(0);
     let offset = $state(0);
     let deleteModal = $state({isOpen: false, id: '', title: ''});
+    let favoritesModal = $state({isOpen: false, id: '', title: ''});
 
     function load() {
         getAdminRecipes({
@@ -108,6 +111,15 @@
                 </div>
 
                 <div class="flex flex-wrap gap-2">
+                    <Button
+                            size="sm" variant="outline"
+                            disabled={recipe.favorite_count === 0}
+                            onclick={() => favoritesModal = {isOpen: true, id: recipe.id, title: recipe.title}}
+                            aria-label={$_('admin.diy.favorites', {values: {count: recipe.favorite_count}})}
+                    >
+                        <Heart size="14" class="mr-1" />
+                        {recipe.favorite_count}
+                    </Button>
                     <Button size="sm" variant="outline" onclick={() => editR(recipe.id)}>
                         {$_('admin.diy.edit')}
                     </Button>
@@ -144,3 +156,10 @@
         </Button>
     </div>
 </Modal>
+
+<RecipeFavoritesModal
+        open={favoritesModal.isOpen}
+        onClose={() => favoritesModal.isOpen = false}
+        recipeId={favoritesModal.id}
+        recipeTitle={favoritesModal.title}
+/>

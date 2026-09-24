@@ -687,6 +687,7 @@
       "title": "Recipes",
       "searchPlaceholder": "Search recipes...",
       "variationBadge": "Variation",
+      "favorites": "{count} favorites",
       "edit": "Edit",
       "retranslate": "Retranslate",
       "delete": "Delete",
@@ -704,6 +705,7 @@
       "title": "DIY",
       "searchPlaceholder": "Search DIY projects...",
       "variationBadge": "Variation",
+      "favorites": "{count} favorites",
       "edit": "Edit",
       "retranslate": "Retranslate",
       "delete": "Delete",
@@ -716,6 +718,14 @@
       "confirmDelete": "Delete",
       "deleted": "DIY project deleted",
       "retranslateScheduled": "Retranslation scheduled"
+    },
+    "favoritesModal": {
+      "title": "Favorited by",
+      "description": "Users who favorited \"{title}\".",
+      "none": "No one has favorited this yet.",
+      "prev": "Previous",
+      "next": "Next",
+      "loadError": "Couldn't load favorites"
     },
     "translations": {
       "title": "Translations",
@@ -803,7 +813,7 @@
       },
       "favorites": {
         "title": "Favorites",
-        "description": "Favorite any recipe or DIY project with the heart icon, then find all of them together under Settings › My Favorites."
+        "description": "Favorite as many recipes or DIY projects as you like with the heart icon — it's private and never affects a recipe's ranking for anyone else — then find them all, a running picture of your taste, under Settings › My Favorites."
       },
       "linkVariation": {
         "title": "Link an Existing Recipe as a Variation",

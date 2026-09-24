@@ -102,6 +102,23 @@ export function retranslateRecipe(id: string) {
     return apiFetchJson<{ message: string }>(`/recipes/${id}/retranslate`, 'POST', null)
 }
 
+// RecipeFavoriter is the identity-only view of a user who favorited a
+// recipe (backend's models.UserView: no email, no admin flag).
+export type RecipeFavoriter = {
+    id: string
+    username: string
+    picture?: string
+}
+
+export type GetRecipeFavoritesResponse = {
+    length: number
+    items: RecipeFavoriter[]
+}
+
+export function getAdminRecipeFavorites(id: string, params: { limit?: number, offset?: number }) {
+    return apiFetchJson<GetRecipeFavoritesResponse>(`/admin/recipes/${id}/favorites`, 'GET', null, params)
+}
+
 export function getAdminStats() {
     return apiFetchJson<AdminStats>('/admin/system/stats')
 }
