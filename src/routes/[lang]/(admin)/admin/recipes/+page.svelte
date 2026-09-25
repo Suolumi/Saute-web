@@ -40,7 +40,7 @@
             quickest_total: !popular && timeTarget === 'quick' && timeBasis === 'total' ? true : undefined,
             preparation_time: !popular && timeTarget !== 'any' && timeTarget !== 'quick' && timeBasis === 'prep' ? Number(timeTarget) : undefined,
             total_time: !popular && timeTarget !== 'any' && timeTarget !== 'quick' && timeBasis === 'total' ? Number(timeTarget) : undefined,
-            limit: PAGE_SIZE, offset, locale: $locale ?? undefined,
+            limit: PAGE_SIZE, offset, locale: $locale ?? undefined, search_locale: $locale ?? 'en',
         }).then(({response, data}) => {
             if (response.ok && data) {
                 recipes = data.items;

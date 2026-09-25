@@ -31,7 +31,7 @@
             title: searchTerm || undefined,
             author: author || undefined,
             ingredients: ingredients.length > 0 ? ingredients : undefined,
-            limit: PAGE_SIZE, offset, locale: $locale ?? undefined,
+            limit: PAGE_SIZE, offset, locale: $locale ?? undefined, search_locale: $locale ?? 'en',
         }).then(({response, data}) => {
             if (response.ok && data) {
                 recipes = data.items;
