@@ -19,3 +19,11 @@ export function toastError(msg: string) {
         }
     })
 }
+
+// pictureUrl resolves a recipe/step picture for display. Most of the time
+// `picture` is a filename that needs the API's static-file prefix; but a
+// locally-staged, not-yet-uploaded photo (the create/edit wizard's live
+// preview) is already a full blob: object URL, and must be used as-is.
+export function pictureUrl(serverUrl: string, picture: string): string {
+    return /^(blob|data|https?):/.test(picture) ? picture : `${serverUrl}/recipe-pictures/${picture}`;
+}

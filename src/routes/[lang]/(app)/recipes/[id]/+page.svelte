@@ -698,6 +698,12 @@
                                             ariaLabel={$_('recipe.stepDone', {values: {step: index + 1}})}
                                     />
                                 </div>
+                                <div class="flex-1 min-w-0 {done ? 'opacity-50' : ''}">
+                                    <div class="font-bold text-sm">
+                                        {step.title || `Step ${index + 1}`}
+                                    </div>
+                                    <p class="text-card-foreground leading-relaxed pl-4 whitespace-pre-line {done ? 'line-through' : ''}">{step.description}</p>
+                                </div>
                                 {#if step.picture}
                                     <button
                                             type="button"
@@ -712,12 +718,6 @@
                                         />
                                     </button>
                                 {/if}
-                                <div class="flex-1 min-w-0 {done ? 'opacity-50' : ''}">
-                                    <div class="font-bold text-sm">
-                                        {step.title || `Step ${index + 1}`}
-                                    </div>
-                                    <p class="text-card-foreground leading-relaxed pl-4 whitespace-pre-line {done ? 'line-through' : ''}">{step.description}</p>
-                                </div>
                             </div>
                         {/each}
                     </div>

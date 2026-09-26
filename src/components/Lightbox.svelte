@@ -3,6 +3,7 @@
     import {ArrowLeft, ArrowRight, X} from "@lucide/svelte";
     import {fade, scale, fly} from "svelte/transition";
     import {_} from 'svelte-i18n';
+    import {pictureUrl} from "$lib/utils";
 
     // pictureAttributions, when given, must be the same length/order as
     // pictures - who added the picture at that index (both fields always
@@ -150,7 +151,7 @@
             <div class="relative w-full h-[90vh] max-w-full overflow-hidden">
                 {#key index}
                     <img
-                            src={`${$serverUrl}/recipe-pictures/${pictures[index]}`}
+                            src={pictureUrl($serverUrl, pictures[index])}
                             {alt}
                             class="absolute inset-0 m-auto max-h-[90vh] max-w-full object-contain select-none"
                             in:pictureIn={{ first: justOpened, dir: direction }}

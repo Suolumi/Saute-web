@@ -96,10 +96,10 @@
                         type="button"
                         onclick={() => handleMatchClick(match)}
                         aria-label={$_('edit.duplicateNudge.viewMatch', {values: {title: match.title}})}
-                        class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-card border border-border text-sm text-foreground hover:border-primary/50 hover:cursor-pointer transition-colors"
+                        class="flex flex-col items-start leading-tight px-3 py-1.5 rounded-full bg-card border border-border text-sm text-foreground hover:border-primary/50 hover:cursor-pointer transition-colors"
                 >
                     <span class="font-medium">{match.title}</span>
-                    <span class="text-muted-foreground">— {$_('recipeCard.by')} {match.author?.username}</span>
+                    <span class="text-xs text-muted-foreground">{$_('recipeCard.by')} {match.author?.username}</span>
                 </button>
             {/each}
         </div>

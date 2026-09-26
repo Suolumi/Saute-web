@@ -5,6 +5,8 @@
     import Select from './Select.svelte';
     import Label from './Label.svelte';
     import RecipeCard from "./RecipeCard.svelte";
+    import RecipeRefIngredient from "./RecipeRefIngredient.svelte";
+    import Lightbox from "./Lightbox.svelte";
     import RecipePickerModal from "./RecipePickerModal.svelte";
     import {
         getIngredientName,
@@ -24,7 +26,7 @@
     import {createRecipeCache, editRecipeCache, serverUrl, user} from "$lib/stores";
     import {untrack} from "svelte";
     import {_} from 'svelte-i18n'
-    import {toastError} from "$lib/utils";
+    import {toastError, pictureUrl} from "$lib/utils";
     import {Trash2, GripVertical, EllipsisVertical, Plus, Pencil, Link2} from "@lucide/svelte";
 
     interface Props {
@@ -117,6 +119,15 @@
 
     let stepRows = $state<EditStep[]>(untrack(() => buildStepRows(formData.steps)));
     let stepPendingPictures = $state<Record<string, {file: File, url: string}>>({});
+    // previewStepLightboxUid mirrors the real detail page's per-step lightbox,
+    // for the live-preview column's step photos.
+    let previewStepLightboxUid = $state<string | null>(null);
+
+    function stepPictureSrc(row: EditStep): string | null {
+        const pending = stepPendingPictures[row.uid];
+        if (pending) return pending.url;
+        return row.picture ? pictureUrl($serverUrl, row.picture) : null;
+    }
 
     $effect(() => {
         formData.steps = stepRows.map(({title, description, picture}) => picture ? {title, description, picture} : {title, description});
@@ -1376,7 +1387,11 @@
               <div class="lg:sticky lg:top-8 space-y-6">
                 <h2 class="text-2xl font-semibold text-card-foreground mt-4">{$_('edit.preview')}</h2>
 
-                <RecipeCard recipe={{...formData, author: $user ?? {id: '', admin: false, username: 'aa', picture: ''}, id: '', favorite: false, favorite_count: 0, variation_count: 0}} disabled />
+                <RecipeCard
+                    recipe={{...formData, pictures: [...formData.pictures, ...pendingPictures.map(p => p.url)], author: $user ?? {id: '', admin: false, username: 'aa', picture: ''}, id: '', favorite: false, favorite_count: 0, variation_count: 0}}
+                    disabled
+                    truncateDescription={false}
+                />
 
                 <div class="bg-card rounded-xl border border-border p-6">
                   <h3 class="text-lg font-semibold text-foreground mb-4 flex items-center">
@@ -1397,13 +1412,11 @@
                             {#each group.items as ingredient}
                               <li class="flex items-start text-sm">
                                 <div class="w-1.5 h-1.5 bg-primary rounded-full mt-1.5 mr-2 flex-shrink-0"></div>
-                                <span class="text-foreground">
-                                                {#if ingredient.recipe_ref}
-                                                  {`${getReferenceQuantity(ingredient)} ${ingredient.ref_label || ingredient.resolved_ref_title}`.trim()}
-                                                {:else}
-                                                  {getIngredientName(ingredient)}
-                                                {/if}
-                                            </span>
+                                {#if ingredient.recipe_ref}
+                                  <RecipeRefIngredient {ingredient} />
+                                {:else}
+                                  <span class="text-foreground">{getIngredientName(ingredient)}</span>
+                                {/if}
                               </li>
                             {/each}
                           </ul>

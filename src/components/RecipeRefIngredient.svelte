@@ -82,19 +82,19 @@
 </script>
 
 <div class="flex-1 min-w-0">
-    <div class="flex items-center gap-1.5 flex-wrap">
-        <span class="text-card-foreground">
+    <div class="flex items-start gap-1.5">
+        <span class="text-card-foreground min-w-0">
             {#if displayQuantity}{displayQuantity}{/if}
             <a href={`/${$locale}/recipes/${displayId}`} class="text-primary hover:underline font-medium">{displayTitle}</a>
-            <button
-                    type="button"
-                    onclick={toggle}
-                    class="inline-flex items-center align-middle text-xs text-muted-foreground hover:text-foreground transition-colors hover:cursor-pointer"
-                    aria-label={$_(expanded ? 'recipe.referenceCollapse' : 'recipe.referenceExpand')}
-            >
-                {#if expanded}<ChevronUp class="w-3.5 h-3.5" />{:else}<ChevronDown class="w-3.5 h-3.5" />{/if}
-            </button>
         </span>
+        <button
+                type="button"
+                onclick={toggle}
+                class="inline-flex items-center align-middle shrink-0 text-xs text-muted-foreground hover:text-foreground transition-colors hover:cursor-pointer"
+                aria-label={$_(expanded ? 'recipe.referenceCollapse' : 'recipe.referenceExpand')}
+        >
+            {#if expanded}<ChevronUp class="w-3.5 h-3.5" />{:else}<ChevronDown class="w-3.5 h-3.5" />{/if}
+        </button>
     </div>
 
     {#if expanded}
@@ -108,17 +108,19 @@
                             <button
                                     type="button"
                                     onclick={() => selectVariant(familyRoot!.id)}
-                                    class="text-xs px-2 py-0.5 rounded-full border transition-colors hover:cursor-pointer {selectedId === familyRoot.id ? 'bg-primary text-primary-foreground border-primary' : 'border-border text-muted-foreground hover:text-foreground'}"
+                                    class="flex flex-col items-start leading-tight text-xs px-2 py-1 rounded-full border transition-colors hover:cursor-pointer {selectedId === familyRoot.id ? 'bg-primary text-primary-foreground border-primary' : 'border-border text-muted-foreground hover:text-foreground'}"
                             >
-                                {familyRoot.title}
+                                <span>{familyRoot.title}</span>
+                                <span class="text-[0.65rem] opacity-70">{$_('recipeCard.by')} {familyRoot.author?.username}</span>
                             </button>
                             {#each familyVariations as variation (variation.id)}
                                 <button
                                         type="button"
                                         onclick={() => selectVariant(variation.id)}
-                                        class="text-xs px-2 py-0.5 rounded-full border transition-colors hover:cursor-pointer {selectedId === variation.id ? 'bg-primary text-primary-foreground border-primary' : 'border-border text-muted-foreground hover:text-foreground'}"
+                                        class="flex flex-col items-start leading-tight text-xs px-2 py-1 rounded-full border transition-colors hover:cursor-pointer {selectedId === variation.id ? 'bg-primary text-primary-foreground border-primary' : 'border-border text-muted-foreground hover:text-foreground'}"
                                 >
-                                    {variation.title}
+                                    <span>{variation.title}</span>
+                                    <span class="text-[0.65rem] opacity-70">{$_('recipeCard.by')} {variation.author?.username}</span>
                                 </button>
                             {/each}
                         </div>

@@ -6,7 +6,7 @@
     import {ArrowLeft, ArrowRight, Heart, Plus} from "@lucide/svelte";
     import {serverUrl, user} from "$lib/stores";
     import {locale, _} from "svelte-i18n";
-    import {toastError} from "$lib/utils";
+    import {toastError, pictureUrl} from "$lib/utils";
     import Lightbox from "./Lightbox.svelte";
     import Modal from "./Modal.svelte";
     import RecipeCard from "./RecipeCard.svelte";
@@ -18,7 +18,10 @@
     // - the My Favorites tab uses it to drop a card the moment it's
     // unfavorited, since this component only updates its own local copy of
     // `recipe` and never mutates the parent's list itself.
-    let { recipe, disabled = false, suppressPicker = false, onFavoriteChange }: { recipe: RecipePreview, disabled?: boolean, suppressPicker?: boolean, onFavoriteChange?: (favorite: boolean) => void } = $props();
+    // truncateDescription clips the description to 200 chars, as fits a grid
+    // listing card - the create/edit wizard's live preview (a full-page
+    // stand-in, not a listing) turns it off to show the description in full.
+    let { recipe, disabled = false, suppressPicker = false, onFavoriteChange, truncateDescription = true }: { recipe: RecipePreview, disabled?: boolean, suppressPicker?: boolean, onFavoriteChange?: (favorite: boolean) => void, truncateDescription?: boolean } = $props();
     let emblaApi: any = $state();
     let lightboxOpen = $state(false);
     let lightboxIndex = $state(0);
@@ -167,7 +170,7 @@
                 <div class="embla__container">
                     {#each recipe.pictures as picture}
                         <img
-                                src={`${$serverUrl}/recipe-pictures/${picture}`}
+                                src={pictureUrl($serverUrl, picture)}
                                 alt={recipe.title || 'Recipe Title'}
                                 class="embla__slide__img aspect-video object-cover cursor-zoom-in hover:scale-105 transition-transform duration-300"
                         />
@@ -218,7 +221,7 @@
             </div>
         </div>
 
-        <p class="text-muted-foreground mb-4 text-pretty whitespace-pre-line">{recipe.description ? recipe.description.length > 200 ? recipe.description.slice(0, 200) + '...' : recipe.description : $_('recipeCard.description')}</p>
+        <p class="text-muted-foreground mb-4 text-pretty whitespace-pre-line">{recipe.description ? (truncateDescription && recipe.description.length > 200 ? recipe.description.slice(0, 200) + '...' : recipe.description) : $_('recipeCard.description')}</p>
 
     </div>
     <div class="px-6 pb-6 flex items-center justify-between text-sm text-muted-foreground">
