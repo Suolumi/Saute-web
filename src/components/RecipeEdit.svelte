@@ -1436,19 +1436,34 @@
                     {$_('recipe.instructions')}
                   </h3>
 
-                  {#if formData.steps.length > 0 && formData.steps.some(s => s.title.trim() || s.description.trim())}
+                  {#if stepRows.some(row => row.title.trim() || row.description.trim())}
                     <div class="space-y-4">
-                      {#each formData.steps as step}
-                        {#if step.title.trim() || step.description.trim()}
+                      {#each stepRows as row, index (row.uid)}
+                        {@const pictureSrc = stepPictureSrc(row)}
+                        {#if row.title.trim() || row.description.trim()}
                           <div class="flex gap-3">
-                            <div class="text-sm">
-                              {#if step.title.trim()}
-                                <h4 class="font-semibold text-foreground mb-1">{step.title}</h4>
+                            <div class="flex-1 min-w-0 text-sm">
+                              {#if row.title.trim()}
+                                <h4 class="font-semibold text-foreground mb-1">{row.title}</h4>
                               {/if}
-                              {#if step.description.trim()}
-                                <p class="text-foreground leading-relaxed whitespace-pre-line">{step.description}</p>
+                              {#if row.description.trim()}
+                                <p class="text-foreground leading-relaxed whitespace-pre-line">{row.description}</p>
                               {/if}
                             </div>
+                            {#if pictureSrc}
+                              <button
+                                  type="button"
+                                  onclick={() => previewStepLightboxUid = row.uid}
+                                  class="flex-shrink-0 hover:cursor-zoom-in"
+                                  aria-label={$_('recipe.stepPhoto', {values: {step: index + 1}})}
+                              >
+                                <img
+                                    src={pictureSrc}
+                                    alt={row.title || `Step ${index + 1}`}
+                                    class="w-20 h-20 object-cover rounded-lg border border-border hover:scale-105 transition-transform"
+                                />
+                              </button>
+                            {/if}
                           </div>
                         {/if}
                       {/each}
@@ -1465,6 +1480,13 @@
     </div>
   </div>
 </div>
+
+<Lightbox
+    open={previewStepLightboxUid !== null}
+    pictures={previewStepLightboxUid ? [stepPictureSrc(stepRows.find(r => r.uid === previewStepLightboxUid)!) ?? ''] : []}
+    alt={formData.title || 'Recipe Title'}
+    onClose={() => previewStepLightboxUid = null}
+/>
 
 <ImageCropModal file={currentCrop?.file ?? null} onConfirm={onCropConfirm} onCancel={onCropCancel} />
 
