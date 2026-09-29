@@ -956,7 +956,7 @@
       },
       "toolbox": {
         "title": "Toolbox",
-        "description": "Convert a quantity between weight and volume for a given ingredient, flip between °C and °F for oven temperatures, look up a substitution for something you're out of, or run multiple named kitchen timers at once — all under the Toolbox tab."
+        "description": "Convert a quantity between weight and volume for a given ingredient, flip between °C and °F for oven temperatures, look up a food's nutrition facts per 100 g, look up a substitution for something you're out of, or run multiple named kitchen timers at once — all under the Toolbox tab."
       },
       "translationFix": {
         "title": "Suggest a Translation Fix",
@@ -1052,6 +1052,7 @@
     "tabs": {
       "quantity": "Quantity converter",
       "oven": "Oven temperatures",
+      "nutrition": "Nutrition facts",
       "timers": "Timers",
       "substitutions": "Substitutions"
     },
@@ -1074,6 +1075,13 @@
       "unitCelsius": "Celsius (°C)",
       "unitFahrenheit": "Fahrenheit (°F)",
       "resultLabel": "Result"
+    },
+    "nutritionData": {
+      "ingredientLabel": "Food",
+      "placeholder": "Search foods…",
+      "empty": "Search for a food to see its nutrition facts.",
+      "per100g": "Per 100 g",
+      "disclaimer": "Values come from a curated food-composition reference list, not the ingredient as you'd actually cook it (raw vs. cooked, brand, etc.)."
     },
     "substitutions": {
       "searchLabel": "Search substitutions",

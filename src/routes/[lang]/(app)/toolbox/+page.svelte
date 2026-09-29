@@ -15,12 +15,13 @@
         getToolboxIngredients, getToolboxUnits, getToolboxSubstitutions, convertQuantity,
         type ToolboxIngredient, type ToolboxUnit, type ToolboxSubstitution
     } from "$lib/toolbox";
+    import {getNutritionIngredients, type NutritionIngredient} from "$lib/nutrition";
     import {
         activeTimers, startAdHocTimer, cancelTimer, pauseTimer, resumeTimer, isPaused, remainingMs, formatRemaining
     } from "$lib/recipeTimers";
     import {unlockAlarmAudio} from "$lib/timerAlarm";
 
-    type Tab = 'quantity' | 'oven' | 'timers' | 'substitutions';
+    type Tab = 'quantity' | 'oven' | 'nutrition' | 'timers' | 'substitutions';
 
     let ingredients: ToolboxIngredient[] = $state([]);
     let units: ToolboxUnit[] = $state([]);
@@ -35,6 +36,9 @@
 
     let ovenTemp: number = $state(350);
     let ovenUnit: 'F' | 'C' = $state('F');
+
+    let nutritionIngredients: NutritionIngredient[] = $state([]);
+    let nutritionIngredientId = $state('');
 
     let subSearch = $state('');
 
@@ -51,6 +55,23 @@
         const interval = setInterval(() => timerNow = Date.now(), 500);
         return () => clearInterval(interval);
     });
+
+    onMount(() => {
+        getNutritionIngredients().then(({response, data}) => {
+            if (response.ok && data)
+                nutritionIngredients = data.items;
+        });
+    });
+
+    // displayName resolves a curated Ciqual entry's name in the site's
+    // current language - NutritionIngredient.name is always Ciqual's own
+    // French name; .names holds the en/fi translations baked in at import.
+    function displayName(item: NutritionIngredient): string {
+        return item.names?.[$locale ?? ''] ?? item.name;
+    }
+
+    const localizedNutritionIngredients = $derived(nutritionIngredients.map(n => ({id: n.id, name: displayName(n)})));
+    const selectedNutritionIngredient = $derived(nutritionIngredients.find(n => n.id === nutritionIngredientId));
 
     const adHocTimers = $derived(
         [...$activeTimers].filter(t => t.recipeId === null).sort((a, b) => remainingMs(a, timerNow) - remainingMs(b, timerNow))
@@ -184,6 +205,13 @@
         </button>
         <button
                 type="button"
+                onclick={() => activeTab = 'nutrition'}
+                class="px-5 py-2.5 rounded-full text-sm font-semibold transition-colors hover:cursor-pointer {activeTab === 'nutrition' ? 'bg-primary text-primary-foreground' : 'bg-card border border-border text-foreground hover:bg-muted'}"
+        >
+            {$_('toolbox.tabs.nutrition')}
+        </button>
+        <button
+                type="button"
                 onclick={() => activeTab = 'timers'}
                 class="px-5 py-2.5 rounded-full text-sm font-semibold transition-colors hover:cursor-pointer {activeTab === 'timers' ? 'bg-primary text-primary-foreground' : 'bg-card border border-border text-foreground hover:bg-muted'}"
         >
@@ -265,6 +293,58 @@
                 <div class="text-xs font-semibold text-muted-foreground uppercase tracking-wide">{$_('toolbox.oven.resultLabel')}</div>
                 <div class="text-4xl font-extrabold text-primary mt-1.5">{ovenResult !== undefined ? `${ovenResult}°${ovenResultUnit}` : '—'}</div>
             </div>
+        </div>
+    {:else if activeTab === 'nutrition'}
+        <div class="bg-card border border-border rounded-2xl p-6 sm:p-8 space-y-6">
+            <div>
+                <Label for="toolbox-nutrition-ingredient">{$_('toolbox.nutritionData.ingredientLabel')}</Label>
+                <IngredientCombobox
+                        id="toolbox-nutrition-ingredient"
+                        ingredients={localizedNutritionIngredients}
+                        bind:value={nutritionIngredientId}
+                        placeholder={$_('toolbox.nutritionData.placeholder')}
+                />
+            </div>
+
+            {#if selectedNutritionIngredient}
+                <div class="bg-primary/10 rounded-xl p-6">
+                    <div class="text-lg font-bold text-foreground mb-1">{displayName(selectedNutritionIngredient)}</div>
+                    <div class="text-xs font-semibold text-muted-foreground uppercase tracking-wide mb-4">{$_('toolbox.nutritionData.per100g')}</div>
+                    <div class="grid grid-cols-2 sm:grid-cols-3 gap-4">
+                        <div>
+                            <div class="text-xs font-semibold text-muted-foreground uppercase tracking-wide">{$_('recipe.nutrition.kcal')}</div>
+                            <div class="text-xl font-bold text-foreground">{Math.round(selectedNutritionIngredient.kcal_per_100g)}</div>
+                        </div>
+                        <div>
+                            <div class="text-xs font-semibold text-muted-foreground uppercase tracking-wide">{$_('recipe.nutrition.protein')}</div>
+                            <div class="text-xl font-bold text-foreground">{selectedNutritionIngredient.protein_g_per_100g} {$_('recipe.nutrition.gShort')}</div>
+                        </div>
+                        <div>
+                            <div class="text-xs font-semibold text-muted-foreground uppercase tracking-wide">{$_('recipe.nutrition.carbs')}</div>
+                            <div class="text-xl font-bold text-foreground">{selectedNutritionIngredient.carbs_g_per_100g} {$_('recipe.nutrition.gShort')}</div>
+                        </div>
+                        <div>
+                            <div class="text-xs font-semibold text-muted-foreground uppercase tracking-wide">{$_('recipe.nutrition.fat')}</div>
+                            <div class="text-xl font-bold text-foreground">{selectedNutritionIngredient.fat_g_per_100g} {$_('recipe.nutrition.gShort')}</div>
+                        </div>
+                        <div>
+                            <div class="text-xs font-semibold text-muted-foreground uppercase tracking-wide">{$_('recipe.nutrition.salt')}</div>
+                            <div class="text-xl font-bold text-foreground">{selectedNutritionIngredient.salt_g_per_100g} {$_('recipe.nutrition.gShort')}</div>
+                        </div>
+                        <div>
+                            <div class="text-xs font-semibold text-muted-foreground uppercase tracking-wide">{$_('recipe.nutrition.sugar')}</div>
+                            <div class="text-xl font-bold text-foreground">{selectedNutritionIngredient.sugar_g_per_100g} {$_('recipe.nutrition.gShort')}</div>
+                        </div>
+                    </div>
+                </div>
+            {:else}
+                <div class="text-center py-8 text-muted-foreground">
+                    <SearchX class="w-8 h-8 mx-auto mb-2 opacity-60" />
+                    {$_('toolbox.nutritionData.empty')}
+                </div>
+            {/if}
+
+            <p class="text-sm text-muted-foreground">{$_('toolbox.nutritionData.disclaimer')}</p>
         </div>
     {:else if activeTab === 'timers'}
         <div class="bg-card border border-border rounded-2xl p-6 sm:p-8 space-y-6">

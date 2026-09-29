@@ -956,7 +956,7 @@
       },
       "toolbox": {
         "title": "Boîte à outils",
-        "description": "Convertissez une quantité entre poids et volume pour un ingrédient donné, basculez entre °C et °F pour les températures de four, cherchez un substitut à ce qui vous manque, ou lancez plusieurs minuteurs nommés à la fois — le tout dans l'onglet Boîte à outils."
+        "description": "Convertissez une quantité entre poids et volume pour un ingrédient donné, basculez entre °C et °F pour les températures de four, consultez les valeurs nutritionnelles d'un aliment pour 100 g, cherchez un substitut à ce qui vous manque, ou lancez plusieurs minuteurs nommés à la fois — le tout dans l'onglet Boîte à outils."
       },
       "translationFix": {
         "title": "Proposer une correction de traduction",
@@ -1052,6 +1052,7 @@
     "tabs": {
       "quantity": "Convertisseur de quantités",
       "oven": "Températures de four",
+      "nutrition": "Valeurs nutritionnelles",
       "timers": "Minuteurs",
       "substitutions": "Remplacements"
     },
@@ -1074,6 +1075,13 @@
       "unitCelsius": "Celsius (°C)",
       "unitFahrenheit": "Fahrenheit (°F)",
       "resultLabel": "Résultat"
+    },
+    "nutritionData": {
+      "ingredientLabel": "Aliment",
+      "placeholder": "Rechercher un aliment…",
+      "empty": "Recherchez un aliment pour voir ses valeurs nutritionnelles.",
+      "per100g": "Pour 100 g",
+      "disclaimer": "Les valeurs proviennent d'une liste de référence de composition des aliments, pas de l'ingrédient tel que vous le cuisinez réellement (cru ou cuit, marque, etc.)."
     },
     "substitutions": {
       "searchLabel": "Rechercher un remplacement",

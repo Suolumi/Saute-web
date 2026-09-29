@@ -956,7 +956,7 @@
       },
       "toolbox": {
         "title": "Työkalupakki",
-        "description": "Muunna määrä painon ja tilavuuden välillä valitulle ainesosalle, vaihda uunin lämpötila °C:n ja °F:n välillä, etsi korvike jollekin, joka on loppu, tai käytä useita nimettyjä ajastimia yhtä aikaa — kaikki Työkalupakki-välilehdellä."
+        "description": "Muunna määrä painon ja tilavuuden välillä valitulle ainesosalle, vaihda uunin lämpötila °C:n ja °F:n välillä, katso elintarvikkeen ravintosisältö 100 g kohti, etsi korvike jollekin, joka on loppu, tai käytä useita nimettyjä ajastimia yhtä aikaa — kaikki Työkalupakki-välilehdellä."
       },
       "translationFix": {
         "title": "Ehdota käännöskorjausta",
@@ -1052,6 +1052,7 @@
     "tabs": {
       "quantity": "Määrämuunnin",
       "oven": "Uunin lämpötilat",
+      "nutrition": "Ravintosisältö",
       "timers": "Ajastimet",
       "substitutions": "Korvaavat ainekset"
     },
@@ -1074,6 +1075,13 @@
       "unitCelsius": "Celsius (°C)",
       "unitFahrenheit": "Fahrenheit (°F)",
       "resultLabel": "Tulos"
+    },
+    "nutritionData": {
+      "ingredientLabel": "Elintarvike",
+      "placeholder": "Hae elintarvikkeita…",
+      "empty": "Hae elintarviketta nähdäksesi sen ravintosisällön.",
+      "per100g": "100 g kohti",
+      "disclaimer": "Arvot ovat peräisin kuratoidusta elintarvikkeiden koostumustietokannasta, eivät ainesosasta sellaisena kuin todella valmistat sen (raaka vai kypsä, merkki jne.)."
     },
     "substitutions": {
       "searchLabel": "Hae korvaavia aineksia",
