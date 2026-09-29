@@ -7,6 +7,7 @@
     import Modal from '../../../../../components/Modal.svelte';
     import RecipeFavoritesModal from '../../../../../components/RecipeFavoritesModal.svelte';
     import RecipeFilters from '../../../../../components/RecipeFilters.svelte';
+    import HighlightText from '../../../../../components/HighlightText.svelte';
     import {getAdminRecipes, retranslateRecipe} from '$lib/admin';
     import {deleteRecipe, type RecipePreview} from '$lib/recipes';
     import {serverUrl} from '$lib/stores';
@@ -102,7 +103,7 @@
 
                 <div class="min-w-0 flex-1">
                     <p class="font-medium text-card-foreground truncate">
-                        {recipe.title}
+                        <HighlightText text={recipe.title} query={searchTerm} />
                         {#if recipe.variation_of}
                             <span class="ml-1 text-xs bg-muted text-muted-foreground px-2 py-0.5 rounded-full">{$_('admin.recipes.variationBadge')}</span>
                         {/if}

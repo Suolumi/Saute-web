@@ -7,6 +7,7 @@
     import Input from '../../../../../components/Input.svelte';
     import Label from '../../../../../components/Label.svelte';
     import IngredientCombobox from '../../../../../components/toolbox/IngredientCombobox.svelte';
+    import HighlightText from '../../../../../components/HighlightText.svelte';
     import {
         approveNutritionSuggestion, getNutritionSuggestions, rejectNutritionSuggestion, type NutritionSuggestionView,
         adminCreateNutritionLink, adminUpdateNutritionLink, adminDeleteNutritionLink, type AdminNutritionLinkRequest,
@@ -51,6 +52,13 @@
         const u = units.find(u => u.id === id);
         return u ? `${u.name} (${u.symbol})` : id;
     }
+
+    let linkSearch = $state('');
+    const filteredLinks = $derived.by(() => {
+        const q = linkSearch.trim().toLowerCase();
+        if (!q) return links;
+        return links.filter(l => `${l.name} ${nutritionName(l.nutrition_id)}`.toLowerCase().includes(q));
+    });
 
     // Link create/edit modal
     let linkModalOpen = $state(false);
@@ -231,13 +239,16 @@
                     <h2 class="text-lg font-semibold text-foreground">{$_('admin.nutrition.ingredientLinks')} ({links.length})</h2>
                     <Button size="sm" onclick={openCreateLink}>{$_('admin.nutrition.newLink')}</Button>
                 </div>
+                <div class="max-w-sm">
+                    <Input type="search" placeholder={$_('admin.nutrition.searchLinksPlaceholder')} bind:value={linkSearch} />
+                </div>
                 <div class="bg-card rounded-lg border border-border divide-y divide-border">
-                    {#each links as link (link.id)}
+                    {#each filteredLinks as link (link.id)}
                         <div class="p-3 flex flex-wrap items-center justify-between gap-2">
                             <div>
-                                <p class="font-medium text-card-foreground">{link.name}</p>
+                                <p class="font-medium text-card-foreground"><HighlightText text={link.name} query={linkSearch} /></p>
                                 <p class="text-xs text-muted-foreground">
-                                    {$_('admin.nutrition.linkedTo')}: {nutritionName(link.nutrition_id)}
+                                    {$_('admin.nutrition.linkedTo')}: <HighlightText text={nutritionName(link.nutrition_id)} query={linkSearch} />
                                     {#if link.g_per_100ml} · {link.g_per_100ml} g/100ml{/if}
                                     {#if link.grams_per_unit} · {link.grams_per_unit} g/unit{/if}
                                 </p>
@@ -248,7 +259,7 @@
                             </div>
                         </div>
                     {:else}
-                        <p class="p-4 text-muted-foreground">{$_('admin.nutrition.noLinks')}</p>
+                        <p class="p-4 text-muted-foreground">{links.length === 0 ? $_('admin.nutrition.noLinks') : $_('admin.nutrition.noSearchResults')}</p>
                     {/each}
                 </div>
             </div>

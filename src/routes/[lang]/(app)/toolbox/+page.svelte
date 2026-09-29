@@ -8,6 +8,7 @@
     import Input from "../../../../components/Input.svelte";
     import Select from "../../../../components/Select.svelte";
     import IngredientCombobox from "../../../../components/toolbox/IngredientCombobox.svelte";
+    import HighlightText from "../../../../components/HighlightText.svelte";
     import SuggestIngredientModal from "../../../../components/toolbox/SuggestIngredientModal.svelte";
     import SuggestUnitModal from "../../../../components/toolbox/SuggestUnitModal.svelte";
     import SuggestSubstitutionModal from "../../../../components/toolbox/SuggestSubstitutionModal.svelte";
@@ -446,12 +447,12 @@
                     {#each filteredSubstitutions as sub (sub.id)}
                         <div class="border border-border rounded-xl p-4 bg-background">
                             <div class="flex items-center justify-between gap-3 mb-1.5">
-                                <span class="font-bold text-foreground">{sub.problem}</span>
+                                <span class="font-bold text-foreground"><HighlightText text={sub.problem} query={subSearch} /></span>
                                 {#if sub.tag}
-                                    <span class="text-xs font-semibold text-primary bg-primary/10 px-2.5 py-0.5 rounded-full whitespace-nowrap">{sub.tag}</span>
+                                    <span class="text-xs font-semibold text-primary bg-primary/10 px-2.5 py-0.5 rounded-full whitespace-nowrap"><HighlightText text={sub.tag} query={subSearch} /></span>
                                 {/if}
                             </div>
-                            <p class="text-sm text-muted-foreground">{sub.solution}</p>
+                            <p class="text-sm text-muted-foreground"><HighlightText text={sub.solution} query={subSearch} /></p>
                         </div>
                     {/each}
                 </div>

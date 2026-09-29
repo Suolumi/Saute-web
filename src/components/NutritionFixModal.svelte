@@ -5,6 +5,7 @@
     import Label from './Label.svelte';
     import Input from './Input.svelte';
     import IngredientCombobox from './toolbox/IngredientCombobox.svelte';
+    import SuggestUnitModal from './toolbox/SuggestUnitModal.svelte';
     import type {ToolboxUnit} from '$lib/toolbox';
     import {
         submitNutritionLinkSuggestion, requiredNutritionField, parsePositiveNumberInput,
@@ -58,6 +59,12 @@
     const fieldValueNumber = $derived(parsePositiveNumberInput(fieldValue));
     const fieldValueValid = $derived(requiredField === null || (fieldValueNumber !== null && fieldValueNumber > 0));
     const canSubmit = $derived(!!nutritionId && fieldValueValid && !submitting);
+
+    // See NutritionLinkSuggestion.svelte's identical note: only unrecognized
+    // unit *text* (not a genuinely blank unit) is worth offering to
+    // register as a real Toolbox unit.
+    const unknownUnitText = $derived(requiredField === 'grams_per_unit' ? ingredientUnit.trim() : '');
+    let suggestingUnit = $state(false);
 
     // Reset the form to this ingredient's current state every time the
     // modal opens - existingLink pre-fills the nutrition entry (and
@@ -124,6 +131,11 @@
                 <p class="mt-1 text-xs text-muted-foreground">
                     {$_(requiredField === 'density' ? 'edit.ingredients.nutritionLink.densityHelp' : 'edit.ingredients.nutritionLink.gramsPerUnitHelp')}
                 </p>
+                {#if unknownUnitText}
+                    <button type="button" onclick={() => suggestingUnit = true} class="mt-1.5 text-xs text-primary hover:underline hover:cursor-pointer">
+                        {$_('edit.ingredients.nutritionLink.suggestUnit', {values: {unit: unknownUnitText}})}
+                    </button>
+                {/if}
             </div>
         {/if}
         <div class="flex justify-end gap-2 pt-2">
@@ -132,3 +144,5 @@
         </div>
     </div>
 </Modal>
+
+<SuggestUnitModal bind:open={suggestingUnit} units={toolboxUnits} initialName={unknownUnitText} />

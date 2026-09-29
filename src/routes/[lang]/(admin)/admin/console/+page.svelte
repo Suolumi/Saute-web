@@ -5,6 +5,7 @@
     import Modal from '../../../../../components/Modal.svelte';
     import RecipePickerModal from '../../../../../components/RecipePickerModal.svelte';
     import UserPickerModal from '../../../../../components/UserPickerModal.svelte';
+    import HighlightText from '../../../../../components/HighlightText.svelte';
     import {
         getAdminRoutes, callAdminRoute,
         type AdminRouteDescriptor, type AdminRouteParam, type AdminRouteCategory, type AdminUser
@@ -358,7 +359,7 @@
                                     onclick={() => selectRoute(route)}
                                     class="block w-full text-left p-3 hover:bg-muted transition-colors hover:cursor-pointer {selected?.id === route.id ? 'bg-muted' : ''}"
                             >
-                                <p class="font-medium text-sm text-card-foreground">{route.label}</p>
+                                <p class="font-medium text-sm text-card-foreground"><HighlightText text={route.label} query={filter} /></p>
                                 <p class="text-xs text-muted-foreground">{route.method} {route.path}</p>
                             </button>
                         {/each}

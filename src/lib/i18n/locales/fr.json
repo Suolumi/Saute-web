@@ -399,7 +399,8 @@
         "densityLabel": "Densité (grammes pour 100ml)",
         "densityHelp": "Grammes pour 100ml de cet ingrédient — eau ≈ 100, miel ≈ 141, huile d'olive ≈ 92.",
         "gramsPerUnitLabel": "Poids par unité (grammes)",
-        "gramsPerUnitHelp": "Poids d'une unité entière — un oignon ≈ 150g, un œuf ≈ 50g."
+        "gramsPerUnitHelp": "Poids d'une unité entière — un oignon ≈ 150g, un œuf ≈ 50g.",
+        "suggestUnit": "« {unit} » n'est pas une unité connue — la proposer comme unité"
       },
       "enableNutrition": "Activer la nutrition"
     },
@@ -876,6 +877,8 @@
       "newLink": "Nouveau lien",
       "editLink": "Modifier le lien",
       "noLinks": "Aucun lien pour l'instant",
+      "searchLinksPlaceholder": "Rechercher par ingrédient ou entrée nutritionnelle…",
+      "noSearchResults": "Aucun lien ne correspond à votre recherche",
       "unitAliases": "Alias d'unités",
       "newAlias": "Nouvel alias",
       "editAlias": "Modifier l'alias",

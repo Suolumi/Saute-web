@@ -399,7 +399,8 @@
         "densityLabel": "Tiheys (grammaa per 100ml)",
         "densityHelp": "Grammaa per 100ml tätä ainesosaa — vesi ≈ 100, hunaja ≈ 141, oliiviöljy ≈ 92.",
         "gramsPerUnitLabel": "Paino per yksikkö (grammaa)",
-        "gramsPerUnitHelp": "Yhden kokonaisen yksikön paino — yksi sipuli ≈ 150g, yksi muna ≈ 50g."
+        "gramsPerUnitHelp": "Yhden kokonaisen yksikön paino — yksi sipuli ≈ 150g, yksi muna ≈ 50g.",
+        "suggestUnit": "\"{unit}\" ei ole tunnettu yksikkö — ehdota sitä yksiköksi"
       },
       "enableNutrition": "Ota ravinto käyttöön"
     },
@@ -876,6 +877,8 @@
       "newLink": "Uusi linkki",
       "editLink": "Muokkaa linkkiä",
       "noLinks": "Ei vielä linkkejä",
+      "searchLinksPlaceholder": "Hae ainesosan tai ravintotietueen mukaan…",
+      "noSearchResults": "Hakuun ei löytynyt linkkejä",
       "unitAliases": "Yksikköaliakset",
       "newAlias": "Uusi alias",
       "editAlias": "Muokkaa aliasta",

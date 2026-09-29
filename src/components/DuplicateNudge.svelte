@@ -1,6 +1,7 @@
 <script lang="ts">
     import Modal from './Modal.svelte';
     import Button from './Button.svelte';
+    import HighlightText from './HighlightText.svelte';
     import {getRecipes, type RecipeCategory, type RecipePreview} from '$lib/recipes';
     import {goto} from '$app/navigation';
     import {locale, _} from 'svelte-i18n';
@@ -98,7 +99,7 @@
                         aria-label={$_('edit.duplicateNudge.viewMatch', {values: {title: match.title}})}
                         class="flex flex-col items-start leading-tight px-3 py-1.5 rounded-full bg-card border border-border text-sm text-foreground hover:border-primary/50 hover:cursor-pointer transition-colors"
                 >
-                    <span class="font-medium">{match.title}</span>
+                    <span class="font-medium"><HighlightText text={match.title} query={title} /></span>
                     <span class="text-xs text-muted-foreground">{$_('recipeCard.by')} {match.author?.username}</span>
                 </button>
             {/each}

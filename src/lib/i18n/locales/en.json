@@ -399,7 +399,8 @@
         "densityLabel": "Density (grams per 100ml)",
         "densityHelp": "Grams per 100ml of this ingredient — water ≈ 100, honey ≈ 141, olive oil ≈ 92.",
         "gramsPerUnitLabel": "Weight per unit (grams)",
-        "gramsPerUnitHelp": "Weight of one whole unit — one onion ≈ 150g, one egg ≈ 50g."
+        "gramsPerUnitHelp": "Weight of one whole unit — one onion ≈ 150g, one egg ≈ 50g.",
+        "suggestUnit": "\"{unit}\" isn't a known unit — suggest it as one"
       },
       "enableNutrition": "Enable nutrition"
     },
@@ -876,6 +877,8 @@
       "newLink": "New link",
       "editLink": "Edit link",
       "noLinks": "No links yet",
+      "searchLinksPlaceholder": "Search by ingredient or nutrition entry…",
+      "noSearchResults": "No links match your search",
       "unitAliases": "Unit Aliases",
       "newAlias": "New alias",
       "editAlias": "Edit alias",

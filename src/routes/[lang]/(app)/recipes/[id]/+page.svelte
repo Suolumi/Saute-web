@@ -58,6 +58,28 @@
         })
     })
 
+    // canonicalIngredients is only fetched when actually viewing a
+    // translated copy (recipe.locale !== recipe.source_locale) - the
+    // Nutrition panel's fix-it flow must submit against the recipe's
+    // canonical (source-locale) ingredient text, since that's what
+    // GetRecipeNutrition always resolves links against server-side;
+    // submitting the locale-displayed name instead creates a link that can
+    // never match this recipe (confirmed live: linking "Patate douce" while
+    // viewing a French translation of a "Sweet potatoe" (source_locale en)
+    // recipe created a real link that just never resolves for it). Left
+    // undefined when they're the same locale - RecipeNutritionPanel falls
+    // back to the (already-canonical) ingredients prop in that case.
+    let canonicalIngredients: Recipe['ingredients'] | undefined = $state(undefined)
+    $effect(() => {
+        if (!recipe || recipe.locale === recipe.source_locale) {
+            canonicalIngredients = undefined
+            return
+        }
+        getRecipe(recipe.id).then(({response, data}) => {
+            if (response.ok && data) canonicalIngredients = data.ingredients
+        })
+    })
+
     $effect(() => {
         if (!rootId) {
             siblingVariations = []
@@ -771,7 +793,7 @@
         </div>
 
         {#if recipe.category !== 'diy' && (recipe.ingredients ?? []).length > 0}
-            <RecipeNutritionPanel recipeId={recipe.id} servings={selectedServings} ingredients={recipe.ingredients} />
+            <RecipeNutritionPanel recipeId={recipe.id} servings={selectedServings} ingredients={recipe.ingredients} canonicalIngredients={canonicalIngredients ?? recipe.ingredients} />
         {/if}
 
         {#if siblingVariations.length > 0}

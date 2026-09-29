@@ -13,10 +13,17 @@
     let {
         open = $bindable(false),
         units,
+        // initialName pre-fills the name field when opened - used when this
+        // is opened from a specific piece of unrecognized unit text (e.g.
+        // NutritionLinkSuggestion/NutritionFixModal's "isn't a known unit"
+        // link) rather than the Toolbox tab's own blank "suggest a unit"
+        // entry point.
+        initialName = '',
         onSubmitted = () => {}
     }: {
         open: boolean
         units: ToolboxUnit[]
+        initialName?: string
         onSubmitted?: () => void
     } = $props();
 
@@ -29,7 +36,7 @@
 
     $effect(() => {
         if (open) {
-            name = '';
+            name = initialName;
             symbol = '';
             kind = 'weight';
             toBase = NaN;

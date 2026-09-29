@@ -10,6 +10,7 @@
     import Lightbox from "./Lightbox.svelte";
     import Modal from "./Modal.svelte";
     import RecipeCard from "./RecipeCard.svelte";
+    import HighlightText from "./HighlightText.svelte";
 
     // suppressPicker forces a direct navigation on click, bypassing the
     // variation picker below - used for cards rendered inside the picker
@@ -21,7 +22,11 @@
     // truncateDescription clips the description to 200 chars, as fits a grid
     // listing card - the create/edit wizard's live preview (a full-page
     // stand-in, not a listing) turns it off to show the description in full.
-    let { recipe, disabled = false, suppressPicker = false, onFavoriteChange, truncateDescription = true }: { recipe: RecipePreview, disabled?: boolean, suppressPicker?: boolean, onFavoriteChange?: (favorite: boolean) => void, truncateDescription?: boolean } = $props();
+    // highlightQuery, when given, highlights the portion of the title that
+    // matches a search box driving this card's listing (e.g. RecipeFilters'
+    // searchTerm) - omitted entirely for cards shown outside a search
+    // context (variation pickers, related-recipe sections, etc.).
+    let { recipe, disabled = false, suppressPicker = false, onFavoriteChange, truncateDescription = true, highlightQuery = '' }: { recipe: RecipePreview, disabled?: boolean, suppressPicker?: boolean, onFavoriteChange?: (favorite: boolean) => void, truncateDescription?: boolean, highlightQuery?: string } = $props();
     let emblaApi: any = $state();
     let lightboxOpen = $state(false);
     let lightboxIndex = $state(0);
@@ -202,7 +207,7 @@
 
     <div class="p-6 flex-1">
         <div class="flex items-start justify-between mb-3">
-            <h3 class="text-xl font-semibold text-card-foreground text-balance">{recipe.title || $_('recipeCard.title')}</h3>
+            <h3 class="text-xl font-semibold text-card-foreground text-balance">{#if recipe.title}<HighlightText text={recipe.title} query={highlightQuery} />{:else}{$_('recipeCard.title')}{/if}</h3>
             <div class="flex items-center gap-2 ml-2 flex-shrink-0">
                 {#if !recipe.variation_of && recipe.variation_count > 0}
                     <span class="bg-primary/10 text-primary px-2 py-1 rounded-full text-sm font-medium whitespace-nowrap">

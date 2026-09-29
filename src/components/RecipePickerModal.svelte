@@ -2,6 +2,7 @@
     import Modal from './Modal.svelte';
     import Button from './Button.svelte';
     import Checkbox from './Checkbox.svelte';
+    import HighlightText from './HighlightText.svelte';
     import {getFamily, getRecipes, type RecipeCategory, type RecipePreview} from '$lib/recipes';
     import {serverUrl} from '$lib/stores';
     import {locale, _} from 'svelte-i18n';
@@ -210,7 +211,7 @@
             <div class="w-12 h-12 rounded-md bg-muted flex-shrink-0"></div>
         {/if}
         <div class="min-w-0 flex-1">
-            <p class="font-medium text-card-foreground truncate">{recipe.title}</p>
+            <p class="font-medium text-card-foreground truncate"><HighlightText text={recipe.title} {query} /></p>
             <p class="text-xs text-muted-foreground truncate">{$_('recipeCard.by')} {recipe.author?.username}</p>
         </div>
         {#if !opts.selectable}

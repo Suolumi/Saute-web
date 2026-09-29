@@ -184,7 +184,7 @@
 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
     {#each filteredRecipes as recipe}
         <div class="relative h-full">
-            <RecipeCard {recipe} disabled={false} />
+            <RecipeCard {recipe} disabled={false} highlightQuery={searchTerm} />
             <div class="absolute top-2 right-2">
                 <button
                         type="button"

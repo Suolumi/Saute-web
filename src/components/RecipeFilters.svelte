@@ -4,6 +4,7 @@
     import {recipeTypeColors, RecipeTypes, TIME_PRESETS, type RecipeType, type TimePreset} from "$lib/recipes";
     import {_} from 'svelte-i18n';
     import {Search, SlidersHorizontal, ChevronDown, User, X, Flame} from '@lucide/svelte';
+    import HighlightText from './HighlightText.svelte';
 
     interface Props {
         searchTerm: string;
@@ -262,7 +263,7 @@
                                             {suggestion.username.charAt(0) || "?"}
                                         </div>
                                     {/if}
-                                    <span class="truncate">{suggestion.username}</span>
+                                    <span class="truncate"><HighlightText text={suggestion.username} query={author} /></span>
                                 </button>
                             {/each}
                         </div>

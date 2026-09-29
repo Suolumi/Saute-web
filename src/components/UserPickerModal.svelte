@@ -1,5 +1,6 @@
 <script lang="ts">
     import Modal from './Modal.svelte';
+    import HighlightText from './HighlightText.svelte';
     import {getAdminUsers, type AdminUser} from '$lib/admin';
     import {serverUrl} from '$lib/stores';
     import {_} from 'svelte-i18n';
@@ -85,7 +86,7 @@
                         </div>
                     {/if}
                     <div class="min-w-0 flex-1">
-                        <p class="font-medium text-card-foreground truncate">{target.username}</p>
+                        <p class="font-medium text-card-foreground truncate"><HighlightText text={target.username} {query} /></p>
                     </div>
                 </button>
             {/each}

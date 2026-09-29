@@ -3,6 +3,7 @@
     import Button from '../../../../../components/Button.svelte';
     import Input from '../../../../../components/Input.svelte';
     import Modal from '../../../../../components/Modal.svelte';
+    import HighlightText from '../../../../../components/HighlightText.svelte';
     import {
         getAdminUsers, setAdminStatus, sendPasswordReset, revokeMcpToken,
         adminDeleteUser, adminUpdateUserPicture, type AdminUser
@@ -147,7 +148,7 @@
 
                 <div class="min-w-0 flex-1">
                     <div class="flex items-center gap-2 flex-wrap">
-                        <p class="font-medium text-card-foreground truncate">{target.username}</p>
+                        <p class="font-medium text-card-foreground truncate"><HighlightText text={target.username} query={search} /></p>
                         <span class="inline-flex items-center gap-1 text-xs font-mono text-muted-foreground bg-muted px-2 py-0.5 rounded flex-shrink-0">
                             {target.id}
                             <button type="button" onclick={() => copyId(target.id)} aria-label={$_('admin.users.copyId')} class="hover:text-foreground hover:cursor-pointer">

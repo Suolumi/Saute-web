@@ -1,5 +1,6 @@
 <script lang="ts">
     import {_} from "svelte-i18n";
+    import HighlightText from '../HighlightText.svelte';
 
     // NamedItem is deliberately minimal - both ToolboxIngredient and
     // NutritionIngredient satisfy it structurally, so this one combobox is
@@ -102,7 +103,7 @@
                             onclick={() => pick(ingredient)}
                             class="block w-full text-left px-4 py-2 text-sm text-foreground hover:bg-muted transition-colors {ingredient.id === value ? 'bg-muted font-semibold' : ''}"
                     >
-                        {ingredient.name}
+                        <HighlightText text={ingredient.name} {query} />
                     </button>
                 {/each}
             {/if}

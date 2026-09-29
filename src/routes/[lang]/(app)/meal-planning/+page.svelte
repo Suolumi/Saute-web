@@ -5,6 +5,7 @@
     import MealSlotCard from '../../../../components/MealSlotCard.svelte';
     import MealPlanServingsModal from '../../../../components/MealPlanServingsModal.svelte';
     import EditableNumber from '../../../../components/EditableNumber.svelte';
+    import HighlightText from '../../../../components/HighlightText.svelte';
     import {_, locale} from 'svelte-i18n';
     import {goto} from '$app/navigation';
     import {serverUrl, user} from '$lib/stores';
@@ -386,7 +387,7 @@
                                     {/if}
                                 </div>
                                 <div class="min-w-0">
-                                    <div class="text-sm font-medium text-foreground truncate">{recipe.title}</div>
+                                    <div class="text-sm font-medium text-foreground truncate"><HighlightText text={recipe.title} query={sidebarQuery} /></div>
                                     <div class="text-xs text-muted-foreground truncate">{$_('recipeCard.by')} {recipe.author?.username}</div>
                                 </div>
                             </div>

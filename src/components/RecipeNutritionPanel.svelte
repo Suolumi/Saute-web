@@ -15,14 +15,28 @@
     // shows the card - see the caller) - there's no endpoint to compute
     // nutrition for a recipe that doesn't exist yet, so this shows its own
     // "save first" state instead of fetching.
+    //
+    // ingredients is used for DISPLAY only (it may be locale-translated,
+    // e.g. the recipe detail page always fetches in the site's current
+    // language). canonicalIngredients is what actually gets submitted when
+    // linking/fixing an ingredient - nutrition matching always resolves
+    // against the recipe's canonical (source-locale) text server-side
+    // (GetRecipeNutrition), so submitting a translated name creates a link
+    // that can never match this recipe's own ingredients. Defaults to
+    // ingredients when omitted, which is correct for the edit wizard's
+    // live-preview column (formData.ingredients is already canonical there
+    // - the author edits raw stored values, no translation involved) but
+    // NOT for the recipe detail page, which must pass the real thing.
     let {
         recipeId,
         servings,
-        ingredients
+        ingredients,
+        canonicalIngredients = ingredients
     }: {
         recipeId?: string
         servings: number
         ingredients: Ingredient[]
+        canonicalIngredients?: Ingredient[]
     } = $props();
 
     let nutrition: RecipeNutrition | null = $state(null);
@@ -130,8 +144,8 @@
         const n = nutrition;
         if (!n || !$user) return [];
         return n.ingredients
-            .map((line, i) => ({line, ingredient: ingredients[i]}))
-            .filter(row => !row.line.matched && row.ingredient && !row.ingredient.recipe_ref && row.ingredient.name.trim() && row.ingredient.quantity > 0);
+            .map((line, i) => ({line, ingredient: ingredients[i], canonical: canonicalIngredients[i]}))
+            .filter(row => !row.line.matched && row.ingredient && row.canonical && !row.canonical.recipe_ref && row.canonical.name.trim() && row.canonical.quantity > 0);
     });
 
     const incomplete = $derived.by(() => {
@@ -204,7 +218,7 @@
                             {#each unmatchedRows as row}
                                 <li class="flex items-center justify-between gap-3 py-1.5">
                                     <span class="text-sm text-card-foreground truncate">{ingredientLabel(row.ingredient)}</span>
-                                    <button type="button" onclick={() => openFixModal(row.ingredient.name, row.ingredient.unit)}
+                                    <button type="button" onclick={() => openFixModal(row.canonical.name, row.canonical.unit)}
                                             class="shrink-0 text-xs font-semibold text-primary hover:underline hover:cursor-pointer">
                                         {$_('recipe.nutrition.fix.button')}
                                     </button>
