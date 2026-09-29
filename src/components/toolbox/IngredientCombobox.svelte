@@ -10,16 +10,20 @@
         ingredients,
         value = $bindable(''),
         id = '',
-        placeholder = ''
+        placeholder = '',
+        // open is optionally bindable so a caller can react to the dropdown
+        // being open - e.g. reserving layout space for it only while it's
+        // actually shown, rather than permanently (see NutritionFixModal.svelte).
+        open = $bindable(false)
     }: {
         ingredients: NamedItem[]
         value: string
         id?: string
         placeholder?: string
+        open?: boolean
     } = $props();
 
     let query = $state('');
-    let open = $state(false);
     let container: HTMLDivElement | undefined = $state();
 
     const selected = $derived(ingredients.find(i => i.id === value));

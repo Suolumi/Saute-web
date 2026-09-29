@@ -110,6 +110,22 @@ export function requiredNutritionField(unitText: string, units: ToolboxUnit[]): 
     return 'grams_per_unit'
 }
 
+// parsePositiveNumberInput reads a required-field numeric input's bound
+// value - which, despite being declared/initialized as a string, Svelte
+// silently turns into an actual `number` (or `undefined`) once a digit is
+// typed, since `bind:value` on a `type="number"` input coerces at the DOM
+// binding regardless of whether that `type` was a static or dynamic prop at
+// the call site (an easy trap: even routing it through a wrapper component
+// like Input.svelte doesn't avoid it). Never call `.trim()` or other
+// string-only methods on that value directly - always go through this.
+// Returns null for "empty" (blank string, undefined, or NaN) rather than 0,
+// so a caller can tell "nothing entered yet" from "entered zero".
+export function parsePositiveNumberInput(value: string | number | undefined | null): number | null {
+    if (value === '' || value === null || value === undefined) return null
+    const n = typeof value === 'number' ? value : Number(value)
+    return Number.isNaN(n) ? null : n
+}
+
 export type NutritionSuggestion = {
     id: string
     status: 'pending' | 'approved' | 'rejected'

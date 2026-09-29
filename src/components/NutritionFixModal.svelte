@@ -3,10 +3,11 @@
     import Modal from './Modal.svelte';
     import Button from './Button.svelte';
     import Label from './Label.svelte';
+    import Input from './Input.svelte';
     import IngredientCombobox from './toolbox/IngredientCombobox.svelte';
     import type {ToolboxUnit} from '$lib/toolbox';
     import {
-        submitNutritionLinkSuggestion, requiredNutritionField,
+        submitNutritionLinkSuggestion, requiredNutritionField, parsePositiveNumberInput,
         type NutritionIngredient, type IngredientNutritionLink, type SubmitNutritionLinkResult
     } from '$lib/nutrition';
     import {toastError, toastSuccess} from '$lib/utils';
@@ -43,11 +44,18 @@
     } = $props();
 
     let nutritionId = $state('');
-    let fieldValue = $state('');
+    // comboboxOpen tracks whether the ingredient search's dropdown is
+    // currently shown, so the layout space it needs (see the template
+    // below) is only reserved while it's actually open, not permanently.
+    let comboboxOpen = $state(false);
+    // Declared/initialized as a string, but bind:value on the number input
+    // below silently turns this into an actual number once typed into (see
+    // parsePositiveNumberInput) - never call string-only methods on it.
+    let fieldValue: string | number = $state('');
     let submitting = $state(false);
 
     const requiredField = $derived(requiredNutritionField(ingredientUnit, toolboxUnits));
-    const fieldValueNumber = $derived(fieldValue.trim() === '' ? null : Number(fieldValue));
+    const fieldValueNumber = $derived(parsePositiveNumberInput(fieldValue));
     const fieldValueValid = $derived(requiredField === null || (fieldValueNumber !== null && fieldValueNumber > 0));
     const canSubmit = $derived(!!nutritionId && fieldValueValid && !submitting);
 
@@ -92,17 +100,27 @@
         {#if existingLink}
             <p class="text-xs text-muted-foreground">{$_('recipe.nutrition.fix.alreadyLinkedTo', {values: {name: displayName(nutritionIngredients.find(n => n.id === existingLink!.nutrition_id) ?? {name: existingLink.name} as NutritionIngredient)}})}</p>
         {/if}
-        <div>
+        <!-- min-height reserves enough room for the combobox's open dropdown
+             (roughly 7-8 rows at its own max-h-64) so the modal's box is
+             never too short to show them - without it, a modal with nothing
+             else below this field (a weight-unit ingredient needing no
+             density/grams-per-unit) sized itself to just the label+input,
+             and the dropdown - an absolutely-positioned descendant that
+             doesn't contribute to that auto-height - got clipped by the
+             modal's own overflow-hidden/auto ancestors the moment it opened.
+             Only applied while comboboxOpen (the dropdown is actually
+             showing) - reserving it unconditionally left dead space below
+             the field whenever the dropdown was closed. -->
+        <div class={comboboxOpen ? 'min-h-[21rem]' : ''}>
             <Label for="fix-nutrition-entry" required>{$_('recipe.nutrition.fix.searchLabel')}</Label>
-            <IngredientCombobox id="fix-nutrition-entry" ingredients={localizedNutritionIngredients} bind:value={nutritionId} placeholder={$_('edit.ingredients.nutritionLink.searchPlaceholder')} />
+            <IngredientCombobox id="fix-nutrition-entry" ingredients={localizedNutritionIngredients} bind:value={nutritionId} bind:open={comboboxOpen} placeholder={$_('edit.ingredients.nutritionLink.searchPlaceholder')} />
         </div>
         {#if requiredField !== null}
             <div>
                 <Label for="fix-field">
                     {$_(requiredField === 'density' ? 'edit.ingredients.nutritionLink.densityLabel' : 'edit.ingredients.nutritionLink.gramsPerUnitLabel')}
                 </Label>
-                <input id="fix-field" type="number" min="0" step="any" bind:value={fieldValue}
-                       class="mt-1 w-full rounded-md border border-border bg-background px-3 py-2 text-sm text-foreground" />
+                <Input id="fix-field" type="number" min={0} step="any" bind:value={fieldValue} class="mt-1" />
                 <p class="mt-1 text-xs text-muted-foreground">
                     {$_(requiredField === 'density' ? 'edit.ingredients.nutritionLink.densityHelp' : 'edit.ingredients.nutritionLink.gramsPerUnitHelp')}
                 </p>

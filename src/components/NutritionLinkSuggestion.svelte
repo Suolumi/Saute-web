@@ -1,12 +1,13 @@
 <script lang="ts">
     import {_, locale} from 'svelte-i18n';
     import {X, Search, Check} from '@lucide/svelte';
-    import {submitNutritionLinkSuggestion, requiredNutritionField, type NutritionIngredient, type IngredientNutritionLink} from '$lib/nutrition';
+    import {submitNutritionLinkSuggestion, requiredNutritionField, parsePositiveNumberInput, type NutritionIngredient, type IngredientNutritionLink} from '$lib/nutrition';
     import type {ToolboxUnit} from '$lib/toolbox';
     import {toastError, toastSuccess} from '$lib/utils';
     import {apiErrorMessage} from '$lib/api';
     import IngredientCombobox from './toolbox/IngredientCombobox.svelte';
     import Button from './Button.svelte';
+    import Input from './Input.svelte';
 
     // NutritionLinkSuggestion offers a best-effort match from the curated
     // Ciqual-derived reference list for one ingredient row while authoring -
@@ -57,10 +58,13 @@
     // collecting first (see requiredField below) - the inline expand shows
     // a number input for it instead of submitting immediately.
     let awaitingFieldFor: string | null = $state(null);
-    let fieldValue = $state('');
+    // Declared/initialized as a string, but bind:value on the number input
+    // below silently turns this into an actual number once typed into (see
+    // parsePositiveNumberInput) - never call string-only methods on it.
+    let fieldValue: string | number = $state('');
 
     const requiredField = $derived(requiredNutritionField(ingredientUnit, toolboxUnits));
-    const fieldValueNumber = $derived(fieldValue.trim() === '' ? null : Number(fieldValue));
+    const fieldValueNumber = $derived(parsePositiveNumberInput(fieldValue));
     const fieldValueValid = $derived(requiredField === null || (fieldValueNumber !== null && fieldValueNumber > 0));
 
     const trimmedName = $derived(ingredientName.trim());
@@ -176,8 +180,7 @@
         <label class="block text-xs font-medium text-foreground" for="nutrition-field-{trimmedName}">
             {$_(requiredField === 'density' ? 'edit.ingredients.nutritionLink.densityLabel' : 'edit.ingredients.nutritionLink.gramsPerUnitLabel')}
         </label>
-        <input id="nutrition-field-{trimmedName}" type="number" min="0" step="any" bind:value={fieldValue}
-               class="mt-1 w-40 rounded-md border border-border bg-background px-2 py-1 text-sm text-foreground" />
+        <Input id="nutrition-field-{trimmedName}" type="number" min={0} step="any" bind:value={fieldValue} class="mt-1 w-40 !py-1.5" />
         <p class="mt-1 text-[11px] text-muted-foreground max-w-xs">
             {$_(requiredField === 'density' ? 'edit.ingredients.nutritionLink.densityHelp' : 'edit.ingredients.nutritionLink.gramsPerUnitHelp')}
         </p>
