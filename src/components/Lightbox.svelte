@@ -148,7 +148,7 @@
         {/if}
 
         {#if pictures[index]}
-            <div class="relative w-full h-[90vh] max-w-full overflow-hidden">
+            <div class="relative w-full h-[90vh] max-w-full overflow-hidden" onclick={handleBackdropClick} role="presentation">
                 {#key index}
                     <img
                             src={pictureUrl($serverUrl, pictures[index])}
