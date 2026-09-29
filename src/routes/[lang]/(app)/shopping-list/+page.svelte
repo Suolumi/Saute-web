@@ -17,10 +17,11 @@
         clearShoppingList,
         buildRecipeSummaries,
         buildShoppingListGroups,
+        buildShoppingListShareText,
         capitalizeIngredientHeading,
     } from '$lib/shoppingList';
-    import {toastError} from '$lib/utils';
-    import {ShoppingCart, Plus, Minus, X, ChefHat} from '@lucide/svelte';
+    import {toastError, toastSuccess} from '$lib/utils';
+    import {ShoppingCart, Plus, Minus, X, ChefHat, Share2} from '@lucide/svelte';
 
     let pickerOpen = $state(false);
 
@@ -46,6 +47,29 @@
 
     function increaseServings(recipeId: string, servings: number) {
         setRecipeServings(recipeId, servings + 1);
+    }
+
+    async function shareList() {
+        const text = buildShoppingListShareText(groups, {
+            heading: $_('shoppingList.share.heading'),
+            stillNeed: $_('shoppingList.share.stillNeed'),
+            alreadyHave: $_('shoppingList.share.alreadyHave'),
+        });
+        const shareData = {title: $_('shoppingList.share.heading'), text};
+        if (navigator.share && navigator.canShare?.(shareData)) {
+            try {
+                await navigator.share(shareData);
+            } catch (e) {
+                if ((e as Error).name !== 'AbortError') toastError($_('shoppingList.share.error'));
+            }
+        } else {
+            try {
+                await navigator.clipboard.writeText(text);
+                toastSuccess($_('shoppingList.share.copied'));
+            } catch (e) {
+                toastError($_('shoppingList.share.error'));
+            }
+        }
     }
 </script>
 
@@ -82,6 +106,16 @@
                     {$_('shoppingList.addRecipes')}
                 </Button>
                 {#if $shoppingList.length > 0}
+                    <Button
+                            variant="outline"
+                            onclick={shareList}
+                            class="flex items-center gap-2"
+                            aria-label={$_('shoppingList.share.button')}
+                            title={$_('shoppingList.share.button')}
+                    >
+                        <Share2 class="w-4 h-4" />
+                        {$_('shoppingList.share.button')}
+                    </Button>
                     <Button variant="outline" onclick={clearShoppingList}>{$_('shoppingList.clearAll')}</Button>
                 {/if}
             </div>

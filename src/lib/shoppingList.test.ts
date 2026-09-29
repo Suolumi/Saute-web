@@ -1,6 +1,8 @@
 import {describe, expect, it} from 'vitest';
-import {buildRecipeSummaries, buildShoppingListGroups, capitalizeIngredientHeading, entryRatio, type ShoppingListEntry} from './shoppingList';
+import {buildRecipeSummaries, buildShoppingListGroups, buildShoppingListShareText, capitalizeIngredientHeading, entryRatio, type ShoppingListEntry} from './shoppingList';
 import type {Ingredient} from './recipes';
+
+const shareLabels = {heading: 'Shopping List', stillNeed: 'Still need', alreadyHave: 'Already have'};
 
 function ingredient(overrides: Partial<Ingredient> = {}): Ingredient {
     return {name: 'Flour', quantity: 2, unit: 'cups', label: '', ...overrides};
@@ -155,5 +157,50 @@ describe('capitalizeIngredientHeading', () => {
 
     it('leaves an empty name as-is', () => {
         expect(capitalizeIngredientHeading('')).toBe('');
+    });
+});
+
+describe('buildShoppingListShareText', () => {
+    it('lists unchecked items under stillNeed, with quantity and capitalized name', () => {
+        const entries = [entry({ingredient: ingredient({name: 'flour', quantity: 2, unit: 'cups'})})];
+        const text = buildShoppingListShareText(buildShoppingListGroups(entries), shareLabels);
+        expect(text).toBe('Shopping List\n\nStill need\n- 2 cups Flour');
+    });
+
+    it('splits checked and unchecked items into separate sections', () => {
+        const entries = [
+            entry({ingredient: ingredient({name: 'Flour', quantity: 2, unit: 'cups'}), checked: false}),
+            entry({ingredient: ingredient({name: 'Sugar', quantity: 1, unit: 'cup'}), checked: true}),
+        ];
+        const text = buildShoppingListShareText(buildShoppingListGroups(entries), shareLabels);
+        expect(text).toBe('Shopping List\n\nStill need\n- 2 cups Flour\n\nAlready have\n- 1 cup Sugar');
+    });
+
+    it('omits the alreadyHave section entirely when nothing is checked', () => {
+        const entries = [entry({checked: false})];
+        const text = buildShoppingListShareText(buildShoppingListGroups(entries), shareLabels);
+        expect(text).not.toContain('Already have');
+    });
+
+    it('omits the stillNeed section entirely when everything is checked', () => {
+        const entries = [entry({checked: true})];
+        const text = buildShoppingListShareText(buildShoppingListGroups(entries), shareLabels);
+        expect(text).not.toContain('Still need');
+    });
+
+    it('gives a multi-unit group its own bullet per unit variant', () => {
+        const entries = [
+            entry({ingredient: ingredient({name: 'Flour', quantity: 2, unit: 'cups'})}),
+            entry({ingredient: ingredient({name: 'Flour', quantity: 4, unit: 'dl'})}),
+        ];
+        const text = buildShoppingListShareText(buildShoppingListGroups(entries), shareLabels);
+        expect(text).toContain('- 2 cups Flour');
+        expect(text).toContain('- 4 dl Flour');
+    });
+
+    it('lists a quantity-less ingredient by name alone', () => {
+        const entries = [entry({ingredient: ingredient({name: 'Salt to taste', quantity: 0, unit: ''})})];
+        const text = buildShoppingListShareText(buildShoppingListGroups(entries), shareLabels);
+        expect(text).toContain('- Salt to taste');
     });
 });

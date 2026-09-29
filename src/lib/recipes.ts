@@ -48,6 +48,7 @@ export type Step = {
     title: string
     description: string
     picture?: string
+    timer_minutes?: number
 }
 
 export type Ingredient = {

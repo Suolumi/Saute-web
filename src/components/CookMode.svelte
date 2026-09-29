@@ -3,12 +3,15 @@
     import {_} from 'svelte-i18n';
     import {serverUrl} from '$lib/stores';
     import {Drawer} from 'vaul-svelte';
-    import {ChevronLeft, ChevronRight, X, FileText} from '@lucide/svelte';
+    import {ChevronLeft, ChevronRight, X, FileText, Timer} from '@lucide/svelte';
     import {groupIngredients, getIngredientName, type Step, type Ingredient} from '$lib/recipes';
+    import {activeTimers, startTimer, cancelTimer, getTimerFor, remainingMs, formatRemaining} from '$lib/recipeTimers';
+    import {unlockAlarmAudio} from '$lib/timerAlarm';
     import RecipeRefIngredient from './RecipeRefIngredient.svelte';
     import Checkbox from './Checkbox.svelte';
 
     let {
+        recipeId,
         recipeTitle,
         steps,
         startIndex = 0,
@@ -21,6 +24,7 @@
         onStepChange,
         onClose,
     }: {
+        recipeId: string;
         recipeTitle: string;
         steps: Step[];
         startIndex?: number;
@@ -146,7 +150,51 @@
                 releaseWakeLock();
         };
     });
+
+    // Drives the live "Xm Ys left" label on the current step's timer button -
+    // the global widget (mounted separately in the root layout) ticks the
+    // store itself, but this button needs its own clock to re-render every
+    // second rather than only whenever the store happens to change.
+    let now = $state(Date.now());
+    onMount(() => {
+        const interval = setInterval(() => now = Date.now(), 500);
+        return () => clearInterval(interval);
+    });
+
+    function startStepTimer(stepIndex: number, label: string, minutes: number) {
+        unlockAlarmAudio();
+        startTimer(recipeId, stepIndex, label, recipeTitle, minutes);
+    }
+
+    const stepTimer = $derived(getTimerFor($activeTimers, recipeId, index));
 </script>
+
+{#snippet stepTimerButton()}
+    {#if currentStep.timer_minutes}
+        {#if stepTimer}
+            <button
+                    type="button"
+                    onclick={(e) => { e.stopPropagation(); cancelTimer(stepTimer.id); }}
+                    class="self-start inline-flex items-center gap-1.5 text-sm font-medium px-3 py-1.5 rounded-full hover:cursor-pointer"
+                    style="background: {stepTimer.ringing ? 'var(--primary)' : 'var(--cm-card)'}; color: {stepTimer.ringing ? 'var(--primary-foreground)' : 'var(--cm-ink)'}; border: 1.5px solid var(--cm-line);"
+            >
+                <Timer size="14" />
+                {stepTimer.ringing ? $_('recipe.timerDone') : $_('recipe.timerRemaining', {values: {time: formatRemaining(remainingMs(stepTimer, now))}})}
+                <X size="12" />
+            </button>
+        {:else}
+            <button
+                    type="button"
+                    onclick={(e) => { e.stopPropagation(); startStepTimer(index, currentStep.title || `Step ${index + 1}`, currentStep.timer_minutes!); }}
+                    class="self-start inline-flex items-center gap-1.5 text-sm font-medium px-3 py-1.5 rounded-full hover:cursor-pointer"
+                    style="background: var(--primary); color: var(--primary-foreground);"
+            >
+                <Timer size="14" />
+                {$_('recipe.startTimer', {values: {minutes: currentStep.timer_minutes}})}
+            </button>
+        {/if}
+    {/if}
+{/snippet}
 
 <svelte:head>
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -293,6 +341,7 @@
                     <span class="text-[11px] font-bold uppercase" style="letter-spacing: 0.1em; color: var(--cm-green-strong);">{$_('recipe.cookModeStep', {values: {step: index + 1}})}</span>
                     <h1 class="cm-serif m-0 text-[32px] lg:text-[38px] xl:text-[44px] font-semibold" style="line-height: 1.15;">{currentStep.title || `Step ${index + 1}`}</h1>
                     <p class="m-0 text-base lg:text-lg xl:text-xl whitespace-pre-line" style="line-height: 1.65; color: var(--cm-ink-soft);">{currentStep.description}</p>
+                    {@render stepTimerButton()}
                 </div>
                 <div class="flex-shrink-0 flex items-center justify-between" style="padding: 18px 0 22px 0;">
                     <button
@@ -326,6 +375,7 @@
                 <span class="text-[11px] font-bold uppercase" style="letter-spacing: 0.1em; color: var(--cm-green-strong);">{$_('recipe.cookModeStep', {values: {step: index + 1}})}</span>
                 <h1 class="cm-serif m-0 text-[32px] lg:text-[38px] xl:text-[44px] font-semibold" style="line-height: 1.15;">{currentStep.title || `Step ${index + 1}`}</h1>
                 <p class="m-0 text-base lg:text-lg xl:text-xl whitespace-pre-line" style="line-height: 1.65; color: var(--cm-ink-soft);">{currentStep.description}</p>
+                {@render stepTimerButton()}
             </div>
             <div class="flex-shrink-0 relative z-[1] flex items-center justify-between" style="padding: 18px 0 22px 0;">
                 <button

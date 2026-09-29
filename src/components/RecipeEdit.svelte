@@ -23,10 +23,14 @@
     import FileUpload from "./FileUpload.svelte";
     import ImageCropModal from "./ImageCropModal.svelte";
     import DuplicateNudge from "./DuplicateNudge.svelte";
+    import NutritionLinkSuggestion from "./NutritionLinkSuggestion.svelte";
+    import Checkbox from "./Checkbox.svelte";
     import {createRecipeCache, editRecipeCache, serverUrl, user} from "$lib/stores";
-    import {untrack} from "svelte";
+    import {untrack, onMount} from "svelte";
     import {_} from 'svelte-i18n'
     import {toastError, pictureUrl} from "$lib/utils";
+    import {getNutritionIngredients, getIngredientNutritionLinks, type NutritionIngredient, type IngredientNutritionLink} from "$lib/nutrition";
+    import RecipeNutritionPanel from "./RecipeNutritionPanel.svelte";
     import {Trash2, GripVertical, EllipsisVertical, Plus, Pencil, Link2} from "@lucide/svelte";
 
     interface Props {
@@ -66,6 +70,30 @@
         commentLabel = $_('create.commentLabel'),
     }: Props = $props()
 
+    // Fetched once per mount, not per ingredient row - the inline nutrition-
+    // link suggestion (below) matches against this shared list, and against
+    // existingLinksByName to tell an already-linked ingredient from one that
+    // still needs a suggestion (see NutritionLinkSuggestion.svelte).
+    let nutritionIngredients: NutritionIngredient[] = $state([]);
+    let existingLinksByName: Record<string, IngredientNutritionLink> = $state({});
+    onMount(() => {
+        getNutritionIngredients().then(({response, data}) => {
+            if (response.ok && data) nutritionIngredients = data.items;
+        });
+        getIngredientNutritionLinks().then(({response, data}) => {
+            if (response.ok && data) existingLinksByName = Object.fromEntries(data.items.map(link => [link.name.toLowerCase(), link]));
+        });
+    });
+
+    // nutritionEnabled only hides the inline link-suggestion prompts on the
+    // ingredients step below - it's a per-session authoring preference (not
+    // persisted, not a recipe field), so an author who doesn't want the
+    // nudges while filling in a DIY project's materials (or just doesn't
+    // care to link anything right now) can turn it off. The live-preview
+    // Nutrition panel further down stays visible either way - it reflects
+    // the recipe's actual saved links, not this toggle.
+    let nutritionEnabled = $state(true);
+
     // Terminology lookup: for a diy-category recipe, tries `<diyNamespace>.<key>`
     // first and falls back to `<namespace>.<key>` when no diy-specific
     // override exists (svelte-i18n returns the key itself on a miss).
@@ -104,7 +132,7 @@
     // `stepRows` (uid + fields) and is flattened back into formData.steps, the
     // same pattern `sections` below uses for ingredients.
 
-    type EditStep = { uid: string, title: string, description: string, picture: string };
+    type EditStep = { uid: string, title: string, description: string, picture: string, timer_minutes: number };
 
     let stepUid = 0;
 
@@ -114,7 +142,7 @@
     }
 
     function buildStepRows(stepsList: Step[]): EditStep[] {
-        return stepsList.map(step => ({uid: nextStepUid(), title: step.title, description: step.description, picture: step.picture ?? ''}));
+        return stepsList.map(step => ({uid: nextStepUid(), title: step.title, description: step.description, picture: step.picture ?? '', timer_minutes: step.timer_minutes ?? 0}));
     }
 
     let stepRows = $state<EditStep[]>(untrack(() => buildStepRows(formData.steps)));
@@ -130,7 +158,11 @@
     }
 
     $effect(() => {
-        formData.steps = stepRows.map(({title, description, picture}) => picture ? {title, description, picture} : {title, description});
+        formData.steps = stepRows.map(({title, description, picture, timer_minutes}) => ({
+            title, description,
+            ...(picture ? {picture} : {}),
+            ...(timer_minutes ? {timer_minutes} : {}),
+        }));
     });
 
     const steps = [
@@ -208,10 +240,11 @@
         return normalizeRecipe($createRecipeCache && !isBlank($createRecipeCache) ? $createRecipeCache : (recipeProps ?? r))
     }
 
-    // A step counts as blank only once it has no title, no description, and no
-    // photo (pending or already saved) - a photo alone is deliberate content.
+    // A step counts as blank only once it has no title, no description, no
+    // photo (pending or already saved), and no timer - a photo or timer alone
+    // is deliberate content.
     function isEmptyStep(row: EditStep): boolean {
-        return !row.title.trim() && !row.description.trim() && !row.picture && !stepPendingPictures[row.uid];
+        return !row.title.trim() && !row.description.trim() && !row.picture && !stepPendingPictures[row.uid] && !row.timer_minutes;
     }
 
     // Keeps exactly one blank trailing step: the current trailing row is left
@@ -223,7 +256,7 @@
         const bodySource = trailingBlank ? list.slice(0, -1) : list;
         const body = bodySource.filter(row => !isEmptyStep(row));
         if (trailingBlank && body.length === bodySource.length) return list;
-        const placeholder = trailingBlank ?? {uid: nextStepUid(), title: '', description: '', picture: ''};
+        const placeholder = trailingBlank ?? {uid: nextStepUid(), title: '', description: '', picture: '', timer_minutes: 0};
         return [...body, placeholder];
     }
 
@@ -266,7 +299,7 @@
     }
 
     async function saveRecipe() {
-        for (let nb of [...formData.ingredients.map(e => e.quantity), formData.cooking_time, formData.resting_time, formData.preparation_time, formData.quantity]) {
+        for (let nb of [...formData.ingredients.map(e => e.quantity), ...stepRows.map(r => r.timer_minutes), formData.cooking_time, formData.resting_time, formData.preparation_time, formData.quantity]) {
             if (nb < 0)
                 return toastError($_('create.toasts.negativeNumber'))
         }
@@ -275,7 +308,11 @@
         // from the outgoing payload only, leaving the on-screen form as-is.
         const cleanedIngredients = formData.ingredients.filter(i => i.name.trim() || i.recipe_ref);
         const cleanedStepRows = stepRows.filter(row => !isEmptyStep(row));
-        const cleanedSteps: Step[] = cleanedStepRows.map(({title, description, picture}) => picture ? {title, description, picture} : {title, description});
+        const cleanedSteps: Step[] = cleanedStepRows.map(({title, description, picture, timer_minutes}) => ({
+            title, description,
+            ...(picture ? {picture} : {}),
+            ...(timer_minutes ? {timer_minutes} : {}),
+        }));
 
         const newStepPictures: Record<number, File> = {};
         cleanedStepRows.forEach((row, index) => {
@@ -823,15 +860,25 @@
 
             <div class="bg-card rounded-xl border border-border p-6 shadow-sm">
               <div class="mb-6">
-                <p class="text-sm font-medium text-primary mb-1">
-                  {$_('edit.wizard.stepLabel', {values: {current: currentStep + 1, total: steps.length}})}
-                </p>
-                <h2 class="text-2xl font-semibold text-card-foreground">
-                  {t('wizard.' + steps[currentStep].id + '.name')}
-                </h2>
-                <p class="text-sm text-muted-foreground mt-1">
-                  {t('wizard.' + steps[currentStep].id + '.hint')}
-                </p>
+                <div class="flex items-start justify-between gap-3">
+                  <div>
+                    <p class="text-sm font-medium text-primary mb-1">
+                      {$_('edit.wizard.stepLabel', {values: {current: currentStep + 1, total: steps.length}})}
+                    </p>
+                    <h2 class="text-2xl font-semibold text-card-foreground">
+                      {t('wizard.' + steps[currentStep].id + '.name')}
+                    </h2>
+                    <p class="text-sm text-muted-foreground mt-1">
+                      {t('wizard.' + steps[currentStep].id + '.hint')}
+                    </p>
+                  </div>
+                  {#if currentStep === 1 && formData.category !== 'diy'}
+                    <label class="flex items-center gap-2 text-sm text-muted-foreground flex-shrink-0 hover:cursor-pointer">
+                      <span class="whitespace-nowrap">{$_('edit.ingredients.enableNutrition')}</span>
+                      <Checkbox checked={nutritionEnabled} onchange={(checked) => nutritionEnabled = checked} ariaLabel={$_('edit.ingredients.enableNutrition')} />
+                    </label>
+                  {/if}
+                </div>
 
                 <!-- Step 1: Basics -->
                 {#if currentStep === 0}
@@ -1151,6 +1198,11 @@
                                   <p class="text-xs text-muted-foreground mt-1 pl-1">
                                     {$_('edit.ingredients.preview', {values: {text: getIngredientName(ingredient)}})}
                                   </p>
+                                  {#if $user && nutritionEnabled && formData.category !== 'diy'}
+                                    <div class="pl-1">
+                                      <NutritionLinkSuggestion ingredientName={ingredient.name} {nutritionIngredients} existingLinks={existingLinksByName} />
+                                    </div>
+                                  {/if}
                                 {/if}
 
                                 {#if isRowDropBelow(section, ingredient)}
@@ -1245,14 +1297,26 @@
                             </div>
                             <div class="flex flex-col sm:flex-row gap-3 items-stretch sm:items-start">
                               <div class="flex-1 min-w-0 space-y-2">
-                                <div>
-                                  <Label for={`step-title-${row.uid}`}>{$_('edit.instructions.title.label')}</Label>
-                                  <Input
-                                      id={`step-title-${row.uid}`}
-                                      type="text"
-                                      bind:value={row.title}
-                                      placeholder={t('instructions.title.placeholder')}
-                                  />
+                                <div class="flex gap-3">
+                                  <div class="flex-1 min-w-0">
+                                    <Label for={`step-title-${row.uid}`}>{$_('edit.instructions.title.label')}</Label>
+                                    <Input
+                                        id={`step-title-${row.uid}`}
+                                        type="text"
+                                        bind:value={row.title}
+                                        placeholder={t('instructions.title.placeholder')}
+                                    />
+                                  </div>
+                                  <div class="w-28 flex-shrink-0">
+                                    <Label for={`step-timer-${row.uid}`}>{$_('edit.instructions.timer.label')}</Label>
+                                    <Input
+                                        id={`step-timer-${row.uid}`}
+                                        type="number"
+                                        min={0}
+                                        bind:value={row.timer_minutes}
+                                        placeholder={t('instructions.timer.placeholder')}
+                                    />
+                                  </div>
                                 </div>
                                 <div>
                                   <Label for={`step-description-${row.uid}`}>{$_('edit.instructions.description.label')}</Label>
@@ -1472,6 +1536,19 @@
                     <p class="text-sm text-muted-foreground">{$_('create.noStep')}</p>
                   {/if}
                 </div>
+
+                {#if formData.category !== 'diy'}
+                  <!-- Shown for a brand-new recipe too (RecipeNutritionPanel
+                       shows its own "save first" state when recipeId is
+                       unset) - only DIY hides this card outright. When
+                       recipeId is set, it reflects the last *saved* version
+                       of this recipe, not the live draft above it - there's
+                       no endpoint to compute nutrition for an unsaved
+                       ingredient list, so this necessarily lags one save
+                       behind an in-progress edit, unlike the rest of this
+                       preview column. -->
+                  <RecipeNutritionPanel {recipeId} servings={formData.quantity} ingredients={formData.ingredients} />
+                {/if}
               </div>
             </div>
           </div>

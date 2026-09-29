@@ -11,6 +11,7 @@
     "myFavorites": "Mes favoris",
     "logout": "Déconnexion",
     "diy": "Bricolage",
+    "toolbox": "Boîte à outils",
     "admin": "Administration",
     "about": "À propos",
     "browse": "Parcourir",
@@ -226,6 +227,16 @@
     "instructions": "Instructions",
     "stepPhoto": "Photo de l'étape {step}",
     "stepDone": "Marquer l'étape {step} comme terminée",
+    "startTimer": "Démarrer un minuteur de {minutes} min",
+    "timerRemaining": "{time} restantes",
+    "timerPaused": "{time} — en pause",
+    "timerDone": "Le temps est écoulé !",
+    "cancelTimer": "Annuler le minuteur",
+    "pauseTimer": "Mettre en pause le minuteur",
+    "resumeTimer": "Reprendre le minuteur",
+    "timerWidgetLabel": "Minuteurs actifs",
+    "dismissTimer": "Ignorer",
+    "timerFor": "{recipe} — {step}",
     "notFound": "Recette non trouvée",
     "variations": "Variantes",
     "variationBanner": "Ceci est une variante d'une autre recette.",
@@ -260,7 +271,25 @@
     "suggestFixSubmit": "Envoyer la correction",
     "suggestFixSuccess": "Merci ! Votre correction a été envoyée pour révision.",
     "suggestFixError": "Impossible d'envoyer votre correction",
-    "suggestFixDuplicate": "Vous avez déjà une proposition en attente pour cette recette et cette langue"
+    "suggestFixDuplicate": "Vous avez déjà une proposition en attente pour cette recette et cette langue",
+    "nutrition": {
+      "title": "Nutrition",
+      "kcal": "Calories",
+      "protein": "Protéines",
+      "carbs": "Glucides",
+      "fat": "Lipides",
+      "salt": "Sel",
+      "sugar": "Sucres",
+      "coverageNote": "{matched} ingrédient(s) sur {total} comptabilisé(s)",
+      "noMatch": "Pas encore assez d'ingrédients n'ont pu être associés à des données nutritionnelles.",
+      "perIngredient": "Par ingrédient",
+      "kcalShort": "kcal",
+      "gShort": "g",
+      "proteinShort": "prot.",
+      "carbsShort": "gluc.",
+      "fatShort": "lip.",
+      "saveFirst": "La nutrition sera disponible une fois cette recette enregistrée."
+    }
   },
   "edit": {
     "toasts": {
@@ -342,7 +371,22 @@
         "placeholder": "ex. g, cl, feuilles…"
       },
       "preview": "Affiché comme : « {text} »",
-      "remove": "Supprimer l'ingrédient"
+      "remove": "Supprimer l'ingrédient",
+      "nutritionLink": {
+        "suggestion": "Lier aux données nutritionnelles : {name} ?",
+        "accept": "Lier",
+        "dismiss": "Ignorer la suggestion de lien nutritionnel",
+        "linkDifferently": "Lier à d'autres données nutritionnelles",
+        "searchPlaceholder": "Rechercher des données nutritionnelles...",
+        "link": "Lier",
+        "cancel": "Annuler",
+        "submittedChip": "Lien nutritionnel soumis pour validation",
+        "success": "Lien nutritionnel soumis pour validation",
+        "error": "Impossible de soumettre le lien nutritionnel",
+        "linkedTo": "Lié à : {name}",
+        "linkedSuccess": "Lié !"
+      },
+      "enableNutrition": "Activer la nutrition"
     },
     "instructions": {
       "title": {
@@ -359,6 +403,10 @@
         "label": "Photo",
         "alt": "Photo de l'étape {step}",
         "remove": "Supprimer la photo"
+      },
+      "timer": {
+        "label": "Minuteur (min)",
+        "placeholder": "ex. 30"
       }
     },
     "submit": "Enregistrer",
@@ -628,7 +676,8 @@
       "recipes": "Recettes",
       "diy": "Bricolage",
       "translations": "Traductions",
-      "console": "Console"
+      "console": "Console",
+      "nutrition": "Nutrition"
     },
     "errors": {
       "loadStats": "Impossible de charger les statistiques",
@@ -645,7 +694,9 @@
       "deleteDiy": "Impossible de supprimer ce projet bricolage",
       "retranslate": "Impossible de programmer la retraduction",
       "loadTranslations": "Impossible de charger les propositions de traduction",
-      "resolveTranslation": "Impossible de traiter cette proposition"
+      "resolveTranslation": "Impossible de traiter cette proposition",
+      "loadNutrition": "Impossible de charger les suggestions nutritionnelles",
+      "resolveNutrition": "Impossible de traiter cette suggestion"
     },
     "dashboard": {
       "title": "Tableau de bord",
@@ -756,7 +807,9 @@
         "users": "Utilisateurs",
         "recipes": "Recettes",
         "translations": "Traductions",
-        "system": "Système"
+        "system": "Système",
+        "toolbox": "Boîte à outils",
+        "nutrition": "Nutrition"
       },
       "select": "Sélectionner",
       "paramsFormTitle": "Paramètres",
@@ -781,7 +834,57 @@
         "noResults": "Aucun utilisateur trouvé",
         "error": "Impossible de rechercher des utilisateurs"
       }
-    }
+    },
+    "nutrition": {
+      "title": "Nutrition",
+      "statusPending": "En attente",
+      "statusApproved": "Approuvée",
+      "statusRejected": "Rejetée",
+      "none": "Aucune suggestion trouvée",
+      "approve": "Approuver",
+      "reject": "Rejeter",
+      "approved": "Suggestion approuvée",
+      "rejected": "Suggestion rejetée",
+      "linkedTo": "Lié à",
+      "density": "Densité",
+      "gramsPerUnit": "Grammes par unité",
+      "unitAlias": "Alias d'unité",
+      "correction": "correction",
+      "correctionOf": "correction de {name}",
+      "note": "Note",
+      "pendingBadge": "{count} suggestion(s) nutritionnelle(s) en attente",
+      "tabLinks": "Liens",
+      "tabPending": "Corrections en attente",
+      "ingredientLinks": "Liens d'ingrédients",
+      "newLink": "Nouveau lien",
+      "editLink": "Modifier le lien",
+      "noLinks": "Aucun lien pour l'instant",
+      "unitAliases": "Alias d'unités",
+      "newAlias": "Nouvel alias",
+      "editAlias": "Modifier l'alias",
+      "noAliases": "Aucun alias pour l'instant",
+      "aliasFor": "Correspond à",
+      "edit": "Modifier",
+      "delete": "Supprimer",
+      "cancel": "Annuler",
+      "save": "Enregistrer",
+      "ingredientName": "Nom de l'ingrédient",
+      "nutritionEntry": "Entrée nutritionnelle",
+      "aliasText": "Texte de l'alias",
+      "unit": "Unité",
+      "linkCreated": "Lien créé",
+      "linkUpdated": "Lien mis à jour",
+      "linkDeleted": "Lien supprimé",
+      "linkSaveError": "Impossible d'enregistrer le lien",
+      "aliasCreated": "Alias créé",
+      "aliasUpdated": "Alias mis à jour",
+      "aliasDeleted": "Alias supprimé",
+      "aliasSaveError": "Impossible d'enregistrer l'alias",
+      "deleteError": "Impossible de supprimer cet élément",
+      "confirmDeleteTitle": "Supprimer ?",
+      "confirmDeleteDescription": "« {name} » sera définitivement supprimé."
+    },
+    "pendingBadge": "{count} élément(s) en attente de validation"
   },
   "about": {
     "meta": {
@@ -790,6 +893,14 @@
     },
     "headLabel": "Ce que Sauté permet de faire",
     "commentLabel": "Un aperçu rapide de fonctionnalités qui ne sont pas toujours évidentes en regardant simplement l'application.",
+    "sections": {
+      "discover": { "title": "Découvrir des recettes" },
+      "cooking": { "title": "Cuisiner" },
+      "creating": { "title": "Créer et rédiger" },
+      "planning": { "title": "Planifier et faire les courses" },
+      "sharing": { "title": "Partager et contribuer" },
+      "integrations": { "title": "Intégrations" }
+    },
     "items": {
       "variations": {
         "title": "Variations de recette",
@@ -827,17 +938,33 @@
         "title": "Mode cuisine",
         "description": "Parcourez les instructions d'une recette une étape à la fois, en gros caractères, avec l'écran maintenu allumé automatiquement — cliquez sur « Cuisiner » au-dessus des instructions, sur la page de n'importe quelle recette."
       },
+      "recipeTimers": {
+        "title": "Minuteurs de recette",
+        "description": "Lancez un compte à rebours sur n'importe quelle étape ayant une durée définie, depuis le mode cuisine ou directement depuis les instructions d'une recette — il continue de tourner dans un widget flottant qui vous suit sur tout le site et sonne une fois terminé, même si vous avez changé de page. Mettez-le en pause et reprenez-le à tout moment depuis ce widget."
+      },
       "share": {
         "title": "Partager une recette",
         "description": "Partagez n'importe quelle recette directement depuis sa page, via la feuille de partage de votre appareil ou un lien copié — l'aperçu qui s'affiche de l'autre côté (titre, photo, description) est inclus automatiquement."
       },
       "shoppingList": {
         "title": "Liste de courses",
-        "description": "Ajoutez des recettes à votre liste de courses depuis la page d'accueil : leurs ingrédients se regroupent en une seule liste à cocher, toutes recettes confondues."
+        "description": "Ajoutez des recettes à votre liste de courses depuis la page d'accueil : leurs ingrédients se regroupent en une seule liste à cocher, toutes recettes confondues. Cliquez sur Partager sur la page de la liste de courses pour l'envoyer, avec les éléments encore à acheter et déjà pris séparés, via le menu de partage de votre appareil ou le presse-papiers."
+      },
+      "mealPlanning": {
+        "title": "Planification des repas",
+        "description": "Organisez petit-déjeuner, déjeuner et dîner sur la semaine en glissant des recettes depuis vos favoris ou en en choisissant une pour un créneau, puis cliquez sur « Ajouter la semaine à la liste de courses » pour regrouper d'un coup les ingrédients de toutes les recettes prévues — depuis le bouton Planification des repas sur la page d'accueil."
+      },
+      "toolbox": {
+        "title": "Boîte à outils",
+        "description": "Convertissez une quantité entre poids et volume pour un ingrédient donné, basculez entre °C et °F pour les températures de four, cherchez un substitut à ce qui vous manque, ou lancez plusieurs minuteurs nommés à la fois — le tout dans l'onglet Boîte à outils."
       },
       "translationFix": {
         "title": "Proposer une correction de traduction",
         "description": "Une phrase traduite automatiquement sonne mal ? Cliquez sur l'icône crayon à côté du titre d'une recette traduite pour proposer une correction — un administrateur la valide avant qu'elle soit publiée."
+      },
+      "nutrition": {
+        "title": "Infos nutritionnelles",
+        "description": "Les recettes affichent une estimation nutritionnelle indicative (calories, protéines, glucides, lipides, sel, sucres) qui s'ajuste avec le nombre de portions, calculée à partir des ingrédients associés avec confiance à une base alimentaire de référence. Le nombre d'ingrédients pris en compte est toujours affiché, jamais un total partiel présenté comme exact — et tout utilisateur connecté peut aider à l'améliorer en liant un ingrédient à la bonne entrée pendant la rédaction d'une recette."
       }
     }
   },
@@ -867,6 +994,153 @@
       "title": "Ajouter des recettes à la liste de courses",
       "description": "Recherchez et sélectionnez des recettes - choisissez une version précise pour les recettes à variations."
     },
-    "summary": "{recipes} recettes · {items} ingrédients"
+    "summary": "{recipes} recettes · {items} ingrédients",
+    "share": {
+      "button": "Partager",
+      "heading": "Liste de courses",
+      "stillNeed": "Encore à acheter",
+      "alreadyHave": "Déjà pris",
+      "copied": "Liste de courses copiée dans le presse-papiers",
+      "error": "Impossible de partager la liste de courses"
+    }
+  },
+  "mealPlanning": {
+    "navButton": "Planning repas",
+    "meta": {
+      "title": "Planning des repas",
+      "description": "Planifiez les repas de la semaine et ajoutez-les directement à votre liste de courses."
+    },
+    "title": "Planning des repas",
+    "prevWeek": "Semaine précédente",
+    "nextWeek": "Semaine suivante",
+    "today": "Aujourd'hui",
+    "addWeekToShoppingList": "Ajouter la semaine à la liste de courses",
+    "addedToShoppingList": "Les recettes de la semaine ont été ajoutées à votre liste de courses",
+    "addToShoppingListError": "Impossible d'ajouter certaines recettes à votre liste de courses",
+    "yourFavorites": "Vos favoris",
+    "dragHint": "Glissez sur un repas pour le planifier",
+    "searchPlaceholder": "Rechercher dans vos favoris…",
+    "loading": "Chargement…",
+    "noFavorites": "Aucun favori ne correspond à votre recherche",
+    "addRecipe": "Ajouter une recette",
+    "removeMeal": "Retirer ce repas",
+    "servings": "{count} portions",
+    "editServings": "Modifier les portions de ce repas",
+    "pickerTitle": "Ajouter une recette à ce repas",
+    "weekServings": "Portions cette semaine",
+    "dayServings": "Portions ce jour-là",
+    "editDayServings": "Modifier les portions de ce jour",
+    "useWeekDefault": "Utiliser la valeur par défaut de la semaine",
+    "useDayDefault": "Utiliser la valeur par défaut du jour",
+    "mealType": {
+      "breakfast": "Petit-déjeuner",
+      "lunch": "Déjeuner",
+      "dinner": "Dîner"
+    },
+    "unauthorized": {
+      "title": "Connectez-vous pour planifier vos repas",
+      "description": "Connectez-vous pour planifier votre semaine et en générer une liste de courses."
+    }
+  },
+  "toolbox": {
+    "meta": {
+      "title": "Boîte à outils",
+      "description": "Des aides de cuisine pour les quantités, les températures de four et les remplacements."
+    },
+    "title": "Boîte à outils",
+    "subtitle": "Des aides de cuisine pour les quantités, les températures de four et les remplacements.",
+    "tabs": {
+      "quantity": "Convertisseur de quantités",
+      "oven": "Températures de four",
+      "timers": "Minuteurs",
+      "substitutions": "Remplacements"
+    },
+    "quantity": {
+      "ingredientLabel": "Ingrédient",
+      "ingredientPlaceholder": "Rechercher un ingrédient…",
+      "noIngredientResults": "Aucun ingrédient trouvé",
+      "amountLabel": "Quantité",
+      "fromLabel": "De",
+      "toLabel": "Vers",
+      "swap": "Inverser les unités",
+      "result": "Résultat",
+      "disclaimer": "Valeurs approximatives, basées sur la densité habituelle de l'ingrédient.",
+      "suggestIngredient": "Suggérer un ingrédient",
+      "suggestUnit": "Suggérer une unité"
+    },
+    "oven": {
+      "temperatureLabel": "Température",
+      "unitLabel": "Unité",
+      "unitCelsius": "Celsius (°C)",
+      "unitFahrenheit": "Fahrenheit (°F)",
+      "resultLabel": "Résultat"
+    },
+    "substitutions": {
+      "searchLabel": "Rechercher un remplacement",
+      "searchPlaceholder": "ex. œufs, beurre, babeurre",
+      "noResults": "Aucun résultat pour cette recherche.",
+      "suggest": "Suggérer un remplacement",
+      "empty": "Aucun remplacement pour le moment — soyez le premier à en suggérer un."
+    },
+    "timers": {
+      "nameLabel": "Nom (facultatif)",
+      "namePlaceholder": "ex. Pâtes",
+      "minutesLabel": "Minutes",
+      "secondsLabel": "Secondes",
+      "start": "Démarrer le minuteur",
+      "presets": "Réglages rapides",
+      "presetMinutes": "{minutes} min",
+      "autoLabel": "Minuteur {n}",
+      "active": "Minuteurs en cours",
+      "empty": "Aucun minuteur en cours — démarrez-en un ci-dessus."
+    },
+    "suggestIngredient": {
+      "title": "Suggérer un ingrédient",
+      "nameLabel": "Nom de l'ingrédient",
+      "densityLabel": "Densité (grammes pour 100 ml)",
+      "densityHint": "Indiquez combien 100 ml de cet ingrédient pèsent en grammes — ex. eau = 100, miel ≈ 141. Doit être compris entre 20 et 250.",
+      "noteLabel": "Source ou remarque (facultatif)",
+      "duplicateWarning": "« {name} » existe déjà dans la liste — ceci sera soumis comme une correction de cette entrée plutôt qu'un nouvel ajout.",
+      "newHint": "Cet ingrédient semble nouveau — ceci sera soumis comme un nouvel ingrédient.",
+      "submitNew": "Soumettre le nouvel ingrédient",
+      "submitCorrection": "Soumettre la correction",
+      "success": "Merci — un administrateur vérifiera cette suggestion avant qu'elle apparaisse dans la boîte à outils.",
+      "error": "Impossible d'envoyer votre suggestion.",
+      "cancel": "Annuler"
+    },
+    "suggestUnit": {
+      "title": "Suggérer une unité",
+      "nameLabel": "Nom de l'unité",
+      "symbolLabel": "Symbole",
+      "kindLabel": "Type",
+      "kindWeight": "Poids",
+      "kindVolume": "Volume",
+      "toBaseLabel": "Facteur de conversion",
+      "toBaseHintWeight": "Grammes par unité, ex. une cuillère à soupe de beurre ≈ 14.",
+      "toBaseHintVolume": "Millilitres par unité, ex. une tasse US = 240.",
+      "noteLabel": "Source ou remarque (facultatif)",
+      "duplicateWarning": "« {name} » existe déjà — ceci sera soumis comme une correction plutôt qu'une nouvelle unité.",
+      "newHint": "Cette unité semble nouvelle — ceci sera soumis comme une nouvelle unité.",
+      "submitNew": "Soumettre la nouvelle unité",
+      "submitCorrection": "Soumettre la correction",
+      "success": "Merci — un administrateur vérifiera cette suggestion avant qu'elle apparaisse dans la boîte à outils.",
+      "error": "Impossible d'envoyer votre suggestion.",
+      "cancel": "Annuler"
+    },
+    "suggestSubstitution": {
+      "title": "Suggérer un remplacement",
+      "problemLabel": "Qu'est-ce qui manque ?",
+      "problemPlaceholder": "ex. Pas de babeurre",
+      "solutionLabel": "Utiliser à la place",
+      "tagLabel": "Catégorie (facultatif)",
+      "noteLabel": "Source ou remarque (facultatif)",
+      "duplicateWarning": "Un remplacement pour « {problem} » existe déjà — ceci sera soumis comme une correction plutôt qu'un nouvel ajout.",
+      "newHint": "Ce remplacement semble nouveau — ceci sera soumis comme un nouveau remplacement.",
+      "submitNew": "Soumettre le nouveau remplacement",
+      "submitCorrection": "Soumettre la correction",
+      "success": "Merci — un administrateur vérifiera cette suggestion avant qu'elle apparaisse dans la boîte à outils.",
+      "error": "Impossible d'envoyer votre suggestion.",
+      "cancel": "Annuler"
+    }
   }
 }

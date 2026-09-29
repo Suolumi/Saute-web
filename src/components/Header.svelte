@@ -8,8 +8,8 @@
     import {_, locale} from "svelte-i18n";
     import LanguageSelect from "./LanguageSelect.svelte";
     import {Drawer} from "vaul-svelte";
-    import {Home, Wrench, Info, Sparkles, Settings, BookOpen, Heart, ShieldCheck, LogOut, ChevronRight, X} from "@lucide/svelte";
-    import {pendingTranslationSuggestionCount, refreshPendingTranslationSuggestionCount} from "$lib/admin";
+    import {Home, Wrench, Calculator, Info, Sparkles, Settings, BookOpen, Heart, ShieldCheck, LogOut, ChevronRight, X} from "@lucide/svelte";
+    import {pendingTranslationSuggestionCount, refreshPendingTranslationSuggestionCount, pendingNutritionSuggestionCount, refreshPendingNutritionSuggestionCount} from "$lib/admin";
 
     function toggleDarkMode(): void {
         darkMode.update((mode: boolean) => {
@@ -30,17 +30,30 @@
     let pathSegment = $derived(page.url.pathname.split('/').filter(Boolean)[1]);
 
     // Polled here (mounted on every page, not just /admin) so an admin sees
-    // the pending-translation-suggestion badge from anywhere in the site,
-    // not only while already inside the back-office; (admin)/+layout.svelte
-    // reads the same store rather than polling a second time.
+    // the pending-suggestion badges from anywhere in the site, not only
+    // while already inside the back-office; (admin)/+layout.svelte reads
+    // the same stores rather than polling a second time. Nutrition
+    // suggestions only ever come from a correction to an already-linked
+    // ingredient (a first-time link applies immediately, no review) - see
+    // CLAUDE.md's Nutrition Info entry.
     const PENDING_TRANSLATIONS_POLL_MS = 30_000;
     $effect(() => {
         if (!$user?.admin)
             return;
         refreshPendingTranslationSuggestionCount();
-        const interval = setInterval(refreshPendingTranslationSuggestionCount, PENDING_TRANSLATIONS_POLL_MS);
+        refreshPendingNutritionSuggestionCount();
+        const interval = setInterval(() => {
+            refreshPendingTranslationSuggestionCount();
+            refreshPendingNutritionSuggestionCount();
+        }, PENDING_TRANSLATIONS_POLL_MS);
         return () => clearInterval(interval);
     });
+
+    // totalPendingAdminCount backs the generic "you have pending admin work"
+    // indicators (the profile avatar dot, the "Admin" row's count badge) -
+    // unlike the admin nav's own per-tab badges, these aren't specific to
+    // one suggestion type.
+    let totalPendingAdminCount = $derived($pendingTranslationSuggestionCount + $pendingNutritionSuggestionCount);
 
     function navRowClass(active: boolean): string {
         return `flex w-full items-center gap-3 rounded-2xl px-2 py-2.5 text-left transition-colors ${active ? 'bg-primary/10' : 'hover:bg-muted'}`;
@@ -110,6 +123,13 @@
                         {$_('header.diy')}
                     </button>
                     <button
+                        onclick={() => goto(`/${$locale}/toolbox`)}
+                        class="text-foreground hover:text-primary transition-colors font-medium hover:cursor-pointer"
+                        aria-label="Toolbox"
+                    >
+                        {$_('header.toolbox')}
+                    </button>
+                    <button
                         onclick={() => goto(`/${$locale}/about`)}
                         class="text-foreground hover:text-primary transition-colors font-medium hover:cursor-pointer"
                         aria-label="About"
@@ -159,10 +179,10 @@
                                     {$user.username?.charAt(0) || '?'}
                                 </div>
                             {/if}
-                            {#if $user.admin && $pendingTranslationSuggestionCount > 0}
+                            {#if $user.admin && totalPendingAdminCount > 0}
                                 <span
                                         class="absolute top-0 right-0 w-2.5 h-2.5 rounded-full bg-destructive ring-2 ring-background"
-                                        title={$_('admin.translations.pendingBadge', {values: {count: $pendingTranslationSuggestionCount}})}
+                                        title={$_('admin.pendingBadge', {values: {count: totalPendingAdminCount}})}
                                 ></span>
                             {/if}
                         </button>
@@ -193,9 +213,9 @@
                                             class="w-full flex items-center justify-between gap-2 px-4 py-2 text-sm text-foreground transition-colors hover:cursor-pointer hover:bg-gray-200 dark:hover:bg-gray-800"
                                     >
                                         {$_('header.admin')}
-                                        {#if $pendingTranslationSuggestionCount > 0}
+                                        {#if totalPendingAdminCount > 0}
                                             <span class="bg-destructive text-destructive-foreground rounded-full px-1.5 py-0.5 text-xs font-semibold leading-none">
-                                                {$pendingTranslationSuggestionCount}
+                                                {totalPendingAdminCount}
                                             </span>
                                         {/if}
                                     </button>
@@ -228,12 +248,10 @@
                 {/if}
                 <div class="md:hidden">
                     <Drawer.Root shouldScaleBackground direction="right" bind:open={drawerOpen}>
-                        <Drawer.Trigger class="flex items-center justify-center">
-                            <button class="text-foreground hover:text-primary" aria-label="Menu">
-                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
-                                </svg>
-                            </button>
+                        <Drawer.Trigger class="flex items-center justify-center text-foreground hover:text-primary" aria-label="Menu">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                            </svg>
                         </Drawer.Trigger>
                         <Drawer.Portal>
                             <Drawer.Overlay class="fixed inset-0 bg-black/40 z-50" />
@@ -311,6 +329,18 @@
                                             {/if}
                                         </button>
                                         <button
+                                                onclick={() => {drawerOpen = false; goto(`/${$locale}/toolbox`)}}
+                                                class={navRowClass(pathSegment === 'toolbox')}
+                                        >
+                                            <div class={navChipClass(pathSegment === 'toolbox')}>
+                                                <Calculator class="w-4 h-4" />
+                                            </div>
+                                            <div class={navLabelClass(pathSegment === 'toolbox')}>{$_('header.toolbox')}</div>
+                                            {#if pathSegment === 'toolbox'}
+                                                <div class="ml-auto mr-1.5 h-1.5 w-1.5 rounded-full bg-primary"></div>
+                                            {/if}
+                                        </button>
+                                        <button
                                                 onclick={() => {drawerOpen = false; goto(`/${$locale}/about`)}}
                                                 class={navRowClass(pathSegment === 'about')}
                                         >
@@ -383,9 +413,9 @@
                                                         <ShieldCheck class="w-4 h-4" />
                                                     </div>
                                                     <div class={navLabelClass(false)}>{$_('header.admin')}</div>
-                                                    {#if $pendingTranslationSuggestionCount > 0}
+                                                    {#if totalPendingAdminCount > 0}
                                                         <span class="ml-auto bg-destructive text-destructive-foreground rounded-full px-1.5 py-0.5 text-xs font-semibold leading-none">
-                                                            {$pendingTranslationSuggestionCount}
+                                                            {totalPendingAdminCount}
                                                         </span>
                                                     {/if}
                                                 </button>

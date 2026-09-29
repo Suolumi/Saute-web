@@ -2,6 +2,7 @@ import {writable} from "svelte/store";
 import {apiFetchJson} from "$lib/api";
 import type {User} from "$lib/user";
 import type {GetRecipesRequest, RecipePreview, Ingredient, Step, TranslationSuggestion} from "$lib/recipes";
+import type {IngredientNutritionLink, UnitAlias} from "$lib/nutrition";
 
 // AdminUser is the full user document the back-office sees (unlike the
 // public User type, which the API redacts for non-admin callers).
@@ -40,7 +41,7 @@ export type AdminRouteParam = {
     label: string
 }
 
-export type AdminRouteCategory = 'users' | 'recipes' | 'system' | 'translations'
+export type AdminRouteCategory = 'users' | 'recipes' | 'system' | 'translations' | 'toolbox' | 'nutrition'
 
 export type AdminRouteDescriptor = {
     id: string
@@ -189,6 +190,103 @@ export async function refreshPendingTranslationSuggestionCount() {
     const {response, data} = await getTranslationSuggestions('pending', 1);
     if (response.ok && data)
         pendingTranslationSuggestionCount.set(data.length);
+}
+
+// NutritionSuggestionView is one row in the admin review list: the
+// suggestion's own content plus its resolved submitter username, the target
+// nutrition entry's display name, and - for a correction - the link's
+// current name it would replace.
+export type NutritionSuggestionView = {
+    id: string
+    target_id?: string
+    is_correction: boolean
+    submitted_by: string
+    submitted_by_username: string
+    note?: string
+    status: 'pending' | 'approved' | 'rejected'
+    created_at: string
+    reviewed_at?: string
+    ingredient_name: string
+    nutrition_id: string
+    nutrition_name?: string
+    g_per_100ml?: number
+    grams_per_unit?: number
+    unit_alias?: string
+    unit_name?: string
+    is_unit_correction: boolean
+    current_name?: string
+}
+
+export type ListNutritionSuggestionsResponse = {
+    length: number
+    items: NutritionSuggestionView[]
+}
+
+export function getNutritionSuggestions(status?: string, limit?: number) {
+    const params: Record<string, unknown> = {};
+    if (status) params.status = status;
+    if (limit) params.limit = limit;
+    return apiFetchJson<ListNutritionSuggestionsResponse>('/admin/nutrition-suggestions', 'GET', null, Object.keys(params).length > 0 ? params : null)
+}
+
+export function approveNutritionSuggestion(id: string) {
+    return apiFetchJson<NutritionSuggestionView>(`/admin/nutrition-suggestions/${id}/approve`, 'POST')
+}
+
+export function rejectNutritionSuggestion(id: string) {
+    return apiFetchJson<NutritionSuggestionView>(`/admin/nutrition-suggestions/${id}/reject`, 'POST')
+}
+
+// pendingNutritionSuggestionCount backs the notification badge on the admin
+// nav's "Nutrition" tab, same pattern as pendingTranslationSuggestionCount
+// above - only corrections to an already-linked ingredient ever reach this
+// queue (a first-time link applies immediately, no review).
+export const pendingNutritionSuggestionCount = writable(0);
+
+export async function refreshPendingNutritionSuggestionCount() {
+    const {response, data} = await getNutritionSuggestions('pending', 1);
+    if (response.ok && data)
+        pendingNutritionSuggestionCount.set(data.length);
+}
+
+// Admin direct CRUD over ingredient nutrition links and unit aliases -
+// applies immediately, no suggestion/review involved (see
+// SubmitNutritionLinkSuggestion's docs for why the regular authoring flow
+// still goes through review for a correction, while these never do).
+export type AdminNutritionLinkRequest = {
+    ingredient_name: string
+    nutrition_id: string
+    g_per_100ml?: number
+    grams_per_unit?: number
+}
+
+export function adminCreateNutritionLink(body: AdminNutritionLinkRequest) {
+    return apiFetchJson<IngredientNutritionLink>('/admin/nutrition-links', 'POST', body)
+}
+
+export function adminUpdateNutritionLink(id: string, body: AdminNutritionLinkRequest) {
+    return apiFetchJson<IngredientNutritionLink>(`/admin/nutrition-links/${id}`, 'PUT', body)
+}
+
+export function adminDeleteNutritionLink(id: string) {
+    return apiFetchJson<null>(`/admin/nutrition-links/${id}`, 'DELETE')
+}
+
+export type AdminUnitAliasRequest = {
+    alias: string
+    unit_id: string
+}
+
+export function adminCreateUnitAlias(body: AdminUnitAliasRequest) {
+    return apiFetchJson<UnitAlias>('/admin/unit-aliases', 'POST', body)
+}
+
+export function adminUpdateUnitAlias(id: string, body: AdminUnitAliasRequest) {
+    return apiFetchJson<UnitAlias>(`/admin/unit-aliases/${id}`, 'PUT', body)
+}
+
+export function adminDeleteUnitAlias(id: string) {
+    return apiFetchJson<null>(`/admin/unit-aliases/${id}`, 'DELETE')
 }
 
 // callAdminRoute fires an arbitrary route from the manifest. pathAndQuery is

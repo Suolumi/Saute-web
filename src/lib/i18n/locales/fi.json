@@ -11,6 +11,7 @@
     "myFavorites": "Omat suosikit",
     "logout": "Kirjaudu ulos",
     "diy": "DIY",
+    "toolbox": "Työkalupakki",
     "admin": "Ylläpito",
     "about": "Tietoa",
     "browse": "Selaa",
@@ -226,6 +227,16 @@
     "instructions": "Ohjeet",
     "stepPhoto": "Vaiheen {step} kuva",
     "stepDone": "Merkitse vaihe {step} valmiiksi",
+    "startTimer": "Käynnistä {minutes} min ajastin",
+    "timerRemaining": "{time} jäljellä",
+    "timerPaused": "{time} — tauolla",
+    "timerDone": "Aika on kulunut!",
+    "cancelTimer": "Peruuta ajastin",
+    "pauseTimer": "Keskeytä ajastin",
+    "resumeTimer": "Jatka ajastinta",
+    "timerWidgetLabel": "Aktiiviset ajastimet",
+    "dismissTimer": "Hylkää",
+    "timerFor": "{recipe} — {step}",
     "notFound": "Reseptiä ei löytynyt",
     "variations": "Muunnelmat",
     "variationBanner": "Tämä on muunnelma toisesta reseptistä.",
@@ -260,7 +271,25 @@
     "suggestFixSubmit": "Lähetä korjaus",
     "suggestFixSuccess": "Kiitos! Korjauksesi on lähetetty tarkistettavaksi.",
     "suggestFixError": "Korjauksen lähettäminen epäonnistui",
-    "suggestFixDuplicate": "Sinulla on jo odottava ehdotus tälle reseptille ja kielelle"
+    "suggestFixDuplicate": "Sinulla on jo odottava ehdotus tälle reseptille ja kielelle",
+    "nutrition": {
+      "title": "Ravintosisältö",
+      "kcal": "Kalorit",
+      "protein": "Proteiini",
+      "carbs": "Hiilihydraatit",
+      "fat": "Rasva",
+      "salt": "Suola",
+      "sugar": "Sokeri",
+      "coverageNote": "{matched}/{total} ainesosaa laskettu mukaan",
+      "noMatch": "Liian vähän ainesosia voitiin vielä yhdistää ravintotietoihin.",
+      "perIngredient": "Ainesosittain",
+      "kcalShort": "kcal",
+      "gShort": "g",
+      "proteinShort": "prot.",
+      "carbsShort": "hiilih.",
+      "fatShort": "rasva",
+      "saveFirst": "Ravintotiedot ovat saatavilla, kun tallennat tämän reseptin."
+    }
   },
   "edit": {
     "toasts": {
@@ -342,7 +371,22 @@
         "placeholder": "esim. g, dl, lehteä…"
       },
       "preview": "Näytetään muodossa: \"{text}\"",
-      "remove": "Poista ainesosa"
+      "remove": "Poista ainesosa",
+      "nutritionLink": {
+        "suggestion": "Linkitä ravintotietoihin: {name}?",
+        "accept": "Linkitä",
+        "dismiss": "Hylkää ravintolinkkiehdotus",
+        "linkDifferently": "Linkitä muihin ravintotietoihin",
+        "searchPlaceholder": "Hae ravintotietoja...",
+        "link": "Linkitä",
+        "cancel": "Peruuta",
+        "submittedChip": "Ravintolinkki lähetetty tarkistettavaksi",
+        "success": "Ravintolinkki lähetetty tarkistettavaksi",
+        "error": "Ravintolinkin lähettäminen epäonnistui",
+        "linkedTo": "Linkitetty: {name}",
+        "linkedSuccess": "Linkitetty!"
+      },
+      "enableNutrition": "Ota ravinto käyttöön"
     },
     "instructions": {
       "title": {
@@ -359,6 +403,10 @@
         "label": "Kuva",
         "alt": "Vaiheen {step} kuva",
         "remove": "Poista kuva"
+      },
+      "timer": {
+        "label": "Ajastin (min)",
+        "placeholder": "esim. 30"
       }
     },
     "submit": "Tallenna resepti",
@@ -628,7 +676,8 @@
       "recipes": "Reseptit",
       "diy": "DIY",
       "translations": "Käännökset",
-      "console": "Konsoli"
+      "console": "Konsoli",
+      "nutrition": "Ravinto"
     },
     "errors": {
       "loadStats": "Tilastojen lataaminen epäonnistui",
@@ -645,7 +694,9 @@
       "deleteDiy": "DIY-projektin poistaminen epäonnistui",
       "retranslate": "Uudelleenkäännöksen ajoitus epäonnistui",
       "loadTranslations": "Käännösehdotusten lataaminen epäonnistui",
-      "resolveTranslation": "Ehdotuksen käsittely epäonnistui"
+      "resolveTranslation": "Ehdotuksen käsittely epäonnistui",
+      "loadNutrition": "Ravintoehdotusten lataaminen epäonnistui",
+      "resolveNutrition": "Tämän ehdotuksen käsittely epäonnistui"
     },
     "dashboard": {
       "title": "Kojelauta",
@@ -756,7 +807,9 @@
         "users": "Käyttäjät",
         "recipes": "Reseptit",
         "translations": "Käännökset",
-        "system": "Järjestelmä"
+        "system": "Järjestelmä",
+        "toolbox": "Työkalupakki",
+        "nutrition": "Ravinto"
       },
       "select": "Valitse",
       "paramsFormTitle": "Parametrit",
@@ -781,7 +834,57 @@
         "noResults": "Käyttäjiä ei löytynyt",
         "error": "Käyttäjien haku epäonnistui"
       }
-    }
+    },
+    "nutrition": {
+      "title": "Ravinto",
+      "statusPending": "Odottaa",
+      "statusApproved": "Hyväksytty",
+      "statusRejected": "Hylätty",
+      "none": "Ehdotuksia ei löytynyt",
+      "approve": "Hyväksy",
+      "reject": "Hylkää",
+      "approved": "Ehdotus hyväksytty",
+      "rejected": "Ehdotus hylätty",
+      "linkedTo": "Linkitetty kohteeseen",
+      "density": "Tiheys",
+      "gramsPerUnit": "Grammaa per yksikkö",
+      "unitAlias": "Yksikön alias",
+      "correction": "korjaus",
+      "correctionOf": "korjaus kohteeseen {name}",
+      "note": "Huomautus",
+      "pendingBadge": "{count} odottavaa ravintoehdotusta",
+      "tabLinks": "Linkit",
+      "tabPending": "Odottavat korjaukset",
+      "ingredientLinks": "Ainesosalinkit",
+      "newLink": "Uusi linkki",
+      "editLink": "Muokkaa linkkiä",
+      "noLinks": "Ei vielä linkkejä",
+      "unitAliases": "Yksikköaliakset",
+      "newAlias": "Uusi alias",
+      "editAlias": "Muokkaa aliasta",
+      "noAliases": "Ei vielä aliaksia",
+      "aliasFor": "Vastaa yksikköä",
+      "edit": "Muokkaa",
+      "delete": "Poista",
+      "cancel": "Peruuta",
+      "save": "Tallenna",
+      "ingredientName": "Ainesosan nimi",
+      "nutritionEntry": "Ravintotietue",
+      "aliasText": "Aliasteksti",
+      "unit": "Yksikkö",
+      "linkCreated": "Linkki luotu",
+      "linkUpdated": "Linkki päivitetty",
+      "linkDeleted": "Linkki poistettu",
+      "linkSaveError": "Linkin tallentaminen epäonnistui",
+      "aliasCreated": "Alias luotu",
+      "aliasUpdated": "Alias päivitetty",
+      "aliasDeleted": "Alias poistettu",
+      "aliasSaveError": "Aliaksen tallentaminen epäonnistui",
+      "deleteError": "Poistaminen epäonnistui",
+      "confirmDeleteTitle": "Poistetaanko?",
+      "confirmDeleteDescription": "”{name}” poistetaan pysyvästi."
+    },
+    "pendingBadge": "{count} kohdetta odottaa tarkistusta"
   },
   "about": {
     "meta": {
@@ -790,6 +893,14 @@
     },
     "headLabel": "Mitä Sauté osaa",
     "commentLabel": "Nopea katsaus ominaisuuksiin, jotka eivät ole aina itsestäänselviä pelkästään sovellusta selaamalla.",
+    "sections": {
+      "discover": { "title": "Reseptien löytäminen" },
+      "cooking": { "title": "Kokkaaminen" },
+      "creating": { "title": "Luominen ja kirjoittaminen" },
+      "planning": { "title": "Suunnittelu ja ostokset" },
+      "sharing": { "title": "Jakaminen ja yhteisö" },
+      "integrations": { "title": "Integraatiot" }
+    },
     "items": {
       "variations": {
         "title": "Reseptien versiot",
@@ -827,17 +938,33 @@
         "title": "Kokkaustila",
         "description": "Käy reseptin ohjeet läpi vaihe kerrallaan, suurella tekstillä, näytön pysyessä automaattisesti päällä — paina \"Kokkaa\" ohjeiden yläpuolella minkä tahansa reseptin sivulla."
       },
+      "recipeTimers": {
+        "title": "Reseptiajastimet",
+        "description": "Käynnistä ajastin millä tahansa vaiheella, jolle on asetettu kesto, joko kokkaustilassa tai suoraan reseptin ohjeista — se jatkaa käyntiään kelluvassa widgetissä, joka seuraa mukana koko sivustolla ja soi ajan loputtua, vaikka olisit siirtynyt muualle. Voit keskeyttää ja jatkaa sitä milloin tahansa samasta widgetistä."
+      },
       "share": {
         "title": "Jaa resepti",
         "description": "Jaa mikä tahansa resepti suoraan sen sivulta, laitteesi jakovalikon tai kopioidun linkin kautta — esikatselu (otsikko, kuva, kuvaus) tulee mukana automaattisesti."
       },
       "shoppingList": {
         "title": "Ostoslista",
-        "description": "Lisää reseptejä ostoslistallesi etusivulta, ja niiden raaka-aineet yhdistyvät yhdeksi tarkistuslistaksi kaikkien reseptien kesken — merkitse asioita ostetuiksi kaupassa."
+        "description": "Lisää reseptejä ostoslistallesi etusivulta, ja niiden raaka-aineet yhdistyvät yhdeksi tarkistuslistaksi kaikkien reseptien kesken — merkitse asioita ostetuiksi kaupassa. Paina Jaa ostoslistasivulla lähettääksesi listan, vielä ostettavat ja jo hankitut ainekset erikseen merkittynä, laitteesi jakovalikon tai leikepöydän kautta."
+      },
+      "mealPlanning": {
+        "title": "Ateriasuunnittelu",
+        "description": "Suunnittele aamiainen, lounas ja päivällinen viikoksi vetämällä reseptejä suosikeistasi tai valitsemalla yksi kullekin paikalle, ja paina sitten \"Lisää viikko ostoslistalle\" yhdistääksesi kaikkien suunniteltujen reseptien ainesosat kerralla listalle — etusivun Ateriasuunnittelu-painikkeesta."
+      },
+      "toolbox": {
+        "title": "Työkalupakki",
+        "description": "Muunna määrä painon ja tilavuuden välillä valitulle ainesosalle, vaihda uunin lämpötila °C:n ja °F:n välillä, etsi korvike jollekin, joka on loppu, tai käytä useita nimettyjä ajastimia yhtä aikaa — kaikki Työkalupakki-välilehdellä."
       },
       "translationFix": {
         "title": "Ehdota käännöskorjausta",
         "description": "Kuulostaako konekäännetty rivi kömpelöltä? Napsauta käännetyn reseptin otsikon vieressä olevaa kynäkuvaketta ehdottaaksesi korjausta — ylläpitäjä tarkistaa sen ennen julkaisua."
+      },
+      "nutrition": {
+        "title": "Ravintotiedot",
+        "description": "Reseptit näyttävät suuntaa-antavan ravintoarvion (kalorit, proteiini, hiilihydraatit, rasva, suola, sokeri), joka skaalautuu annosmäärän mukaan ja lasketaan ainesosista, jotka on varmasti yhdistetty kuratoituun ruoka-tietokantaan. Sovellus näyttää aina, kuinka monta ainesosaa laskettiin mukaan, eikä koskaan esitä osittaista summaa tarkkana - ja kuka tahansa kirjautunut käyttäjä voi auttaa parantamaan sitä linkittämällä ainesosan oikeaan tietueeseen reseptiä kirjoittaessaan."
       }
     }
   },
@@ -867,6 +994,153 @@
       "title": "Lisää reseptejä ostoslistalle",
       "description": "Hae ja valitse reseptejä - valitse tietty versio resepteille, joilla on useita muunnelmia."
     },
-    "summary": "{recipes} reseptia · {items} ainesosaa"
+    "summary": "{recipes} reseptia · {items} ainesosaa",
+    "share": {
+      "button": "Jaa",
+      "heading": "Ostoslista",
+      "stillNeed": "Vielä ostettavat",
+      "alreadyHave": "Jo hankitut",
+      "copied": "Ostoslista kopioitu leikepöydälle",
+      "error": "Ostoslistan jakaminen epäonnistui"
+    }
+  },
+  "mealPlanning": {
+    "navButton": "Ateriasuunnitelma",
+    "meta": {
+      "title": "Ateriasuunnittelu",
+      "description": "Suunnittele viikon ateriat ja lisää ne suoraan ostoslistallesi."
+    },
+    "title": "Ateriasuunnittelu",
+    "prevWeek": "Edellinen viikko",
+    "nextWeek": "Seuraava viikko",
+    "today": "Tänään",
+    "addWeekToShoppingList": "Lisää viikko ostoslistalle",
+    "addedToShoppingList": "Tämän viikon reseptit lisättiin ostoslistallesi",
+    "addToShoppingListError": "Joidenkin reseptien lisääminen ostoslistalle epäonnistui",
+    "yourFavorites": "Suosikkisi",
+    "dragHint": "Raahaa aterialle suunnitellaksesi sen",
+    "searchPlaceholder": "Hae suosikeistasi…",
+    "loading": "Ladataan…",
+    "noFavorites": "Hakuasi vastaavia suosikkeja ei löytynyt",
+    "addRecipe": "Lisää resepti",
+    "removeMeal": "Poista tämä ateria",
+    "servings": "{count} annosta",
+    "editServings": "Muuta tämän aterian annosmäärää",
+    "pickerTitle": "Lisää resepti tähän ateriaan",
+    "weekServings": "Annosmäärä tällä viikolla",
+    "dayServings": "Annosmäärä tänä päivänä",
+    "editDayServings": "Muuta tämän päivän annosmäärää",
+    "useWeekDefault": "Käytä viikon oletusta",
+    "useDayDefault": "Käytä päivän oletusta",
+    "mealType": {
+      "breakfast": "Aamiainen",
+      "lunch": "Lounas",
+      "dinner": "Päivällinen"
+    },
+    "unauthorized": {
+      "title": "Kirjaudu sisään suunnitellaksesi ateriasi",
+      "description": "Kirjaudu sisään suunnitellaksesi viikkosi ja luodaksesi siitä ostoslistan."
+    }
+  },
+  "toolbox": {
+    "meta": {
+      "title": "Työkalupakki",
+      "description": "Keittiöapuja määrille, uunin lämpötiloille ja korvaaville aineksille."
+    },
+    "title": "Työkalupakki",
+    "subtitle": "Keittiöapuja määrille, uunin lämpötiloille ja korvaaville aineksille.",
+    "tabs": {
+      "quantity": "Määrämuunnin",
+      "oven": "Uunin lämpötilat",
+      "timers": "Ajastimet",
+      "substitutions": "Korvaavat ainekset"
+    },
+    "quantity": {
+      "ingredientLabel": "Ainesosa",
+      "ingredientPlaceholder": "Hae ainesosia…",
+      "noIngredientResults": "Ei vastaavia ainesosia",
+      "amountLabel": "Määrä",
+      "fromLabel": "Mistä",
+      "toLabel": "Mihin",
+      "swap": "Vaihda yksiköt",
+      "result": "Tulos",
+      "disclaimer": "Arvot ovat suuntaa antavia, perustuen ainesosan tyypilliseen tiheyteen.",
+      "suggestIngredient": "Ehdota ainesosaa",
+      "suggestUnit": "Ehdota yksikköä"
+    },
+    "oven": {
+      "temperatureLabel": "Lämpötila",
+      "unitLabel": "Yksikkö",
+      "unitCelsius": "Celsius (°C)",
+      "unitFahrenheit": "Fahrenheit (°F)",
+      "resultLabel": "Tulos"
+    },
+    "substitutions": {
+      "searchLabel": "Hae korvaavia aineksia",
+      "searchPlaceholder": "esim. kananmunat, voi, kirnupiimä",
+      "noResults": "Ei osumia haulle.",
+      "suggest": "Ehdota korvaavaa ainesta",
+      "empty": "Ei vielä korvaavia aineksia — ehdota ensimmäistä."
+    },
+    "timers": {
+      "nameLabel": "Nimi (valinnainen)",
+      "namePlaceholder": "esim. Pasta",
+      "minutesLabel": "Minuuttia",
+      "secondsLabel": "Sekuntia",
+      "start": "Käynnistä ajastin",
+      "presets": "Pika-asetukset",
+      "presetMinutes": "{minutes} min",
+      "autoLabel": "Ajastin {n}",
+      "active": "Käynnissä olevat ajastimet",
+      "empty": "Ei käynnissä olevia ajastimia — käynnistä yksi yllä."
+    },
+    "suggestIngredient": {
+      "title": "Ehdota ainesosaa",
+      "nameLabel": "Ainesosan nimi",
+      "densityLabel": "Tiheys (grammaa per 100 ml)",
+      "densityHint": "Kerro kuinka monta grammaa 100 ml tätä ainesosaa painaa — esim. vesi = 100, hunaja ≈ 141. Oltava välillä 20–250.",
+      "noteLabel": "Lähde tai huomautus (valinnainen)",
+      "duplicateWarning": "”{name}” on jo listalla — tämä lähetetään korjauksena kyseiseen merkintään, ei uutena ainesosana.",
+      "newHint": "Vaikuttaa uudelta — tämä lähetetään uutena ainesosana.",
+      "submitNew": "Lähetä uusi ainesosa tarkistettavaksi",
+      "submitCorrection": "Lähetä korjaus tarkistettavaksi",
+      "success": "Kiitos — ylläpitäjä tarkistaa tämän ennen kuin se näkyy työkalupakissa.",
+      "error": "Ehdotuksen lähettäminen epäonnistui.",
+      "cancel": "Peruuta"
+    },
+    "suggestUnit": {
+      "title": "Ehdota yksikköä",
+      "nameLabel": "Yksikön nimi",
+      "symbolLabel": "Symboli",
+      "kindLabel": "Tyyppi",
+      "kindWeight": "Paino",
+      "kindVolume": "Tilavuus",
+      "toBaseLabel": "Muuntokerroin",
+      "toBaseHintWeight": "Grammaa yksikköä kohti, esim. ruokalusikallinen voita ≈ 14.",
+      "toBaseHintVolume": "Millilitraa yksikköä kohti, esim. yhdysvaltalainen kuppi = 240.",
+      "noteLabel": "Lähde tai huomautus (valinnainen)",
+      "duplicateWarning": "”{name}” on jo olemassa — tämä lähetetään korjauksena, ei uutena yksikkönä.",
+      "newHint": "Vaikuttaa uudelta — tämä lähetetään uutena yksikkönä.",
+      "submitNew": "Lähetä uusi yksikkö tarkistettavaksi",
+      "submitCorrection": "Lähetä korjaus tarkistettavaksi",
+      "success": "Kiitos — ylläpitäjä tarkistaa tämän ennen kuin se näkyy työkalupakissa.",
+      "error": "Ehdotuksen lähettäminen epäonnistui.",
+      "cancel": "Peruuta"
+    },
+    "suggestSubstitution": {
+      "title": "Ehdota korvaavaa ainesta",
+      "problemLabel": "Mikä puuttuu?",
+      "problemPlaceholder": "esim. Ei kirnupiimää",
+      "solutionLabel": "Käytä sen sijaan",
+      "tagLabel": "Kategoria (valinnainen)",
+      "noteLabel": "Lähde tai huomautus (valinnainen)",
+      "duplicateWarning": "Korvaava aines merkinnälle ”{problem}” on jo olemassa — tämä lähetetään korjauksena, ei uutena merkintänä.",
+      "newHint": "Vaikuttaa uudelta — tämä lähetetään uutena korvaavana aineksena.",
+      "submitNew": "Lähetä uusi korvaava aines tarkistettavaksi",
+      "submitCorrection": "Lähetä korjaus tarkistettavaksi",
+      "success": "Kiitos — ylläpitäjä tarkistaa tämän ennen kuin se näkyy työkalupakissa.",
+      "error": "Ehdotuksen lähettäminen epäonnistui.",
+      "cancel": "Peruuta"
+    }
   }
 }

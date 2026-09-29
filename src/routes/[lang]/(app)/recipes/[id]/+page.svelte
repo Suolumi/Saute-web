@@ -19,18 +19,22 @@
         unfavoriteRecipe
     } from "$lib/recipes";
     import emblaCarouselSvelte from "embla-carousel-svelte";
-    import {FileText, List, Users, Wind, Flame, Clock, ArrowLeft, ArrowRight, Heart, Minus, Plus, Coffee, Camera, Share2, X, ChefHat, Pencil} from "@lucide/svelte";
+    import {FileText, List, Users, Wind, Flame, Clock, ArrowLeft, ArrowRight, Heart, Minus, Plus, Coffee, Camera, Share2, X, ChefHat, Pencil, Timer} from "@lucide/svelte";
     import {serverUrl, user} from "$lib/stores";
     import {_, locale} from "svelte-i18n";
     import {toastError, toastSuccess} from "$lib/utils";
     import Lightbox from "../../../../../components/Lightbox.svelte";
     import RecipeCard from "../../../../../components/RecipeCard.svelte";
     import RecipeRefIngredient from "../../../../../components/RecipeRefIngredient.svelte";
+    import RecipeNutritionPanel from "../../../../../components/RecipeNutritionPanel.svelte";
     import PageMeta from "../../../../../components/PageMeta.svelte";
     import CookMode from "../../../../../components/CookMode.svelte";
     import Checkbox from "../../../../../components/Checkbox.svelte";
     import ImageCropModal from "../../../../../components/ImageCropModal.svelte";
     import {recipeStepProgress, isStepDone, toggleStepDone} from "$lib/recipeProgress";
+    import {activeTimers, startTimer, cancelTimer, getTimerFor, remainingMs, formatRemaining} from "$lib/recipeTimers";
+    import {unlockAlarmAudio} from "$lib/timerAlarm";
+    import {onMount} from "svelte";
 
     let id = $derived(page.params.id)
     const { data } = $props()
@@ -172,6 +176,22 @@
     function openStepLightbox(picture: string) {
         stepLightboxPicture = picture;
     }
+
+    function onStartStepTimer(stepIndex: number, label: string, minutes: number) {
+        if (!recipe) return;
+        unlockAlarmAudio();
+        startTimer(recipe.id, stepIndex, label, recipe.title, minutes);
+    }
+
+    // Drives the live "Xm Ys left" label on a step's own timer button - the
+    // global widget (mounted separately in the root layout) ticks the store
+    // itself, but a per-step button here needs its own clock to re-render
+    // every second rather than only whenever the store happens to change.
+    let now = $state(Date.now());
+    onMount(() => {
+        const interval = setInterval(() => now = Date.now(), 500);
+        return () => clearInterval(interval);
+    });
 
     async function toggleFavorite() {
         if (!recipe)
@@ -690,6 +710,7 @@
                     <div class="space-y-4">
                         {#each recipe.steps as step, index}
                             {@const done = isStepDone($recipeStepProgress, recipe.id, index)}
+                            {@const stepTimer = getTimerFor($activeTimers, recipe.id, index)}
                             <div class="flex gap-4">
                                 <div class="pt-1 flex-shrink-0">
                                     <Checkbox
@@ -703,6 +724,30 @@
                                         {step.title || `Step ${index + 1}`}
                                     </div>
                                     <p class="text-card-foreground leading-relaxed pl-4 whitespace-pre-line {done ? 'line-through' : ''}">{step.description}</p>
+                                    {#if step.timer_minutes}
+                                        <div class="pl-4 mt-1.5">
+                                            {#if stepTimer}
+                                                <button
+                                                        type="button"
+                                                        onclick={() => cancelTimer(stepTimer.id)}
+                                                        class="inline-flex items-center gap-1.5 text-sm font-medium px-2.5 py-1 rounded-full hover:cursor-pointer {stepTimer.ringing ? 'bg-primary text-primary-foreground' : 'bg-accent text-accent-foreground'}"
+                                                >
+                                                    <Timer size="14" />
+                                                    {stepTimer.ringing ? $_('recipe.timerDone') : $_('recipe.timerRemaining', {values: {time: formatRemaining(remainingMs(stepTimer, now))}})}
+                                                    <X size="12" />
+                                                </button>
+                                            {:else}
+                                                <button
+                                                        type="button"
+                                                        onclick={() => onStartStepTimer(index, step.title || `Step ${index + 1}`, step.timer_minutes!)}
+                                                        class="inline-flex items-center gap-1.5 text-sm font-medium px-2.5 py-1 rounded-full border-2 border-primary text-primary hover:bg-primary/10 transition-colors hover:cursor-pointer"
+                                                >
+                                                    <Timer size="14" />
+                                                    {$_('recipe.startTimer', {values: {minutes: step.timer_minutes}})}
+                                                </button>
+                                            {/if}
+                                        </div>
+                                    {/if}
                                 </div>
                                 {#if step.picture}
                                     <button
@@ -724,6 +769,10 @@
                 </div>
             </div>
         </div>
+
+        {#if recipe.category !== 'diy' && (recipe.ingredients ?? []).length > 0}
+            <RecipeNutritionPanel recipeId={recipe.id} servings={selectedServings} ingredients={recipe.ingredients} />
+        {/if}
 
         {#if siblingVariations.length > 0}
             <div class="bg-card rounded-lg border border-border p-6 mt-8">
@@ -760,6 +809,7 @@
 
     {#if cookModeOpen}
         <CookMode
+                recipeId={recipe.id}
                 recipeTitle={recipe.title}
                 steps={recipe.steps}
                 startIndex={cookModeStartIndex}

@@ -11,6 +11,7 @@
     "myFavorites": "My favorites",
     "logout": "Logout",
     "diy": "DIY",
+    "toolbox": "Toolbox",
     "admin": "Admin",
     "about": "About",
     "browse": "Browse",
@@ -226,6 +227,16 @@
     "instructions": "Instructions",
     "stepPhoto": "Step {step} photo",
     "stepDone": "Mark step {step} as done",
+    "startTimer": "Start {minutes} min timer",
+    "timerRemaining": "{time} left",
+    "timerPaused": "{time} — paused",
+    "timerDone": "Time's up!",
+    "cancelTimer": "Cancel timer",
+    "pauseTimer": "Pause timer",
+    "resumeTimer": "Resume timer",
+    "timerWidgetLabel": "Active timers",
+    "dismissTimer": "Dismiss",
+    "timerFor": "{recipe} — {step}",
     "notFound": "Recipe not found",
     "variations": "Variations",
     "variationBanner": "This is a variation of another recipe.",
@@ -260,7 +271,25 @@
     "suggestFixSubmit": "Submit fix",
     "suggestFixSuccess": "Thanks! Your fix has been submitted for review.",
     "suggestFixError": "Could not submit your fix",
-    "suggestFixDuplicate": "You already have a pending suggestion for this recipe and locale"
+    "suggestFixDuplicate": "You already have a pending suggestion for this recipe and locale",
+    "nutrition": {
+      "title": "Nutrition",
+      "kcal": "Calories",
+      "protein": "Protein",
+      "carbs": "Carbs",
+      "fat": "Fat",
+      "salt": "Salt",
+      "sugar": "Sugar",
+      "coverageNote": "{matched} of {total} ingredients counted",
+      "noMatch": "Not enough ingredients could be matched to nutrition data yet.",
+      "perIngredient": "Per ingredient",
+      "kcalShort": "kcal",
+      "gShort": "g",
+      "proteinShort": "protein",
+      "carbsShort": "carbs",
+      "fatShort": "fat",
+      "saveFirst": "Nutrition will be available once you save this recipe."
+    }
   },
   "edit": {
     "toasts": {
@@ -342,7 +371,22 @@
         "placeholder": "e.g. g, cl, leaves…"
       },
       "preview": "Will show as: \"{text}\"",
-      "remove": "Remove ingredient"
+      "remove": "Remove ingredient",
+      "nutritionLink": {
+        "suggestion": "Link to nutrition data: {name}?",
+        "accept": "Link",
+        "dismiss": "Dismiss nutrition link suggestion",
+        "linkDifferently": "Link to different nutrition data",
+        "searchPlaceholder": "Search nutrition data...",
+        "link": "Link",
+        "cancel": "Cancel",
+        "submittedChip": "Nutrition link submitted for review",
+        "success": "Nutrition link submitted for review",
+        "error": "Couldn't submit the nutrition link",
+        "linkedTo": "Linked to: {name}",
+        "linkedSuccess": "Linked!"
+      },
+      "enableNutrition": "Enable nutrition"
     },
     "instructions": {
       "title": {
@@ -359,6 +403,10 @@
         "label": "Photo",
         "alt": "Step {step} photo",
         "remove": "Remove photo"
+      },
+      "timer": {
+        "label": "Timer (min)",
+        "placeholder": "e.g. 30"
       }
     },
     "submit": "Save Recipe",
@@ -628,7 +676,8 @@
       "recipes": "Recipes",
       "diy": "DIY",
       "translations": "Translations",
-      "console": "Console"
+      "console": "Console",
+      "nutrition": "Nutrition"
     },
     "errors": {
       "loadStats": "Couldn't load stats",
@@ -645,7 +694,9 @@
       "deleteDiy": "Couldn't delete this DIY project",
       "retranslate": "Couldn't schedule retranslation",
       "loadTranslations": "Couldn't load translation suggestions",
-      "resolveTranslation": "Couldn't resolve this suggestion"
+      "resolveTranslation": "Couldn't resolve this suggestion",
+      "loadNutrition": "Couldn't load nutrition suggestions",
+      "resolveNutrition": "Couldn't resolve this suggestion"
     },
     "dashboard": {
       "title": "Dashboard",
@@ -756,7 +807,9 @@
         "users": "Users",
         "recipes": "Recipes",
         "translations": "Translations",
-        "system": "System"
+        "system": "System",
+        "toolbox": "Toolbox",
+        "nutrition": "Nutrition"
       },
       "select": "Select",
       "paramsFormTitle": "Parameters",
@@ -781,7 +834,57 @@
         "noResults": "No users found",
         "error": "Couldn't search users"
       }
-    }
+    },
+    "nutrition": {
+      "title": "Nutrition",
+      "statusPending": "Pending",
+      "statusApproved": "Approved",
+      "statusRejected": "Rejected",
+      "none": "No suggestions found",
+      "approve": "Approve",
+      "reject": "Reject",
+      "approved": "Suggestion approved",
+      "rejected": "Suggestion rejected",
+      "linkedTo": "Linked to",
+      "density": "Density",
+      "gramsPerUnit": "Grams per unit",
+      "unitAlias": "Unit alias",
+      "correction": "correction",
+      "correctionOf": "correction of {name}",
+      "note": "Note",
+      "pendingBadge": "{count} pending nutrition suggestion(s)",
+      "tabLinks": "Links",
+      "tabPending": "Pending corrections",
+      "ingredientLinks": "Ingredient Links",
+      "newLink": "New link",
+      "editLink": "Edit link",
+      "noLinks": "No links yet",
+      "unitAliases": "Unit Aliases",
+      "newAlias": "New alias",
+      "editAlias": "Edit alias",
+      "noAliases": "No aliases yet",
+      "aliasFor": "Maps to",
+      "edit": "Edit",
+      "delete": "Delete",
+      "cancel": "Cancel",
+      "save": "Save",
+      "ingredientName": "Ingredient name",
+      "nutritionEntry": "Nutrition entry",
+      "aliasText": "Alias text",
+      "unit": "Unit",
+      "linkCreated": "Link created",
+      "linkUpdated": "Link updated",
+      "linkDeleted": "Link deleted",
+      "linkSaveError": "Couldn't save the link",
+      "aliasCreated": "Alias created",
+      "aliasUpdated": "Alias updated",
+      "aliasDeleted": "Alias deleted",
+      "aliasSaveError": "Couldn't save the alias",
+      "deleteError": "Couldn't delete this",
+      "confirmDeleteTitle": "Delete this?",
+      "confirmDeleteDescription": "\"{name}\" will be permanently removed."
+    },
+    "pendingBadge": "{count} item(s) awaiting review"
   },
   "about": {
     "meta": {
@@ -790,6 +893,14 @@
     },
     "headLabel": "What Sauté Can Do",
     "commentLabel": "A quick tour of features that aren't always obvious just from looking around the app.",
+    "sections": {
+      "discover": { "title": "Discovering Recipes" },
+      "cooking": { "title": "Cooking" },
+      "creating": { "title": "Creating & Authoring" },
+      "planning": { "title": "Planning & Shopping" },
+      "sharing": { "title": "Sharing & Community" },
+      "integrations": { "title": "Integrations" }
+    },
     "items": {
       "variations": {
         "title": "Recipe Variations",
@@ -827,17 +938,33 @@
         "title": "Cook Mode",
         "description": "Step through a recipe's instructions one at a time, in large type, with your screen kept awake automatically — hit \"Cook\" above the instructions on any recipe's page."
       },
+      "recipeTimers": {
+        "title": "Recipe Timers",
+        "description": "Start a countdown on any step with a set duration, from Cook Mode or straight from a recipe's instructions — it keeps running in a floating widget that follows you across the site and rings when it's done, even if you've navigated away. Pause and resume it anytime from that widget."
+      },
       "share": {
         "title": "Share a Recipe",
         "description": "Share any recipe straight from its page, via your device's share sheet or a copied link — the preview that shows up on the other end (title, photo, description) comes along for free."
       },
       "shoppingList": {
         "title": "Shopping List",
-        "description": "Add recipes to your shopping list from the home page, and their ingredients merge into one checklist across every recipe — check things off as you shop."
+        "description": "Add recipes to your shopping list from the home page, and their ingredients merge into one checklist across every recipe — check things off as you shop. Hit Share on the shopping list page to send the list, still-needed and already-have items marked separately, through your device's share sheet or clipboard."
+      },
+      "mealPlanning": {
+        "title": "Meal Planning",
+        "description": "Lay out breakfast, lunch, and dinner across the week by dragging recipes from your favorites or picking one for a slot, then hit \"Add week to Shopping List\" to merge every planned recipe's ingredients into your list at once — from the Meal Planning button on the home page."
+      },
+      "toolbox": {
+        "title": "Toolbox",
+        "description": "Convert a quantity between weight and volume for a given ingredient, flip between °C and °F for oven temperatures, look up a substitution for something you're out of, or run multiple named kitchen timers at once — all under the Toolbox tab."
       },
       "translationFix": {
         "title": "Suggest a Translation Fix",
         "description": "Spot an awkward machine-translated line? Hit the pencil icon next to a translated recipe's title to propose a fix — an admin reviews it before it goes live."
+      },
+      "nutrition": {
+        "title": "Nutrition Info",
+        "description": "Recipes show a best-effort nutrition estimate (calories, protein, carbs, fat, salt, sugar) that scales with the servings stepper, computed from ingredients confidently matched to a curated food database. It always shows how many ingredients were counted, never a partial total presented as exact — and any signed-in user can help it improve by linking an ingredient to the right entry while authoring a recipe."
       }
     }
   },
@@ -867,6 +994,153 @@
       "title": "Add recipes to your shopping list",
       "description": "Search and select recipes - pick a specific version for recipes with multiple variations."
     },
-    "summary": "{recipes} recipes · {items} items"
+    "summary": "{recipes} recipes · {items} items",
+    "share": {
+      "button": "Share",
+      "heading": "Shopping List",
+      "stillNeed": "Still need",
+      "alreadyHave": "Already have",
+      "copied": "Shopping list copied to clipboard",
+      "error": "Could not share the shopping list"
+    }
+  },
+  "mealPlanning": {
+    "navButton": "Meal Plan",
+    "meta": {
+      "title": "Meal Planning",
+      "description": "Plan your week's meals and add them straight to your shopping list."
+    },
+    "title": "Meal Planning",
+    "prevWeek": "Previous week",
+    "nextWeek": "Next week",
+    "today": "Today",
+    "addWeekToShoppingList": "Add week to shopping list",
+    "addedToShoppingList": "This week's recipes were added to your shopping list",
+    "addToShoppingListError": "Couldn't add some recipes to your shopping list",
+    "yourFavorites": "Your Favorites",
+    "dragHint": "Drag onto a meal to plan it",
+    "searchPlaceholder": "Search your favorites…",
+    "loading": "Loading…",
+    "noFavorites": "No favorites match your search",
+    "addRecipe": "Add recipe",
+    "removeMeal": "Remove this meal",
+    "servings": "{count} servings",
+    "editServings": "Change servings for this meal",
+    "pickerTitle": "Add a recipe to this meal",
+    "weekServings": "Servings this week",
+    "dayServings": "Servings for this day",
+    "editDayServings": "Change servings for this day",
+    "useWeekDefault": "Use the week's default",
+    "useDayDefault": "Use this day's default",
+    "mealType": {
+      "breakfast": "Breakfast",
+      "lunch": "Lunch",
+      "dinner": "Dinner"
+    },
+    "unauthorized": {
+      "title": "Log in to plan your meals",
+      "description": "Log in to plan your week and generate a shopping list from it."
+    }
+  },
+  "toolbox": {
+    "meta": {
+      "title": "Toolbox",
+      "description": "Kitchen helpers for quantities, oven temperatures, and swaps."
+    },
+    "title": "Toolbox",
+    "subtitle": "Kitchen helpers for quantities, oven temperatures, and swaps.",
+    "tabs": {
+      "quantity": "Quantity converter",
+      "oven": "Oven temperatures",
+      "timers": "Timers",
+      "substitutions": "Substitutions"
+    },
+    "quantity": {
+      "ingredientLabel": "Ingredient",
+      "ingredientPlaceholder": "Search ingredients…",
+      "noIngredientResults": "No matching ingredients",
+      "amountLabel": "Amount",
+      "fromLabel": "From",
+      "toLabel": "To",
+      "swap": "Swap units",
+      "result": "Result",
+      "disclaimer": "Values are approximate, based on typical ingredient density.",
+      "suggestIngredient": "Suggest an ingredient",
+      "suggestUnit": "Suggest a unit"
+    },
+    "oven": {
+      "temperatureLabel": "Temperature",
+      "unitLabel": "Unit",
+      "unitCelsius": "Celsius (°C)",
+      "unitFahrenheit": "Fahrenheit (°F)",
+      "resultLabel": "Result"
+    },
+    "substitutions": {
+      "searchLabel": "Search substitutions",
+      "searchPlaceholder": "e.g. eggs, butter, buttermilk",
+      "noResults": "No matches for that search.",
+      "suggest": "Suggest a substitution",
+      "empty": "No substitutions yet — be the first to suggest one."
+    },
+    "timers": {
+      "nameLabel": "Name (optional)",
+      "namePlaceholder": "e.g. Pasta",
+      "minutesLabel": "Minutes",
+      "secondsLabel": "Seconds",
+      "start": "Start timer",
+      "presets": "Quick presets",
+      "presetMinutes": "{minutes} min",
+      "autoLabel": "Timer {n}",
+      "active": "Running timers",
+      "empty": "No timers running yet — start one above."
+    },
+    "suggestIngredient": {
+      "title": "Suggest an ingredient",
+      "nameLabel": "Ingredient name",
+      "densityLabel": "Density (grams per 100 ml)",
+      "densityHint": "Enter how many grams 100 ml of it weighs — e.g. water = 100, honey ≈ 141. Must be between 20 and 250.",
+      "noteLabel": "Source or note (optional)",
+      "duplicateWarning": "\"{name}\" is already in the list — this will be submitted as a correction to that entry instead of a new one.",
+      "newHint": "Looks new — this will be submitted as a new ingredient.",
+      "submitNew": "Submit new ingredient for review",
+      "submitCorrection": "Submit correction for review",
+      "success": "Thanks — an admin will review this before it appears in the Toolbox.",
+      "error": "Could not submit your suggestion.",
+      "cancel": "Cancel"
+    },
+    "suggestUnit": {
+      "title": "Suggest a unit",
+      "nameLabel": "Unit name",
+      "symbolLabel": "Symbol",
+      "kindLabel": "Kind",
+      "kindWeight": "Weight",
+      "kindVolume": "Volume",
+      "toBaseLabel": "Conversion factor",
+      "toBaseHintWeight": "Grams per unit, e.g. a tablespoon of butter ≈ 14.",
+      "toBaseHintVolume": "Milliliters per unit, e.g. a US cup = 240.",
+      "noteLabel": "Source or note (optional)",
+      "duplicateWarning": "\"{name}\" already exists — this will be submitted as a correction instead of a new unit.",
+      "newHint": "Looks new — this will be submitted as a new unit.",
+      "submitNew": "Submit new unit for review",
+      "submitCorrection": "Submit correction for review",
+      "success": "Thanks — an admin will review this before it appears in the Toolbox.",
+      "error": "Could not submit your suggestion.",
+      "cancel": "Cancel"
+    },
+    "suggestSubstitution": {
+      "title": "Suggest a substitution",
+      "problemLabel": "What's missing?",
+      "problemPlaceholder": "e.g. No buttermilk",
+      "solutionLabel": "Use instead",
+      "tagLabel": "Category (optional)",
+      "noteLabel": "Source or note (optional)",
+      "duplicateWarning": "A substitution for \"{problem}\" already exists — this will be submitted as a correction instead of a new one.",
+      "newHint": "Looks new — this will be submitted as a new substitution.",
+      "submitNew": "Submit new substitution for review",
+      "submitCorrection": "Submit correction for review",
+      "success": "Thanks — an admin will review this before it appears in the Toolbox.",
+      "error": "Could not submit your suggestion.",
+      "cancel": "Cancel"
+    }
   }
 }

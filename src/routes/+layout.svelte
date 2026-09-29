@@ -1,6 +1,7 @@
 <script lang="ts">
 	import '../app.css';
 	import Header from "../components/Header.svelte";
+	import TimerWidget from "../components/TimerWidget.svelte";
     import {afterNavigate, goto} from "$app/navigation";
 	import {onMount} from "svelte";
     import {accessToken, refreshToken, user} from "$lib/stores";
@@ -34,3 +35,4 @@
 {/if}
 {@render children?.()}
 <SvelteToast options={{ reversed: true, intro: { y: 192 } }} />
+<TimerWidget />

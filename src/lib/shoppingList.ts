@@ -241,3 +241,34 @@ export function buildShoppingListGroups(entries: ShoppingListEntry[]): ShoppingL
             })),
         }))
 }
+
+export type ShoppingListShareLabels = {
+    heading: string
+    stillNeed: string
+    alreadyHave: string
+}
+
+// buildShoppingListShareText renders the grouped list as plain text for the
+// device share sheet / clipboard (shopping-list page's Share button) - still
+// (unchecked) items first under `stillNeed`, then checked ones under
+// `alreadyHave`, each section omitted entirely when it would be empty. Every
+// sub-line becomes its own bullet since plain text can't nest a heading over
+// several unit variants the way the on-page grouped view does.
+export function buildShoppingListShareText(groups: ShoppingListGroup[], labels: ShoppingListShareLabels): string {
+    const stillNeedLines: string[] = []
+    const alreadyHaveLines: string[] = []
+    for (const group of groups) {
+        const name = capitalizeIngredientHeading(group.name)
+        for (const sub of group.subLines) {
+            const line = `- ${sub.text ? `${sub.text} ${name}` : name}`
+            ;(sub.checked ? alreadyHaveLines : stillNeedLines).push(line)
+        }
+    }
+
+    const sections = [labels.heading]
+    if (stillNeedLines.length > 0)
+        sections.push('', labels.stillNeed, ...stillNeedLines)
+    if (alreadyHaveLines.length > 0)
+        sections.push('', labels.alreadyHave, ...alreadyHaveLines)
+    return sections.join('\n')
+}

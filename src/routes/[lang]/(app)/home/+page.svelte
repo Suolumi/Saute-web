@@ -9,7 +9,7 @@
     import { user } from '$lib/stores';
     import { _, locale } from 'svelte-i18n';
     import { goto } from '$app/navigation';
-    import { Plus, SearchX, ShoppingCart } from '@lucide/svelte';
+    import { Plus, SearchX, ShoppingCart, CalendarDays } from '@lucide/svelte';
 
     let shoppingListRecipeCount = $derived(new Set($shoppingList.map(e => e.recipeId)).size);
 
@@ -122,6 +122,14 @@
         </div>
         <div class="flex items-center gap-3 flex-wrap">
             {#if $user}
+                <Button
+                        variant="outline"
+                        onclick={() => goto(`/${$locale}/meal-planning`)}
+                        class="flex items-center gap-2 whitespace-nowrap"
+                >
+                    <CalendarDays class="w-4 h-4" />
+                    {$_('mealPlanning.navButton')}
+                </Button>
                 <Button
                         variant="outline"
                         onclick={() => goto(`/${$locale}/shopping-list`)}

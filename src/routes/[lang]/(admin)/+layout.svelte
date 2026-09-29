@@ -3,10 +3,11 @@
     import {_, locale} from 'svelte-i18n';
     import {page} from '$app/stores';
     import {goto} from '$app/navigation';
-    // pendingTranslationSuggestionCount is polled globally by Header.svelte
-    // (mounted on every page, so an admin sees the badge site-wide, not just
-    // inside /admin) - this layout just reads the same store, no second poll.
-    import {pendingTranslationSuggestionCount} from '$lib/admin';
+    // pendingTranslationSuggestionCount/pendingNutritionSuggestionCount are
+    // polled globally by Header.svelte (mounted on every page, so an admin
+    // sees the badge site-wide, not just inside /admin) - this layout just
+    // reads the same stores, no second poll.
+    import {pendingTranslationSuggestionCount, pendingNutritionSuggestionCount} from '$lib/admin';
 
     let { children } = $props();
 
@@ -21,6 +22,7 @@
         ['admin.nav.recipes', '/recipes'],
         ['admin.nav.diy', '/diy'],
         ['admin.nav.translations', '/translations'],
+        ['admin.nav.nutrition', '/nutrition'],
         ['admin.nav.console', '/console'],
     ] as const;
 
@@ -55,6 +57,13 @@
                                 title={$_('admin.translations.pendingBadge', {values: {count: $pendingTranslationSuggestionCount}})}
                         >
                             {$pendingTranslationSuggestionCount}
+                        </span>
+                    {:else if suffix === '/nutrition' && $pendingNutritionSuggestionCount > 0}
+                        <span
+                                class="bg-destructive text-destructive-foreground rounded-full px-1.5 py-0.5 text-xs font-semibold leading-none"
+                                title={$_('admin.nutrition.pendingBadge', {values: {count: $pendingNutritionSuggestionCount}})}
+                        >
+                            {$pendingNutritionSuggestionCount}
                         </span>
                     {/if}
                 </button>
