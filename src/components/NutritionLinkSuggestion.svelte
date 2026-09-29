@@ -20,16 +20,22 @@
     // (this row's own unit text, may be blank) decides via
     // requiredNutritionField whether a density or a per-unit weight must
     // also be collected before a link can be submitted at all - a weight
-    // unit needs neither.
+    // unit needs neither. ingredientQuantity gates the whole component: a
+    // quantity-less ingredient (e.g. "Salt", entered with no amount) can
+    // never resolve to grams regardless of what's linked -
+    // resolveIngredientGrams bails immediately on Quantity <= 0 - so there's
+    // nothing to gain from asking anyone to link or correct it.
     let {
         ingredientName,
         ingredientUnit,
+        ingredientQuantity,
         nutritionIngredients,
         existingLinks,
         toolboxUnits
     }: {
         ingredientName: string
         ingredientUnit: string
+        ingredientQuantity: number
         nutritionIngredients: NutritionIngredient[]
         existingLinks: Record<string, IngredientNutritionLink>
         toolboxUnits: ToolboxUnit[]
@@ -178,6 +184,7 @@
     </div>
 {/snippet}
 
+{#if ingredientQuantity > 0}
 {#if submittedFor === trimmedName}
     <div class="mt-1.5 inline-flex items-center gap-1.5 rounded-full bg-primary/10 text-primary px-3 py-1 text-xs font-medium">
         {$_('edit.ingredients.nutritionLink.submittedChip')}
@@ -230,4 +237,5 @@
         <Search class="w-3 h-3" />
         {$_('edit.ingredients.nutritionLink.linkDifferently')}
     </button>
+{/if}
 {/if}

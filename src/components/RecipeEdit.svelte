@@ -1205,7 +1205,7 @@
                                   </p>
                                   {#if $user && nutritionEnabled && formData.category !== 'diy'}
                                     <div class="pl-1">
-                                      <NutritionLinkSuggestion ingredientName={ingredient.name} ingredientUnit={ingredient.unit} {nutritionIngredients} existingLinks={existingLinksByName} {toolboxUnits} />
+                                      <NutritionLinkSuggestion ingredientName={ingredient.name} ingredientUnit={ingredient.unit} ingredientQuantity={ingredient.quantity} {nutritionIngredients} existingLinks={existingLinksByName} {toolboxUnits} />
                                     </div>
                                   {/if}
                                 {/if}

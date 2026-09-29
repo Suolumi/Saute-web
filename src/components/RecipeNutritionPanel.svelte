@@ -120,14 +120,18 @@
     // unmatchedRows feeds the self-service fix-it list below - a recipe_ref
     // line is never fixable this way (it recurses into another recipe
     // rather than resolving through a name link, see
-    // Service.computeRecipeRefLine) and a blank name has nothing to link,
-    // so both are excluded regardless of match status.
+    // Service.computeRecipeRefLine), a blank name has nothing to link, and a
+    // quantity-less ingredient (e.g. "Salt", entered with no amount) can
+    // never resolve to grams no matter what's linked -
+    // resolveIngredientGrams bails immediately on Quantity <= 0 - so all
+    // three are excluded regardless of match status: there's nothing a fix
+    // could actually do for them.
     const unmatchedRows = $derived.by(() => {
         const n = nutrition;
         if (!n || !$user) return [];
         return n.ingredients
             .map((line, i) => ({line, ingredient: ingredients[i]}))
-            .filter(row => !row.line.matched && row.ingredient && !row.ingredient.recipe_ref && row.ingredient.name.trim());
+            .filter(row => !row.line.matched && row.ingredient && !row.ingredient.recipe_ref && row.ingredient.name.trim() && row.ingredient.quantity > 0);
     });
 
     const incomplete = $derived.by(() => {
