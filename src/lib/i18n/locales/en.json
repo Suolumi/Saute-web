@@ -288,7 +288,18 @@
       "proteinShort": "protein",
       "carbsShort": "carbs",
       "fatShort": "fat",
-      "saveFirst": "Nutrition will be available once you save this recipe."
+      "saveFirst": "Nutrition will be available once you save this recipe.",
+      "fix": {
+        "explanation": "Nutrition data comes from matching each ingredient's name to a reference food entry, plus either a density or a per-unit weight so its amount can be converted to grams. You can help complete the ingredients below.",
+        "button": "Help fix this",
+        "modalTitle": "Complete nutrition data for \"{name}\"",
+        "searchLabel": "Reference food entry",
+        "alreadyLinkedTo": "Currently linked to: {name}",
+        "submit": "Save",
+        "appliedSuccess": "Linked!",
+        "reviewSuccess": "Submitted for review",
+        "error": "Couldn't submit this"
+      }
     }
   },
   "edit": {
@@ -384,7 +395,11 @@
         "success": "Nutrition link submitted for review",
         "error": "Couldn't submit the nutrition link",
         "linkedTo": "Linked to: {name}",
-        "linkedSuccess": "Linked!"
+        "linkedSuccess": "Linked!",
+        "densityLabel": "Density (grams per 100ml)",
+        "densityHelp": "Grams per 100ml of this ingredient — water ≈ 100, honey ≈ 141, olive oil ≈ 92.",
+        "gramsPerUnitLabel": "Weight per unit (grams)",
+        "gramsPerUnitHelp": "Weight of one whole unit — one onion ≈ 150g, one egg ≈ 50g."
       },
       "enableNutrition": "Enable nutrition"
     },
@@ -847,7 +862,9 @@
       "rejected": "Suggestion rejected",
       "linkedTo": "Linked to",
       "density": "Density",
+      "densityHelp": "Grams per 100ml of this ingredient — water ≈ 100, honey ≈ 141, olive oil ≈ 92.",
       "gramsPerUnit": "Grams per unit",
+      "gramsPerUnitHelp": "Weight of one whole unit — one onion ≈ 150g, one egg ≈ 50g.",
       "unitAlias": "Unit alias",
       "correction": "correction",
       "correctionOf": "correction of {name}",
@@ -964,7 +981,7 @@
       },
       "nutrition": {
         "title": "Nutrition Info",
-        "description": "Recipes show a best-effort nutrition estimate (calories, protein, carbs, fat, salt, sugar) that scales with the servings stepper, computed from ingredients confidently matched to a curated food database. It always shows how many ingredients were counted, never a partial total presented as exact — and any signed-in user can help it improve by linking an ingredient to the right entry while authoring a recipe."
+        "description": "Recipes show a best-effort nutrition estimate (calories, protein, carbs, fat, salt, sugar) that scales with the servings stepper, computed from ingredients confidently matched to a curated food database. It always shows how many ingredients were counted, never a partial total presented as exact — any signed-in user can help it improve, either while authoring a recipe or right from a recipe's own Nutrition panel whenever it explains that something wasn't counted."
       }
     }
   },

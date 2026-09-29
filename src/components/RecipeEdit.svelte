@@ -30,6 +30,7 @@
     import {_} from 'svelte-i18n'
     import {toastError, pictureUrl} from "$lib/utils";
     import {getNutritionIngredients, getIngredientNutritionLinks, type NutritionIngredient, type IngredientNutritionLink} from "$lib/nutrition";
+    import {getToolboxUnits, type ToolboxUnit} from "$lib/toolbox";
     import RecipeNutritionPanel from "./RecipeNutritionPanel.svelte";
     import {Trash2, GripVertical, EllipsisVertical, Plus, Pencil, Link2} from "@lucide/svelte";
 
@@ -76,12 +77,16 @@
     // still needs a suggestion (see NutritionLinkSuggestion.svelte).
     let nutritionIngredients: NutritionIngredient[] = $state([]);
     let existingLinksByName: Record<string, IngredientNutritionLink> = $state({});
+    let toolboxUnits: ToolboxUnit[] = $state([]);
     onMount(() => {
         getNutritionIngredients().then(({response, data}) => {
             if (response.ok && data) nutritionIngredients = data.items;
         });
         getIngredientNutritionLinks().then(({response, data}) => {
             if (response.ok && data) existingLinksByName = Object.fromEntries(data.items.map(link => [link.name.toLowerCase(), link]));
+        });
+        getToolboxUnits().then(({response, data}) => {
+            if (response.ok && data) toolboxUnits = data.items;
         });
     });
 
@@ -1200,7 +1205,7 @@
                                   </p>
                                   {#if $user && nutritionEnabled && formData.category !== 'diy'}
                                     <div class="pl-1">
-                                      <NutritionLinkSuggestion ingredientName={ingredient.name} {nutritionIngredients} existingLinks={existingLinksByName} />
+                                      <NutritionLinkSuggestion ingredientName={ingredient.name} ingredientUnit={ingredient.unit} {nutritionIngredients} existingLinks={existingLinksByName} {toolboxUnits} />
                                     </div>
                                   {/if}
                                 {/if}

@@ -288,7 +288,18 @@
       "proteinShort": "prot.",
       "carbsShort": "gluc.",
       "fatShort": "lip.",
-      "saveFirst": "La nutrition sera disponible une fois cette recette enregistrée."
+      "saveFirst": "La nutrition sera disponible une fois cette recette enregistrée.",
+      "fix": {
+        "explanation": "Les données nutritionnelles proviennent de la mise en correspondance du nom de chaque ingrédient avec une entrée alimentaire de référence, ainsi que d'une densité ou d'un poids par unité permettant de convertir la quantité en grammes. Vous pouvez aider à compléter les ingrédients ci-dessous.",
+        "button": "Aider à corriger",
+        "modalTitle": "Compléter les données nutritionnelles pour « {name} »",
+        "searchLabel": "Entrée alimentaire de référence",
+        "alreadyLinkedTo": "Actuellement lié à : {name}",
+        "submit": "Enregistrer",
+        "appliedSuccess": "Lié !",
+        "reviewSuccess": "Soumis pour validation",
+        "error": "Impossible de soumettre"
+      }
     }
   },
   "edit": {
@@ -384,7 +395,11 @@
         "success": "Lien nutritionnel soumis pour validation",
         "error": "Impossible de soumettre le lien nutritionnel",
         "linkedTo": "Lié à : {name}",
-        "linkedSuccess": "Lié !"
+        "linkedSuccess": "Lié !",
+        "densityLabel": "Densité (grammes pour 100ml)",
+        "densityHelp": "Grammes pour 100ml de cet ingrédient — eau ≈ 100, miel ≈ 141, huile d'olive ≈ 92.",
+        "gramsPerUnitLabel": "Poids par unité (grammes)",
+        "gramsPerUnitHelp": "Poids d'une unité entière — un oignon ≈ 150g, un œuf ≈ 50g."
       },
       "enableNutrition": "Activer la nutrition"
     },
@@ -847,7 +862,9 @@
       "rejected": "Suggestion rejetée",
       "linkedTo": "Lié à",
       "density": "Densité",
+      "densityHelp": "Grammes pour 100ml de cet ingrédient — eau ≈ 100, miel ≈ 141, huile d'olive ≈ 92.",
       "gramsPerUnit": "Grammes par unité",
+      "gramsPerUnitHelp": "Poids d'une unité entière — un oignon ≈ 150g, un œuf ≈ 50g.",
       "unitAlias": "Alias d'unité",
       "correction": "correction",
       "correctionOf": "correction de {name}",
@@ -964,7 +981,7 @@
       },
       "nutrition": {
         "title": "Infos nutritionnelles",
-        "description": "Les recettes affichent une estimation nutritionnelle indicative (calories, protéines, glucides, lipides, sel, sucres) qui s'ajuste avec le nombre de portions, calculée à partir des ingrédients associés avec confiance à une base alimentaire de référence. Le nombre d'ingrédients pris en compte est toujours affiché, jamais un total partiel présenté comme exact — et tout utilisateur connecté peut aider à l'améliorer en liant un ingrédient à la bonne entrée pendant la rédaction d'une recette."
+        "description": "Les recettes affichent une estimation nutritionnelle indicative (calories, protéines, glucides, lipides, sel, sucres) qui s'ajuste avec le nombre de portions, calculée à partir des ingrédients associés avec confiance à une base alimentaire de référence. Le nombre d'ingrédients pris en compte est toujours affiché, jamais un total partiel présenté comme exact — tout utilisateur connecté peut aider à l'améliorer, en liant un ingrédient à la bonne entrée pendant la rédaction d'une recette, ou directement depuis le panneau Nutrition d'une recette lorsqu'il explique que quelque chose n'a pas été comptabilisé."
       }
     }
   },

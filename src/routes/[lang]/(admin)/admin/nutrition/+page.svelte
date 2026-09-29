@@ -373,10 +373,12 @@
         <div>
             <Label for="link-density">{$_('admin.nutrition.density')}</Label>
             <Input id="link-density" type="number" bind:value={linkForm.gPer100ml} />
+            <p class="mt-1 text-xs text-muted-foreground">{$_('admin.nutrition.densityHelp')}</p>
         </div>
         <div>
             <Label for="link-gpu">{$_('admin.nutrition.gramsPerUnit')}</Label>
             <Input id="link-gpu" type="number" bind:value={linkForm.gramsPerUnit} />
+            <p class="mt-1 text-xs text-muted-foreground">{$_('admin.nutrition.gramsPerUnitHelp')}</p>
         </div>
         <div class="flex justify-end gap-2 pt-2">
             <Button type="button" variant="outline" onclick={() => linkModalOpen = false} disabled={savingLink}>{$_('admin.nutrition.cancel')}</Button>

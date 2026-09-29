@@ -1,7 +1,8 @@
 <script lang="ts">
     import {_, locale} from 'svelte-i18n';
     import {X, Search, Check} from '@lucide/svelte';
-    import {submitNutritionLinkSuggestion, type NutritionIngredient, type IngredientNutritionLink} from '$lib/nutrition';
+    import {submitNutritionLinkSuggestion, requiredNutritionField, type NutritionIngredient, type IngredientNutritionLink} from '$lib/nutrition';
+    import type {ToolboxUnit} from '$lib/toolbox';
     import {toastError, toastSuccess} from '$lib/utils';
     import {apiErrorMessage} from '$lib/api';
     import IngredientCombobox from './toolbox/IngredientCombobox.svelte';
@@ -15,15 +16,23 @@
     // match for a not-yet-linked ingredient applies immediately (no review);
     // accepting one for an ingredient that already has a link submits a
     // correction for admin review instead - see
-    // Service.SubmitNutritionLinkSuggestion's docs for why.
+    // Service.SubmitNutritionLinkSuggestion's docs for why. ingredientUnit
+    // (this row's own unit text, may be blank) decides via
+    // requiredNutritionField whether a density or a per-unit weight must
+    // also be collected before a link can be submitted at all - a weight
+    // unit needs neither.
     let {
         ingredientName,
+        ingredientUnit,
         nutritionIngredients,
-        existingLinks
+        existingLinks,
+        toolboxUnits
     }: {
         ingredientName: string
+        ingredientUnit: string
         nutritionIngredients: NutritionIngredient[]
         existingLinks: Record<string, IngredientNutritionLink>
+        toolboxUnits: ToolboxUnit[]
     } = $props();
 
     let dismissedKey: string | null = $state(null);
@@ -36,6 +45,17 @@
     let searching = $state(false);
     let searchValue = $state('');
     let submitting = $state(false);
+
+    // awaitingFieldFor holds the nutrition entry id once "Accept" has been
+    // clicked but a required density/grams-per-unit value still needs
+    // collecting first (see requiredField below) - the inline expand shows
+    // a number input for it instead of submitting immediately.
+    let awaitingFieldFor: string | null = $state(null);
+    let fieldValue = $state('');
+
+    const requiredField = $derived(requiredNutritionField(ingredientUnit, toolboxUnits));
+    const fieldValueNumber = $derived(fieldValue.trim() === '' ? null : Number(fieldValue));
+    const fieldValueValid = $derived(requiredField === null || (fieldValueNumber !== null && fieldValueNumber > 0));
 
     const trimmedName = $derived(ingredientName.trim());
 
@@ -97,12 +117,27 @@
 
     async function accept() {
         if (!bestMatch) return;
+        if (requiredField !== null) {
+            awaitingFieldFor = bestMatch.id;
+            fieldValue = '';
+            return;
+        }
         await submit(bestMatch.id);
     }
 
-    async function submit(nutritionId: string) {
+    async function confirmAwaitingField() {
+        if (!awaitingFieldFor || !fieldValueValid) return;
+        await submit(awaitingFieldFor, fieldValueNumber);
+        awaitingFieldFor = null;
+    }
+
+    async function submit(nutritionId: string, value?: number | null) {
         submitting = true;
-        const {response, data} = await submitNutritionLinkSuggestion({ingredient_name: trimmedName, nutrition_id: nutritionId});
+        const {response, data} = await submitNutritionLinkSuggestion({
+            ingredient_name: trimmedName, ingredient_unit: ingredientUnit, nutrition_id: nutritionId,
+            g_per_100ml: requiredField === 'density' && value != null ? value : undefined,
+            grams_per_unit: requiredField === 'grams_per_unit' && value != null ? value : undefined,
+        });
         submitting = false;
         if (response.ok && data) {
             searching = false;
@@ -121,24 +156,53 @@
     function openSearch() {
         searching = true;
         searchValue = '';
+        fieldValue = '';
+        awaitingFieldFor = null;
     }
 
     async function confirmSearch() {
-        if (searchValue) await submit(searchValue);
+        if (searchValue && fieldValueValid) await submit(searchValue, fieldValueNumber);
     }
 </script>
+
+{#snippet fieldInput()}
+    <div class="mt-1.5">
+        <label class="block text-xs font-medium text-foreground" for="nutrition-field-{trimmedName}">
+            {$_(requiredField === 'density' ? 'edit.ingredients.nutritionLink.densityLabel' : 'edit.ingredients.nutritionLink.gramsPerUnitLabel')}
+        </label>
+        <input id="nutrition-field-{trimmedName}" type="number" min="0" step="any" bind:value={fieldValue}
+               class="mt-1 w-40 rounded-md border border-border bg-background px-2 py-1 text-sm text-foreground" />
+        <p class="mt-1 text-[11px] text-muted-foreground max-w-xs">
+            {$_(requiredField === 'density' ? 'edit.ingredients.nutritionLink.densityHelp' : 'edit.ingredients.nutritionLink.gramsPerUnitHelp')}
+        </p>
+    </div>
+{/snippet}
 
 {#if submittedFor === trimmedName}
     <div class="mt-1.5 inline-flex items-center gap-1.5 rounded-full bg-primary/10 text-primary px-3 py-1 text-xs font-medium">
         {$_('edit.ingredients.nutritionLink.submittedChip')}
     </div>
-{:else if searching}
-    <div class="mt-1.5 flex items-center gap-2">
-        <div class="flex-1 max-w-xs">
-            <IngredientCombobox ingredients={localizedNutritionIngredients} bind:value={searchValue} placeholder={$_('edit.ingredients.nutritionLink.searchPlaceholder')} />
+{:else if awaitingFieldFor}
+    <div class="mt-1.5 rounded-lg border border-primary/30 bg-primary/5 p-3">
+        <p class="text-xs text-foreground">{$_('edit.ingredients.nutritionLink.suggestion', {values: {name: bestMatch ? displayName(bestMatch) : ''}})}</p>
+        {@render fieldInput()}
+        <div class="mt-2 flex items-center gap-2">
+            <Button type="button" size="sm" disabled={!fieldValueValid || submitting} onclick={confirmAwaitingField}>{$_('edit.ingredients.nutritionLink.link')}</Button>
+            <Button type="button" size="sm" variant="outline" onclick={() => awaitingFieldFor = null}>{$_('edit.ingredients.nutritionLink.cancel')}</Button>
         </div>
-        <Button type="button" size="sm" disabled={!searchValue || submitting} onclick={confirmSearch}>{$_('edit.ingredients.nutritionLink.link')}</Button>
-        <Button type="button" size="sm" variant="outline" onclick={() => searching = false}>{$_('edit.ingredients.nutritionLink.cancel')}</Button>
+    </div>
+{:else if searching}
+    <div class="mt-1.5 rounded-lg border border-border p-3">
+        <div class="flex items-center gap-2">
+            <div class="flex-1 max-w-xs">
+                <IngredientCombobox ingredients={localizedNutritionIngredients} bind:value={searchValue} placeholder={$_('edit.ingredients.nutritionLink.searchPlaceholder')} />
+            </div>
+            <Button type="button" size="sm" disabled={!searchValue || !fieldValueValid || submitting} onclick={confirmSearch}>{$_('edit.ingredients.nutritionLink.link')}</Button>
+            <Button type="button" size="sm" variant="outline" onclick={() => searching = false}>{$_('edit.ingredients.nutritionLink.cancel')}</Button>
+        </div>
+        {#if requiredField !== null}
+            {@render fieldInput()}
+        {/if}
     </div>
 {:else if effectiveLink}
     <div class="mt-1.5 inline-flex items-center gap-1.5 flex-wrap rounded-full border border-border bg-muted/50 pl-3 pr-1.5 py-1 text-xs">

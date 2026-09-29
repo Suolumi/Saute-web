@@ -1,8 +1,14 @@
 <script lang="ts">
     import {_} from "svelte-i18n";
     import {Flame} from "@lucide/svelte";
-    import {getRecipeNutrition, type RecipeNutrition} from "$lib/nutrition";
+    import {
+        getRecipeNutrition, getNutritionIngredients, getIngredientNutritionLinks,
+        type RecipeNutrition, type NutritionIngredient, type IngredientNutritionLink, type SubmitNutritionLinkResult
+    } from "$lib/nutrition";
+    import {getToolboxUnits, type ToolboxUnit} from "$lib/toolbox";
+    import {user} from "$lib/stores";
     import type {Ingredient} from "$lib/recipes";
+    import NutritionFixModal from "./NutritionFixModal.svelte";
 
     // recipeId is optional: the edit wizard's live-preview column mounts
     // this for a brand-new, not-yet-saved recipe too (any non-diy category
@@ -21,18 +27,64 @@
 
     let nutrition: RecipeNutrition | null = $state(null);
 
-    $effect(() => {
+    function refetchNutrition() {
         const id = recipeId;
-        const count = servings;
         if (!id) {
             nutrition = null;
             return;
         }
-        getRecipeNutrition(id, count).then(({response, data}) => {
+        getRecipeNutrition(id, servings).then(({response, data}) => {
             if (response.ok && data)
                 nutrition = data;
         });
+    }
+
+    $effect(() => {
+        recipeId; servings; // re-run when either changes
+        refetchNutrition();
     });
+
+    // The self-service "help fix this" flow (see NutritionFixModal.svelte)
+    // is only offered to a logged-in viewer - these lists are only fetched
+    // when one is present, both to save the requests for an anonymous
+    // visitor and because the fix-it UI itself is hidden for them entirely.
+    let nutritionIngredients: NutritionIngredient[] = $state([]);
+    let existingLinksByName: Record<string, IngredientNutritionLink> = $state({});
+    let toolboxUnits: ToolboxUnit[] = $state([]);
+
+    function refetchLinks() {
+        getIngredientNutritionLinks().then(({response, data}) => {
+            if (response.ok && data) existingLinksByName = Object.fromEntries(data.items.map(link => [link.name.toLowerCase(), link]));
+        });
+    }
+
+    $effect(() => {
+        if (!$user) return;
+        getNutritionIngredients().then(({response, data}) => {
+            if (response.ok && data) nutritionIngredients = data.items;
+        });
+        refetchLinks();
+        getToolboxUnits().then(({response, data}) => {
+            if (response.ok && data) toolboxUnits = data.items;
+        });
+    });
+
+    let fixModalFor: {name: string, unit: string} | null = $state(null);
+
+    function openFixModal(name: string, unit: string) {
+        fixModalFor = {name, unit};
+    }
+
+    function onFixResult(result: SubmitNutritionLinkResult) {
+        if (result.applied) {
+            // The link is now live - re-fetch both so the totals/coverage
+            // and the unmatched list itself reflect it immediately.
+            refetchNutrition();
+            refetchLinks();
+        }
+        // A correction that needs review has no visible effect yet - the
+        // ingredient stays in the unmatched list until an admin approves it.
+    }
 
     const rows = $derived.by(() => {
         const n = nutrition;
@@ -63,6 +115,19 @@
         return n.ingredients
             .map((line, i) => ({line, label: ingredients[i] ? ingredientLabel(ingredients[i]) : ''}))
             .filter(row => row.line.matched && row.label);
+    });
+
+    // unmatchedRows feeds the self-service fix-it list below - a recipe_ref
+    // line is never fixable this way (it recurses into another recipe
+    // rather than resolving through a name link, see
+    // Service.computeRecipeRefLine) and a blank name has nothing to link,
+    // so both are excluded regardless of match status.
+    const unmatchedRows = $derived.by(() => {
+        const n = nutrition;
+        if (!n || !$user) return [];
+        return n.ingredients
+            .map((line, i) => ({line, ingredient: ingredients[i]}))
+            .filter(row => !row.line.matched && row.ingredient && !row.ingredient.recipe_ref && row.ingredient.name.trim());
     });
 
     const incomplete = $derived.by(() => {
@@ -128,7 +193,36 @@
                 <p class="mt-4 text-sm text-muted-foreground">
                     {$_('recipe.nutrition.coverageNote', {values: {matched: nutrition.matched_count, total: nutrition.total_count}})}
                 </p>
+                {#if $user && unmatchedRows.length > 0}
+                    <div class="mt-3 rounded-lg border border-border bg-muted/30 p-3">
+                        <p class="text-xs text-muted-foreground">{$_('recipe.nutrition.fix.explanation')}</p>
+                        <ul class="mt-2 divide-y divide-border">
+                            {#each unmatchedRows as row}
+                                <li class="flex items-center justify-between gap-3 py-1.5">
+                                    <span class="text-sm text-card-foreground truncate">{ingredientLabel(row.ingredient)}</span>
+                                    <button type="button" onclick={() => openFixModal(row.ingredient.name, row.ingredient.unit)}
+                                            class="shrink-0 text-xs font-semibold text-primary hover:underline hover:cursor-pointer">
+                                        {$_('recipe.nutrition.fix.button')}
+                                    </button>
+                                </li>
+                            {/each}
+                        </ul>
+                    </div>
+                {/if}
             {/if}
         {/if}
     </div>
 </div>
+
+{#if fixModalFor}
+    <NutritionFixModal
+            open={!!fixModalFor}
+            onClose={() => fixModalFor = null}
+            ingredientName={fixModalFor.name}
+            ingredientUnit={fixModalFor.unit}
+            {nutritionIngredients}
+            existingLink={existingLinksByName[fixModalFor.name.toLowerCase()]}
+            {toolboxUnits}
+            onResult={onFixResult}
+    />
+{/if}

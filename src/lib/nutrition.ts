@@ -1,4 +1,5 @@
 import {apiFetchJson} from "$lib/api";
+import type {ToolboxUnit} from "$lib/toolbox";
 
 export type NutritionIngredient = {
     id: string
@@ -77,12 +78,36 @@ export function getRecipeNutrition(recipeId: string, servings?: number) {
 
 export type NutritionLinkSuggestionRequest = {
     ingredient_name: string
+    // ingredient_unit is the current recipe ingredient's own unit text (may
+    // be blank for a bare count) - the backend uses it to decide whether
+    // g_per_100ml or grams_per_unit is required for the link to actually
+    // resolve (see requiredNutritionField below, which mirrors that same
+    // decision client-side). Never itself persisted.
+    ingredient_unit?: string
     nutrition_id: string
     g_per_100ml?: number
     grams_per_unit?: number
     unit_alias?: string
     unit_id?: string
     note?: string
+}
+
+// requiredNutritionField mirrors the backend's unit-aware requirement
+// (Service.validateIngredientUnitRequirement): a weight unit needs neither
+// field to resolve to grams, a volume unit needs a density, and a blank or
+// unrecognized unit needs a per-unit weight. Only a direct case-insensitive
+// match against a unit's own name/symbol is checked here (unlike the
+// backend, this doesn't consult unit aliases) - an unmatched unit falls
+// back to 'grams_per_unit', the same conservative default the backend uses
+// for "blank or unrecognized". The backend remains the authoritative gate
+// regardless of what this returns.
+export function requiredNutritionField(unitText: string, units: ToolboxUnit[]): 'density' | 'grams_per_unit' | null {
+    const text = unitText.trim().toLowerCase()
+    if (text) {
+        const unit = units.find(u => u.name.toLowerCase() === text || u.symbol.toLowerCase() === text)
+        if (unit) return unit.kind === 'weight' ? null : 'density'
+    }
+    return 'grams_per_unit'
 }
 
 export type NutritionSuggestion = {

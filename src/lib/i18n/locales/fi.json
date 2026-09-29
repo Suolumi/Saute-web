@@ -288,7 +288,18 @@
       "proteinShort": "prot.",
       "carbsShort": "hiilih.",
       "fatShort": "rasva",
-      "saveFirst": "Ravintotiedot ovat saatavilla, kun tallennat tämän reseptin."
+      "saveFirst": "Ravintotiedot ovat saatavilla, kun tallennat tämän reseptin.",
+      "fix": {
+        "explanation": "Ravintotiedot perustuvat kunkin ainesosan nimen yhdistämiseen viiteruokatietueeseen sekä tiheyteen tai yksikköpainoon, joiden avulla määrä voidaan muuttaa grammoiksi. Voit auttaa täydentämään alla olevat ainesosat.",
+        "button": "Auta korjaamaan",
+        "modalTitle": "Täydennä ravintotiedot: \"{name}\"",
+        "searchLabel": "Viiteruokatietue",
+        "alreadyLinkedTo": "Tällä hetkellä linkitetty: {name}",
+        "submit": "Tallenna",
+        "appliedSuccess": "Linkitetty!",
+        "reviewSuccess": "Lähetetty tarkistettavaksi",
+        "error": "Lähettäminen epäonnistui"
+      }
     }
   },
   "edit": {
@@ -384,7 +395,11 @@
         "success": "Ravintolinkki lähetetty tarkistettavaksi",
         "error": "Ravintolinkin lähettäminen epäonnistui",
         "linkedTo": "Linkitetty: {name}",
-        "linkedSuccess": "Linkitetty!"
+        "linkedSuccess": "Linkitetty!",
+        "densityLabel": "Tiheys (grammaa per 100ml)",
+        "densityHelp": "Grammaa per 100ml tätä ainesosaa — vesi ≈ 100, hunaja ≈ 141, oliiviöljy ≈ 92.",
+        "gramsPerUnitLabel": "Paino per yksikkö (grammaa)",
+        "gramsPerUnitHelp": "Yhden kokonaisen yksikön paino — yksi sipuli ≈ 150g, yksi muna ≈ 50g."
       },
       "enableNutrition": "Ota ravinto käyttöön"
     },
@@ -847,7 +862,9 @@
       "rejected": "Ehdotus hylätty",
       "linkedTo": "Linkitetty kohteeseen",
       "density": "Tiheys",
+      "densityHelp": "Grammaa per 100ml tätä ainesosaa — vesi ≈ 100, hunaja ≈ 141, oliiviöljy ≈ 92.",
       "gramsPerUnit": "Grammaa per yksikkö",
+      "gramsPerUnitHelp": "Yhden kokonaisen yksikön paino — yksi sipuli ≈ 150g, yksi muna ≈ 50g.",
       "unitAlias": "Yksikön alias",
       "correction": "korjaus",
       "correctionOf": "korjaus kohteeseen {name}",
@@ -964,7 +981,7 @@
       },
       "nutrition": {
         "title": "Ravintotiedot",
-        "description": "Reseptit näyttävät suuntaa-antavan ravintoarvion (kalorit, proteiini, hiilihydraatit, rasva, suola, sokeri), joka skaalautuu annosmäärän mukaan ja lasketaan ainesosista, jotka on varmasti yhdistetty kuratoituun ruoka-tietokantaan. Sovellus näyttää aina, kuinka monta ainesosaa laskettiin mukaan, eikä koskaan esitä osittaista summaa tarkkana - ja kuka tahansa kirjautunut käyttäjä voi auttaa parantamaan sitä linkittämällä ainesosan oikeaan tietueeseen reseptiä kirjoittaessaan."
+        "description": "Reseptit näyttävät suuntaa-antavan ravintoarvion (kalorit, proteiini, hiilihydraatit, rasva, suola, sokeri), joka skaalautuu annosmäärän mukaan ja lasketaan ainesosista, jotka on varmasti yhdistetty kuratoituun ruoka-tietokantaan. Sovellus näyttää aina, kuinka monta ainesosaa laskettiin mukaan, eikä koskaan esitä osittaista summaa tarkkana - kuka tahansa kirjautunut käyttäjä voi auttaa parantamaan sitä joko linkittämällä ainesosan oikeaan tietueeseen reseptiä kirjoittaessaan, tai suoraan reseptin omasta Ravinto-paneelista, kun se selittää, ettei jotain laskettu mukaan."
       }
     }
   },
