@@ -362,6 +362,9 @@
         "label": "Mukautettu nimike (valinnainen)",
         "placeholder": "esim. Piirakkataikina"
       },
+      "refQuantity": {
+        "nutritionWarning": "Ravintolaskenta ymmärtää tämän vain erämääränä (esim. 2) - painon tai tilavuuden yksikköä ei voida muuntaa osuudeksi viitatusta reseptistä, joten sitä ei lasketa mukaan."
+      },
       "addCategory": "Lisää kategoria",
       "categoryNamePlaceholder": "Kategorian nimi",
       "deleteCategory": "Poista kategoria",

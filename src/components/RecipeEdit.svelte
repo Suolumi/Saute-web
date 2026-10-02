@@ -29,7 +29,7 @@
     import {untrack, onMount} from "svelte";
     import {_} from 'svelte-i18n'
     import {toastError, pictureUrl} from "$lib/utils";
-    import {getNutritionIngredients, getIngredientNutritionLinks, type NutritionIngredient, type IngredientNutritionLink} from "$lib/nutrition";
+    import {getNutritionIngredients, getIngredientNutritionLinks, isWeightOrVolumeUnitText, type NutritionIngredient, type IngredientNutritionLink} from "$lib/nutrition";
     import {getToolboxUnits, type ToolboxUnit} from "$lib/toolbox";
     import RecipeNutritionPanel from "./RecipeNutritionPanel.svelte";
     import {Trash2, GripVertical, EllipsisVertical, Plus, Pencil, Link2} from "@lucide/svelte";
@@ -1199,6 +1199,11 @@
                                   <p class="text-xs text-muted-foreground mt-1 pl-1">
                                     {$_('edit.ingredients.preview', {values: {text: `${getReferenceQuantity(ingredient)} ${ingredient.ref_label || ingredient.resolved_ref_title}`.trim()}})}
                                   </p>
+                                  {#if $user && nutritionEnabled && formData.category !== 'diy' && ingredient.quantity > 0 && isWeightOrVolumeUnitText(ingredient.unit ?? '', toolboxUnits)}
+                                    <p class="text-xs text-amber-600 dark:text-amber-500 mt-1 pl-1">
+                                      {$_('edit.ingredients.refQuantity.nutritionWarning')}
+                                    </p>
+                                  {/if}
                                 {:else if ingredient.name.trim()}
                                   <p class="text-xs text-muted-foreground mt-1 pl-1">
                                     {$_('edit.ingredients.preview', {values: {text: getIngredientName(ingredient)}})}

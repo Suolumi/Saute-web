@@ -362,6 +362,9 @@
         "label": "Custom label (optional)",
         "placeholder": "e.g. Tarte Dough"
       },
+      "refQuantity": {
+        "nutritionWarning": "Nutrition only understands this as a batch count (e.g. 2) - a weight or volume unit here can't be converted into a share of the referenced recipe, so it won't be counted."
+      },
       "addCategory": "Add category",
       "categoryNamePlaceholder": "Category name",
       "deleteCategory": "Delete category",

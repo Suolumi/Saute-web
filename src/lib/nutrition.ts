@@ -110,6 +110,20 @@ export function requiredNutritionField(unitText: string, units: ToolboxUnit[]): 
     return 'grams_per_unit'
 }
 
+// isWeightOrVolumeUnitText reports whether unitText names an actual
+// registered weight/volume ToolboxUnit (by name or symbol, not alias, same
+// direct-match-only posture as requiredNutritionField above) - used to warn
+// on a recipe-as-ingredient row, whose Quantity/Unit only have a defined
+// nutrition meaning as a batch count (see the backend's
+// computeRecipeRefLine): "20g" of a sub-recipe can't be read as "20
+// batches" without silently overcounting, so that case is excluded from
+// nutrition entirely rather than guessed at.
+export function isWeightOrVolumeUnitText(unitText: string, units: ToolboxUnit[]): boolean {
+    const text = unitText.trim().toLowerCase()
+    if (!text) return false
+    return units.some(u => u.name.toLowerCase() === text || u.symbol.toLowerCase() === text)
+}
+
 // parsePositiveNumberInput reads a required-field numeric input's bound
 // value - which, despite being declared/initialized as a string, Svelte
 // silently turns into an actual `number` (or `undefined`) once a digit is

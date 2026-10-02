@@ -362,6 +362,9 @@
         "label": "Libellé personnalisé (optionnel)",
         "placeholder": "ex. Pâte à tarte"
       },
+      "refQuantity": {
+        "nutritionWarning": "Pour la nutrition, ce champ n'est compris que comme un nombre de fournées (ex. 2) - une unité de poids ou de volume ici ne peut pas être convertie en part de la recette référencée, elle ne sera donc pas comptabilisée."
+      },
       "addCategory": "Ajouter une catégorie",
       "categoryNamePlaceholder": "Nom de la catégorie",
       "deleteCategory": "Supprimer la catégorie",
