@@ -1,6 +1,7 @@
 <script lang="ts">
     import {_} from "svelte-i18n";
     import HighlightText from '../HighlightText.svelte';
+    import {normalizeForMatch} from '$lib/highlight';
 
     // NamedItem is deliberately minimal - both ToolboxIngredient and
     // NutritionIngredient satisfy it structurally, so this one combobox is
@@ -37,11 +38,29 @@
             query = selected?.name ?? '';
     });
 
-    const filtered = $derived(
-        query.trim().length === 0
-            ? ingredients
-            : ingredients.filter(i => i.name.toLowerCase().includes(query.trim().toLowerCase()))
-    );
+    // Normalized once per ingredient list (not per keystroke) so filtering/
+    // ranking on every keystroke is just map lookups.
+    const normalizedNames = $derived(new Map(ingredients.map(i => [i.id, normalizeForMatch(i.name)])));
+
+    // A starts-with match (e.g. "Oeuf" for query "oeuf") ranks above a
+    // contains-elsewhere match (e.g. "Boeuf") - alphabetical order alone was
+    // burying short, highly-relevant results behind longer names that merely
+    // contain the query. Ties within a rank go to the shorter name, then
+    // alphabetically.
+    const filtered = $derived.by(() => {
+        const q = query.trim();
+        if (q.length === 0) return ingredients;
+        const normalizedQuery = normalizeForMatch(q);
+        return ingredients
+            .filter(i => (normalizedNames.get(i.id) ?? '').includes(normalizedQuery))
+            .sort((a, b) => {
+                const tierA = (normalizedNames.get(a.id) ?? '').startsWith(normalizedQuery) ? 0 : 1;
+                const tierB = (normalizedNames.get(b.id) ?? '').startsWith(normalizedQuery) ? 0 : 1;
+                if (tierA !== tierB) return tierA - tierB;
+                if (a.name.length !== b.name.length) return a.name.length - b.name.length;
+                return a.name.localeCompare(b.name);
+            });
+    });
 
     function pick(ingredient: NamedItem) {
         value = ingredient.id;
