@@ -18,8 +18,8 @@
     "aiTools": "Outils IA",
     "account": "Compte",
     "viewProfile": "Voir le profil",
-    "feedback": "Avis",
-    "feedbackUnread": "{count, plural, one {# mise à jour de vos avis} other {# mises à jour de vos avis}}"
+    "feedback": "Retours",
+    "feedbackUnread": "{count, plural, one {# mise à jour de vos retours} other {# mises à jour de vos retours}}"
   },
   "fileUpload": {
     "click": "Cliquez pour ajouter",
@@ -701,7 +701,7 @@
       "translations": "Traductions",
       "console": "Console",
       "nutrition": "Nutrition",
-      "feedback": "Avis"
+      "feedback": "Retours"
     },
     "errors": {
       "loadStats": "Impossible de charger les statistiques",
@@ -834,7 +834,7 @@
         "system": "Système",
         "toolbox": "Boîte à outils",
         "nutrition": "Nutrition",
-        "feedback": "Avis"
+        "feedback": "Retours"
       },
       "select": "Sélectionner",
       "paramsFormTitle": "Paramètres",
@@ -915,8 +915,8 @@
     },
     "pendingBadge": "{count} élément(s) en attente de validation",
     "feedback": {
-      "title": "Avis",
-      "pendingBadge": "{count, plural, one {# nouvel avis} other {# nouveaux avis}}",
+      "title": "Retours",
+      "pendingBadge": "{count, plural, one {# nouveau retour} other {# nouveaux retours}}",
       "tabs": {
         "new": "Nouveaux",
         "open": "Ouverts",
@@ -925,22 +925,22 @@
         "all": "Tous"
       },
       "empty": "Rien ici.",
-      "selected": "Avis sélectionné",
+      "selected": "Retour sélectionné",
       "votes": "{count, plural, one {# vote} other {# votes}}",
       "viewOnBoard": "Voir sur le tableau",
       "markDone": "Marquer comme fait",
       "decline": "Refuser",
       "reopen": "Rouvrir",
-      "statusHelp": "Fermer un avis affiche un badge sur le lien Avis de son auteur. Rouvrir conserve les votes.",
+      "statusHelp": "Fermer un retour affiche un badge sur le lien Retours de son auteur. Rouvrir conserve les votes.",
       "deleteDescription": "Il disparaîtra du tableau, avec ses votes et ses photos, quel que soit son statut. C’est définitif.",
       "toasts": {
-        "load": "Impossible de charger les avis",
+        "load": "Impossible de charger les retours",
         "status": "Impossible de changer le statut",
         "done": "Marqué comme fait",
         "declined": "Refusé",
         "open": "Rouvert",
-        "delete": "Impossible de supprimer cet avis",
-        "deleted": "Avis supprimé"
+        "delete": "Impossible de supprimer ce retour",
+        "deleted": "Retour supprimé"
       }
     }
   },
@@ -1211,32 +1211,32 @@
     }
   },
   "feedback": {
-    "title": "Avis",
-    "intro": "Quelque chose ne marche pas, ou une idée pour mieux cuisiner avec Sauté ? Dites-le-nous. Votez pour ce que les autres ont publié afin qu’on sache ce qui compte le plus, et suivez vos propres avis ici jusqu’à ce qu’ils soient traités.",
-    "new": "Nouvel avis",
+    "title": "Retours",
+    "intro": "Quelque chose ne marche pas, ou une idée pour mieux cuisiner avec Sauté ? Dites-le-nous. Votez pour ce que les autres ont publié afin qu’on sache ce qui compte le plus, et suivez vos propres retours ici jusqu’à ce qu’ils soient traités.",
+    "new": "Nouveau retour",
     "signInFirst": "Il vous faudra d’abord vous connecter.",
-    "board": "Tableau des avis",
+    "board": "Tableau des retours",
     "open": "Ouverts",
     "empty": "Rien pour l’instant. Soyez le premier à signaler un bug ou proposer une idée !",
-    "emptyFiltered": "Aucun avis ouvert ne correspond à ces filtres.",
+    "emptyFiltered": "Aucun retour ouvert ne correspond à ces filtres.",
     "loadMore": "Voir plus",
     "showClosed": "Afficher les {count} fermés",
     "closedHeading": "Fermés · {count}",
-    "back": "Tous les avis",
+    "back": "Tous les retours",
     "you": "Vous",
     "deletedUser": "Utilisateur supprimé",
     "unread": "Mis à jour depuis votre dernière visite",
     "closedAgo": "fermé {ago}",
     "voteLabel": "Voter, {count, plural, one {# vote} other {# votes}}",
     "votesClosed": "{count, plural, one {# vote} other {# votes}}, votes fermés",
-    "ownVote": "Votre propre avis compte déjà comme votre vote.",
+    "ownVote": "Votre propre retour compte déjà comme votre vote.",
     "openPhoto": "Ouvrir la photo {n}",
     "copyLink": "Copier le lien",
     "edit": "Modifier",
     "delete": "Supprimer",
-    "locked": "Un avis fermé ne peut plus être voté ni modifié.",
+    "locked": "Un retour fermé ne peut plus être voté ni modifié.",
     "meta": {
-      "title": "Avis",
+      "title": "Retours",
       "description": "Signalez un bug ou proposez une idée pour Sauté, et votez pour ce qui compte pour vous."
     },
     "type": {
@@ -1253,7 +1253,7 @@
       "bugs": "Bugs",
       "ideas": "Idées",
       "mine": "Les miens",
-      "search": "Rechercher un avis"
+      "search": "Rechercher un retour"
     },
     "sort": {
       "label": "Trier",
@@ -1261,9 +1261,9 @@
       "new": "Plus récents"
     },
     "notice": {
-      "done": "Votre avis « {title} » a été marqué comme fait.",
-      "declined": "Votre avis « {title} » a été refusé.",
-      "open": "Votre avis « {title} » a été rouvert.",
+      "done": "Votre retour « {title} » a été marqué comme fait.",
+      "declined": "Votre retour « {title} » a été refusé.",
+      "open": "Votre retour « {title} » a été rouvert.",
       "view": "Voir",
       "dismiss": "Masquer"
     },
@@ -1272,33 +1272,33 @@
       "recipeUnknown": "Une recette qui n’existe plus"
     },
     "deleteConfirm": {
-      "title": "Supprimer cet avis ?",
+      "title": "Supprimer ce retour ?",
       "description": "Il disparaîtra du tableau, avec ses votes et ses photos. C’est définitif."
     },
     "toasts": {
-      "load": "Impossible de charger le tableau des avis",
-      "notFound": "Cet avis n’existe plus",
+      "load": "Impossible de charger le tableau des retours",
+      "notFound": "Ce retour n’existe plus",
       "signInToVote": "Connectez-vous pour voter",
-      "signInToPost": "Connectez-vous pour envoyer un avis",
+      "signInToPost": "Connectez-vous pour envoyer un retour",
       "vote": "Impossible d’enregistrer votre vote",
-      "delete": "Impossible de supprimer cet avis",
-      "deleted": "Avis supprimé",
+      "delete": "Impossible de supprimer ce retour",
+      "deleted": "Retour supprimé",
       "linkCopied": "Lien copié",
-      "save": "Impossible d’enregistrer votre avis",
-      "notEditable": "Vous ne pouvez modifier que vos propres avis ouverts"
+      "save": "Impossible d’enregistrer votre retour",
+      "notEditable": "Vous ne pouvez modifier que vos propres retours ouverts"
     },
     "newPage": {
-      "title": "Nouvel avis",
-      "intro": "Un bug, ou une idée pour mieux cuisiner avec Sauté ? Dites-le-nous. Chaque avis est lu, et vous pouvez suivre le vôtre sur le tableau jusqu’à ce qu’il soit traité.",
-      "submit": "Envoyer l’avis"
+      "title": "Nouveau retour",
+      "intro": "Un bug, ou une idée pour mieux cuisiner avec Sauté ? Dites-le-nous. Chaque retour est lu, et vous pouvez suivre le vôtre sur le tableau jusqu’à ce qu’il soit traité.",
+      "submit": "Envoyer le retour"
     },
     "editPage": {
-      "title": "Modifier l’avis",
+      "title": "Modifier le retour",
       "intro": "Ajoutez des détails ou des photos tant qu’il est ouvert. Une fois fermé, il est verrouillé.",
       "submit": "Enregistrer"
     },
     "form": {
-      "kind": "Quel type d’avis ?",
+      "kind": "Quel type de retour ?",
       "bug": {
         "label": "Quelque chose ne marche pas",
         "hint": "Un bug, une valeur fausse, une page qui se comporte mal.",
@@ -1316,7 +1316,7 @@
         "descriptionHint": "Une idée avec un exemple concret est la plus facile à reprendre."
       },
       "title": "Titre",
-      "similar": "Quelqu’un a peut-être déjà publié ceci. Votez plutôt pour cet avis ?",
+      "similar": "Quelqu’un a peut-être déjà publié ceci. Votez plutôt pour ce retour ?",
       "upvoted": "Voté",
       "upvoteInstead": "Voter plutôt",
       "photos": "Photos",
@@ -1340,7 +1340,7 @@
       "linkSource": {
         "from": "Ajoutée depuis la page d’où vous venez.",
         "pasted": "Vérifié : c’est bien une page de Sauté.",
-        "saved": "La page concernée par cet avis."
+        "saved": "La page concernée par ce retour."
       },
       "pasteLink": "Coller un lien vers une page de Sauté",
       "public": "Publié sous votre nom d’utilisateur, visible par tous."
@@ -1350,8 +1350,8 @@
       "loading": "Traduction…",
       "showOriginal": "Voir l’original",
       "note": "Traduit depuis : {language}, par Google",
-      "same": "Cet avis est déjà dans votre langue.",
-      "error": "Impossible de traduire cet avis"
+      "same": "Ce retour est déjà dans votre langue.",
+      "error": "Impossible de traduire ce retour"
     }
   }
 }
