@@ -18,9 +18,9 @@ export type NutritionIngredient = {
 // same index as the recipe's `ingredients` array (translation preserves
 // positional correspondence, so this zips against either the canonical or a
 // locale-displayed ingredient list). matched is false when this line
-// contributed nothing to the total (no link, no quantity, no density, or -
-// for a recipe_ref line - the referenced recipe itself had nothing
-// matched) - its numbers are 0 in that case, not omitted.
+// contributed nothing to the total (no link, no quantity, no density, or a
+// recipe_ref line, which is never counted) - its numbers are 0 in that
+// case, not omitted.
 export type IngredientNutrition = {
     matched: boolean
     kcal: number
@@ -108,20 +108,6 @@ export function requiredNutritionField(unitText: string, units: ToolboxUnit[]): 
         if (unit) return unit.kind === 'weight' ? null : 'density'
     }
     return 'grams_per_unit'
-}
-
-// isWeightOrVolumeUnitText reports whether unitText names an actual
-// registered weight/volume ToolboxUnit (by name or symbol, not alias, same
-// direct-match-only posture as requiredNutritionField above) - used to warn
-// on a recipe-as-ingredient row, whose Quantity/Unit only have a defined
-// nutrition meaning as a batch count (see the backend's
-// computeRecipeRefLine): "20g" of a sub-recipe can't be read as "20
-// batches" without silently overcounting, so that case is excluded from
-// nutrition entirely rather than guessed at.
-export function isWeightOrVolumeUnitText(unitText: string, units: ToolboxUnit[]): boolean {
-    const text = unitText.trim().toLowerCase()
-    if (!text) return false
-    return units.some(u => u.name.toLowerCase() === text || u.symbol.toLowerCase() === text)
 }
 
 // parsePositiveNumberInput reads a required-field numeric input's bound

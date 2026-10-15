@@ -65,9 +65,9 @@ export type Ingredient = {
     // ingredient; blank falls back to the referenced recipe's live current
     // title (resolved_ref_title).
     ref_label?: string
-    // resolved_ref_title is server-decorated, read-only - ref_label if set,
-    // else the referenced recipe's live current title. Never send this back
-    // on write.
+    // resolved_ref_title is server-decorated, read-only - the referenced
+    // recipe's live current title (display ref_label || resolved_ref_title).
+    // Never send this back on write.
     resolved_ref_title?: string
     // variation_count is carried over client-side from the RecipePreview
     // picked in RecipePickerModal - the server doesn't decorate it on
@@ -136,6 +136,48 @@ export type RecipeForm = {
     ingredients: Ingredient[]
     steps: Step[]
     pictures: string[]
+}
+
+// RecipeViewData is what RecipeView renders: a published Recipe, or an
+// edit-page draft shaped like one.
+export type RecipeViewData = Pick<Recipe,
+    'title' | 'description' | 'author' | 'quantity' | 'preparation_time' | 'cooking_time' | 'resting_time' |
+    'kind' | 'category' | 'ingredients' | 'steps' | 'pictures' | 'variation_of'>
+
+// normalizeIngredientsForSave mirrors what the backend's validateRecipe
+// stores: blank rows dropped, text fields trimmed, a reference's name and a
+// plain ingredient's ref_label cleared, and labels that differ only by case
+// merged into the first one seen.
+export function normalizeIngredientsForSave(ingredients: Ingredient[]): Ingredient[] {
+    const seenLabels = new Map<string, string>()
+    return ingredients
+        .filter(ingredient => ingredient.name.trim() || ingredient.recipe_ref)
+        .map(ingredient => {
+            let label = (ingredient.label ?? '').trim()
+            if (label) {
+                const key = label.toLowerCase()
+                const canonical = seenLabels.get(key)
+                if (canonical !== undefined) label = canonical
+                else seenLabels.set(key, label)
+            }
+            return {
+                ...ingredient,
+                name: ingredient.recipe_ref ? '' : ingredient.name.trim(),
+                unit: (ingredient.unit ?? '').trim(),
+                label,
+                ref_label: ingredient.recipe_ref ? (ingredient.ref_label ?? '').trim() : '',
+            }
+        })
+}
+
+// sameRecipeForm compares two forms by their stored content, ignoring the
+// fields the server decorates on read.
+export function sameRecipeForm(a: RecipeForm, b: RecipeForm): boolean {
+    const stored = (form: RecipeForm) => JSON.stringify({
+        ...form,
+        ingredients: form.ingredients.map(({resolved_ref_title, variation_count, ...rest}) => rest),
+    })
+    return stored(a) === stored(b)
 }
 
 export type GetRecipesRequest = {
@@ -241,6 +283,9 @@ export function formatScaledQuantity(quantity: number): string {
     const whole = Math.floor(quantity)
     const frac = quantity - whole
 
+    // Snapping a small positive amount down to 0 would print "0 g".
+    if (whole === 0 && frac < FRACTION_ROUND_EPSILON)
+        return String(Number(quantity.toPrecision(2)))
     if (frac < FRACTION_ROUND_EPSILON)
         return String(whole)
     if (1 - frac < FRACTION_ROUND_EPSILON)
@@ -267,13 +312,13 @@ export function formatDuration(minutes: number, hourUnit: string, minuteUnit: st
 }
 
 // `ratio` scales the ingredient's stored quantity (e.g. selected servings /
-// recipe's default servings). At ratio 1 (the default), formatting is
-// unchanged from the recipe's authored quantity; away from 1, the quantity
-// is scaled and rounded to a friendly fraction. Ingredients with no
-// quantity (quantity <= 0, e.g. "salt to taste") are never scaled.
+// recipe's default servings). The quantity always goes through
+// formatScaledQuantity, at ratio 1 too, so an authored 0.3333333 reads the
+// same as a scaled one. Ingredients with no quantity (quantity <= 0, e.g.
+// "salt to taste") are never scaled.
 export function getIngredientName(ingredient: Ingredient, ratio: number = 1): string {
     if (ingredient.quantity && ingredient.quantity > 0) {
-        const quantity = ratio === 1 ? ingredient.quantity : formatScaledQuantity(ingredient.quantity * ratio)
+        const quantity = formatScaledQuantity(ingredient.quantity * ratio)
         if (ingredient.unit && ingredient.unit !== '') {
             return `${quantity} ${ingredient.unit} - ${ingredient.name}`
         }
@@ -290,7 +335,7 @@ export function getIngredientName(ingredient: Ingredient, ratio: number = 1): st
 // recipe").
 export function getReferenceQuantity(ingredient: Ingredient, ratio: number = 1): string {
     if (ingredient.quantity && ingredient.quantity > 0) {
-        const quantity = ratio === 1 ? ingredient.quantity : formatScaledQuantity(ingredient.quantity * ratio)
+        const quantity = formatScaledQuantity(ingredient.quantity * ratio)
         return ingredient.unit && ingredient.unit !== '' ? `${quantity} ${ingredient.unit}` : String(quantity)
     }
     return ''

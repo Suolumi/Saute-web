@@ -4,22 +4,25 @@
     import Textarea from './Textarea.svelte';
     import Select from './Select.svelte';
     import Label from './Label.svelte';
-    import RecipeCard from "./RecipeCard.svelte";
-    import RecipeRefIngredient from "./RecipeRefIngredient.svelte";
-    import Lightbox from "./Lightbox.svelte";
+    import InfoTip from './InfoTip.svelte';
+    import RecipeView from "./RecipeView.svelte";
     import RecipePickerModal from "./RecipePickerModal.svelte";
     import {
         getIngredientName,
         getReferenceQuantity,
         groupIngredients,
+        normalizeIngredientsForSave,
+        sameRecipeForm,
         type Ingredient,
         type RecipeCategory,
         type RecipeForm,
         type RecipePicture,
         type RecipePreview,
+        type RecipeViewData,
         RecipeTypes,
         type Step
     } from "$lib/recipes";
+    import type {User} from "$lib/user";
     import FileUpload from "./FileUpload.svelte";
     import ImageCropModal from "./ImageCropModal.svelte";
     import DuplicateNudge from "./DuplicateNudge.svelte";
@@ -29,8 +32,8 @@
     import {untrack, onMount} from "svelte";
     import {_} from 'svelte-i18n'
     import {toastError, pictureUrl} from "$lib/utils";
-    import {getNutritionIngredients, getIngredientNutritionLinks, isWeightOrVolumeUnitText, type NutritionIngredient, type IngredientNutritionLink} from "$lib/nutrition";
-    import {getToolboxUnits, type ToolboxUnit} from "$lib/toolbox";
+    import {getUnitAliases, type IngredientNutritionLink} from "$lib/nutrition";
+    import {loadNutritionReferenceData, withLink, type LoadedNutritionReferenceData} from "$lib/nutritionCompute";
     import RecipeNutritionPanel from "./RecipeNutritionPanel.svelte";
     import {Trash2, GripVertical, EllipsisVertical, Plus, Pencil, Link2} from "@lucide/svelte";
 
@@ -50,6 +53,9 @@
         // photo step; recipe.pictures itself stays a plain filename list
         // either way (see recipeFormFromSource in the edit page).
         pictureAttribution?: RecipePicture[]
+        // author is the recipe's author when editing (the preview shows them,
+        // not the editor, e.g. for an admin editing someone else's recipe).
+        author?: User
         // category drives the blank-form default when no recipe/cache exists
         // yet (a variation or edit's own recipe.category always wins once
         // loaded, see getRecipe/normalizeRecipe) and picks the terminology
@@ -66,37 +72,47 @@
         recipeId = undefined,
         excludeFamily = undefined,
         pictureAttribution = [],
+        author = undefined,
         category = 'food',
         headLabel = $_('create.headLabel'),
         commentLabel = $_('create.commentLabel'),
     }: Props = $props()
 
     // Fetched once per mount, not per ingredient row - the inline nutrition-
-    // link suggestion (below) matches against this shared list, and against
+    // link suggestion (below) matches against this shared data, and against
     // existingLinksByName to tell an already-linked ingredient from one that
-    // still needs a suggestion (see NutritionLinkSuggestion.svelte).
-    let nutritionIngredients: NutritionIngredient[] = $state([]);
-    let existingLinksByName: Record<string, IngredientNutritionLink> = $state({});
-    let toolboxUnits: ToolboxUnit[] = $state([]);
+    // still needs a suggestion (see NutritionLinkSuggestion.svelte). The
+    // preview's nutrition is computed from the same data, so a link applied
+    // from either place is merged in here rather than refetched.
+    let nutritionReference: LoadedNutritionReferenceData | null = $state(null);
+    let nutritionReferenceFailed = $state(false);
     onMount(() => {
-        getNutritionIngredients().then(({response, data}) => {
-            if (response.ok && data) nutritionIngredients = data.items;
-        });
-        getIngredientNutritionLinks().then(({response, data}) => {
-            if (response.ok && data) existingLinksByName = Object.fromEntries(data.items.map(link => [link.name.toLowerCase(), link]));
-        });
-        getToolboxUnits().then(({response, data}) => {
-            if (response.ok && data) toolboxUnits = data.items;
+        loadNutritionReferenceData().then(data => {
+            nutritionReference = data;
+            nutritionReferenceFailed = data === null;
         });
     });
+    const nutritionIngredients = $derived(nutritionReference?.foods ?? []);
+    const existingLinksByName: Record<string, IngredientNutritionLink> = $derived(
+        Object.fromEntries((nutritionReference?.links ?? []).map(link => [link.name.toLowerCase(), link]))
+    );
+    const toolboxUnits = $derived(nutritionReference?.units ?? []);
+
+    function onNutritionLinkApplied(link: IngredientNutritionLink) {
+        if (nutritionReference) nutritionReference = withLink(nutritionReference, link);
+        // The submission may have created a unit alias too, which the
+        // response doesn't carry.
+        getUnitAliases().then(({response, data}) => {
+            if (response.ok && data && nutritionReference) nutritionReference = {...nutritionReference, unit_aliases: data.items};
+        });
+    }
 
     // nutritionEnabled only hides the inline link-suggestion prompts on the
     // ingredients step below - it's a per-session authoring preference (not
     // persisted, not a recipe field), so an author who doesn't want the
     // nudges while filling in a DIY project's materials (or just doesn't
     // care to link anything right now) can turn it off. The live-preview
-    // Nutrition panel further down stays visible either way - it reflects
-    // the recipe's actual saved links, not this toggle.
+    // Nutrition panel further down stays visible either way.
     let nutritionEnabled = $state(true);
 
     // Terminology lookup: for a diy-category recipe, tries `<diyNamespace>.<key>`
@@ -128,6 +144,10 @@
             addRecipeRefToSection(recipePickerTargetSection, picked);
     }
 
+    // draftBase is the server copy the current edit draft started from,
+    // stored with the draft so a later visit can tell whether someone has
+    // saved the recipe since (see getRecipe).
+    let draftBase: RecipeForm | undefined = $state(undefined);
     let formData = $state<RecipeForm>(getRecipe(recipe));
     let pendingPictures = $state<{file: File, url: string}[]>([])
 
@@ -152,9 +172,6 @@
 
     let stepRows = $state<EditStep[]>(untrack(() => buildStepRows(formData.steps)));
     let stepPendingPictures = $state<Record<string, {file: File, url: string}>>({});
-    // previewStepLightboxUid mirrors the real detail page's per-step lightbox,
-    // for the live-preview column's step photos.
-    let previewStepLightboxUid = $state<string | null>(null);
 
     function stepPictureSrc(row: EditStep): string | null {
         const pending = stepPendingPictures[row.uid];
@@ -194,7 +211,7 @@
     $effect(() => {
         onChange(formData)
         if (recipeId !== undefined)
-            $editRecipeCache = {id: recipeId, data: formData}
+            $editRecipeCache = {id: recipeId, data: formData, base: draftBase}
         else
             $createRecipeCache = formData
     })
@@ -238,8 +255,16 @@
         }
 
         if (recipeId !== undefined) {
-            const cached = $editRecipeCache?.id === recipeId ? $editRecipeCache.data : undefined
-            return normalizeRecipe(cached && !isBlank(cached) ? cached : (recipeProps ?? r))
+            const entry = $editRecipeCache?.id === recipeId && !isBlank($editRecipeCache.data) ? $editRecipeCache : undefined
+            if (!recipeProps) {
+                draftBase = entry?.base
+                return normalizeRecipe(entry?.data ?? r)
+            }
+            draftBase = recipeProps
+            // A draft only survives while the server copy is still the one it
+            // started from; a draft with no recorded base can't be checked.
+            const keep = entry?.base !== undefined && sameRecipeForm(normalizeRecipe(entry.base), normalizeRecipe(recipeProps))
+            return normalizeRecipe(keep ? entry!.data : recipeProps)
         }
 
         return normalizeRecipe($createRecipeCache && !isBlank($createRecipeCache) ? $createRecipeCache : (recipeProps ?? r))
@@ -446,7 +471,39 @@
         (formData.pictures?.length ?? 0) > 0
     );
 
-    let previewIngredientGroups = $derived(groupIngredients(formData.ingredients.filter(i => i.name.trim() || i.recipe_ref)));
+    // The preview renders what saving would store (see saveRecipe and the
+    // backend's validateRecipe), through the same component as the
+    // published page.
+    const previewBaseServings = $derived(Number(formData.quantity) || 0);
+    const previewRecipe: RecipeViewData = $derived({
+        title: formData.title.trim(),
+        description: formData.description.trim(),
+        author: author ?? $user ?? {id: '', admin: false, username: '', picture: ''},
+        quantity: previewBaseServings,
+        preparation_time: Number(formData.preparation_time) || 0,
+        cooking_time: Number(formData.cooking_time) || 0,
+        resting_time: Number(formData.resting_time) || 0,
+        kind: formData.kind,
+        category: formData.category,
+        ingredients: normalizeIngredientsForSave(formData.ingredients),
+        steps: stepRows.filter(row => !isEmptyStep(row)).map(row => {
+            const picture = stepPictureSrc(row);
+            return {
+                title: row.title.trim(),
+                description: row.description.trim(),
+                ...(picture ? {picture} : {}),
+                ...(row.timer_minutes ? {timer_minutes: row.timer_minutes} : {}),
+            };
+        }),
+        pictures: [...formData.pictures, ...pendingPictures.map(p => p.url)].map(filename => ({filename})),
+    });
+
+    // The preview's servings stepper starts from (and resets to) the draft's
+    // own servings, like the published page starts from the recipe's.
+    let previewServings = $state(1);
+    $effect(() => {
+        previewServings = previewBaseServings > 0 ? previewBaseServings : 1;
+    });
 
     // --- Ingredient categories -------------------------------------------------
     // The backend only stores a free-text `label` per ingredient; a "category" is
@@ -1199,18 +1256,13 @@
                                   <p class="text-xs text-muted-foreground mt-1 pl-1">
                                     {$_('edit.ingredients.preview', {values: {text: `${getReferenceQuantity(ingredient)} ${ingredient.ref_label || ingredient.resolved_ref_title}`.trim()}})}
                                   </p>
-                                  {#if $user && nutritionEnabled && formData.category !== 'diy' && ingredient.quantity > 0 && isWeightOrVolumeUnitText(ingredient.unit ?? '', toolboxUnits)}
-                                    <p class="text-xs text-amber-600 dark:text-amber-500 mt-1 pl-1">
-                                      {$_('edit.ingredients.refQuantity.nutritionWarning')}
-                                    </p>
-                                  {/if}
                                 {:else if ingredient.name.trim()}
                                   <p class="text-xs text-muted-foreground mt-1 pl-1">
                                     {$_('edit.ingredients.preview', {values: {text: getIngredientName(ingredient)}})}
                                   </p>
                                   {#if $user && nutritionEnabled && formData.category !== 'diy'}
                                     <div class="pl-1">
-                                      <NutritionLinkSuggestion ingredientName={ingredient.name} ingredientUnit={ingredient.unit} ingredientQuantity={ingredient.quantity} {nutritionIngredients} existingLinks={existingLinksByName} {toolboxUnits} />
+                                      <NutritionLinkSuggestion ingredientName={ingredient.name} ingredientUnit={ingredient.unit} ingredientQuantity={ingredient.quantity} {nutritionIngredients} existingLinks={existingLinksByName} {toolboxUnits} onApplied={onNutritionLinkApplied} />
                                     </div>
                                   {/if}
                                 {/if}
@@ -1308,7 +1360,7 @@
                             <div class="flex flex-col sm:flex-row gap-3 items-stretch sm:items-start">
                               <div class="flex-1 min-w-0 space-y-2">
                                 <div class="flex gap-3">
-                                  <div class="flex-1 min-w-0">
+                                  <div class="flex-1 min-w-0 flex flex-col justify-end">
                                     <Label for={`step-title-${row.uid}`}>{$_('edit.instructions.title.label')}</Label>
                                     <Input
                                         id={`step-title-${row.uid}`}
@@ -1317,8 +1369,11 @@
                                         placeholder={t('instructions.title.placeholder')}
                                     />
                                   </div>
-                                  <div class="w-28 flex-shrink-0">
-                                    <Label for={`step-timer-${row.uid}`}>{$_('edit.instructions.timer.label')}</Label>
+                                  <div class="w-36 sm:w-48 flex-shrink-0 flex flex-col justify-end">
+                                    <div class="flex items-center gap-1.5 mb-2">
+                                      <Label for={`step-timer-${row.uid}`} class="mb-0!">{$_('edit.instructions.timer.label')}</Label>
+                                      <InfoTip text={$_('edit.instructions.timer.hint')} label={$_('edit.instructions.timer.infoAria')} />
+                                    </div>
                                     <Input
                                         id={`step-timer-${row.uid}`}
                                         type="number"
@@ -1458,107 +1513,21 @@
 
             <!-- Live preview column -->
             <div class="lg:col-span-2">
-              <div class="lg:sticky lg:top-8 space-y-6">
+              <div class="lg:sticky lg:top-8 lg:max-h-[calc(100vh-4rem)] lg:overflow-y-auto space-y-6">
                 <h2 class="text-2xl font-semibold text-card-foreground mt-4">{$_('edit.preview')}</h2>
 
-                <RecipeCard
-                    recipe={{...formData, pictures: [...formData.pictures, ...pendingPictures.map(p => p.url)], author: $user ?? {id: '', admin: false, username: 'aa', picture: ''}, id: '', favorite: false, favorite_count: 0, variation_count: 0}}
-                    disabled
-                    truncateDescription={false}
-                />
-
-                <div class="bg-card rounded-xl border border-border p-6">
-                  <h3 class="text-lg font-semibold text-foreground mb-4 flex items-center">
-                    <svg class="w-5 h-5 mr-2 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
-                    </svg>
-                    {categoryLabel('recipe', 'diyRecipe', 'ingredients')}
-                  </h3>
-
-                  {#if previewIngredientGroups.length > 0}
-                    <div class="space-y-4">
-                      {#each previewIngredientGroups as group}
-                        <div>
-                          {#if group.label}
-                            <h4 class="font-semibold text-foreground text-sm mb-2">{group.label}</h4>
-                          {/if}
-                          <ul class="space-y-2">
-                            {#each group.items as ingredient}
-                              <li class="flex items-start text-sm">
-                                <div class="w-1.5 h-1.5 bg-primary rounded-full mt-1.5 mr-2 flex-shrink-0"></div>
-                                {#if ingredient.recipe_ref}
-                                  <RecipeRefIngredient {ingredient} />
-                                {:else}
-                                  <span class="text-foreground">{getIngredientName(ingredient)}</span>
-                                {/if}
-                              </li>
-                            {/each}
-                          </ul>
-                        </div>
-                      {/each}
-                    </div>
-                  {:else}
-                    <p class="text-sm text-muted-foreground">{$_('create.noIngredient')}</p>
-                  {/if}
-                </div>
-
-                <div class="bg-card rounded-xl border border-border p-6">
-                  <h3 class="text-lg font-semibold text-foreground mb-4 flex items-center">
-                    <svg class="w-5 h-5 mr-2 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.25 6.75h12M8.25 12h12m-12 5.25h12M3.75 6.75h.007v.008H3.75V6.75zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zM3.75 12h.007v.008H3.75V12zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm-.375 5.25h.007v.008H3.75v-.008zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z"></path>
-                    </svg>
-                    {$_('recipe.instructions')}
-                  </h3>
-
-                  {#if stepRows.some(row => row.title.trim() || row.description.trim())}
-                    <div class="space-y-4">
-                      {#each stepRows as row, index (row.uid)}
-                        {@const pictureSrc = stepPictureSrc(row)}
-                        {#if row.title.trim() || row.description.trim()}
-                          <div class="flex gap-3">
-                            <div class="flex-1 min-w-0 text-sm">
-                              {#if row.title.trim()}
-                                <h4 class="font-semibold text-foreground mb-1">{row.title}</h4>
-                              {/if}
-                              {#if row.description.trim()}
-                                <p class="text-foreground leading-relaxed whitespace-pre-line">{row.description}</p>
-                              {/if}
-                            </div>
-                            {#if pictureSrc}
-                              <button
-                                  type="button"
-                                  onclick={() => previewStepLightboxUid = row.uid}
-                                  class="flex-shrink-0 hover:cursor-zoom-in"
-                                  aria-label={$_('recipe.stepPhoto', {values: {step: index + 1}})}
-                              >
-                                <img
-                                    src={pictureSrc}
-                                    alt={row.title || `Step ${index + 1}`}
-                                    class="w-20 h-20 object-cover rounded-lg border border-border hover:scale-105 transition-transform"
-                                />
-                              </button>
-                            {/if}
-                          </div>
-                        {/if}
-                      {/each}
-                    </div>
-                  {:else}
-                    <p class="text-sm text-muted-foreground">{$_('create.noStep')}</p>
-                  {/if}
-                </div>
-
-                {#if formData.category !== 'diy'}
-                  <!-- Shown for a brand-new recipe too (RecipeNutritionPanel
-                       shows its own "save first" state when recipeId is
-                       unset) - only DIY hides this card outright. When
-                       recipeId is set, it reflects the last *saved* version
-                       of this recipe, not the live draft above it - there's
-                       no endpoint to compute nutrition for an unsaved
-                       ingredient list, so this necessarily lags one save
-                       behind an in-progress edit, unlike the rest of this
-                       preview column. -->
-                  <RecipeNutritionPanel {recipeId} servings={formData.quantity} ingredients={formData.ingredients} />
-                {/if}
+                <RecipeView recipe={previewRecipe} bind:selectedServings={previewServings}>
+                  {#snippet nutrition(servings)}
+                    <RecipeNutritionPanel
+                        {servings}
+                        baseServings={previewRecipe.quantity}
+                        ingredients={previewRecipe.ingredients}
+                        referenceData={nutritionReference}
+                        referenceFailed={nutritionReferenceFailed}
+                        onLinkApplied={onNutritionLinkApplied}
+                    />
+                  {/snippet}
+                </RecipeView>
               </div>
             </div>
           </div>
@@ -1568,18 +1537,12 @@
   </div>
 </div>
 
-<Lightbox
-    open={previewStepLightboxUid !== null}
-    pictures={previewStepLightboxUid ? [stepPictureSrc(stepRows.find(r => r.uid === previewStepLightboxUid)!) ?? ''] : []}
-    alt={formData.title || 'Recipe Title'}
-    onClose={() => previewStepLightboxUid = null}
-/>
-
 <ImageCropModal file={currentCrop?.file ?? null} onConfirm={onCropConfirm} onCancel={onCropCancel} />
 
 <RecipePickerModal
     open={recipePickerOpen}
     {excludeFamily}
+    description={$_('edit.ingredients.recipePicker.ingredientDescription')}
     onClose={() => recipePickerOpen = false}
     onSelect={onRecipePicked}
 />

@@ -288,7 +288,9 @@
       "proteinShort": "prot.",
       "carbsShort": "gluc.",
       "fatShort": "lip.",
-      "saveFirst": "La nutrition sera disponible une fois cette recette enregistrée.",
+      "forServings": "Totaux pour {count, plural, one {# portion} other {# portions}}",
+      "unavailable": "Impossible de charger les données nutritionnelles.",
+      "notCounted": "Non comptabilisées (sous-recettes) : {names}",
       "fix": {
         "explanation": "Les données nutritionnelles proviennent de la mise en correspondance du nom de chaque ingrédient avec une entrée alimentaire de référence, ainsi que d'une densité ou d'un poids par unité permettant de convertir la quantité en grammes. Vous pouvez aider à compléter les ingrédients ci-dessous.",
         "button": "Aider à corriger",
@@ -345,7 +347,8 @@
       "addRecipeRef": "Ajouter une recette comme ingrédient",
       "recipePicker": {
         "title": "Choisir une recette",
-        "description": "Recherchez une recette à utiliser comme ingrédient.",
+        "description": "Recherchez une recette.",
+        "ingredientDescription": "Recherchez une recette à utiliser comme ingrédient.",
         "searchPlaceholder": "Rechercher des recettes...",
         "noResults": "Aucune recette trouvée",
         "error": "Impossible de rechercher des recettes",
@@ -361,9 +364,6 @@
       "refLabel": {
         "label": "Libellé personnalisé (optionnel)",
         "placeholder": "ex. Pâte à tarte"
-      },
-      "refQuantity": {
-        "nutritionWarning": "Pour la nutrition, ce champ n'est compris que comme un nombre de fournées (ex. 2) - une unité de poids ou de volume ici ne peut pas être convertie en part de la recette référencée, elle ne sera donc pas comptabilisée."
       },
       "addCategory": "Ajouter une catégorie",
       "categoryNamePlaceholder": "Nom de la catégorie",
@@ -424,8 +424,10 @@
         "remove": "Supprimer la photo"
       },
       "timer": {
-        "label": "Minuteur (min)",
-        "placeholder": "ex. 30"
+        "label": "Compte à rebours (min)",
+        "placeholder": "ex. 30",
+        "hint": "Ajoute un bouton minuteur à cette étape pour lancer un compte à rebours. Ce n'est pas la durée totale de l'étape.",
+        "infoAria": "Plus d'infos"
       }
     },
     "submit": "Enregistrer",
@@ -1050,6 +1052,7 @@
     "servings": "{count} portions",
     "editServings": "Modifier les portions de ce repas",
     "pickerTitle": "Ajouter une recette à ce repas",
+    "pickerDescription": "Recherchez une recette à ajouter à ce repas.",
     "weekServings": "Portions cette semaine",
     "dayServings": "Portions ce jour-là",
     "editDayServings": "Modifier les portions de ce jour",

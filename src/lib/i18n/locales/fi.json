@@ -288,7 +288,9 @@
       "proteinShort": "prot.",
       "carbsShort": "hiilih.",
       "fatShort": "rasva",
-      "saveFirst": "Ravintotiedot ovat saatavilla, kun tallennat tämän reseptin.",
+      "forServings": "Yhteensä {count, plural, one {# annokselle} other {# annokselle}}",
+      "unavailable": "Ravintotietoja ei voitu ladata.",
+      "notCounted": "Ei laskettu mukaan (alireseptit): {names}",
       "fix": {
         "explanation": "Ravintotiedot perustuvat kunkin ainesosan nimen yhdistämiseen viiteruokatietueeseen sekä tiheyteen tai yksikköpainoon, joiden avulla määrä voidaan muuttaa grammoiksi. Voit auttaa täydentämään alla olevat ainesosat.",
         "button": "Auta korjaamaan",
@@ -345,7 +347,8 @@
       "addRecipeRef": "Lisää resepti ainesosaksi",
       "recipePicker": {
         "title": "Valitse resepti",
-        "description": "Etsi resepti käytettäväksi ainesosana.",
+        "description": "Etsi resepti.",
+        "ingredientDescription": "Etsi resepti käytettäväksi ainesosana.",
         "searchPlaceholder": "Etsi reseptejä...",
         "noResults": "Reseptejä ei löytynyt",
         "error": "Reseptejä ei voitu hakea",
@@ -361,9 +364,6 @@
       "refLabel": {
         "label": "Mukautettu nimike (valinnainen)",
         "placeholder": "esim. Piirakkataikina"
-      },
-      "refQuantity": {
-        "nutritionWarning": "Ravintolaskenta ymmärtää tämän vain erämääränä (esim. 2) - painon tai tilavuuden yksikköä ei voida muuntaa osuudeksi viitatusta reseptistä, joten sitä ei lasketa mukaan."
       },
       "addCategory": "Lisää kategoria",
       "categoryNamePlaceholder": "Kategorian nimi",
@@ -424,8 +424,10 @@
         "remove": "Poista kuva"
       },
       "timer": {
-        "label": "Ajastin (min)",
-        "placeholder": "esim. 30"
+        "label": "Lähtölaskenta (min)",
+        "placeholder": "esim. 30",
+        "hint": "Lisää vaiheeseen ajastinpainikkeen, jolla kokki voi käynnistää lähtölaskennan. Se ei ole vaiheen kokonaiskesto.",
+        "infoAria": "Lisätietoja"
       }
     },
     "submit": "Tallenna resepti",
@@ -1050,6 +1052,7 @@
     "servings": "{count} annosta",
     "editServings": "Muuta tämän aterian annosmäärää",
     "pickerTitle": "Lisää resepti tähän ateriaan",
+    "pickerDescription": "Etsi resepti lisättäväksi tähän ateriaan.",
     "weekServings": "Annosmäärä tällä viikolla",
     "dayServings": "Annosmäärä tänä päivänä",
     "editDayServings": "Muuta tämän päivän annosmäärää",

@@ -19,9 +19,8 @@
         // a UX nicety - the server is the authoritative check wherever one
         // applies.
         category?: RecipeCategory;
-        // title/description override the default ingredient-picker copy for
-        // a caller using this same picker for a different purpose (e.g.
-        // linking a recipe as a variation).
+        // title/description override the default generic picker copy (e.g.
+        // ingredient picking, linking a recipe as a variation).
         title?: string;
         description?: string;
         // flat lists every matching recipe ungrouped - roots AND variations

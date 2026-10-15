@@ -497,6 +497,7 @@
         <RecipePickerModal
                 open={pickerOpen}
                 title={$_('mealPlanning.pickerTitle')}
+                description={$_('mealPlanning.pickerDescription')}
                 onClose={closePicker}
                 onSelect={handlePicked}
         />

@@ -5,27 +5,21 @@
     import {
         addRecipePicture,
         favoriteRecipe,
-        formatDuration,
         getFamily,
-        getIngredientName,
         getRecipe,
-        groupIngredients,
         PICTURE_CAP_PER_CONTRIBUTOR,
         type Recipe,
         type RecipePicture,
         type RecipePreview,
-        recipeTypeColors,
         removeRecipePicture,
         unfavoriteRecipe
     } from "$lib/recipes";
-    import emblaCarouselSvelte from "embla-carousel-svelte";
-    import {FileText, List, Users, Wind, Flame, Clock, ArrowLeft, ArrowRight, Heart, Minus, Plus, Coffee, Camera, Share2, X, ChefHat, Pencil, Timer} from "@lucide/svelte";
+    import {Heart, Plus, Coffee, Camera, Share2, X, ChefHat, Pencil, Timer} from "@lucide/svelte";
     import {serverUrl, user} from "$lib/stores";
     import {_, locale} from "svelte-i18n";
-    import {toastError, toastSuccess} from "$lib/utils";
-    import Lightbox from "../../../../../components/Lightbox.svelte";
+    import {pictureUrl, toastError, toastSuccess} from "$lib/utils";
     import RecipeCard from "../../../../../components/RecipeCard.svelte";
-    import RecipeRefIngredient from "../../../../../components/RecipeRefIngredient.svelte";
+    import RecipeView from "../../../../../components/RecipeView.svelte";
     import RecipeNutritionPanel from "../../../../../components/RecipeNutritionPanel.svelte";
     import PageMeta from "../../../../../components/PageMeta.svelte";
     import CookMode from "../../../../../components/CookMode.svelte";
@@ -128,76 +122,9 @@
         }
     }
 
-    let ingredientGroups = $derived(groupIngredients(recipe?.ingredients ?? []));
     let servingsRatio = $derived(recipe && recipe.quantity > 0 ? selectedServings / recipe.quantity : 1);
 
-    function decreaseServings() {
-        if (selectedServings > 1)
-            selectedServings -= 1;
-    }
-
-    function increaseServings() {
-        selectedServings += 1;
-    }
-
-    let emblaApi: any = $state();
-    let lightboxOpen = $state(false);
-    let lightboxIndex = $state(0);
-    let stepLightboxPicture: string | null = $state(null);
     let heartBump = $state(false);
-    let canScrollPrev = $state(false);
-    let canScrollNext = $state(false);
-    let currentSlideIndex = $state(0);
-
-    function updateScrollState() {
-        canScrollPrev = emblaApi ? emblaApi.canScrollPrev() : false;
-        canScrollNext = emblaApi ? emblaApi.canScrollNext() : false;
-        currentSlideIndex = emblaApi ? emblaApi.selectedScrollSnap() : 0;
-    }
-
-    function emblaInit(e: CustomEvent) {
-        emblaApi = e.detail
-        updateScrollState();
-        emblaApi.on('select', updateScrollState);
-        emblaApi.on('reInit', updateScrollState);
-    }
-
-    // Embla scans its slide DOM once at init; adding/removing a picture
-    // changes the {#each recipe.pictures} list under it without Embla
-    // noticing on its own, so canScrollNext/currentSlideIndex would stay
-    // stuck on whatever they were before the change. Re-scan explicitly
-    // whenever the picture count changes.
-    $effect(() => {
-        void recipe?.pictures.length;
-        if (emblaApi) {
-            emblaApi.reInit();
-            updateScrollState();
-        }
-    });
-
-    function next(e: MouseEvent) {
-        e.stopPropagation();
-        if (emblaApi)
-            emblaApi.scrollNext()
-    }
-
-    function prev(e: MouseEvent) {
-        e.stopPropagation();
-        if (emblaApi)
-            emblaApi.scrollPrev()
-    }
-
-    function openLightbox(e: MouseEvent) {
-        e.stopPropagation();
-        if (!recipe?.pictures || recipe.pictures.length === 0)
-            return;
-        lightboxIndex = emblaApi ? emblaApi.selectedScrollSnap() : 0;
-        lightboxOpen = true;
-    }
-
-    function openStepLightbox(picture: string) {
-        stepLightboxPicture = picture;
-    }
 
     function onStartStepTimer(stepIndex: number, label: string, minutes: number) {
         if (!recipe) return;
@@ -322,10 +249,6 @@
         }
     }
 
-    const currentPicture = $derived(recipe?.pictures?.[currentSlideIndex]);
-
-    const typeColorClass = $derived(recipeTypeColors[(recipe ?? {kind: ''}).kind] || "bg-gray-100 text-gray-800 dark:bg-gray-900/20 dark:text-gray-300");
-
     // Wake Lock API keeps the screen on while cooking so it doesn't dim/lock
     // mid-recipe. The lock is auto-released by the browser whenever the tab
     // is hidden, so it's re-acquired on visibilitychange while still enabled.
@@ -446,7 +369,7 @@
 <PageMeta
         title={recipe?.title ?? (recipe === null ? t('notFound') : undefined)}
         description={recipe?.description}
-        image={recipe?.pictures && recipe.pictures.length > 0 ? `${$serverUrl}/recipe-pictures/${recipe.pictures[0].filename}` : undefined}
+        image={recipe?.pictures && recipe.pictures.length > 0 ? pictureUrl($serverUrl, recipe.pictures[0].filename) : undefined}
 />
 {#if recipe}
     <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
@@ -460,48 +383,12 @@
             {t('back')}
         </button>
 
-        <div class="bg-card rounded-lg border border-border overflow-hidden mb-8">
-            <div class="relative">
-                {#if canScrollPrev}
-                    <button class="absolute h-full flex flex-col justify-center left-0 z-20 hover:cursor-pointer"
-                            onclick={prev}>
-                        <ArrowLeft class="text-white" />
-                    </button>
-                {/if}
-                {#if canScrollNext}
-                    <button class="absolute h-full flex flex-col justify-center right-0 z-20 hover:cursor-pointer"
-                            onclick={next}>
-                        <ArrowRight class="text-white" />
-                    </button>
-                {/if}
-                <div
-                        class="embla"
-                        use:emblaCarouselSvelte
-                        onemblaInit={emblaInit}
-                        onclick={openLightbox}
-                        onkeydown={(e) => e.key === 'Enter' && openLightbox(e as unknown as MouseEvent)}
-                        role="button"
-                        tabindex="0"
-                >
-                    {#if (recipe.pictures?.length ?? 0) >= 1}
-                        <div class="embla__container flex">
-                            {#each recipe.pictures as picture}
-                                <img
-                                        src={`${$serverUrl}/recipe-pictures/${picture.filename}`}
-                                        alt={recipe.title || 'Recipe Title'}
-                                        class="embla__slide__img aspect-video object-cover cursor-zoom-in hover:scale-105 transition-transform duration-300"
-                                />
-                            {/each}
-                        </div>
-                    {:else}
-                        <p class="embla__slide flex items-center justify-center h-full border-b border-b-border">{$_('recipeCard.noPicture')}</p>
-                    {/if}
-                </div>
-
+        <RecipeView {recipe} bind:selectedServings stepDone={(index) => isStepDone($recipeStepProgress, recipe!.id, index)}>
+            {#snippet pictureOverlay(currentPicture)}
                 {#if currentPicture && canRemovePicture(currentPicture)}
                     <button
                             type="button"
-                            onclick={(e) => handleRemovePicture(e, currentPicture!.filename)}
+                            onclick={(e) => handleRemovePicture(e, currentPicture.filename)}
                             class="absolute bottom-3 right-3 z-20 bg-black/60 hover:bg-black/80 text-white rounded-full p-2 hover:cursor-pointer transition-colors"
                             aria-label={$_('recipe.removePhoto')}
                             title={$_('recipe.removePhoto')}
@@ -530,271 +417,125 @@
                     />
                     <ImageCropModal file={cropFile} onConfirm={onPictureCropConfirm} onCancel={onPictureCropCancel} />
                 {/if}
-            </div>
+            {/snippet}
 
-            <div class="p-8">
-                <div class="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4 mb-4">
-                    <h1 class="text-3xl sm:text-4xl font-bold text-card-foreground text-balance">{recipe.title}</h1>
-                    <div class="flex items-center justify-between sm:justify-start w-full sm:w-auto gap-2 sm:gap-3 sm:flex-shrink-0">
-                        {#if recipe.category === 'diy'}
-                            <span class="bg-muted text-muted-foreground px-3 py-2 rounded-full text-sm font-medium whitespace-nowrap ml-4">
-                                {$_('recipeCard.diyBadge')}
-                            </span>
-                        {:else}
-                            <span class="{typeColorClass} px-3 py-2 rounded-full text-sm font-medium whitespace-nowrap ml-4">
-                                {$_('recipes.types.' + recipe.kind)}
-                            </span>
-                        {/if}
-                        {#if $user}
-                            <button
-                                    onclick={toggleFavorite}
-                                    class="bg-background hover:cursor-pointer hover:bg-accent border-2 border-primary text-primary hover:text-primary px-3 py-2 rounded-lg transition-all flex items-center gap-2 shadow-sm hover:shadow-md whitespace-nowrap"
-                                    aria-label={$_(recipe.favorite ? 'recipeCard.unfavorite' : 'recipeCard.favorite')}
-                                    title={$_(recipe.favorite ? 'recipeCard.unfavorite' : 'recipeCard.favorite')}
-                            >
-                                <span
-                                        class="inline-flex {heartBump ? 'heart-bump' : ''}"
-                                        onanimationend={() => heartBump = false}
-                                >
-                                    <Heart size="20" fill={recipe.favorite ? 'currentColor' : 'none'} class={recipe.favorite ? 'text-red-500' : ''} />
-                                </span>
-                                {#if recipe.favorite_count > 0}
-                                    <span class="text-sm font-semibold">{recipe.favorite_count}</span>
-                                {/if}
-                            </button>
-                        {/if}
-                        <button
-                                onclick={shareRecipe}
-                                class="bg-background hover:cursor-pointer hover:bg-accent border-2 border-primary text-primary hover:text-primary px-3 py-2 rounded-lg transition-all flex items-center gap-2 shadow-sm hover:shadow-md whitespace-nowrap"
-                                aria-label={$_('recipe.share')}
-                                title={$_('recipe.share')}
+            {#snippet headerActions()}
+                {#if $user}
+                    <button
+                            onclick={toggleFavorite}
+                            class="bg-background hover:cursor-pointer hover:bg-accent border-2 border-primary text-primary hover:text-primary px-3 py-2 rounded-lg transition-all flex items-center gap-2 shadow-sm hover:shadow-md whitespace-nowrap"
+                            aria-label={$_(recipe!.favorite ? 'recipeCard.unfavorite' : 'recipeCard.favorite')}
+                            title={$_(recipe!.favorite ? 'recipeCard.unfavorite' : 'recipeCard.favorite')}
+                    >
+                        <span
+                                class="inline-flex {heartBump ? 'heart-bump' : ''}"
+                                onanimationend={() => heartBump = false}
                         >
-                            <Share2 size="20" />
-                        </button>
-                        {#if $user}
-                            <button
-                                    onclick={submitVariation}
-                                    class="bg-background hover:cursor-pointer hover:bg-accent border-2 border-primary text-primary px-3 py-2 rounded-lg transition-all flex items-center gap-2 shadow-sm hover:shadow-md whitespace-nowrap"
-                                    aria-label={$_('recipe.submitVariation')}
-                                    title={$_('recipe.submitVariation')}
-                            >
-                                <Plus size="20" />
-                                <span class="hidden sm:inline text-sm font-semibold">{$_('recipe.submitVariation')}</span>
-                            </button>
+                            <Heart size="20" fill={recipe!.favorite ? 'currentColor' : 'none'} class={recipe!.favorite ? 'text-red-500' : ''} />
+                        </span>
+                        {#if recipe!.favorite_count > 0}
+                            <span class="text-sm font-semibold">{recipe!.favorite_count}</span>
                         {/if}
-                        {#if $user && recipe.locale !== recipe.source_locale}
-                            <button
-                                    onclick={suggestTranslationFix}
-                                    class="bg-background hover:cursor-pointer hover:bg-accent border-2 border-primary text-primary px-3 py-2 rounded-lg transition-all flex items-center gap-2 shadow-sm hover:shadow-md whitespace-nowrap"
-                                    aria-label={$_('recipe.suggestFix')}
-                                    title={$_('recipe.suggestFix')}
-                            >
-                                <Pencil size="20" />
-                            </button>
-                        {/if}
-                    </div>
-                </div>
-
-                {#if recipe.variation_of}
-                    <p class="text-sm text-muted-foreground mb-4">
-                        {$_('recipe.variationBanner')}
-                        <a href={`/${$locale}/recipes/${recipe.variation_of}`} class="text-primary hover:underline font-medium">{$_('recipe.viewOriginal')}</a>
-                    </p>
+                    </button>
                 {/if}
+                <button
+                        onclick={shareRecipe}
+                        class="bg-background hover:cursor-pointer hover:bg-accent border-2 border-primary text-primary hover:text-primary px-3 py-2 rounded-lg transition-all flex items-center gap-2 shadow-sm hover:shadow-md whitespace-nowrap"
+                        aria-label={$_('recipe.share')}
+                        title={$_('recipe.share')}
+                >
+                    <Share2 size="20" />
+                </button>
+                {#if $user}
+                    <button
+                            onclick={submitVariation}
+                            class="bg-background hover:cursor-pointer hover:bg-accent border-2 border-primary text-primary px-3 py-2 rounded-lg transition-all flex items-center gap-2 shadow-sm hover:shadow-md whitespace-nowrap"
+                            aria-label={$_('recipe.submitVariation')}
+                            title={$_('recipe.submitVariation')}
+                    >
+                        <Plus size="20" />
+                        <span class="hidden sm:inline text-sm font-semibold">{$_('recipe.submitVariation')}</span>
+                    </button>
+                {/if}
+                {#if $user && recipe!.locale !== recipe!.source_locale}
+                    <button
+                            onclick={suggestTranslationFix}
+                            class="bg-background hover:cursor-pointer hover:bg-accent border-2 border-primary text-primary px-3 py-2 rounded-lg transition-all flex items-center gap-2 shadow-sm hover:shadow-md whitespace-nowrap"
+                            aria-label={$_('recipe.suggestFix')}
+                            title={$_('recipe.suggestFix')}
+                    >
+                        <Pencil size="20" />
+                    </button>
+                {/if}
+            {/snippet}
 
-                <p class="text-xl text-muted-foreground mb-6 text-pretty whitespace-pre-line">{recipe.description}</p>
+            {#snippet instructionsActions()}
+                {#if recipe!.steps.length > 0}
+                    <button
+                            type="button"
+                            onclick={openCookMode}
+                            class="hover:cursor-pointer border-2 border-primary bg-primary text-primary-foreground px-3 py-2 rounded-lg transition-all flex items-center gap-2 shadow-sm hover:shadow-md hover:bg-primary/90 whitespace-nowrap"
+                            aria-label={t('cookMode')}
+                            title={t('cookMode')}
+                    >
+                        <ChefHat size="18" />
+                        <span class="hidden sm:inline text-sm font-medium">{t('cookMode')}</span>
+                    </button>
+                {/if}
+                {#if wakeLockSupported}
+                    <button
+                            onclick={toggleWakeLock}
+                            class="hover:cursor-pointer border-2 px-3 py-2 rounded-lg transition-all flex items-center gap-2 shadow-sm hover:shadow-md whitespace-nowrap {wakeLockActive ? 'bg-primary text-primary-foreground border-primary' : 'bg-background hover:bg-accent border-primary text-primary'}"
+                            aria-pressed={wakeLockActive}
+                            aria-label={$_(wakeLockActive ? 'recipe.keepAwakeOff' : 'recipe.keepAwakeOn')}
+                            title={$_(wakeLockActive ? 'recipe.keepAwakeOff' : 'recipe.keepAwakeOn')}
+                    >
+                        <Coffee size="18" fill={wakeLockActive ? 'currentColor' : 'none'} />
+                        <span class="text-sm font-medium">{$_(wakeLockActive ? 'recipe.keepAwakeOff' : 'recipe.keepAwakeOn')}</span>
+                    </button>
+                {/if}
+            {/snippet}
 
-                <div class="flex flex-col sm:flex-row sm:flex-wrap sm:items-center sm:justify-between gap-4">
-                    <div class="flex items-center gap-x-2">
-                        {#if recipe.author.picture}
-                            <img
-                                    src={`${$serverUrl}/pictures/${recipe.author.picture}`}
-                                    alt="{recipe.author.username} profile"
-                                    class="w-8 h-8 rounded-full border-2 border-card object-cover"
-                            />
+            {#snippet stepAside(index)}
+                <Checkbox
+                        checked={isStepDone($recipeStepProgress, recipe!.id, index)}
+                        onchange={() => toggleStepDone(recipe!.id, index)}
+                        ariaLabel={$_('recipe.stepDone', {values: {step: index + 1}})}
+                />
+            {/snippet}
+
+            {#snippet stepFooter(step, index)}
+                {@const stepTimer = getTimerFor($activeTimers, recipe!.id, index)}
+                {#if step.timer_minutes}
+                    <div class="pl-4 mt-1.5">
+                        {#if stepTimer}
+                            <button
+                                    type="button"
+                                    onclick={() => cancelTimer(stepTimer.id)}
+                                    class="inline-flex items-center gap-1.5 text-sm font-medium px-2.5 py-1 rounded-full hover:cursor-pointer {stepTimer.ringing ? 'bg-primary text-primary-foreground' : 'bg-accent text-accent-foreground'}"
+                            >
+                                <Timer size="14" />
+                                {stepTimer.ringing ? $_('recipe.timerDone') : $_('recipe.timerRemaining', {values: {time: formatRemaining(remainingMs(stepTimer, now))}})}
+                                <X size="12" />
+                            </button>
                         {:else}
-                            <div class="w-8 h-8 rounded-full bg-primary text-primary-foreground border-2 border-card flex items-center justify-center text-xs font-medium">
-                                {recipe.author.username.charAt(0) || "?"}
-                            </div>
+                            <button
+                                    type="button"
+                                    onclick={() => onStartStepTimer(index, step.title || `Step ${index + 1}`, step.timer_minutes!)}
+                                    class="inline-flex items-center gap-1.5 text-sm font-medium px-2.5 py-1 rounded-full border-2 border-primary text-primary hover:bg-primary/10 transition-colors hover:cursor-pointer"
+                            >
+                                <Timer size="14" />
+                                {$_('recipe.startTimer', {values: {minutes: step.timer_minutes}})}
+                            </button>
                         {/if}
-                        <span class="text-lg font-medium text-card-foreground">{$_('recipeCard.by')} {recipe.author?.username || 'Author Name'}</span>
                     </div>
+                {/if}
+            {/snippet}
 
-                    <div class="grid grid-cols-2 sm:flex sm:flex-nowrap sm:items-center gap-3 sm:gap-4 lg:gap-6 text-muted-foreground text-sm sm:text-base">
-                        <div class="flex items-center">
-                            <Clock size="20" class="mr-2 text-black dark:text-current" />
-                            <span class="whitespace-nowrap">{$_('recipe.prep')}: {formatDuration(recipe.preparation_time, $_('recipes.h'), $_('recipes.min'))}</span>
-                        </div>
-                        <div class="flex items-center">
-                            <Flame size="20" class="mr-2 text-black dark:text-current" />
-                            <span class="whitespace-nowrap">{t('cook')}: {formatDuration(recipe.cooking_time, $_('recipes.h'), $_('recipes.min'))}</span>
-                        </div>
-                        <div class="flex items-center">
-                            <Wind size="20" class="mr-2 text-black dark:text-current" />
-                            <span class="whitespace-nowrap">{t('rest')}: {formatDuration(recipe.resting_time, $_('recipes.h'), $_('recipes.min'))}</span>
-                        </div>
-                        <div class="flex items-center">
-                            <Users size="20" class="mr-2 text-black dark:text-current" />
-                            <span class="whitespace-nowrap mr-2">{t('servings')}:</span>
-                            <div class="flex items-center gap-2">
-                                <button
-                                        type="button"
-                                        onclick={decreaseServings}
-                                        disabled={selectedServings <= 1}
-                                        aria-label={$_('recipe.decreaseServings')}
-                                        class="w-6 h-6 flex items-center justify-center rounded-full border border-border hover:bg-accent disabled:opacity-40 disabled:cursor-not-allowed hover:cursor-pointer transition-colors"
-                                >
-                                    <Minus size="14" />
-                                </button>
-                                <span class="w-4 text-center font-medium text-card-foreground">{selectedServings}</span>
-                                <button
-                                        type="button"
-                                        onclick={increaseServings}
-                                        aria-label={$_('recipe.increaseServings')}
-                                        class="w-6 h-6 flex items-center justify-center rounded-full border border-border hover:bg-accent hover:cursor-pointer transition-colors"
-                                >
-                                    <Plus size="14" />
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            <div class="lg:col-span-1">
-                <div class="bg-card rounded-lg border border-border p-6 sticky top-24">
-                    <h2 class="text-2xl font-semibold text-card-foreground mb-6 flex items-center">
-                        <FileText class="mr-3 text-primary" />
-                        {t('ingredients')}
-                    </h2>
-
-                    <div class="space-y-4">
-                        {#each ingredientGroups as group}
-                            <div>
-                                {#if group.label}
-                                    <h3 class="font-semibold text-card-foreground text-sm mb-2">{group.label}</h3>
-                                {/if}
-                                <ul class="space-y-3">
-                                    {#each group.items as ingredient}
-                                        <li class="flex items-start">
-                                            <div class="w-2 h-2 bg-primary rounded-full mt-2 mr-3 flex-shrink-0"></div>
-                                            {#if ingredient.recipe_ref}
-                                                <RecipeRefIngredient {ingredient} ratio={servingsRatio} />
-                                            {:else}
-                                                <span class="text-card-foreground">{getIngredientName(ingredient, servingsRatio)}</span>
-                                            {/if}
-                                        </li>
-                                    {/each}
-                                </ul>
-                            </div>
-                        {/each}
-                    </div>
-                </div>
-            </div>
-
-            <div class="lg:col-span-2">
-                <div class="bg-card rounded-lg border border-border p-6">
-                    <div class="flex flex-wrap items-center justify-between gap-3 mb-6">
-                        <h2 class="text-2xl font-semibold text-card-foreground flex items-center">
-                            <List class="mr-3 text-primary" />
-                            {$_('recipe.instructions')}
-                        </h2>
-                        <div class="flex items-center gap-2 flex-wrap">
-                            {#if recipe.steps.length > 0}
-                                <button
-                                        type="button"
-                                        onclick={openCookMode}
-                                        class="hover:cursor-pointer border-2 border-primary bg-primary text-primary-foreground px-3 py-2 rounded-lg transition-all flex items-center gap-2 shadow-sm hover:shadow-md hover:bg-primary/90 whitespace-nowrap"
-                                        aria-label={t('cookMode')}
-                                        title={t('cookMode')}
-                                >
-                                    <ChefHat size="18" />
-                                    <span class="hidden sm:inline text-sm font-medium">{t('cookMode')}</span>
-                                </button>
-                            {/if}
-                            {#if wakeLockSupported}
-                                <button
-                                        onclick={toggleWakeLock}
-                                        class="hover:cursor-pointer border-2 px-3 py-2 rounded-lg transition-all flex items-center gap-2 shadow-sm hover:shadow-md whitespace-nowrap {wakeLockActive ? 'bg-primary text-primary-foreground border-primary' : 'bg-background hover:bg-accent border-primary text-primary'}"
-                                        aria-pressed={wakeLockActive}
-                                        aria-label={$_(wakeLockActive ? 'recipe.keepAwakeOff' : 'recipe.keepAwakeOn')}
-                                        title={$_(wakeLockActive ? 'recipe.keepAwakeOff' : 'recipe.keepAwakeOn')}
-                                >
-                                    <Coffee size="18" fill={wakeLockActive ? 'currentColor' : 'none'} />
-                                    <span class="text-sm font-medium">{$_(wakeLockActive ? 'recipe.keepAwakeOff' : 'recipe.keepAwakeOn')}</span>
-                                </button>
-                            {/if}
-                        </div>
-                    </div>
-
-                    <div class="space-y-4">
-                        {#each recipe.steps as step, index}
-                            {@const done = isStepDone($recipeStepProgress, recipe.id, index)}
-                            {@const stepTimer = getTimerFor($activeTimers, recipe.id, index)}
-                            <div class="flex gap-4">
-                                <div class="pt-1 flex-shrink-0">
-                                    <Checkbox
-                                            checked={done}
-                                            onchange={() => toggleStepDone(recipe!.id, index)}
-                                            ariaLabel={$_('recipe.stepDone', {values: {step: index + 1}})}
-                                    />
-                                </div>
-                                <div class="flex-1 min-w-0 {done ? 'opacity-50' : ''}">
-                                    <div class="font-bold text-sm">
-                                        {step.title || `Step ${index + 1}`}
-                                    </div>
-                                    <p class="text-card-foreground leading-relaxed pl-4 whitespace-pre-line {done ? 'line-through' : ''}">{step.description}</p>
-                                    {#if step.timer_minutes}
-                                        <div class="pl-4 mt-1.5">
-                                            {#if stepTimer}
-                                                <button
-                                                        type="button"
-                                                        onclick={() => cancelTimer(stepTimer.id)}
-                                                        class="inline-flex items-center gap-1.5 text-sm font-medium px-2.5 py-1 rounded-full hover:cursor-pointer {stepTimer.ringing ? 'bg-primary text-primary-foreground' : 'bg-accent text-accent-foreground'}"
-                                                >
-                                                    <Timer size="14" />
-                                                    {stepTimer.ringing ? $_('recipe.timerDone') : $_('recipe.timerRemaining', {values: {time: formatRemaining(remainingMs(stepTimer, now))}})}
-                                                    <X size="12" />
-                                                </button>
-                                            {:else}
-                                                <button
-                                                        type="button"
-                                                        onclick={() => onStartStepTimer(index, step.title || `Step ${index + 1}`, step.timer_minutes!)}
-                                                        class="inline-flex items-center gap-1.5 text-sm font-medium px-2.5 py-1 rounded-full border-2 border-primary text-primary hover:bg-primary/10 transition-colors hover:cursor-pointer"
-                                                >
-                                                    <Timer size="14" />
-                                                    {$_('recipe.startTimer', {values: {minutes: step.timer_minutes}})}
-                                                </button>
-                                            {/if}
-                                        </div>
-                                    {/if}
-                                </div>
-                                {#if step.picture}
-                                    <button
-                                            type="button"
-                                            onclick={() => openStepLightbox(step.picture!)}
-                                            class="flex-shrink-0 hover:cursor-zoom-in"
-                                            aria-label={$_('recipe.stepPhoto', {values: {step: index + 1}})}
-                                    >
-                                        <img
-                                                src={`${$serverUrl}/recipe-pictures/${step.picture}`}
-                                                alt={step.title || `Step ${index + 1}`}
-                                                class="w-20 h-20 sm:w-24 sm:h-24 object-cover rounded-lg border border-border hover:scale-105 transition-transform {done ? 'opacity-50' : ''}"
-                                        />
-                                    </button>
-                                {/if}
-                            </div>
-                        {/each}
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        {#if recipe.category !== 'diy' && (recipe.ingredients ?? []).length > 0}
-            <RecipeNutritionPanel recipeId={recipe.id} servings={selectedServings} ingredients={recipe.ingredients} canonicalIngredients={canonicalIngredients ?? recipe.ingredients} />
-        {/if}
+            {#snippet nutrition(servings)}
+                <RecipeNutritionPanel recipeId={recipe!.id} {servings} ingredients={recipe!.ingredients} canonicalIngredients={canonicalIngredients ?? recipe!.ingredients} />
+            {/snippet}
+        </RecipeView>
 
         {#if siblingVariations.length > 0}
             <div class="bg-card rounded-lg border border-border p-6 mt-8">
@@ -808,26 +549,6 @@
         {/if}
 
     </div>
-
-    {@const author = recipe.author}
-    <Lightbox
-            open={lightboxOpen}
-            pictures={(recipe.pictures ?? []).map(p => p.filename)}
-            pictureAttributions={(recipe.pictures ?? []).map(p => ({
-                username: p.added_by?.username ?? author.username,
-                picture: p.added_by?.picture ?? author.picture,
-            }))}
-            startIndex={lightboxIndex}
-            alt={recipe.title || 'Recipe Title'}
-            onClose={() => lightboxOpen = false}
-    />
-
-    <Lightbox
-            open={stepLightboxPicture !== null}
-            pictures={stepLightboxPicture ? [stepLightboxPicture] : []}
-            alt={recipe.title || 'Recipe Title'}
-            onClose={() => stepLightboxPicture = null}
-    />
 
     {#if cookModeOpen}
         <CookMode

@@ -1,6 +1,7 @@
 <script lang="ts">
     import RecipeEdit from "../../../../../../components/RecipeEdit.svelte";
     import {editRecipe, getRecipe, type Recipe, type RecipeForm, type RecipePicture} from "$lib/recipes.js";
+    import type {User} from "$lib/user";
     import {goto} from "$app/navigation";
     import {onMount} from "svelte";
     import {page} from "$app/state";
@@ -13,6 +14,7 @@
     const id = page.params.id ?? ''
     let recipe: RecipeForm | undefined = $state(undefined);
     let excludeFamily: string | undefined = $state(undefined);
+    let author: User | undefined = $state(undefined);
     // pictureAttribution is only populated when fullPictureAccess is true
     // (an admin editing a recipe they don't author) - it's what lets the
     // wizard's photo step show who added each picture and offer removing
@@ -61,6 +63,7 @@
                 recipe = recipeFormFromSource(data, fullPictureAccess)
                 pictureAttribution = fullPictureAccess ? data.pictures : []
                 excludeFamily = data.variation_of ?? data.id
+                author = data.author
             }
         })
     })
@@ -78,6 +81,7 @@
         recipeId={id}
         {excludeFamily}
         {pictureAttribution}
+        {author}
         headLabel={recipe?.category === 'diy' ? $_('diyEdit.editHeadLabel') : $_('edit.headLabel')}
         commentLabel={recipe?.category === 'diy' ? $_('diyEdit.editCommentLabel') : $_('edit.commentLabel')}
 />

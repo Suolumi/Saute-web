@@ -33,7 +33,8 @@
         ingredientQuantity,
         nutritionIngredients,
         existingLinks,
-        toolboxUnits
+        toolboxUnits,
+        onApplied = () => {}
     }: {
         ingredientName: string
         ingredientUnit: string
@@ -41,6 +42,7 @@
         nutritionIngredients: NutritionIngredient[]
         existingLinks: Record<string, IngredientNutritionLink>
         toolboxUnits: ToolboxUnit[]
+        onApplied?: (link: IngredientNutritionLink) => void
     } = $props();
 
     let dismissedKey: string | null = $state(null);
@@ -163,6 +165,7 @@
             searching = false;
             if (data.applied && data.link) {
                 justAppliedLink = data.link;
+                onApplied(data.link);
                 toastSuccess($_('edit.ingredients.nutritionLink.linkedSuccess'));
             } else {
                 submittedFor = trimmedName;

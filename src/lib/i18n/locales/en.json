@@ -288,7 +288,9 @@
       "proteinShort": "protein",
       "carbsShort": "carbs",
       "fatShort": "fat",
-      "saveFirst": "Nutrition will be available once you save this recipe.",
+      "forServings": "Totals for {count, plural, one {# serving} other {# servings}}",
+      "unavailable": "Nutrition data couldn't be loaded.",
+      "notCounted": "Not counted (sub-recipes): {names}",
       "fix": {
         "explanation": "Nutrition data comes from matching each ingredient's name to a reference food entry, plus either a density or a per-unit weight so its amount can be converted to grams. You can help complete the ingredients below.",
         "button": "Help fix this",
@@ -345,7 +347,8 @@
       "addRecipeRef": "Add recipe as ingredient",
       "recipePicker": {
         "title": "Choose a recipe",
-        "description": "Search for a recipe to use as an ingredient.",
+        "description": "Search for a recipe.",
+        "ingredientDescription": "Search for a recipe to use as an ingredient.",
         "searchPlaceholder": "Search recipes...",
         "noResults": "No recipes found",
         "error": "Couldn't search recipes",
@@ -361,9 +364,6 @@
       "refLabel": {
         "label": "Custom label (optional)",
         "placeholder": "e.g. Tarte Dough"
-      },
-      "refQuantity": {
-        "nutritionWarning": "Nutrition only understands this as a batch count (e.g. 2) - a weight or volume unit here can't be converted into a share of the referenced recipe, so it won't be counted."
       },
       "addCategory": "Add category",
       "categoryNamePlaceholder": "Category name",
@@ -424,8 +424,10 @@
         "remove": "Remove photo"
       },
       "timer": {
-        "label": "Timer (min)",
-        "placeholder": "e.g. 30"
+        "label": "Countdown (min)",
+        "placeholder": "e.g. 30",
+        "hint": "Adds a timer button to this step so cooks can start a countdown. It's not the step's total duration.",
+        "infoAria": "More info"
       }
     },
     "submit": "Save Recipe",
@@ -1050,6 +1052,7 @@
     "servings": "{count} servings",
     "editServings": "Change servings for this meal",
     "pickerTitle": "Add a recipe to this meal",
+    "pickerDescription": "Search for a recipe to add to this meal.",
     "weekServings": "Servings this week",
     "dayServings": "Servings for this day",
     "editDayServings": "Change servings for this day",

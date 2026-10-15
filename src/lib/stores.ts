@@ -28,7 +28,8 @@ export const createRecipeCache = persisted<RecipeForm | null>('createRecipeCache
     syncTabs: true,
     serializer: jsonParser,
 })
-export const editRecipeCache = persisted<{ id: string, data: RecipeForm } | null>('editRecipeCache', null, {
+// base is the server copy the draft started from (see RecipeEdit's getRecipe).
+export const editRecipeCache = persisted<{ id: string, data: RecipeForm, base?: RecipeForm } | null>('editRecipeCache', null, {
     syncTabs: true,
     serializer: jsonParser,
 })
