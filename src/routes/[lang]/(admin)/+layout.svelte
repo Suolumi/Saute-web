@@ -8,6 +8,7 @@
     // sees the badge site-wide, not just inside /admin) - this layout just
     // reads the same stores, no second poll.
     import {pendingTranslationSuggestionCount, pendingNutritionSuggestionCount} from '$lib/admin';
+    import {pendingFeedbackCount} from '$lib/feedback';
 
     let { children } = $props();
 
@@ -23,6 +24,7 @@
         ['admin.nav.diy', '/diy'],
         ['admin.nav.translations', '/translations'],
         ['admin.nav.nutrition', '/nutrition'],
+        ['admin.nav.feedback', '/feedback'],
         ['admin.nav.console', '/console'],
     ] as const;
 
@@ -64,6 +66,13 @@
                                 title={$_('admin.nutrition.pendingBadge', {values: {count: $pendingNutritionSuggestionCount}})}
                         >
                             {$pendingNutritionSuggestionCount}
+                        </span>
+                    {:else if suffix === '/feedback' && $pendingFeedbackCount > 0}
+                        <span
+                                class="bg-destructive text-destructive-foreground rounded-full px-1.5 py-0.5 text-xs font-semibold leading-none"
+                                title={$_('admin.feedback.pendingBadge', {values: {count: $pendingFeedbackCount}})}
+                        >
+                            {$pendingFeedbackCount}
                         </span>
                     {/if}
                 </button>

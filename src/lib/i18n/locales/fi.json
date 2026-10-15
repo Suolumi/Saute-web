@@ -17,7 +17,9 @@
     "browse": "Selaa",
     "aiTools": "Tekoälytyökalut",
     "account": "Tili",
-    "viewProfile": "Näytä profiili"
+    "viewProfile": "Näytä profiili",
+    "feedback": "Palaute",
+    "feedbackUnread": "{count, plural, one {# palautepäivitys} other {# palautepäivitystä}}"
   },
   "fileUpload": {
     "click": "Klikkaa ladataksesi",
@@ -698,7 +700,8 @@
       "diy": "DIY",
       "translations": "Käännökset",
       "console": "Konsoli",
-      "nutrition": "Ravinto"
+      "nutrition": "Ravinto",
+      "feedback": "Palaute"
     },
     "errors": {
       "loadStats": "Tilastojen lataaminen epäonnistui",
@@ -830,7 +833,8 @@
         "translations": "Käännökset",
         "system": "Järjestelmä",
         "toolbox": "Työkalupakki",
-        "nutrition": "Ravinto"
+        "nutrition": "Ravinto",
+        "feedback": "Palaute"
       },
       "select": "Valitse",
       "paramsFormTitle": "Parametrit",
@@ -909,7 +913,36 @@
       "confirmDeleteTitle": "Poistetaanko?",
       "confirmDeleteDescription": "”{name}” poistetaan pysyvästi."
     },
-    "pendingBadge": "{count} kohdetta odottaa tarkistusta"
+    "pendingBadge": "{count} kohdetta odottaa tarkistusta",
+    "feedback": {
+      "title": "Palaute",
+      "pendingBadge": "{count, plural, one {# uusi palaute} other {# uutta palautetta}}",
+      "tabs": {
+        "new": "Uudet",
+        "open": "Avoimet",
+        "done": "Tehdyt",
+        "declined": "Hylätyt",
+        "all": "Kaikki"
+      },
+      "empty": "Täällä ei ole mitään.",
+      "selected": "Valittu palaute",
+      "votes": "{count, plural, one {# ääni} other {# ääntä}}",
+      "viewOnBoard": "Näytä taululla",
+      "markDone": "Merkitse tehdyksi",
+      "decline": "Hylkää",
+      "reopen": "Avaa uudelleen",
+      "statusHelp": "Sulkeminen näyttää tekijälle merkin hänen Palaute-linkissään. Uudelleen avaaminen säilyttää äänet.",
+      "deleteDescription": "Se poistuu taululta äänineen ja kuvineen tilasta riippumatta. Tätä ei voi perua.",
+      "toasts": {
+        "load": "Palautteiden lataaminen epäonnistui",
+        "status": "Tilan muuttaminen epäonnistui",
+        "done": "Merkitty tehdyksi",
+        "declined": "Hylätty",
+        "open": "Avattu uudelleen",
+        "delete": "Palautteen poistaminen epäonnistui",
+        "deleted": "Palaute poistettu"
+      }
+    }
   },
   "about": {
     "meta": {
@@ -1175,6 +1208,142 @@
       "success": "Kiitos — ylläpitäjä tarkistaa tämän ennen kuin se näkyy työkalupakissa.",
       "error": "Ehdotuksen lähettäminen epäonnistui.",
       "cancel": "Peruuta"
+    }
+  },
+  "feedback": {
+    "title": "Palaute",
+    "intro": "Onko jokin rikki, tai onko sinulla idea, joka tekisi Sautésta paremman? Kerro meille. Äänestä muiden julkaisuja, jotta tiedämme mikä on tärkeintä, ja seuraa omia palautteitasi täällä, kunnes ne on käsitelty.",
+    "new": "Uusi palaute",
+    "signInFirst": "Sinua pyydetään ensin kirjautumaan.",
+    "board": "Palautetaulu",
+    "open": "Avoimet",
+    "empty": "Täällä ei ole vielä mitään. Kerro ensimmäisenä bugista tai ideasta!",
+    "emptyFiltered": "Yksikään avoin palaute ei vastaa näitä suodattimia.",
+    "loadMore": "Lataa lisää",
+    "showClosed": "Näytä {count} suljettua",
+    "closedHeading": "Suljetut · {count}",
+    "back": "Kaikki palautteet",
+    "you": "Sinä",
+    "deletedUser": "Poistettu käyttäjä",
+    "unread": "Päivitetty edellisen käyntisi jälkeen",
+    "closedAgo": "suljettu {ago}",
+    "voteLabel": "Äänestä, {count, plural, one {# ääni} other {# ääntä}}",
+    "votesClosed": "{count, plural, one {# ääni} other {# ääntä}}, äänestys suljettu",
+    "ownVote": "Oma palautteesi lasketaan jo äänesi.",
+    "openPhoto": "Avaa kuva {n}",
+    "copyLink": "Kopioi linkki",
+    "edit": "Muokkaa",
+    "delete": "Poista",
+    "locked": "Suljettuja palautteita ei voi äänestää eikä muokata.",
+    "meta": {
+      "title": "Palaute",
+      "description": "Ilmoita bugista tai ehdota ideaa Sautélle ja äänestä sinulle tärkeitä asioita."
+    },
+    "type": {
+      "bug": "Bugi",
+      "idea": "Idea"
+    },
+    "status": {
+      "open": "Avoin",
+      "done": "Tehty",
+      "declined": "Hylätty"
+    },
+    "filters": {
+      "all": "Kaikki",
+      "bugs": "Bugit",
+      "ideas": "Ideat",
+      "mine": "Vain omat",
+      "search": "Hae palautteista"
+    },
+    "sort": {
+      "label": "Järjestys",
+      "votes": "Eniten ääniä",
+      "new": "Uusimmat"
+    },
+    "notice": {
+      "done": "Palautteesi ”{title}” merkittiin tehdyksi.",
+      "declined": "Palautteesi ”{title}” hylättiin.",
+      "open": "Palautteesi ”{title}” avattiin uudelleen.",
+      "view": "Näytä",
+      "dismiss": "Ohita"
+    },
+    "link": {
+      "recipe": "Resepti · {title}",
+      "recipeUnknown": "Resepti, jota ei enää ole"
+    },
+    "deleteConfirm": {
+      "title": "Poistetaanko tämä palaute?",
+      "description": "Se poistuu taululta äänineen ja kuvineen. Tätä ei voi perua."
+    },
+    "toasts": {
+      "load": "Palautetaulun lataaminen epäonnistui",
+      "notFound": "Tätä palautetta ei enää ole",
+      "signInToVote": "Kirjaudu sisään äänestääksesi",
+      "signInToPost": "Kirjaudu sisään lähettääksesi palautetta",
+      "vote": "Äänesi tallentaminen epäonnistui",
+      "delete": "Palautteen poistaminen epäonnistui",
+      "deleted": "Palaute poistettu",
+      "linkCopied": "Linkki kopioitu",
+      "save": "Palautteen tallentaminen epäonnistui",
+      "notEditable": "Voit muokata vain omia avoimia palautteitasi"
+    },
+    "newPage": {
+      "title": "Uusi palaute",
+      "intro": "Löysitkö bugin, tai onko sinulla idea, joka tekisi ruoanlaitosta Sautén kanssa paremman? Kerro meille. Jokainen palaute luetaan, ja voit seurata omaasi taululla, kunnes se on käsitelty.",
+      "submit": "Lähetä palaute"
+    },
+    "editPage": {
+      "title": "Muokkaa palautetta",
+      "intro": "Lisää tietoja tai kuvia niin kauan kuin palaute on avoin. Suljettu palaute lukitaan.",
+      "submit": "Tallenna muutokset"
+    },
+    "form": {
+      "kind": "Millaista palautetta?",
+      "bug": {
+        "label": "Jokin on rikki",
+        "hint": "Bugi, väärä arvo tai sivu, joka toimii oudosti.",
+        "titlePlaceholder": "esim. Ajastin ei soi, kun näyttö on lukittu",
+        "descriptionLabel": "Mitä tapahtui?",
+        "descriptionPlaceholder": "Mitä olit tekemässä, mitä odotit ja mitä tapahtui sen sijaan?",
+        "descriptionHint": "Mitä enemmän yksityiskohtia, sitä nopeammin se korjataan. Laite ja selain auttavat myös."
+      },
+      "idea": {
+        "label": "Idea",
+        "hint": "Jotain, mitä toivoisit Sautén tekevän, tai tekevän paremmin.",
+        "titlePlaceholder": "esim. Skaalaa reseptit vuoan koon mukaan",
+        "descriptionLabel": "Mitä toivoisit?",
+        "descriptionPlaceholder": "Mitä haluaisit tehdä, ja miten se auttaisi sinua keittiössä?",
+        "descriptionHint": "Konkreettisen esimerkin sisältävät ideat on helpointa toteuttaa."
+      },
+      "title": "Otsikko",
+      "similar": "Joku on ehkä jo julkaissut tämän. Äänestätkö sitä mieluummin?",
+      "upvoted": "Äänestetty",
+      "upvoteInstead": "Äänestä sitä",
+      "photos": "Kuvat",
+      "photosHint": "valinnainen, enintään {max}",
+      "removePhoto": "Poista kuva {n}",
+      "addPhoto": "Lisää kuva ({count}/{max})",
+      "link": "Sivu, jota palaute koskee",
+      "optional": "valinnainen",
+      "linkInput": "Linkki Sautén sivulle",
+      "linkPlaceholder": "Liitä linkki Sautén sivulle",
+      "addLink": "Lisää linkki",
+      "cancel": "Peruuta",
+      "linkHelp": "Liitä linkki reseptiin tai mihin tahansa muuhun Sautén sivuun.",
+      "linkErrors": {
+        "invalid": "Tämä ei näytä linkiltä.",
+        "external": "Vain linkit Sautén sivuille kelpaavat.",
+        "missingRecipe": "Tätä reseptiä ei ole olemassa."
+      },
+      "removeLink": "Poista linkitetty sivu",
+      "useAnotherLink": "Käytä toista linkkiä",
+      "linkSource": {
+        "from": "Lisätty sivulta, jolta tulit.",
+        "pasted": "Tarkistettu: tämä on Sautén sivu.",
+        "saved": "Sivu, jota tämä palaute koskee."
+      },
+      "pasteLink": "Liitä linkki Sautén sivulle",
+      "public": "Julkaistaan julkisesti käyttäjänimelläsi."
     }
   }
 }

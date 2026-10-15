@@ -17,7 +17,9 @@
     "browse": "Parcourir",
     "aiTools": "Outils IA",
     "account": "Compte",
-    "viewProfile": "Voir le profil"
+    "viewProfile": "Voir le profil",
+    "feedback": "Avis",
+    "feedbackUnread": "{count, plural, one {# mise à jour de vos avis} other {# mises à jour de vos avis}}"
   },
   "fileUpload": {
     "click": "Cliquez pour ajouter",
@@ -698,7 +700,8 @@
       "diy": "Bricolage",
       "translations": "Traductions",
       "console": "Console",
-      "nutrition": "Nutrition"
+      "nutrition": "Nutrition",
+      "feedback": "Avis"
     },
     "errors": {
       "loadStats": "Impossible de charger les statistiques",
@@ -830,7 +833,8 @@
         "translations": "Traductions",
         "system": "Système",
         "toolbox": "Boîte à outils",
-        "nutrition": "Nutrition"
+        "nutrition": "Nutrition",
+        "feedback": "Avis"
       },
       "select": "Sélectionner",
       "paramsFormTitle": "Paramètres",
@@ -909,7 +913,36 @@
       "confirmDeleteTitle": "Supprimer ?",
       "confirmDeleteDescription": "« {name} » sera définitivement supprimé."
     },
-    "pendingBadge": "{count} élément(s) en attente de validation"
+    "pendingBadge": "{count} élément(s) en attente de validation",
+    "feedback": {
+      "title": "Avis",
+      "pendingBadge": "{count, plural, one {# nouvel avis} other {# nouveaux avis}}",
+      "tabs": {
+        "new": "Nouveaux",
+        "open": "Ouverts",
+        "done": "Faits",
+        "declined": "Refusés",
+        "all": "Tous"
+      },
+      "empty": "Rien ici.",
+      "selected": "Avis sélectionné",
+      "votes": "{count, plural, one {# vote} other {# votes}}",
+      "viewOnBoard": "Voir sur le tableau",
+      "markDone": "Marquer comme fait",
+      "decline": "Refuser",
+      "reopen": "Rouvrir",
+      "statusHelp": "Fermer un avis affiche un badge sur le lien Avis de son auteur. Rouvrir conserve les votes.",
+      "deleteDescription": "Il disparaîtra du tableau, avec ses votes et ses photos, quel que soit son statut. C’est définitif.",
+      "toasts": {
+        "load": "Impossible de charger les avis",
+        "status": "Impossible de changer le statut",
+        "done": "Marqué comme fait",
+        "declined": "Refusé",
+        "open": "Rouvert",
+        "delete": "Impossible de supprimer cet avis",
+        "deleted": "Avis supprimé"
+      }
+    }
   },
   "about": {
     "meta": {
@@ -1175,6 +1208,142 @@
       "success": "Merci — un administrateur vérifiera cette suggestion avant qu'elle apparaisse dans la boîte à outils.",
       "error": "Impossible d'envoyer votre suggestion.",
       "cancel": "Annuler"
+    }
+  },
+  "feedback": {
+    "title": "Avis",
+    "intro": "Quelque chose ne marche pas, ou une idée pour mieux cuisiner avec Sauté ? Dites-le-nous. Votez pour ce que les autres ont publié afin qu’on sache ce qui compte le plus, et suivez vos propres avis ici jusqu’à ce qu’ils soient traités.",
+    "new": "Nouvel avis",
+    "signInFirst": "Il vous faudra d’abord vous connecter.",
+    "board": "Tableau des avis",
+    "open": "Ouverts",
+    "empty": "Rien pour l’instant. Soyez le premier à signaler un bug ou proposer une idée !",
+    "emptyFiltered": "Aucun avis ouvert ne correspond à ces filtres.",
+    "loadMore": "Voir plus",
+    "showClosed": "Afficher les {count} fermés",
+    "closedHeading": "Fermés · {count}",
+    "back": "Tous les avis",
+    "you": "Vous",
+    "deletedUser": "Utilisateur supprimé",
+    "unread": "Mis à jour depuis votre dernière visite",
+    "closedAgo": "fermé {ago}",
+    "voteLabel": "Voter, {count, plural, one {# vote} other {# votes}}",
+    "votesClosed": "{count, plural, one {# vote} other {# votes}}, votes fermés",
+    "ownVote": "Votre propre avis compte déjà comme votre vote.",
+    "openPhoto": "Ouvrir la photo {n}",
+    "copyLink": "Copier le lien",
+    "edit": "Modifier",
+    "delete": "Supprimer",
+    "locked": "Un avis fermé ne peut plus être voté ni modifié.",
+    "meta": {
+      "title": "Avis",
+      "description": "Signalez un bug ou proposez une idée pour Sauté, et votez pour ce qui compte pour vous."
+    },
+    "type": {
+      "bug": "Bug",
+      "idea": "Idée"
+    },
+    "status": {
+      "open": "Ouvert",
+      "done": "Fait",
+      "declined": "Refusé"
+    },
+    "filters": {
+      "all": "Tous",
+      "bugs": "Bugs",
+      "ideas": "Idées",
+      "mine": "Les miens",
+      "search": "Rechercher un avis"
+    },
+    "sort": {
+      "label": "Trier",
+      "votes": "Plus votés",
+      "new": "Plus récents"
+    },
+    "notice": {
+      "done": "Votre avis « {title} » a été marqué comme fait.",
+      "declined": "Votre avis « {title} » a été refusé.",
+      "open": "Votre avis « {title} » a été rouvert.",
+      "view": "Voir",
+      "dismiss": "Masquer"
+    },
+    "link": {
+      "recipe": "Recette · {title}",
+      "recipeUnknown": "Une recette qui n’existe plus"
+    },
+    "deleteConfirm": {
+      "title": "Supprimer cet avis ?",
+      "description": "Il disparaîtra du tableau, avec ses votes et ses photos. C’est définitif."
+    },
+    "toasts": {
+      "load": "Impossible de charger le tableau des avis",
+      "notFound": "Cet avis n’existe plus",
+      "signInToVote": "Connectez-vous pour voter",
+      "signInToPost": "Connectez-vous pour envoyer un avis",
+      "vote": "Impossible d’enregistrer votre vote",
+      "delete": "Impossible de supprimer cet avis",
+      "deleted": "Avis supprimé",
+      "linkCopied": "Lien copié",
+      "save": "Impossible d’enregistrer votre avis",
+      "notEditable": "Vous ne pouvez modifier que vos propres avis ouverts"
+    },
+    "newPage": {
+      "title": "Nouvel avis",
+      "intro": "Un bug, ou une idée pour mieux cuisiner avec Sauté ? Dites-le-nous. Chaque avis est lu, et vous pouvez suivre le vôtre sur le tableau jusqu’à ce qu’il soit traité.",
+      "submit": "Envoyer l’avis"
+    },
+    "editPage": {
+      "title": "Modifier l’avis",
+      "intro": "Ajoutez des détails ou des photos tant qu’il est ouvert. Une fois fermé, il est verrouillé.",
+      "submit": "Enregistrer"
+    },
+    "form": {
+      "kind": "Quel type d’avis ?",
+      "bug": {
+        "label": "Quelque chose ne marche pas",
+        "hint": "Un bug, une valeur fausse, une page qui se comporte mal.",
+        "titlePlaceholder": "ex. Le minuteur ne sonne pas quand l’écran est verrouillé",
+        "descriptionLabel": "Que s’est-il passé ?",
+        "descriptionPlaceholder": "Que faisiez-vous, qu’attendiez-vous, et que s’est-il passé à la place ?",
+        "descriptionHint": "Plus il y a de détails, plus vite c’est corrigé. Votre appareil et votre navigateur aident aussi."
+      },
+      "idea": {
+        "label": "Idée",
+        "hint": "Quelque chose que Sauté devrait faire, ou mieux faire.",
+        "titlePlaceholder": "ex. Adapter les recettes à la taille du moule",
+        "descriptionLabel": "Qu’aimeriez-vous ?",
+        "descriptionPlaceholder": "Qu’aimeriez-vous faire, et en quoi cela vous aiderait-il en cuisine ?",
+        "descriptionHint": "Une idée avec un exemple concret est la plus facile à reprendre."
+      },
+      "title": "Titre",
+      "similar": "Quelqu’un a peut-être déjà publié ceci. Votez plutôt pour cet avis ?",
+      "upvoted": "Voté",
+      "upvoteInstead": "Voter plutôt",
+      "photos": "Photos",
+      "photosHint": "facultatif, jusqu’à {max}",
+      "removePhoto": "Retirer la photo {n}",
+      "addPhoto": "Ajouter ({count}/{max})",
+      "link": "Page concernée",
+      "optional": "facultatif",
+      "linkInput": "Lien vers une page de Sauté",
+      "linkPlaceholder": "Collez un lien vers une page de Sauté",
+      "addLink": "Ajouter le lien",
+      "cancel": "Annuler",
+      "linkHelp": "Collez un lien vers une recette ou toute autre page de Sauté.",
+      "linkErrors": {
+        "invalid": "Cela ne ressemble pas à un lien.",
+        "external": "Seuls les liens vers des pages de Sauté sont acceptés.",
+        "missingRecipe": "Cette recette n’existe pas."
+      },
+      "removeLink": "Retirer la page liée",
+      "useAnotherLink": "Utiliser un autre lien",
+      "linkSource": {
+        "from": "Ajoutée depuis la page d’où vous venez.",
+        "pasted": "Vérifié : c’est bien une page de Sauté.",
+        "saved": "La page concernée par cet avis."
+      },
+      "pasteLink": "Coller un lien vers une page de Sauté",
+      "public": "Publié sous votre nom d’utilisateur, visible par tous."
     }
   }
 }

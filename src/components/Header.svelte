@@ -8,8 +8,9 @@
     import {_, locale} from "svelte-i18n";
     import LanguageSelect from "./LanguageSelect.svelte";
     import {Drawer} from "vaul-svelte";
-    import {Home, Wrench, Calculator, Info, Sparkles, Settings, BookOpen, Heart, ShieldCheck, LogOut, ChevronRight, X} from "@lucide/svelte";
+    import {Home, Wrench, Calculator, Info, Sparkles, Settings, BookOpen, Heart, ShieldCheck, LogOut, ChevronRight, X, MessageSquare} from "@lucide/svelte";
     import {pendingTranslationSuggestionCount, refreshPendingTranslationSuggestionCount, pendingNutritionSuggestionCount, refreshPendingNutritionSuggestionCount} from "$lib/admin";
+    import {feedbackUpdates, refreshFeedbackUpdates, pendingFeedbackCount, refreshPendingFeedbackCount} from "$lib/feedback";
 
     function toggleDarkMode(): void {
         darkMode.update((mode: boolean) => {
@@ -42,18 +43,41 @@
             return;
         refreshPendingTranslationSuggestionCount();
         refreshPendingNutritionSuggestionCount();
+        refreshPendingFeedbackCount();
         const interval = setInterval(() => {
             refreshPendingTranslationSuggestionCount();
             refreshPendingNutritionSuggestionCount();
+            refreshPendingFeedbackCount();
         }, PENDING_TRANSLATIONS_POLL_MS);
         return () => clearInterval(interval);
     });
+
+    // Any signed-in user: their own feedback an admin has closed since they
+    // last looked, behind the dot on the Feedback link.
+    $effect(() => {
+        if (!$user) {
+            feedbackUpdates.set([]);
+            return;
+        }
+        refreshFeedbackUpdates();
+        const interval = setInterval(refreshFeedbackUpdates, PENDING_TRANSLATIONS_POLL_MS);
+        return () => clearInterval(interval);
+    });
+    let feedbackUnreadCount = $derived($feedbackUpdates.length);
+
+    // The board passes ?from= on to the new-feedback form, which offers the
+    // page the user came from as the feedback's linked page.
+    let feedbackHref = $derived(
+        pathSegment === 'feedback'
+            ? `/${$locale}/feedback`
+            : `/${$locale}/feedback?from=${encodeURIComponent(page.url.pathname)}`
+    );
 
     // totalPendingAdminCount backs the generic "you have pending admin work"
     // indicators (the profile avatar dot, the "Admin" row's count badge) -
     // unlike the admin nav's own per-tab badges, these aren't specific to
     // one suggestion type.
-    let totalPendingAdminCount = $derived($pendingTranslationSuggestionCount + $pendingNutritionSuggestionCount);
+    let totalPendingAdminCount = $derived($pendingTranslationSuggestionCount + $pendingNutritionSuggestionCount + $pendingFeedbackCount);
 
     function navRowClass(active: boolean): string {
         return `flex w-full items-center gap-3 rounded-2xl px-2 py-2.5 text-left transition-colors ${active ? 'bg-primary/10' : 'hover:bg-muted'}`;
@@ -147,6 +171,19 @@
             </div>
 
             <div class="flex items-center gap-2 md:gap-4">
+                <a
+                        href={feedbackHref}
+                        aria-current={pathSegment === 'feedback' ? 'page' : undefined}
+                        class="relative hidden md:inline-block py-2 text-sm transition-colors hover:text-primary {pathSegment === 'feedback' ? 'font-semibold text-primary' : 'font-medium text-foreground'}"
+                >
+                    {$_('header.feedback')}
+                    {#if feedbackUnreadCount > 0}
+                        <span
+                                class="absolute top-1 -right-2 h-2 w-2 rounded-full bg-destructive ring-2 ring-card"
+                                title={$_('header.feedbackUnread', {values: {count: feedbackUnreadCount}})}
+                        ></span>
+                    {/if}
+                </a>
                 <LanguageSelect />
                 <button
                         onclick={toggleDarkMode}
@@ -248,10 +285,13 @@
                 {/if}
                 <div class="md:hidden">
                     <Drawer.Root shouldScaleBackground direction="right" bind:open={drawerOpen}>
-                        <Drawer.Trigger class="flex items-center justify-center text-foreground hover:text-primary" aria-label="Menu">
+                        <Drawer.Trigger class="relative flex items-center justify-center text-foreground hover:text-primary" aria-label="Menu">
                             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
                             </svg>
+                            {#if feedbackUnreadCount > 0}
+                                <span class="absolute -top-0.5 -right-0.5 h-2 w-2 rounded-full bg-destructive ring-2 ring-card"></span>
+                            {/if}
                         </Drawer.Trigger>
                         <Drawer.Portal>
                             <Drawer.Overlay class="fixed inset-0 bg-black/40 z-50" />
@@ -349,6 +389,22 @@
                                             </div>
                                             <div class={navLabelClass(pathSegment === 'about')}>{$_('header.about')}</div>
                                             {#if pathSegment === 'about'}
+                                                <div class="ml-auto mr-1.5 h-1.5 w-1.5 rounded-full bg-primary"></div>
+                                            {/if}
+                                        </button>
+                                        <button
+                                                onclick={() => {drawerOpen = false; goto(feedbackHref)}}
+                                                class={navRowClass(pathSegment === 'feedback')}
+                                        >
+                                            <div class={navChipClass(pathSegment === 'feedback')}>
+                                                <MessageSquare class="w-4 h-4" />
+                                            </div>
+                                            <div class={navLabelClass(pathSegment === 'feedback')}>{$_('header.feedback')}</div>
+                                            {#if feedbackUnreadCount > 0}
+                                                <span class="ml-auto mr-1.5 bg-destructive text-destructive-foreground rounded-full px-1.5 py-0.5 text-xs font-semibold leading-none">
+                                                    {feedbackUnreadCount}
+                                                </span>
+                                            {:else if pathSegment === 'feedback'}
                                                 <div class="ml-auto mr-1.5 h-1.5 w-1.5 rounded-full bg-primary"></div>
                                             {/if}
                                         </button>

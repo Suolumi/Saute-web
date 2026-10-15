@@ -17,7 +17,9 @@
     "browse": "Browse",
     "aiTools": "AI Tools",
     "account": "Account",
-    "viewProfile": "View profile"
+    "viewProfile": "View profile",
+    "feedback": "Feedback",
+    "feedbackUnread": "{count, plural, one {# feedback update} other {# feedback updates}}"
   },
   "fileUpload": {
     "click": "Click to upload",
@@ -698,7 +700,8 @@
       "diy": "DIY",
       "translations": "Translations",
       "console": "Console",
-      "nutrition": "Nutrition"
+      "nutrition": "Nutrition",
+      "feedback": "Feedback"
     },
     "errors": {
       "loadStats": "Couldn't load stats",
@@ -830,7 +833,8 @@
         "translations": "Translations",
         "system": "System",
         "toolbox": "Toolbox",
-        "nutrition": "Nutrition"
+        "nutrition": "Nutrition",
+        "feedback": "Feedback"
       },
       "select": "Select",
       "paramsFormTitle": "Parameters",
@@ -909,7 +913,36 @@
       "confirmDeleteTitle": "Delete this?",
       "confirmDeleteDescription": "\"{name}\" will be permanently removed."
     },
-    "pendingBadge": "{count} item(s) awaiting review"
+    "pendingBadge": "{count} item(s) awaiting review",
+    "feedback": {
+      "title": "Feedback",
+      "pendingBadge": "{count, plural, one {# new feedback} other {# new feedback items}}",
+      "tabs": {
+        "new": "New",
+        "open": "Open",
+        "done": "Done",
+        "declined": "Declined",
+        "all": "All"
+      },
+      "empty": "Nothing here.",
+      "selected": "Selected feedback",
+      "votes": "{count, plural, one {# vote} other {# votes}}",
+      "viewOnBoard": "View on the board",
+      "markDone": "Mark done",
+      "decline": "Decline",
+      "reopen": "Reopen",
+      "statusHelp": "Closing shows the author a badge on their Feedback link. Reopening keeps the votes.",
+      "deleteDescription": "It will disappear from the board, with its votes and photos, whatever its status. This can’t be undone.",
+      "toasts": {
+        "load": "Could not load feedback",
+        "status": "Could not change the status",
+        "done": "Marked done",
+        "declined": "Declined",
+        "open": "Reopened",
+        "delete": "Could not delete this feedback",
+        "deleted": "Feedback deleted"
+      }
+    }
   },
   "about": {
     "meta": {
@@ -1175,6 +1208,142 @@
       "success": "Thanks — an admin will review this before it appears in the Toolbox.",
       "error": "Could not submit your suggestion.",
       "cancel": "Cancel"
+    }
+  },
+  "feedback": {
+    "title": "Feedback",
+    "intro": "Something broken, or an idea that would make cooking with Sauté better? Tell us. Upvote what others posted so we know what matters most, and follow your own items here until they’re done.",
+    "new": "New feedback",
+    "signInFirst": "You’ll be asked to sign in first.",
+    "board": "Feedback board",
+    "open": "Open",
+    "empty": "Nothing here yet. Be the first to share a bug or an idea!",
+    "emptyFiltered": "No open items match these filters.",
+    "loadMore": "Load more",
+    "showClosed": "Show {count} closed",
+    "closedHeading": "Closed · {count}",
+    "back": "All feedback",
+    "you": "You",
+    "deletedUser": "Deleted user",
+    "unread": "Updated since you last looked",
+    "closedAgo": "closed {ago}",
+    "voteLabel": "Upvote, {count, plural, one {# vote} other {# votes}}",
+    "votesClosed": "{count, plural, one {# vote} other {# votes}}, voting closed",
+    "ownVote": "Your own feedback already counts as your vote.",
+    "openPhoto": "Open photo {n}",
+    "copyLink": "Copy link",
+    "edit": "Edit",
+    "delete": "Delete",
+    "locked": "Closed items can’t be voted on or edited.",
+    "meta": {
+      "title": "Feedback",
+      "description": "Report a bug or suggest an idea for Sauté, and upvote what matters to you."
+    },
+    "type": {
+      "bug": "Bug",
+      "idea": "Idea"
+    },
+    "status": {
+      "open": "Open",
+      "done": "Done",
+      "declined": "Declined"
+    },
+    "filters": {
+      "all": "All",
+      "bugs": "Bugs",
+      "ideas": "Ideas",
+      "mine": "Only mine",
+      "search": "Search feedback"
+    },
+    "sort": {
+      "label": "Sort",
+      "votes": "Most votes",
+      "new": "Newest"
+    },
+    "notice": {
+      "done": "Your feedback “{title}” was marked done.",
+      "declined": "Your feedback “{title}” was declined.",
+      "open": "Your feedback “{title}” was reopened.",
+      "view": "View",
+      "dismiss": "Dismiss"
+    },
+    "link": {
+      "recipe": "Recipe · {title}",
+      "recipeUnknown": "A recipe that no longer exists"
+    },
+    "deleteConfirm": {
+      "title": "Delete this feedback?",
+      "description": "It will disappear from the board, with its votes and photos. This can’t be undone."
+    },
+    "toasts": {
+      "load": "Could not load the feedback board",
+      "notFound": "This feedback doesn’t exist anymore",
+      "signInToVote": "Sign in to upvote",
+      "signInToPost": "Sign in to send feedback",
+      "vote": "Could not save your vote",
+      "delete": "Could not delete this feedback",
+      "deleted": "Feedback deleted",
+      "linkCopied": "Link copied",
+      "save": "Could not save your feedback",
+      "notEditable": "Only your own open feedback can be edited"
+    },
+    "newPage": {
+      "title": "New feedback",
+      "intro": "Found a bug, or have an idea that would make cooking with Sauté better? Tell us. Every report is read, and you can follow yours on the board until it’s done.",
+      "submit": "Send feedback"
+    },
+    "editPage": {
+      "title": "Edit feedback",
+      "intro": "Add details or photos while it’s still open. Once it’s closed, it’s locked.",
+      "submit": "Save changes"
+    },
+    "form": {
+      "kind": "What kind of feedback?",
+      "bug": {
+        "label": "Something’s broken",
+        "hint": "A bug, a wrong value, a page that misbehaves.",
+        "titlePlaceholder": "e.g. Timer doesn’t ring when the screen is locked",
+        "descriptionLabel": "What happened?",
+        "descriptionPlaceholder": "What were you doing, what did you expect, and what happened instead?",
+        "descriptionHint": "The more detail, the faster it gets fixed. Your device and browser help too."
+      },
+      "idea": {
+        "label": "Idea",
+        "hint": "Something you wish Sauté did, or did better.",
+        "titlePlaceholder": "e.g. Scale recipes by pan size",
+        "descriptionLabel": "What would you like?",
+        "descriptionPlaceholder": "What would you like to do, and how would it help you in the kitchen?",
+        "descriptionHint": "Ideas with a concrete example are the easiest to pick up."
+      },
+      "title": "Title",
+      "similar": "Someone may have posted this already. Upvote it instead?",
+      "upvoted": "Upvoted",
+      "upvoteInstead": "Upvote instead",
+      "photos": "Photos",
+      "photosHint": "optional, up to {max}",
+      "removePhoto": "Remove photo {n}",
+      "addPhoto": "Add photo ({count}/{max})",
+      "link": "Page it’s about",
+      "optional": "optional",
+      "linkInput": "Link to a Sauté page",
+      "linkPlaceholder": "Paste a link to a Sauté page",
+      "addLink": "Add link",
+      "cancel": "Cancel",
+      "linkHelp": "Paste a link to a recipe or any other page of Sauté.",
+      "linkErrors": {
+        "invalid": "That doesn’t look like a link.",
+        "external": "Only links to Sauté pages work here.",
+        "missingRecipe": "That recipe doesn’t exist."
+      },
+      "removeLink": "Remove linked page",
+      "useAnotherLink": "Use another link",
+      "linkSource": {
+        "from": "Added from the page you came from.",
+        "pasted": "Checked: this is a Sauté page.",
+        "saved": "The page this feedback is about."
+      },
+      "pasteLink": "Paste a link to a Sauté page",
+      "public": "Posted publicly under your username."
     }
   }
 }
