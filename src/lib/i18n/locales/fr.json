@@ -1344,6 +1344,14 @@
       },
       "pasteLink": "Coller un lien vers une page de Sauté",
       "public": "Publié sous votre nom d’utilisateur, visible par tous."
+    },
+    "translate": {
+      "button": "Traduire",
+      "loading": "Traduction…",
+      "showOriginal": "Voir l’original",
+      "note": "Traduit depuis : {language}, par Google",
+      "same": "Cet avis est déjà dans votre langue.",
+      "error": "Impossible de traduire cet avis"
     }
   }
 }

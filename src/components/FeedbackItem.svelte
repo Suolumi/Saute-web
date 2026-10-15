@@ -3,8 +3,9 @@
     import {Bug, ChevronDown, ChevronUp, Image as ImageIcon, Lightbulb, Link as LinkIcon, Lock, Pencil, Trash2} from "@lucide/svelte";
     import {serverUrl} from "$lib/stores";
     import {pictureUrl, toastSuccess} from "$lib/utils";
-    import {feedbackLinkLabel, relativeTime, type Feedback} from "$lib/feedback";
+    import {feedbackLinkLabel, relativeTime, type Feedback, type FeedbackTranslation} from "$lib/feedback";
     import Lightbox from "./Lightbox.svelte";
+    import FeedbackTranslateButton from "./FeedbackTranslateButton.svelte";
     import HighlightText from "./HighlightText.svelte";
 
     let {item, expanded = false, highlighted = false, query = '', onToggle, onVote, onEdit, onDelete}: {
@@ -21,6 +22,9 @@
 
     let open = $derived(item.status === 'open');
     let lightboxIndex = $state<number | null>(null);
+    let translation = $state<FeedbackTranslation | null>(null);
+    let title = $derived(translation?.title ?? item.title);
+    let description = $derived(translation?.description ?? item.description);
     let authorName = $derived(item.mine ? $_('feedback.you') : (item.author?.username ?? $_('feedback.deletedUser')));
     let ago = $derived(relativeTime(open ? item.created_at : (item.closed_at ?? item.updated_at), $locale ?? 'en'));
 
@@ -65,7 +69,7 @@
                 class="flex min-w-0 flex-1 items-center gap-3 text-left hover:cursor-pointer"
         >
             <span class="flex min-w-0 flex-1 flex-col gap-0.5">
-                <span class="text-[15px] font-semibold leading-snug text-foreground"><HighlightText text={item.title} {query} /></span>
+                <span class="text-[15px] font-semibold leading-snug text-foreground"><HighlightText text={title} {query} /></span>
                 <span class="flex flex-wrap items-center gap-x-2 gap-y-0.5 text-xs text-muted-foreground">
                     {#if !open}
                         <span class="rounded-full px-1.5 font-semibold {item.status === 'done' ? 'bg-primary/10 text-primary' : 'bg-foreground/10 text-foreground'}">
@@ -106,7 +110,7 @@
 
     {#if expanded}
         <div class="flex flex-col gap-3.5 pb-3.5 pl-[4.5rem] pr-3.5 pt-0.5">
-            <p class="whitespace-pre-line text-foreground">{item.description}</p>
+            <p class="whitespace-pre-line text-foreground">{description}</p>
             {#if item.photos.length > 0}
                 <div class="flex flex-wrap gap-2.5">
                     {#each item.photos as photo, index (photo)}
@@ -131,6 +135,7 @@
                 <button type="button" onclick={copyLink} class="inline-flex h-9 items-center gap-1.5 rounded-lg border border-border bg-background px-3 text-[13px] font-medium text-foreground hover:bg-muted hover:cursor-pointer">
                     <LinkIcon class="h-3.5 w-3.5" />{$_('feedback.copyLink')}
                 </button>
+                <FeedbackTranslateButton {item} bind:translation />
                 {#if open && item.mine}
                     <button type="button" onclick={onEdit} class="inline-flex h-9 items-center gap-1.5 rounded-lg border border-border bg-background px-3 text-[13px] font-medium text-foreground hover:bg-muted hover:cursor-pointer">
                         <Pencil class="h-3.5 w-3.5" />{$_('feedback.edit')}

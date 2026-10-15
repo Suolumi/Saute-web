@@ -1344,6 +1344,14 @@
       },
       "pasteLink": "Paste a link to a Sauté page",
       "public": "Posted publicly under your username."
+    },
+    "translate": {
+      "button": "Translate",
+      "loading": "Translating…",
+      "showOriginal": "Show original",
+      "note": "Translated from {language} by Google",
+      "same": "This feedback is already in your language.",
+      "error": "Could not translate this feedback"
     }
   }
 }

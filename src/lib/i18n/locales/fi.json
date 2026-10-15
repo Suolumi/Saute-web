@@ -1344,6 +1344,14 @@
       },
       "pasteLink": "Liitä linkki Sautén sivulle",
       "public": "Julkaistaan julkisesti käyttäjänimelläsi."
+    },
+    "translate": {
+      "button": "Käännä",
+      "loading": "Käännetään…",
+      "showOriginal": "Näytä alkuperäinen",
+      "note": "Käännetty kielestä {language} Googlella",
+      "same": "Tämä palaute on jo sinun kielelläsi.",
+      "error": "Palautteen kääntäminen epäonnistui"
     }
   }
 }

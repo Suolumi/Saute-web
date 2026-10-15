@@ -1,5 +1,5 @@
 import {describe, expect, it} from 'vitest';
-import {feedbackLinkLabel, parseFeedbackLink, recipeIdFromPath, relativeTime, similarFeedback, type Feedback} from './feedback';
+import {feedbackLinkLabel, parseFeedbackLink, recipeIdFromPath, relativeTime, sameLanguage, similarFeedback, type Feedback} from './feedback';
 
 const ORIGIN = 'http://localhost:5173';
 const RECIPE_ID = '0123456789abcdef01234567';
@@ -60,5 +60,13 @@ describe('relativeTime', () => {
         expect(relativeTime('2026-10-12T12:00:00Z', 'en', now)).toBe('3 days ago');
         expect(relativeTime('2026-10-14T12:00:00Z', 'en', now)).toBe('yesterday');
         expect(relativeTime('2026-10-15T11:59:50Z', 'en', now)).toBe('now');
+    });
+});
+
+describe('sameLanguage', () => {
+    it('compares base languages only', () => {
+        expect(sameLanguage('fr', 'fr-CA')).toBe(true);
+        expect(sameLanguage('EN', 'en')).toBe(true);
+        expect(sameLanguage('fi', 'fr')).toBe(false);
     });
 });

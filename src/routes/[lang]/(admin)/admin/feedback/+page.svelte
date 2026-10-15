@@ -5,11 +5,12 @@
     import {pictureUrl, toastError, toastSuccess} from "$lib/utils";
     import {
         adminListFeedback, adminMarkFeedbackSeen, adminSetFeedbackStatus, deleteFeedback, feedbackLinkLabel,
-        refreshPendingFeedbackCount, relativeTime, type Feedback, type FeedbackAdminTab, type FeedbackStatus
+        refreshPendingFeedbackCount, relativeTime, type Feedback, type FeedbackAdminTab, type FeedbackStatus, type FeedbackTranslation
     } from "$lib/feedback";
     import Button from "../../../../../components/Button.svelte";
     import Modal from "../../../../../components/Modal.svelte";
     import Lightbox from "../../../../../components/Lightbox.svelte";
+    import FeedbackTranslateButton from "../../../../../components/FeedbackTranslateButton.svelte";
 
     const PAGE_SIZE = 20;
     const TABS: FeedbackAdminTab[] = ['new', 'open', 'done', 'declined', 'all'];
@@ -21,6 +22,7 @@
     let selected = $state<Feedback | null>(null);
     let confirmingDelete = $state(false);
     let lightboxIndex = $state<number | null>(null);
+    let translation = $state<FeedbackTranslation | null>(null);
 
     async function refreshCounts() {
         const results = await Promise.all(TABS.map(name => adminListFeedback(name, 1)));
@@ -51,6 +53,7 @@
 
     async function select(item: Feedback) {
         selected = item;
+        translation = null;
         if (item.admin_seen === false) {
             await adminMarkFeedbackSeen(item.id);
             const seen = {...item, admin_seen: true};
@@ -153,12 +156,17 @@
                     <span class="rounded-full px-2 text-xs font-semibold {typeClass(selected)}">{$_(`feedback.type.${selected.type}`)}</span>
                     <span>{$_('admin.feedback.votes', {values: {count: selected.vote_count}})}</span>
                 </div>
-                <h2 class="text-lg font-semibold leading-snug text-foreground">{selected.title}</h2>
+                <h2 class="text-lg font-semibold leading-snug text-foreground">{translation?.title ?? selected.title}</h2>
                 <div class="text-[13px] text-muted-foreground">
                     {selected.author?.username ?? $_('feedback.deletedUser')} · {relativeTime(selected.created_at, $locale ?? 'en')}
                     · <a href={`/${$locale}/feedback?open=${selected.id}`} class="text-primary hover:underline">{$_('admin.feedback.viewOnBoard')}</a>
                 </div>
-                <p class="whitespace-pre-line text-foreground">{selected.description}</p>
+                <p class="whitespace-pre-line text-foreground">{translation?.description ?? selected.description}</p>
+                <div class="flex flex-wrap items-center gap-2">
+                    {#key selected.id}
+                        <FeedbackTranslateButton item={selected} bind:translation />
+                    {/key}
+                </div>
                 {#if selected.photos.length > 0}
                     <div class="flex flex-wrap gap-2">
                         {#each selected.photos as photo, index (photo)}

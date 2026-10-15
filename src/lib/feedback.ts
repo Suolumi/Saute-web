@@ -20,6 +20,8 @@ export type Feedback = {
     // page that still exists.
     link_title?: string
     author?: { id: string, username: string, picture?: string }
+    // source_locale is known once someone has translated this feedback.
+    source_locale?: string
     status: FeedbackStatus
     vote_count: number
     voted: boolean
@@ -85,6 +87,35 @@ export function deleteFeedback(id: string) {
 
 export function voteFeedback(id: string, vote: boolean) {
     return apiFetchJson<Feedback>(`/feedback/${id}/vote`, vote ? 'POST' : 'DELETE')
+}
+
+export type FeedbackTranslation = {
+    title: string
+    description: string
+    locale: string
+    source_locale: string
+    // same_language means the feedback was already written in locale.
+    same_language: boolean
+}
+
+// translateFeedback asks the API for a feedback in locale. Feedback is never
+// translated on its own; this only runs when a viewer clicks "Translate".
+export function translateFeedback(id: string, locale: string) {
+    return apiFetchJson<FeedbackTranslation>(`/feedback/${id}/translate`, 'POST', {locale})
+}
+
+// sameLanguage compares the base language of two BCP-47 tags ("fr" = "fr-CA").
+export function sameLanguage(a: string, b: string): boolean {
+    return a.split('-')[0].toLowerCase() === b.split('-')[0].toLowerCase()
+}
+
+// languageName names a language code in the viewer's locale ("fr" -> "French").
+export function languageName(code: string, locale: string): string {
+    try {
+        return new Intl.DisplayNames([locale], {type: 'language'}).of(code) ?? code
+    } catch {
+        return code
+    }
 }
 
 export function markFeedbackSeen(id: string) {
