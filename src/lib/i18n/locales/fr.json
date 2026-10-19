@@ -10,7 +10,7 @@
     "myRecipes": "Mes recettes",
     "myFavorites": "Mes favoris",
     "logout": "Déconnexion",
-    "diy": "Fait maison",
+    "diy": "DIY",
     "toolbox": "Boîte à outils",
     "admin": "Administration",
     "about": "À propos",
@@ -45,7 +45,7 @@
     "unfavorite": "Retirer des favoris",
     "favoriteError": "Impossible de mettre à jour le favori",
     "variationCount": "{count} variantes",
-    "diyBadge": "Fait maison"
+    "diyBadge": "DIY"
   },
   "variationPicker": {
     "title": "Choisissez une version",
@@ -181,12 +181,12 @@
     },
     "favoritesTabs": {
       "recipes": "Recettes",
-      "diy": "Fait maison"
+      "diy": "DIY"
     },
     "favorites": {
       "empty": {
         "title": "Aucun favori pour le moment",
-        "description": "Les recettes et créations faites maison que vous mettez en favori apparaîtront ici."
+        "description": "Les recettes et projets DIY que vous mettez en favori apparaîtront ici."
       }
     },
     "noRecipes": "Vous n'avez pas encore créé de recettes.",
@@ -199,7 +199,7 @@
     },
     "filterAll": "Tout",
     "filterFood": "Cuisine",
-    "filterDiy": "Fait maison",
+    "filterDiy": "DIY",
     "actions": {
       "menu": "Actions",
       "edit": "Modifier",
@@ -605,7 +605,7 @@
   },
   "diyHome": {
     "meta": {
-      "title": "Créations faites maison",
+      "title": "Projets DIY",
       "description": "Savon fait maison, remèdes maison, astuces du quotidien - parcourez des projets à faire soi-même."
     },
     "mainText": "Au-delà de la cuisine",
@@ -621,12 +621,12 @@
     "servings": "Quantité",
     "cook": "Temps actif",
     "rest": "Temps de cure",
-    "back": "Retour aux créations faites maison"
+    "back": "Retour au DIY"
   },
   "diyEdit": {
     "meta": {
-      "title": "Nouvelle création faite maison",
-      "description": "Partagez une nouvelle création faite maison avec la communauté Sauté."
+      "title": "Nouveau projet DIY",
+      "description": "Partagez un nouveau projet DIY avec la communauté Sauté."
     },
     "headLabel": "Nouveau projet",
     "commentLabel": "Aujourd’hui, je fabrique...",
@@ -697,7 +697,7 @@
       "dashboard": "Tableau de bord",
       "users": "Utilisateurs",
       "recipes": "Recettes",
-      "diy": "Fait maison",
+      "diy": "DIY",
       "translations": "Traductions",
       "console": "Console",
       "nutrition": "Nutrition",
@@ -714,8 +714,8 @@
       "deleteUser": "Impossible de supprimer cet utilisateur",
       "loadRecipes": "Impossible de charger les recettes",
       "deleteRecipe": "Impossible de supprimer cette recette",
-      "loadDiy": "Impossible de charger les créations faites maison",
-      "deleteDiy": "Impossible de supprimer cette création faite maison",
+      "loadDiy": "Impossible de charger les projets DIY",
+      "deleteDiy": "Impossible de supprimer ce projet DIY",
       "retranslate": "Impossible de programmer la retraduction",
       "loadTranslations": "Impossible de charger les propositions de traduction",
       "resolveTranslation": "Impossible de traiter cette proposition",
@@ -777,21 +777,21 @@
       "retranslateScheduled": "Retraduction programmée"
     },
     "diy": {
-      "title": "Fait maison",
-      "searchPlaceholder": "Rechercher des créations faites maison...",
+      "title": "DIY",
+      "searchPlaceholder": "Rechercher des projets DIY...",
       "variationBadge": "Variation",
       "favorites": "{count} favoris",
       "edit": "Modifier",
       "retranslate": "Retraduire",
       "delete": "Supprimer",
-      "none": "Aucune création faite maison trouvée",
+      "none": "Aucun projet DIY trouvé",
       "prev": "Précédent",
       "next": "Suivant",
-      "deleteConfirmTitle": "Supprimer cette création faite maison ?",
+      "deleteConfirmTitle": "Supprimer ce projet DIY ?",
       "deleteConfirmDescription": "Ceci supprime définitivement « {title} ».",
       "cancel": "Annuler",
       "confirmDelete": "Supprimer",
-      "deleted": "Création faite maison supprimée",
+      "deleted": "Projet DIY supprimé",
       "retranslateScheduled": "Retraduction programmée"
     },
     "favoritesModal": {
@@ -947,7 +947,7 @@
   "about": {
     "meta": {
       "title": "À propos",
-      "description": "Un aperçu rapide de ce que Sauté permet de faire — des fonctionnalités de recettes et de créations faites maison que vous n'avez peut-être pas encore remarquées."
+      "description": "Un aperçu rapide de ce que Sauté permet de faire — des fonctionnalités de recettes et DIY que vous n'avez peut-être pas encore remarquées."
     },
     "headLabel": "Ce que Sauté permet de faire",
     "commentLabel": "Un aperçu rapide de fonctionnalités qui ne sont pas toujours évidentes en regardant simplement l'application.",
@@ -973,8 +973,8 @@
         "description": "Tout le monde peut ajouter une photo à n'importe quelle recette, pas seulement son auteur — cherchez « Ajouter une photo » sur la page de la recette pour montrer le résultat obtenu."
       },
       "diy": {
-        "title": "Créations faites maison",
-        "description": "Sauté, ce n'est pas que de la cuisine — parcourez savon fait maison, remèdes naturels et petites réparations dans l'onglet Fait maison."
+        "title": "Projets DIY",
+        "description": "Sauté, ce n'est pas que de la cuisine — parcourez savon fait maison, remèdes naturels et petites réparations dans l'onglet DIY."
       },
       "stepPhotos": {
         "title": "Une photo à chaque étape",
@@ -982,7 +982,7 @@
       },
       "favorites": {
         "title": "Favoris",
-        "description": "Mettez en favori autant de recettes ou de créations faites maison que vous voulez grâce à l'icône cœur — c'est privé et cela n'affecte jamais le classement d'une recette pour les autres — puis retrouvez-les tous, un aperçu de vos goûts, dans Paramètres › Mes favoris."
+        "description": "Mettez en favori autant de recettes ou de projets DIY que vous voulez grâce à l'icône cœur — c'est privé et cela n'affecte jamais le classement d'une recette pour les autres — puis retrouvez-les tous, un aperçu de vos goûts, dans Paramètres › Mes favoris."
       },
       "linkVariation": {
         "title": "Lier une recette existante comme variation",
