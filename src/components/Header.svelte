@@ -120,7 +120,7 @@
 </script>
 
 <nav class="bg-card border-b border-border sticky top-0 z-50">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="max-w-page mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex justify-between items-center h-16">
             <div class="flex items-center md:space-x-8">
                 <button

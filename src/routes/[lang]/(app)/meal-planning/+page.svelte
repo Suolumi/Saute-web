@@ -282,7 +282,7 @@
 
 <PageMeta title={$_('mealPlanning.meta.title')} description={$_('mealPlanning.meta.description')} />
 
-<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+<div class="max-w-page mx-auto px-4 sm:px-6 lg:px-8 py-8">
     {#if !$user}
         <div class="max-w-md mx-auto text-center py-24">
             <h1 class="text-2xl font-bold text-foreground mb-2">{$_('mealPlanning.unauthorized.title')}</h1>

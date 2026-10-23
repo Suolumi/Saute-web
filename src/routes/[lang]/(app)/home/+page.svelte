@@ -114,7 +114,7 @@
 
 <PageMeta title={$_('home.meta.title')} description={$_('home.meta.description')} />
 
-<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+<div class="max-w-page mx-auto px-4 sm:px-6 lg:px-8 py-8">
     <div class="mb-8 flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4">
         <div>
             <h1 class="text-4xl font-bold text-foreground mb-4 text-balance">{$_('home.mainText')}</h1>
@@ -168,7 +168,7 @@
         <p class="text-sm text-muted-foreground mb-4">{$_('home.resultCount', {values: {count: totalCount}})}</p>
     {/if}
 
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+    <div class="grid grid-cols-cards gap-6">
         {#each recipes as recipe (recipe.id)}
             <RecipeCard {recipe} highlightQuery={searchTerm} />
         {/each}

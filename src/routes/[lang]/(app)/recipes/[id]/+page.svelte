@@ -372,7 +372,7 @@
         image={recipe?.pictures && recipe.pictures.length > 0 ? pictureUrl($serverUrl, recipe.pictures[0].filename) : undefined}
 />
 {#if recipe}
-    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div class="max-w-page mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <button
                 onclick={() => goto(`/${$locale}/${recipe?.category === 'diy' ? 'diy' : 'home'}`)}
                 class="flex items-center hover:cursor-pointer text-primary hover:text-primary/80 transition-colors mb-6"
@@ -540,7 +540,7 @@
         {#if siblingVariations.length > 0}
             <div class="bg-card rounded-lg border border-border p-6 mt-8">
                 <h2 class="text-2xl font-semibold text-card-foreground mb-6">{$_('recipe.variations')}</h2>
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div class="grid grid-cols-cards gap-6">
                     {#each siblingVariations as variation (variation.id)}
                         <RecipeCard recipe={variation} />
                     {/each}
@@ -569,7 +569,7 @@
 {:else if recipe === null}
 <!--    @TODO skeleton loading-->
 {:else}
-    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div class="max-w-page mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div class="text-center">
             <h2 class="text-2xl font-semibold text-foreground mb-4">{$_('recipe.notFound')}</h2>
             <button

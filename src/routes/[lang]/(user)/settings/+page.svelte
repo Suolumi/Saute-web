@@ -181,7 +181,7 @@
     <p class="text-sm text-muted-foreground mb-4">{$_('home.resultCount', {values: {count: filteredRecipes.length}})}</p>
 {/if}
 
-<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+<div class="grid grid-cols-cards gap-6">
     {#each filteredRecipes as recipe}
         <div class="relative h-full">
             <RecipeCard {recipe} disabled={false} highlightQuery={searchTerm} />

@@ -77,7 +77,7 @@
 
 <PageMeta title={$_('settings.meta.title')} description={$_('settings.meta.description')} />
 
-<div class="max-w-5xl mx-auto px-4 py-8">
+<div class="max-w-page mx-auto px-4 py-8">
     <div class="mb-8">
         <div class="flex items-center gap-x-4">
             <button

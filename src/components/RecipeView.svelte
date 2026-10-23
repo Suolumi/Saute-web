@@ -160,7 +160,7 @@
                             <img
                                     src={pictureUrl($serverUrl, picture.filename)}
                                     alt={recipe.title || 'Recipe Title'}
-                                    class="embla__slide__img aspect-video object-cover cursor-zoom-in hover:scale-105 transition-transform duration-300"
+                                    class="embla__slide__img w-full shrink-0 max-h-[60vh] aspect-video object-cover cursor-zoom-in hover:scale-105 transition-transform duration-300"
                             />
                         {/each}
                     </div>

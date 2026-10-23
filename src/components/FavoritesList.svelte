@@ -150,7 +150,7 @@
     <p class="text-sm text-muted-foreground mb-4">{$_('home.resultCount', {values: {count: totalCount}})}</p>
 {/if}
 
-<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+<div class="grid grid-cols-cards gap-6">
     {#each recipes as recipe (recipe.id)}
         <RecipeCard {recipe} highlightQuery={searchTerm} onFavoriteChange={(favorite) => !favorite && onUnfavorited(recipe.id)} />
     {/each}

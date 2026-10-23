@@ -44,7 +44,7 @@
         <p class="text-muted-foreground">{$_('admin.unauthorized.description')}</p>
     </div>
 {:else}
-    <div class="max-w-6xl mx-auto px-4 py-6">
+    <div class="max-w-page mx-auto px-4 py-6">
         <nav class="flex gap-2 mb-6 border-b border-border">
             {#each tabs as [key, suffix] (suffix)}
                 <button

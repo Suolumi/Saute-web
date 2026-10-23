@@ -135,7 +135,29 @@
     --color-sidebar-ring: var(--sidebar-ring);
 }
 
+/* Shared width of the wide pages and the header: ~85% of the viewport past laptop sizes. */
+@utility max-w-page {
+    max-width: 1280px;
+    @media (width >= 1536px) {
+        max-width: 1300px;
+    }
+    @media (width >= 1920px) {
+        max-width: 1630px;
+    }
+    @media (width >= 2560px) {
+        max-width: 2180px;
+    }
+}
+
+@utility grid-cols-cards {
+    grid-template-columns: repeat(auto-fill, minmax(min(20rem, 100%), 1fr));
+}
+
 @layer base {
+    /* Grows the whole rem-based UI on big screens: 16px up to 1512px wide, 20px from 2560px. */
+    html {
+        font-size: clamp(100%, calc(100% + (100vw - 1512px) * 4 / 1048), 125%);
+    }
     * {
         @apply border-border outline-ring/50;
     }
