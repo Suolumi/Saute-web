@@ -139,7 +139,8 @@
     }
 
     const typeColorClass = $derived(recipeTypeColors[recipe.kind] || "bg-gray-100 text-gray-800 dark:bg-gray-900/20 dark:text-gray-300");
-    const totalTime = $derived(recipe.preparation_time + recipe.cooking_time + recipe.resting_time)
+    // DIY projects only have a preparation time; older ones may still store cook/rest values.
+    const totalTime = $derived(recipe.category === 'diy' ? recipe.preparation_time : recipe.preparation_time + recipe.cooking_time + recipe.resting_time)
 </script>
 
 <div
@@ -245,7 +246,7 @@
             <span class="font-medium text-black dark:text-white">{$_('recipeCard.by')} {recipe.author?.username || 'Author Name'}</span>
         </div>
         <div class="flex items-center space-x-4">
-        {#if recipe.category !== 'diy'}
+        {#if recipe.category !== 'diy' || totalTime > 0}
         <span class="flex items-center">
           <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>

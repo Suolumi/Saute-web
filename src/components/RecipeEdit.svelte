@@ -481,8 +481,8 @@
         author: author ?? $user ?? {id: '', admin: false, username: '', picture: ''},
         quantity: previewBaseServings,
         preparation_time: Number(formData.preparation_time) || 0,
-        cooking_time: Number(formData.cooking_time) || 0,
-        resting_time: Number(formData.resting_time) || 0,
+        cooking_time: formData.category === 'diy' ? 0 : Number(formData.cooking_time) || 0,
+        resting_time: formData.category === 'diy' ? 0 : Number(formData.resting_time) || 0,
         kind: formData.kind,
         category: formData.category,
         ingredients: normalizeIngredientsForSave(formData.ingredients),
@@ -984,11 +984,11 @@
                         <Label for="servings">{t('servings.label')}</Label>
                         <Input id="servings" type="number" bind:value={formData.quantity} min={1} />
                       </div>
+                      <div>
+                        <Label for="prep-time">{t('prep.label')} ({$_('recipes.min')})</Label>
+                        <Input id="prep-time" type="number" bind:value={formData.preparation_time} min={0} />
+                      </div>
                       {#if formData.category !== 'diy'}
-                        <div>
-                          <Label for="prep-time">{$_('edit.prep.label')} ({$_('recipes.min')})</Label>
-                          <Input id="prep-time" type="number" bind:value={formData.preparation_time} min={0} />
-                        </div>
                         <div>
                           <Label for="cook-time">{t('cook.label')} ({$_('recipes.min')})</Label>
                           <Input id="cook-time" type="number" bind:value={formData.cooking_time} min={0} />

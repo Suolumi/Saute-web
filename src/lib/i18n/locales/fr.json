@@ -619,8 +619,7 @@
   "diyRecipe": {
     "ingredients": "Matériaux",
     "servings": "Quantité",
-    "cook": "Temps actif",
-    "rest": "Temps de cure",
+    "prep": "Temps nécessaire",
     "back": "Retour au DIY"
   },
   "diyEdit": {
@@ -643,11 +642,8 @@
     "servings": {
       "label": "Quantité"
     },
-    "cook": {
-      "label": "Temps actif"
-    },
-    "rest": {
-      "label": "Temps de cure"
+    "prep": {
+      "label": "Temps nécessaire"
     },
     "ingredients": {
       "name": {

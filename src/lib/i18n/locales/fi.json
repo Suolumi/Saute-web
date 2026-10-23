@@ -619,8 +619,7 @@
   "diyRecipe": {
     "ingredients": "Materiaalit",
     "servings": "Määrä",
-    "cook": "Aktiiviaika",
-    "rest": "Kypsytysaika",
+    "prep": "Aikaa kuluu",
     "back": "Takaisin DIY:hen"
   },
   "diyEdit": {
@@ -643,11 +642,8 @@
     "servings": {
       "label": "Määrä"
     },
-    "cook": {
-      "label": "Aktiiviaika"
-    },
-    "rest": {
-      "label": "Kypsytysaika"
+    "prep": {
+      "label": "Aikaa kuluu"
     },
     "ingredients": {
       "name": {

@@ -217,16 +217,18 @@
                 <div class="grid grid-cols-2 @xl:flex @xl:flex-nowrap @xl:items-center gap-3 @xl:gap-4 @3xl:gap-6 text-muted-foreground text-sm @xl:text-base">
                     <div class="flex items-center">
                         <Clock size="20" class="mr-2 text-black dark:text-current" />
-                        <span class="whitespace-nowrap">{$_('recipe.prep')}: {formatDuration(recipe.preparation_time, $_('recipes.h'), $_('recipes.min'))}</span>
+                        <span class="whitespace-nowrap">{t('prep')}: {formatDuration(recipe.preparation_time, $_('recipes.h'), $_('recipes.min'))}</span>
                     </div>
-                    <div class="flex items-center">
-                        <Flame size="20" class="mr-2 text-black dark:text-current" />
-                        <span class="whitespace-nowrap">{t('cook')}: {formatDuration(recipe.cooking_time, $_('recipes.h'), $_('recipes.min'))}</span>
-                    </div>
-                    <div class="flex items-center">
-                        <Wind size="20" class="mr-2 text-black dark:text-current" />
-                        <span class="whitespace-nowrap">{t('rest')}: {formatDuration(recipe.resting_time, $_('recipes.h'), $_('recipes.min'))}</span>
-                    </div>
+                    {#if recipe.category !== 'diy'}
+                        <div class="flex items-center">
+                            <Flame size="20" class="mr-2 text-black dark:text-current" />
+                            <span class="whitespace-nowrap">{t('cook')}: {formatDuration(recipe.cooking_time, $_('recipes.h'), $_('recipes.min'))}</span>
+                        </div>
+                        <div class="flex items-center">
+                            <Wind size="20" class="mr-2 text-black dark:text-current" />
+                            <span class="whitespace-nowrap">{t('rest')}: {formatDuration(recipe.resting_time, $_('recipes.h'), $_('recipes.min'))}</span>
+                        </div>
+                    {/if}
                     <div class="flex items-center">
                         <Users size="20" class="mr-2 text-black dark:text-current" />
                         <span class="whitespace-nowrap mr-2">{t('servings')}:</span>
