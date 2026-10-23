@@ -918,7 +918,6 @@
       "title": "Palaute",
       "pendingBadge": "{count, plural, one {# uusi palaute} other {# uutta palautetta}}",
       "tabs": {
-        "new": "Uudet",
         "open": "Avoimet",
         "done": "Tehdyt",
         "declined": "Hylätyt",

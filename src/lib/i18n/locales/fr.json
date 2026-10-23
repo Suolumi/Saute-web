@@ -918,7 +918,6 @@
       "title": "Retours",
       "pendingBadge": "{count, plural, one {# nouveau retour} other {# nouveaux retours}}",
       "tabs": {
-        "new": "Nouveaux",
         "open": "Ouverts",
         "done": "Faits",
         "declined": "Refusés",

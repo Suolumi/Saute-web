@@ -918,7 +918,6 @@
       "title": "Feedback",
       "pendingBadge": "{count, plural, one {# new feedback} other {# new feedback items}}",
       "tabs": {
-        "new": "New",
         "open": "Open",
         "done": "Done",
         "declined": "Declined",

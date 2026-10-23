@@ -5,7 +5,7 @@
     import {pictureUrl, toastError, toastSuccess} from "$lib/utils";
     import {
         adminListFeedback, adminMarkFeedbackSeen, adminSetFeedbackStatus, deleteFeedback, feedbackLinkLabel,
-        refreshPendingFeedbackCount, relativeTime, type Feedback, type FeedbackAdminTab, type FeedbackStatus, type FeedbackTranslation
+        pendingFeedbackCount, refreshPendingFeedbackCount, relativeTime, type Feedback, type FeedbackAdminTab, type FeedbackStatus, type FeedbackTranslation
     } from "$lib/feedback";
     import Button from "../../../../../components/Button.svelte";
     import Modal from "../../../../../components/Modal.svelte";
@@ -13,9 +13,9 @@
     import FeedbackTranslateButton from "../../../../../components/FeedbackTranslateButton.svelte";
 
     const PAGE_SIZE = 20;
-    const TABS: FeedbackAdminTab[] = ['new', 'open', 'done', 'declined', 'all'];
+    const TABS: FeedbackAdminTab[] = ['open', 'done', 'declined', 'all'];
 
-    let tab = $state<FeedbackAdminTab>('new');
+    let tab = $state<FeedbackAdminTab>('open');
     let counts = $state<Record<FeedbackAdminTab, number>>({new: 0, open: 0, done: 0, declined: 0, all: 0});
     let items = $state<Feedback[]>([]);
     let total = $state(0);
@@ -115,7 +115,10 @@
                     class="-mb-px flex h-11 items-center gap-2 border-b-2 px-3.5 text-sm transition-colors hover:cursor-pointer {tab === name ? 'border-primary font-semibold text-primary' : 'border-transparent font-medium text-muted-foreground hover:text-foreground'}"
             >
                 {$_(`admin.feedback.tabs.${name}`)}
-                <span class="rounded-full px-1.5 py-0.5 text-xs font-bold leading-none {name === 'new' && counts.new > 0 ? 'bg-destructive text-destructive-foreground' : 'bg-muted text-foreground'}">{counts[name]}</span>
+                <span class="rounded-full bg-muted px-1.5 py-0.5 text-xs font-bold leading-none text-foreground">{counts[name]}</span>
+                {#if (name === 'open' || name === 'all') && $pendingFeedbackCount > 0}
+                    <span class="h-2 w-2 rounded-full bg-destructive" title={$_('admin.feedback.pendingBadge', {values: {count: $pendingFeedbackCount}})}></span>
+                {/if}
             </button>
         {/each}
     </div>
