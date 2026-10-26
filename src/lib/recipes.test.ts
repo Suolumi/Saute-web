@@ -101,7 +101,7 @@ describe('normalizeIngredientsForSave', () => {
 describe('sameRecipeForm', () => {
     const form = (title: string, resolved?: string): RecipeForm => ({
         title, description: '', quantity: 4, kind: 'dish', category: 'food',
-        preparation_time: 0, cooking_time: 0, resting_time: 0, steps: [], pictures: [],
+        preparation_time: 0, cooking_time: 0, resting_time: 0, steps: [], tags: [], pictures: [],
         ingredients: [{name: '', quantity: 1, unit: '', label: '', recipe_ref: 'r1', resolved_ref_title: resolved}],
     });
 

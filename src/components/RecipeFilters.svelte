@@ -1,10 +1,12 @@
 <script lang="ts">
     import {searchUsers, type User as AuthorUser} from "$lib/user";
     import {serverUrl} from "$lib/stores";
-    import {recipeTypeColors, RecipeTypes, TIME_PRESETS, type RecipeType, type TimePreset} from "$lib/recipes";
-    import {_} from 'svelte-i18n';
-    import {Search, SlidersHorizontal, ChevronDown, User, X, Flame} from '@lucide/svelte';
+    import {recipeTypeColors, RecipeTypes, TIME_PRESETS, type RecipeCategory, type RecipeType, type TimePreset} from "$lib/recipes";
+    import {tagLabel, tags as allTags, tagsForCategory} from "$lib/tags";
+    import {_, locale} from 'svelte-i18n';
+    import {Search, SlidersHorizontal, ChevronDown, User, X, Flame, Tag} from '@lucide/svelte';
     import HighlightText from './HighlightText.svelte';
+    import TagFilter from './TagFilter.svelte';
 
     interface Props {
         searchTerm: string;
@@ -32,6 +34,12 @@
         // someone else's recipes while still showing owner-only actions (edit/
         // remove/link) that only work on the caller's own.
         showAuthor?: boolean;
+        // tags are filter tag slugs a recipe must all carry; the Tags panel
+        // (shown only with showTags) offers the ones that apply to
+        // tagCategory.
+        tags?: string[];
+        showTags?: boolean;
+        tagCategory?: RecipeCategory;
         searchPlaceholder: string;
         ingredientsLabel: string;
         ingredientsPlaceholder: string;
@@ -48,12 +56,17 @@
         showKind = true,
         showTime = true,
         showAuthor = true,
+        tags = $bindable([]),
+        showTags = false,
+        tagCategory = 'food',
         searchPlaceholder,
         ingredientsLabel,
         ingredientsPlaceholder,
     }: Props = $props();
 
     let filtersOpen = $state(false);
+    let tagsOpen = $state(false);
+    const hasTags = $derived(showTags && tagsForCategory($allTags, tagCategory).length > 0);
     let selectedAuthorUser: AuthorUser | undefined = $state(undefined);
     let authorSuggestions: AuthorUser[] = $state([]);
     let showAuthorSuggestions = $state(false);
@@ -62,7 +75,7 @@
     let ingredientInput = $state('');
 
     const hasActiveFilters = $derived(
-        (showKind && selectedType !== 'all') || (showAuthor && author.length > 0) || ingredients.length > 0 || (showTime && timeTarget !== 'any') || popular
+        (showKind && selectedType !== 'all') || (showAuthor && author.length > 0) || ingredients.length > 0 || (showTime && timeTarget !== 'any') || popular || tags.length > 0
     );
 
     function togglePopular() {
@@ -125,6 +138,7 @@
         if (showTime)
             timeTarget = 'any'
         popular = false
+        tags = []
     }
 
     $effect(() => {
@@ -185,6 +199,19 @@
             {$_('home.mostPopular')}
         </button>
 
+        {#if hasTags}
+            <button
+                    type="button"
+                    onclick={() => tagsOpen = !tagsOpen}
+                    class="flex items-center justify-center gap-2 px-4 py-3 rounded-lg border text-sm font-medium whitespace-nowrap transition-colors
+                        {tagsOpen ? 'border-primary text-primary bg-background' : 'border-border text-foreground bg-background hover:bg-accent hover:text-accent-foreground'}"
+            >
+                <Tag class="w-4 h-4" />
+                {$_('tags.filter')}{tags.length > 0 ? ` (${tags.length})` : ''}
+                <ChevronDown class="w-4 h-4 transition-transform {tagsOpen ? 'rotate-180' : ''}" />
+            </button>
+        {/if}
+
         <button
                 type="button"
                 onclick={() => filtersOpen = !filtersOpen}
@@ -211,6 +238,12 @@
                     {type.label}
                 </button>
             {/each}
+        </div>
+    {/if}
+
+    {#if tagsOpen && hasTags}
+        <div class="mt-4 pt-4 border-t border-border">
+            <TagFilter bind:selected={tags} category={tagCategory} />
         </div>
     {/if}
 
@@ -370,6 +403,16 @@
             <span class="inline-flex items-center gap-1.5 pl-3 pr-2 py-1.5 rounded-full bg-card border border-border text-sm text-foreground">
                 {ingredient}
                 <button type="button" onclick={() => removeIngredient(ingredient)} class="p-1.5 -m-1.5 text-muted-foreground hover:text-foreground">
+                    <X class="w-3.5 h-3.5" />
+                </button>
+            </span>
+        {/each}
+        {#each tags as slug (slug)}
+            {@const tag = $allTags.get(slug)}
+            <span class="inline-flex items-center gap-1.5 pl-3 pr-2 py-1.5 rounded-full bg-card border border-border text-sm text-foreground">
+                <Tag class="w-3.5 h-3.5" />
+                {tag ? tagLabel(tag, $locale) : slug}
+                <button type="button" onclick={() => tags = tags.filter(t => t !== slug)} class="p-1.5 -m-1.5 text-muted-foreground hover:text-foreground">
                     <X class="w-3.5 h-3.5" />
                 </button>
             </span>

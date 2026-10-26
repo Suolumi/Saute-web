@@ -1,4 +1,5 @@
 <script lang="ts">
+    import TagBadges from "./TagBadges.svelte";
     import type {Snippet} from "svelte";
     import {_, locale} from "svelte-i18n";
     import emblaCarouselSvelte from "embla-carousel-svelte";
@@ -194,6 +195,12 @@
                     {$_('recipe.variationBanner')}
                     <a href={`/${$locale}/recipes/${recipe.variation_of}`} class="text-primary hover:underline font-medium">{$_('recipe.viewOriginal')}</a>
                 </p>
+            {/if}
+
+            {#if recipe.tags?.length}
+                <div class="mb-4">
+                    <TagBadges slugs={recipe.tags} />
+                </div>
             {/if}
 
             <p class="text-xl text-muted-foreground mb-6 text-pretty whitespace-pre-line">{recipe.description}</p>

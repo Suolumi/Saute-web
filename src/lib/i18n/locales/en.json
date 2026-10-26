@@ -685,11 +685,45 @@
     }
   },
   "admin": {
+    "tags": {
+      "intro": "Tags authors can put on recipes. Recipes store implied tags too, so filtering on one includes recipes carrying a tag that implies it.",
+      "new": "New tag",
+      "editTitle": "Edit tag",
+      "edit": "Edit",
+      "delete": "Delete",
+      "save": "Save",
+      "cancel": "Cancel",
+      "empty": "No tags yet.",
+      "slug": "Slug",
+      "slugHint": "Lowercase letters, digits and hyphens. Recipes store it, so it can't change later.",
+      "group": "Group",
+      "categories": "Applies to",
+      "category": {
+        "food": "Recipes",
+        "diy": "DIY"
+      },
+      "labels": "Labels",
+      "labelsHint": "Leave a language blank to machine-translate it from the source label.",
+      "source": "Source",
+      "implies": "Implies",
+      "impliesHint": "Recipes with this tag automatically get these too. Adding one updates existing recipes.",
+      "impliesList": "implies",
+      "noImpliable": "No other tag applies to the same categories.",
+      "created": "Tag created",
+      "updated": "Tag updated",
+      "deleted": "Tag deleted",
+      "backfilled": "Tag updated, {count} recipes gained the new implied tags",
+      "saveError": "Could not save the tag",
+      "deleteError": "Could not delete the tag",
+      "confirmDeleteTitle": "Delete tag?",
+      "confirmDeleteDescription": "Delete \"{name}\"? This only works while no recipe carries it and no other tag implies it."
+    },
     "unauthorized": {
       "title": "Not authorized",
       "description": "You don't have access to the back-office."
     },
     "nav": {
+      "tags": "Tags",
       "dashboard": "Dashboard",
       "users": "Users",
       "recipes": "Recipes",
@@ -855,6 +889,7 @@
       "filterPlaceholder": "Filter actions…",
       "none": "No matching actions",
       "categories": {
+        "tags": "Tags",
         "users": "Users",
         "recipes": "Recipes",
         "translations": "Translations",
@@ -986,6 +1021,10 @@
       "integrations": { "title": "Integrations" }
     },
     "items": {
+      "tags": {
+        "title": "Diet & Practical Tags",
+        "description": "Recipes carry tags like vegan, gluten-free or one-pot. Filter by them with the Tags button on the recipe list or in the meal planner's recipe picker; a family shows up when its original or one of its variations has every tag you picked."
+      },
       "variations": {
         "title": "Recipe Variations",
         "description": "Cooked someone else's recipe your own way? Hit \"Submit a variation\" on that recipe's page, and it shows up alongside the original instead of as a brand-new post."
@@ -1051,6 +1090,18 @@
         "description": "Recipes show a best-effort nutrition estimate (calories, protein, carbs, fat, salt, sugar) that scales with the servings stepper, computed from ingredients confidently matched to a curated food database. It always shows how many ingredients were counted, never a partial total presented as exact — any signed-in user can help it improve, either while authoring a recipe or right from a recipe's own Nutrition panel whenever it explains that something wasn't counted."
       }
     }
+  },
+  "tags": {
+    "filter": "Tags",
+    "groups": {
+      "diet": "Diet",
+      "practical": "Practical"
+    },
+    "showMore": "Show {count} more tags",
+    "variationMatches": "{title} matches your tags",
+    "editLabel": "Tags",
+    "editHint": "Pick what applies. Ticking a tag also ticks the ones it implies (vegan includes vegetarian).",
+    "lockedHint": "Implied by another tag you picked"
   },
   "shoppingList": {
     "navButton": "Shopping List",

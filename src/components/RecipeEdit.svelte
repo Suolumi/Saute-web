@@ -28,10 +28,12 @@
     import DuplicateNudge from "./DuplicateNudge.svelte";
     import NutritionLinkSuggestion from "./NutritionLinkSuggestion.svelte";
     import Checkbox from "./Checkbox.svelte";
+    import TagPicker from "./TagPicker.svelte";
     import {createRecipeCache, editRecipeCache, serverUrl, user} from "$lib/stores";
     import {untrack, onMount} from "svelte";
     import {_} from 'svelte-i18n'
     import {toastError, pictureUrl} from "$lib/utils";
+    import {tags as allTags, tagsForCategory} from "$lib/tags";
     import {getUnitAliases, type IngredientNutritionLink} from "$lib/nutrition";
     import {loadNutritionReferenceData, withLink, type LoadedNutritionReferenceData} from "$lib/nutritionCompute";
     import RecipeNutritionPanel from "./RecipeNutritionPanel.svelte";
@@ -150,6 +152,7 @@
     let draftBase: RecipeForm | undefined = $state(undefined);
     let formData = $state<RecipeForm>(getRecipe(recipe));
     let pendingPictures = $state<{file: File, url: string}[]>([])
+    const hasCategoryTags = $derived(tagsForCategory($allTags, formData.category).length > 0);
 
     // --- Step editing --------------------------------------------------------
     // Steps carry no server-side identity, but drag-reorder and per-step pending
@@ -221,6 +224,7 @@
             ...data,
             ingredients: (data.ingredients ?? []).map(ingredient => ({...ingredient, label: ingredient.label ?? '', ref_label: ingredient.ref_label ?? ''})),
             steps: data.steps ?? [],
+            tags: data.tags ?? [],
             pictures: data.pictures ?? [],
         }
     }
@@ -251,6 +255,7 @@
             resting_time: 0,
             ingredients: [],
             steps: [],
+            tags: [],
             pictures: []
         }
 
@@ -486,6 +491,7 @@
         kind: formData.kind,
         category: formData.category,
         ingredients: normalizeIngredientsForSave(formData.ingredients),
+        tags: formData.tags,
         steps: stepRows.filter(row => !isEmptyStep(row)).map(row => {
             const picture = stepPictureSrc(row);
             return {
@@ -999,6 +1005,13 @@
                         </div>
                       {/if}
                     </div>
+                    {#if hasCategoryTags}
+                      <div>
+                        <p class="text-sm font-medium text-foreground mb-1">{$_('tags.editLabel')}</p>
+                        <p class="text-sm text-muted-foreground mb-3">{$_('tags.editHint')}</p>
+                        <TagPicker bind:selected={formData.tags} category={formData.category} />
+                      </div>
+                    {/if}
                   </div>
                 {/if}
 

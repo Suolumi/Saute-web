@@ -41,6 +41,7 @@
             resting_time: source.resting_time,
             ingredients: source.ingredients,
             steps: source.steps,
+            tags: source.tags ?? [],
             pictures: pictures.map(p => p.filename),
         }
     }

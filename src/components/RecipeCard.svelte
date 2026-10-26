@@ -3,7 +3,7 @@
     import {goto} from "$app/navigation";
     import type {RecipePreview} from "$lib/recipes";
     import emblaCarouselSvelte from "embla-carousel-svelte";
-    import {ArrowLeft, ArrowRight, Heart, Plus} from "@lucide/svelte";
+    import {ArrowLeft, ArrowRight, CornerDownRight, Heart, Plus} from "@lucide/svelte";
     import {serverUrl, user} from "$lib/stores";
     import {locale, _} from "svelte-i18n";
     import {toastError, pictureUrl} from "$lib/utils";
@@ -11,6 +11,7 @@
     import Modal from "./Modal.svelte";
     import RecipeCard from "./RecipeCard.svelte";
     import HighlightText from "./HighlightText.svelte";
+    import TagBadges from "./TagBadges.svelte";
 
     // suppressPicker forces a direct navigation on click, bypassing the
     // variation picker below - used for cards rendered inside the picker
@@ -45,6 +46,12 @@
 
     function viewRecipe(id: string) {
         goto(`/${$locale}/recipes/${id}`);
+    }
+
+    function viewTagMatch(e: MouseEvent | KeyboardEvent, id: string) {
+        e.stopPropagation();
+        if (!disabled)
+            viewRecipe(id);
     }
 
     // A root with variations opens a picker instead of navigating straight
@@ -228,6 +235,24 @@
         </div>
 
         <p class="text-muted-foreground mb-4 text-pretty whitespace-pre-line">{recipe.description ? (truncateDescription && recipe.description.length > 200 ? recipe.description.slice(0, 200) + '...' : recipe.description) : $_('recipeCard.description')}</p>
+
+        <TagBadges slugs={recipe.tags} max={2} />
+
+        {#if recipe.tag_matches && recipe.tag_matches.length > 0}
+            <div class="mt-3 flex flex-col gap-1 text-sm">
+                {#each recipe.tag_matches as match (match.id)}
+                    <button
+                            type="button"
+                            onclick={(e) => viewTagMatch(e, match.id)}
+                            onkeydown={(e) => e.key === 'Enter' && viewTagMatch(e, match.id)}
+                            class="inline-flex items-center gap-1.5 text-left text-primary hover:underline"
+                    >
+                        <CornerDownRight class="w-4 h-4 flex-none" />
+                        <span>{$_('tags.variationMatches', {values: {title: match.title}})}</span>
+                    </button>
+                {/each}
+            </div>
+        {/if}
 
     </div>
     <div class="px-6 pb-6 flex items-center justify-between text-sm text-muted-foreground">

@@ -8,10 +8,12 @@
     import {getSelf} from "$lib/user";
     import {SvelteToast} from "@zerodevx/svelte-toast";
     import {locale} from "svelte-i18n";
+    import {loadTags} from "$lib/tags";
 
 	let { children } = $props();
 
 	onMount(() => {
+		loadTags()
 		if (window.location.pathname === "/")
 			goto(`/${$locale ?? 'en'}/home`)
 	})

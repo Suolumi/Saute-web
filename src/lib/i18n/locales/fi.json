@@ -685,11 +685,45 @@
     }
   },
   "admin": {
+    "tags": {
+      "intro": "Tunnisteet, joita tekijät voivat lisätä resepteihin. Reseptit tallentavat myös sisältyvät tunnisteet, joten yhdellä suodattaminen löytää myös reseptit, joiden tunniste sisältää sen.",
+      "new": "Uusi tunniste",
+      "editTitle": "Muokkaa tunnistetta",
+      "edit": "Muokkaa",
+      "delete": "Poista",
+      "save": "Tallenna",
+      "cancel": "Peruuta",
+      "empty": "Ei vielä tunnisteita.",
+      "slug": "Tunnus",
+      "slugHint": "Pieniä kirjaimia, numeroita ja yhdysmerkkejä. Reseptit tallentavat sen, joten sitä ei voi myöhemmin muuttaa.",
+      "group": "Ryhmä",
+      "categories": "Koskee",
+      "category": {
+        "food": "Reseptejä",
+        "diy": "DIY"
+      },
+      "labels": "Nimet",
+      "labelsHint": "Jätä kieli tyhjäksi, niin se käännetään konekäännöksellä lähdenimestä.",
+      "source": "Lähde",
+      "implies": "Sisältää",
+      "impliesHint": "Tämän tunnisteen reseptit saavat automaattisesti myös nämä. Lisäys päivittää olemassa olevat reseptit.",
+      "impliesList": "sisältää",
+      "noImpliable": "Mikään muu tunniste ei koske samoja luokkia.",
+      "created": "Tunniste luotu",
+      "updated": "Tunniste päivitetty",
+      "deleted": "Tunniste poistettu",
+      "backfilled": "Tunniste päivitetty, {count} reseptiä sai uudet sisältyvät tunnisteet",
+      "saveError": "Tunnistetta ei voitu tallentaa",
+      "deleteError": "Tunnistetta ei voitu poistaa",
+      "confirmDeleteTitle": "Poistetaanko tunniste?",
+      "confirmDeleteDescription": "Poistetaanko \"{name}\"? Tämä onnistuu vain, jos mikään resepti ei käytä sitä eikä mikään muu tunniste sisällä sitä."
+    },
     "unauthorized": {
       "title": "Ei käyttöoikeutta",
       "description": "Sinulla ei ole pääsyä ylläpitoon."
     },
     "nav": {
+      "tags": "Tunnisteet",
       "dashboard": "Kojelauta",
       "users": "Käyttäjät",
       "recipes": "Reseptit",
@@ -855,6 +889,7 @@
       "filterPlaceholder": "Suodata toimintoja…",
       "none": "Ei vastaavia toimintoja",
       "categories": {
+        "tags": "Tunnisteet",
         "users": "Käyttäjät",
         "recipes": "Reseptit",
         "translations": "Käännökset",
@@ -986,6 +1021,10 @@
       "integrations": { "title": "Integraatiot" }
     },
     "items": {
+      "tags": {
+        "title": "Ruokavalio- ja käytännön tunnisteet",
+        "description": "Resepteillä on tunnisteita kuten vegaaninen, gluteeniton tai yhden kattilan ruoka. Suodata niillä reseptilistan Tunnisteet-painikkeesta tai ateriasuunnittelun reseptivalitsimessa; reseptiperhe näkyy, kun alkuperäisellä tai yhdellä sen muunnelmalla on kaikki valitsemasi tunnisteet."
+      },
       "variations": {
         "title": "Reseptien versiot",
         "description": "Valmistitko jonkun toisen reseptin omalla tavallasi? Käytä reseptin sivulla \"Ehdota muunnelmaa\", niin se näkyy alkuperäisen rinnalla uuden julkaisun sijaan."
@@ -1051,6 +1090,18 @@
         "description": "Reseptit näyttävät suuntaa-antavan ravintoarvion (kalorit, proteiini, hiilihydraatit, rasva, suola, sokeri), joka skaalautuu annosmäärän mukaan ja lasketaan ainesosista, jotka on varmasti yhdistetty kuratoituun ruoka-tietokantaan. Sovellus näyttää aina, kuinka monta ainesosaa laskettiin mukaan, eikä koskaan esitä osittaista summaa tarkkana - kuka tahansa kirjautunut käyttäjä voi auttaa parantamaan sitä joko linkittämällä ainesosan oikeaan tietueeseen reseptiä kirjoittaessaan, tai suoraan reseptin omasta Ravinto-paneelista, kun se selittää, ettei jotain laskettu mukaan."
       }
     }
+  },
+  "tags": {
+    "filter": "Tunnisteet",
+    "groups": {
+      "diet": "Ruokavalio",
+      "practical": "Käytännöllinen"
+    },
+    "showMore": "Näytä {count} tunnistetta lisää",
+    "variationMatches": "{title} vastaa tunnisteitasi",
+    "editLabel": "Tunnisteet",
+    "editHint": "Valitse sopivat. Tunnisteen valinta valitsee myös sen sisältämät tunnisteet (vegaaninen sisältää kasvisruoan).",
+    "lockedHint": "Sisältyy toiseen valitsemaasi tunnisteeseen"
   },
   "shoppingList": {
     "navButton": "Ostoslista",

@@ -3,7 +3,10 @@
     import Button from './Button.svelte';
     import Checkbox from './Checkbox.svelte';
     import HighlightText from './HighlightText.svelte';
-    import {getFamily, getRecipes, type RecipeCategory, type RecipePreview} from '$lib/recipes';
+    import TagFilter from './TagFilter.svelte';
+    import {getFamily, getRecipe, getRecipes, type RecipeCategory, type RecipePreview} from '$lib/recipes';
+    import {tags as allTags, tagsForCategory} from '$lib/tags';
+    import {CornerDownRight} from '@lucide/svelte';
     import {serverUrl} from '$lib/stores';
     import {locale, _} from 'svelte-i18n';
     import {toastError} from '$lib/utils';
@@ -43,16 +46,21 @@
         // its own variation-picking view instead of being added directly,
         // since each variation can have different ingredients.
         multiSelect?: boolean;
+        // tagFilter shows tag chips under the search box. A family that
+        // matches only through a variation lists that variation under it.
+        tagFilter?: boolean;
         onClose: () => void;
         onSelect?: (recipe: RecipePreview) => void;
         onConfirm?: (recipes: RecipePreview[]) => void;
     }
 
-    let {open, excludeFamily, category, title, description, flat, excludeRecipeIds, multiSelect, onClose, onSelect, onConfirm}: Props = $props();
+    let {open, excludeFamily, category, title, description, flat, excludeRecipeIds, multiSelect, tagFilter, onClose, onSelect, onConfirm}: Props = $props();
 
     const PAGE_SIZE = 20;
 
     let query = $state('');
+    let selectedTags: string[] = $state([]);
+    const showTagFilter = $derived(!!tagFilter && tagsForCategory($allTags, category).length > 0);
     let results: RecipePreview[] = $state([]);
     let loading = $state(false);
     let loadingMore = $state(false);
@@ -75,7 +83,7 @@
             loading = true;
         else
             loadingMore = true;
-        getRecipes({title: term || undefined, exclude_family: excludeFamily, category, own_recipes: flat || undefined, locale: $locale ?? undefined, search_locale: $locale ?? undefined, limit: PAGE_SIZE, offset})
+        getRecipes({title: term || undefined, tags: selectedTags.length > 0 ? selectedTags : undefined, exclude_family: excludeFamily, category, own_recipes: flat || undefined, locale: $locale ?? undefined, search_locale: $locale ?? undefined, limit: PAGE_SIZE, offset})
             .then(({response, data}) => {
                 if (id !== searchId)
                     return;
@@ -103,6 +111,7 @@
         // edit) re-triggers the search - the actual fetch happens inside
         // the debounce timeout below, whose reactive reads aren't tracked.
         $locale;
+        selectedTags;
         if (!open)
             return;
         const term = query.trim();
@@ -177,6 +186,17 @@
         } finally {
             drillLoading = false;
         }
+    }
+
+    // pickTagMatch fetches a matching variation the listing only named, so it
+    // can be picked like any other row.
+    async function pickTagMatch(id: string) {
+        const {response, data} = await getRecipe(id, $locale ?? undefined);
+        if (!response.ok || !data) {
+            toastError($_('edit.ingredients.recipePicker.error'));
+            return;
+        }
+        handleRowClick({...data, pictures: data.pictures.map(p => p.filename)});
     }
 
     function closeDrill() {
@@ -254,6 +274,11 @@
             placeholder={$_('edit.ingredients.recipePicker.searchPlaceholder')}
             class="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring"
     />
+    {#if showTagFilter}
+        <div class="mt-3">
+            <TagFilter bind:selected={selectedTags} category={category ?? 'food'} />
+        </div>
+    {/if}
     <div class="mt-3 max-h-[50vh] overflow-y-auto flex flex-col gap-1">
         {#if loading}
             <div class="py-8 text-center text-muted-foreground">…</div>
@@ -261,7 +286,21 @@
             <div class="py-8 text-center text-muted-foreground">{$_('edit.ingredients.recipePicker.noResults')}</div>
         {:else}
             {#each results.filter(r => !excluded.has(r.id)) as recipe (recipe.id)}
-                {@render recipeRow(recipe, {selectable: true, isSelected: isSelected(recipe), onClick: () => handleRowClick(recipe)})}
+                {#if recipe.tag_matches?.length}
+                    <p class="px-2 pt-1 text-xs text-muted-foreground truncate">{recipe.title}</p>
+                    {#each recipe.tag_matches as match (match.id)}
+                        <button
+                                type="button"
+                                onclick={() => pickTagMatch(match.id)}
+                                class="flex items-center gap-2 rounded-lg p-2 pl-4 text-left text-sm hover:bg-muted hover:cursor-pointer"
+                        >
+                            <CornerDownRight class="w-4 h-4 flex-none text-muted-foreground" />
+                            <span class="font-medium text-card-foreground truncate">{match.title}</span>
+                        </button>
+                    {/each}
+                {:else}
+                    {@render recipeRow(recipe, {selectable: true, isSelected: isSelected(recipe), onClick: () => handleRowClick(recipe)})}
+                {/if}
             {/each}
             {#if searched && hasMore}
                 <div bind:this={resultsSentinel} class="h-1"></div>

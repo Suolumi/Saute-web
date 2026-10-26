@@ -24,6 +24,7 @@
         ['admin.nav.diy', '/diy'],
         ['admin.nav.translations', '/translations'],
         ['admin.nav.nutrition', '/nutrition'],
+        ['admin.nav.tags', '/tags'],
         ['admin.nav.feedback', '/feedback'],
         ['admin.nav.mail', '/mail'],
         ['admin.nav.console', '/console'],

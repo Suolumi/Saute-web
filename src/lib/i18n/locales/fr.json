@@ -685,11 +685,45 @@
     }
   },
   "admin": {
+    "tags": {
+      "intro": "Étiquettes que les auteurs peuvent mettre sur leurs recettes. Les recettes stockent aussi les étiquettes impliquées, donc filtrer sur l'une inclut les recettes portant une étiquette qui l'implique.",
+      "new": "Nouvelle étiquette",
+      "editTitle": "Modifier l'étiquette",
+      "edit": "Modifier",
+      "delete": "Supprimer",
+      "save": "Enregistrer",
+      "cancel": "Annuler",
+      "empty": "Aucune étiquette pour l'instant.",
+      "slug": "Identifiant",
+      "slugHint": "Lettres minuscules, chiffres et tirets. Les recettes le stockent, il ne peut donc plus changer.",
+      "group": "Groupe",
+      "categories": "S'applique à",
+      "category": {
+        "food": "Recettes",
+        "diy": "Fait maison"
+      },
+      "labels": "Libellés",
+      "labelsHint": "Laissez une langue vide pour la traduire automatiquement depuis le libellé source.",
+      "source": "Source",
+      "implies": "Implique",
+      "impliesHint": "Les recettes avec cette étiquette reçoivent aussi celles-ci. En ajouter une met à jour les recettes existantes.",
+      "impliesList": "implique",
+      "noImpliable": "Aucune autre étiquette ne s'applique aux mêmes catégories.",
+      "created": "Étiquette créée",
+      "updated": "Étiquette mise à jour",
+      "deleted": "Étiquette supprimée",
+      "backfilled": "Étiquette mise à jour, {count} recettes ont reçu les nouvelles étiquettes impliquées",
+      "saveError": "Impossible d'enregistrer l'étiquette",
+      "deleteError": "Impossible de supprimer l'étiquette",
+      "confirmDeleteTitle": "Supprimer l'étiquette ?",
+      "confirmDeleteDescription": "Supprimer « {name} » ? Ce n'est possible que si aucune recette ne la porte et qu'aucune autre étiquette ne l'implique."
+    },
     "unauthorized": {
       "title": "Non autorisé",
       "description": "Vous n'avez pas accès à l'administration."
     },
     "nav": {
+      "tags": "Étiquettes",
       "dashboard": "Tableau de bord",
       "users": "Utilisateurs",
       "recipes": "Recettes",
@@ -855,6 +889,7 @@
       "filterPlaceholder": "Filtrer les actions…",
       "none": "Aucune action correspondante",
       "categories": {
+        "tags": "Étiquettes",
         "users": "Utilisateurs",
         "recipes": "Recettes",
         "translations": "Traductions",
@@ -986,6 +1021,10 @@
       "integrations": { "title": "Intégrations" }
     },
     "items": {
+      "tags": {
+        "title": "Étiquettes régime et pratiques",
+        "description": "Les recettes portent des étiquettes comme végan, sans gluten ou plat unique. Filtrez avec le bouton Étiquettes de la liste des recettes ou dans le sélecteur de recettes du planning des repas ; une famille apparaît quand l'original ou l'une de ses variantes porte toutes les étiquettes choisies."
+      },
       "variations": {
         "title": "Variations de recette",
         "description": "Vous avez cuisiné la recette de quelqu'un d'autre à votre façon ? Utilisez « Proposer une variante » sur la page de cette recette : elle apparaîtra aux côtés de l'originale plutôt que comme une nouvelle publication."
@@ -1051,6 +1090,18 @@
         "description": "Les recettes affichent une estimation nutritionnelle indicative (calories, protéines, glucides, lipides, sel, sucres) qui s'ajuste avec le nombre de portions, calculée à partir des ingrédients associés avec confiance à une base alimentaire de référence. Le nombre d'ingrédients pris en compte est toujours affiché, jamais un total partiel présenté comme exact — tout utilisateur connecté peut aider à l'améliorer, en liant un ingrédient à la bonne entrée pendant la rédaction d'une recette, ou directement depuis le panneau Nutrition d'une recette lorsqu'il explique que quelque chose n'a pas été comptabilisé."
       }
     }
+  },
+  "tags": {
+    "filter": "Étiquettes",
+    "groups": {
+      "diet": "Régime",
+      "practical": "Pratique"
+    },
+    "showMore": "Afficher {count} étiquettes de plus",
+    "variationMatches": "{title} correspond à vos étiquettes",
+    "editLabel": "Étiquettes",
+    "editHint": "Choisissez celles qui s'appliquent. Cocher une étiquette coche aussi celles qu'elle implique (végan inclut végétarien).",
+    "lockedHint": "Impliquée par une autre étiquette choisie"
   },
   "shoppingList": {
     "navButton": "Liste de courses",

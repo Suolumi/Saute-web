@@ -1,5 +1,6 @@
 import type {User} from "$lib/user";
 import {apiFetchJson} from "$lib/api";
+import type {TagMatch} from "$lib/tags";
 
 type FetchFn = typeof fetch;
 
@@ -89,6 +90,8 @@ export type Recipe = {
     category: RecipeCategory
     ingredients: Ingredient[]
     steps: Step[]
+    // tags are tag slugs, already expanded with every implied tag.
+    tags: string[]
     pictures: RecipePicture[]
     favorite: boolean
     favorite_count: number
@@ -118,6 +121,10 @@ export type RecipePreview = {
     kind: RecipeType
     category: RecipeCategory
     pictures: string[]
+    tags: string[]
+    // tag_matches, on a tag-filtered family listing, are the variations that
+    // carry every filtered tag when the root itself doesn't.
+    tag_matches?: TagMatch[]
     favorite: boolean
     favorite_count: number
     variation_of?: string
@@ -135,6 +142,7 @@ export type RecipeForm = {
     resting_time: number
     ingredients: Ingredient[]
     steps: Step[]
+    tags: string[]
     pictures: string[]
 }
 
@@ -142,7 +150,7 @@ export type RecipeForm = {
 // edit-page draft shaped like one.
 export type RecipeViewData = Pick<Recipe,
     'title' | 'description' | 'author' | 'quantity' | 'preparation_time' | 'cooking_time' | 'resting_time' |
-    'kind' | 'category' | 'ingredients' | 'steps' | 'pictures' | 'variation_of'>
+    'kind' | 'category' | 'ingredients' | 'steps' | 'tags' | 'pictures' | 'variation_of'>
 
 // normalizeIngredientsForSave mirrors what the backend's validateRecipe
 // stores: blank rows dropped, text fields trimmed, a reference's name and a
@@ -199,6 +207,9 @@ export type GetRecipesRequest = {
     popular?: boolean
     ingredients?: string[]
     kind?: RecipeType
+    // tags keeps recipes carrying every listed tag; on a family listing, a
+    // family matches when its root or one single variation carries them all.
+    tags?: string[]
     // category, omitted, lists the food feed (server excludes diy by
     // default); pass 'diy' for the DIY browse page. Ignored by
     // variation_of/own_recipes requests, which are category-agnostic.

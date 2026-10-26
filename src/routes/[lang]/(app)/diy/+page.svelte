@@ -14,6 +14,7 @@
     let searchTerm = $state('');
     let author = $state('');
     let ingredients: string[] = $state([]);
+    let tags: string[] = $state([]);
     let popular = $state(false);
 
     let recipes: RecipePreview[] = $state([])
@@ -32,6 +33,8 @@
             request.author = author
         if (ingredients.length > 0)
             request.ingredients = ingredients
+        if (tags.length > 0)
+            request.tags = tags
         if (popular)
             request.popular = true
         request.locale = $locale ?? 'en'
@@ -71,7 +74,7 @@
     }
 
     $effect(() => {
-        searchTerm; $locale; author; ingredients; popular;
+        searchTerm; $locale; author; ingredients; tags; popular;
         untrack(() => {
             recipes = []
             hasMore = true
@@ -111,6 +114,9 @@
             bind:searchTerm
             bind:author
             bind:ingredients
+            showTags
+            bind:tags
+            tagCategory="diy"
             bind:popular
             searchPlaceholder={$_('home.search')}
             ingredientsLabel={$_('diyHome.materials')}

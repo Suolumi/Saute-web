@@ -498,6 +498,7 @@
                 open={pickerOpen}
                 title={$_('mealPlanning.pickerTitle')}
                 description={$_('mealPlanning.pickerDescription')}
+                tagFilter
                 onClose={closePicker}
                 onSelect={handlePicked}
         />

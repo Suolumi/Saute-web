@@ -41,7 +41,7 @@ export type AdminRouteParam = {
     label: string
 }
 
-export type AdminRouteCategory = 'users' | 'recipes' | 'system' | 'translations' | 'toolbox' | 'nutrition' | 'feedback'
+export type AdminRouteCategory = 'users' | 'recipes' | 'system' | 'translations' | 'toolbox' | 'nutrition' | 'feedback' | 'tags'
 
 export type AdminRouteDescriptor = {
     id: string

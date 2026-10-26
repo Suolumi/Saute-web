@@ -48,6 +48,7 @@
             // Never copy the original's pictures - they're the original
             // author's files, and a variation starts with none of its own.
             steps: source.steps.map(step => ({title: step.title, description: step.description})),
+            tags: source.tags ?? [],
             pictures: [],
         }
     }
