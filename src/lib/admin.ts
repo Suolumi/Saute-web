@@ -128,6 +128,38 @@ export function cleanupImages() {
     return apiFetchJson<CleanupImagesResult>('/admin/system/cleanup-images', 'POST')
 }
 
+// AdminMail is an announcement sent with the Sauté mail template. A blank
+// line in message starts a new paragraph; the button is optional.
+export type AdminMail = {
+    subject: string
+    heading: string
+    message: string
+    button_label?: string
+    button_url?: string
+}
+
+export type MailBroadcastStatus = {
+    running: boolean
+    subject?: string
+    total: number
+    sent: number
+    failed: { email: string, error: string }[]
+    started_at?: string
+    finished_at?: string
+}
+
+export function previewAdminMail(mail: AdminMail) {
+    return apiFetchJson<{ html: string }>('/admin/mails/preview', 'POST', mail)
+}
+
+export function sendAdminMail(mail: AdminMail, testOnly: boolean) {
+    return apiFetchJson<MailBroadcastStatus & { message?: string }>('/admin/mails/broadcast', 'POST', {...mail, test_only: testOnly})
+}
+
+export function getMailBroadcastStatus() {
+    return apiFetchJson<MailBroadcastStatus>('/admin/mails/broadcast')
+}
+
 // TranslationSuggestionView is one row in the admin review list: the
 // suggestion's own content plus its resolved recipe title/submitter
 // username, and the *current* live translation it would replace - so the

@@ -697,7 +697,38 @@
       "translations": "Traductions",
       "console": "Console",
       "nutrition": "Nutrition",
-      "feedback": "Retours"
+      "feedback": "Retours",
+      "mail": "E-mail"
+    },
+    "mail": {
+      "title": "E-mail à tous les utilisateurs",
+      "description": "Envoyez une annonce à chaque utilisateur avec le modèle d'e-mail Sauté. Chacun reçoit son propre e-mail, adressé à son nom d'utilisateur.",
+      "subject": "Objet",
+      "heading": "Titre",
+      "message": "Message",
+      "messageHint": "Texte brut. Laissez une ligne vide pour commencer un nouveau paragraphe.",
+      "buttonLabel": "Texte du bouton (facultatif)",
+      "buttonUrl": "Lien du bouton (facultatif)",
+      "preview": "Aperçu",
+      "previewEmpty": "Remplissez l'objet, le titre et le message pour voir l'e-mail tel que vous le recevrez.",
+      "sendTest": "M'envoyer un test",
+      "sending": "Envoi…",
+      "sendAll": "Envoyer à tous",
+      "testSent": "E-mail de test envoyé à votre adresse",
+      "started": "Envoi lancé",
+      "confirmTitle": "Envoyer à tous les utilisateurs ?",
+      "confirmDescription": "« {subject} » sera envoyé à {count, plural, one {# utilisateur} other {# utilisateurs}}. Impossible d'annuler.",
+      "confirmDescriptionUnknown": "« {subject} » sera envoyé à tous les utilisateurs. Impossible d'annuler.",
+      "confirmSend": "Envoyer",
+      "cancel": "Annuler",
+      "statusRunning": "Envoi en cours",
+      "statusLast": "Dernier envoi",
+      "progress": "{sent} envoyé(s), {failed} en échec, sur {total}",
+      "failures": "{count, plural, one {# destinataire en échec} other {# destinataires en échec}}",
+      "errors": {
+        "preview": "Impossible d'afficher l'aperçu",
+        "send": "Impossible d'envoyer l'e-mail"
+      }
     },
     "errors": {
       "loadStats": "Impossible de charger les statistiques",

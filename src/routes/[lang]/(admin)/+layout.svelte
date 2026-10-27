@@ -25,6 +25,7 @@
         ['admin.nav.translations', '/translations'],
         ['admin.nav.nutrition', '/nutrition'],
         ['admin.nav.feedback', '/feedback'],
+        ['admin.nav.mail', '/mail'],
         ['admin.nav.console', '/console'],
     ] as const;
 

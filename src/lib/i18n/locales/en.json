@@ -697,7 +697,38 @@
       "translations": "Translations",
       "console": "Console",
       "nutrition": "Nutrition",
-      "feedback": "Feedback"
+      "feedback": "Feedback",
+      "mail": "Mail"
+    },
+    "mail": {
+      "title": "Mail all users",
+      "description": "Send an announcement to every user with the Sauté mail template. Each user gets their own mail, greeted by username.",
+      "subject": "Subject",
+      "heading": "Heading",
+      "message": "Message",
+      "messageHint": "Plain text. Leave a blank line to start a new paragraph.",
+      "buttonLabel": "Button label (optional)",
+      "buttonUrl": "Button link (optional)",
+      "preview": "Preview",
+      "previewEmpty": "Fill in the subject, heading and message to see the mail as you'll receive it.",
+      "sendTest": "Send me a test",
+      "sending": "Sending…",
+      "sendAll": "Send to all users",
+      "testSent": "Test mail sent to your address",
+      "started": "Sending started",
+      "confirmTitle": "Send to every user?",
+      "confirmDescription": "“{subject}” will be mailed to {count, plural, one {# user} other {# users}}. This can't be undone.",
+      "confirmDescriptionUnknown": "“{subject}” will be mailed to every user. This can't be undone.",
+      "confirmSend": "Send",
+      "cancel": "Cancel",
+      "statusRunning": "Sending",
+      "statusLast": "Last broadcast",
+      "progress": "{sent} sent, {failed} failed, out of {total}",
+      "failures": "{count, plural, one {# failed recipient} other {# failed recipients}}",
+      "errors": {
+        "preview": "Could not render the preview",
+        "send": "Could not send the mail"
+      }
     },
     "errors": {
       "loadStats": "Couldn't load stats",

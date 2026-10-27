@@ -697,7 +697,38 @@
       "translations": "Käännökset",
       "console": "Konsoli",
       "nutrition": "Ravinto",
-      "feedback": "Palaute"
+      "feedback": "Palaute",
+      "mail": "Sähköposti"
+    },
+    "mail": {
+      "title": "Sähköposti kaikille käyttäjille",
+      "description": "Lähetä tiedote jokaiselle käyttäjälle Sauté-sähköpostipohjalla. Jokainen saa oman viestinsä käyttäjänimellään tervehdittynä.",
+      "subject": "Aihe",
+      "heading": "Otsikko",
+      "message": "Viesti",
+      "messageHint": "Pelkkää tekstiä. Jätä tyhjä rivi aloittaaksesi uuden kappaleen.",
+      "buttonLabel": "Painikkeen teksti (valinnainen)",
+      "buttonUrl": "Painikkeen linkki (valinnainen)",
+      "preview": "Esikatselu",
+      "previewEmpty": "Täytä aihe, otsikko ja viesti nähdäksesi viestin sellaisena kuin saat sen.",
+      "sendTest": "Lähetä testi itselleni",
+      "sending": "Lähetetään…",
+      "sendAll": "Lähetä kaikille",
+      "testSent": "Testiviesti lähetetty osoitteeseesi",
+      "started": "Lähetys aloitettu",
+      "confirmTitle": "Lähetetäänkö kaikille käyttäjille?",
+      "confirmDescription": "”{subject}” lähetetään {count, plural, one {# käyttäjälle} other {# käyttäjälle}}. Tätä ei voi perua.",
+      "confirmDescriptionUnknown": "”{subject}” lähetetään kaikille käyttäjille. Tätä ei voi perua.",
+      "confirmSend": "Lähetä",
+      "cancel": "Peruuta",
+      "statusRunning": "Lähetetään",
+      "statusLast": "Viimeisin lähetys",
+      "progress": "{sent} lähetetty, {failed} epäonnistui, yhteensä {total}",
+      "failures": "{count, plural, one {# vastaanottaja epäonnistui} other {# vastaanottajaa epäonnistui}}",
+      "errors": {
+        "preview": "Esikatselua ei voitu näyttää",
+        "send": "Viestiä ei voitu lähettää"
+      }
     },
     "errors": {
       "loadStats": "Tilastojen lataaminen epäonnistui",
