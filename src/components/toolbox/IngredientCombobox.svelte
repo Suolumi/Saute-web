@@ -1,5 +1,5 @@
 <script lang="ts">
-    import {_} from "svelte-i18n";
+    import {_, locale} from "svelte-i18n";
     import HighlightText from '../HighlightText.svelte';
     import {normalizeForMatch} from '$lib/highlight';
 
@@ -47,9 +47,11 @@
     // burying short, highly-relevant results behind longer names that merely
     // contain the query. Ties within a rank go to the shorter name, then
     // alphabetically.
+    // Collated in the UI locale so Chinese names sort by pinyin.
+    const collator = $derived(new Intl.Collator($locale ?? undefined));
     const filtered = $derived.by(() => {
         const q = query.trim();
-        if (q.length === 0) return ingredients;
+        if (q.length === 0) return [...ingredients].sort((a, b) => collator.compare(a.name, b.name));
         const normalizedQuery = normalizeForMatch(q);
         return ingredients
             .filter(i => (normalizedNames.get(i.id) ?? '').includes(normalizedQuery))
@@ -58,7 +60,7 @@
                 const tierB = (normalizedNames.get(b.id) ?? '').startsWith(normalizedQuery) ? 0 : 1;
                 if (tierA !== tierB) return tierA - tierB;
                 if (a.name.length !== b.name.length) return a.name.length - b.name.length;
-                return a.name.localeCompare(b.name);
+                return collator.compare(a.name, b.name);
             });
     });
 

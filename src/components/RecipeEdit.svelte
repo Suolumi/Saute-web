@@ -31,7 +31,7 @@
     import TagPicker from "./TagPicker.svelte";
     import {createRecipeCache, editRecipeCache, serverUrl, user} from "$lib/stores";
     import {untrack, onMount} from "svelte";
-    import {_} from 'svelte-i18n'
+    import {_, locale} from 'svelte-i18n'
     import {toastError, pictureUrl} from "$lib/utils";
     import {tags as allTags, tagsForCategory} from "$lib/tags";
     import {getUnitAliases, type IngredientNutritionLink} from "$lib/nutrition";
@@ -89,7 +89,7 @@
     let nutritionReference: LoadedNutritionReferenceData | null = $state(null);
     let nutritionReferenceFailed = $state(false);
     onMount(() => {
-        loadNutritionReferenceData().then(data => {
+        loadNutritionReferenceData($locale).then(data => {
             nutritionReference = data;
             nutritionReferenceFailed = data === null;
         });

@@ -192,15 +192,33 @@ export function feedbackLinkLabel(path: string, recipeTitle: string | undefined,
     return key ? t(key) : path
 }
 
-// similarFeedback returns the open items sharing a significant word (4+
-// letters, case/accent-folded) with title, most shared words first.
+// significantWords splits text into case/accent-folded words of 4+ letters.
+// Chinese has no spaces, so each run of Han characters yields its character
+// pairs instead ("番茄汤" -> "番茄", "茄汤").
+function significantWords(text: string): Set<string> {
+    const words = new Set<string>()
+    for (const word of normalizeForMatch(text).split(/[^\p{L}\p{N}]+/u)) {
+        for (const run of word.match(/\p{Script=Han}+|[^\p{Script=Han}]+/gu) ?? []) {
+            if (/\p{Script=Han}/u.test(run)) {
+                const chars = [...run]
+                for (let i = 0; i + 1 < chars.length; i++) words.add(chars[i] + chars[i + 1])
+            } else if (run.length >= 4) {
+                words.add(run)
+            }
+        }
+    }
+    return words
+}
+
+// similarFeedback returns the open items sharing a significant word (see
+// significantWords) with title, most shared words first.
 export function similarFeedback(title: string, items: Feedback[], max = 3): Feedback[] {
-    const words = new Set(normalizeForMatch(title).split(/[^\p{L}\p{N}]+/u).filter(w => w.length >= 4))
+    const words = significantWords(title)
     if (words.size === 0)
         return []
     return items
         .map(item => {
-            const itemWords = new Set(normalizeForMatch(item.title).split(/[^\p{L}\p{N}]+/u))
+            const itemWords = significantWords(item.title)
             let shared = 0
             for (const word of words)
                 if (itemWords.has(word)) shared++

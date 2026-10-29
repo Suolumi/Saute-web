@@ -1,5 +1,5 @@
 <script lang="ts">
-    import {_} from 'svelte-i18n';
+    import {_, locale} from 'svelte-i18n';
     import Button from '../../../../../components/Button.svelte';
     import Input from '../../../../../components/Input.svelte';
     import Label from '../../../../../components/Label.svelte';
@@ -118,7 +118,7 @@
     }
 
     function formatDate(iso?: string) {
-        return iso ? new Date(iso).toLocaleString() : '';
+        return iso ? new Date(iso).toLocaleString($locale ?? undefined) : '';
     }
 </script>
 

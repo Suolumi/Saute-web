@@ -42,25 +42,28 @@ type Unit = NutritionReferenceData['units'][number]
 type Link = NutritionReferenceData['links'][number]
 
 // loadNutritionReferenceData fetches every public list the computation
-// needs, in their canonical (source-locale) form. Resolves to null if any
-// request fails.
-export async function loadNutritionReferenceData(): Promise<LoadedNutritionReferenceData | null> {
+// needs, in their canonical (source-locale) form. Toolbox ingredients are
+// followed by their names in sourceLocale, the language the draft is
+// presumably written in, as the API matches densities on both. Resolves to
+// null if any request fails.
+export async function loadNutritionReferenceData(sourceLocale?: string | null): Promise<LoadedNutritionReferenceData | null> {
     let results
     try {
         results = await Promise.all([
             getToolboxUnits(), getToolboxIngredients(), getUnitAliases(), getIngredientNutritionLinks(), getNutritionIngredients(),
+            getToolboxIngredients(sourceLocale ?? null),
         ])
     } catch {
         return null
     }
-    const [units, toolboxIngredients, aliases, links, foods] = results
-    if (!units.response.ok || !toolboxIngredients.response.ok || !aliases.response.ok || !links.response.ok || !foods.response.ok)
+    const [units, toolboxIngredients, aliases, links, foods, translatedToolboxIngredients] = results
+    if (!units.response.ok || !toolboxIngredients.response.ok || !aliases.response.ok || !links.response.ok || !foods.response.ok || !translatedToolboxIngredients.response.ok)
         return null
-    if (!units.data || !toolboxIngredients.data || !aliases.data || !links.data || !foods.data)
+    if (!units.data || !toolboxIngredients.data || !aliases.data || !links.data || !foods.data || !translatedToolboxIngredients.data)
         return null
     return {
         units: units.data.items,
-        toolbox_ingredients: toolboxIngredients.data.items,
+        toolbox_ingredients: [...toolboxIngredients.data.items, ...translatedToolboxIngredients.data.items],
         unit_aliases: aliases.data.items,
         links: links.data.items,
         foods: foods.data.items,
@@ -115,7 +118,10 @@ export function computeRecipeNutrition(
     const aliasesByLower = firstByKey(data.unit_aliases, a => a.alias.toLowerCase())
     const foodsById = firstByKey(data.foods, f => f.id)
     const densityByNameLower = new Map<string, number>()
-    for (const ti of data.toolbox_ingredients) densityByNameLower.set(ti.name.toLowerCase(), ti.g_per_100ml)
+    for (const ti of data.toolbox_ingredients) {
+        const key = ti.name.toLowerCase()
+        if (!densityByNameLower.has(key)) densityByNameLower.set(key, ti.g_per_100ml)
+    }
 
     function resolveUnit(text: string): Unit | null {
         const q = text.toLowerCase()

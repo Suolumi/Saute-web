@@ -52,6 +52,13 @@ describe('similarFeedback', () => {
     it('ignores short words', () => {
         expect(similarFeedback('is it', [item('It is broken')])).toEqual([]);
     });
+
+    it('matches Chinese titles on shared character pairs', () => {
+        const items = [item('计时器不响'), item('番茄汤的翻译有错'), item('字体太小')];
+        expect(similarFeedback('计时器坏了', items).map(i => i.title)).toEqual(['计时器不响']);
+        expect(similarFeedback('番茄', items).map(i => i.title)).toEqual(['番茄汤的翻译有错']);
+        expect(similarFeedback('汤', items)).toEqual([]);
+    });
 });
 
 describe('relativeTime', () => {

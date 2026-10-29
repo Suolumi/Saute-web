@@ -18,6 +18,11 @@
 			goto(`/${$locale ?? 'en'}/home`)
 	})
 
+    // app.html ships lang="en"; for Chinese, lang also picks the CJK glyph forms.
+    $effect(() => {
+        if ($locale) document.documentElement.lang = $locale
+    });
+
     afterNavigate(async () => {
         if ($accessToken && $accessToken !== '' && !$user) {
             const {response, data} = await getSelf()

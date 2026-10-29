@@ -1,0 +1,1452 @@
+{
+  "header": {
+    "appName": "Sauté",
+    "allRecipes": "食谱",
+    "createRecipe": "创建食谱",
+    "connectAI": "连接 AI",
+    "login": "登录",
+    "register": "注册",
+    "settings": "设置",
+    "myRecipes": "我的食谱",
+    "myFavorites": "我的收藏",
+    "logout": "退出登录",
+    "diy": "DIY",
+    "toolbox": "工具箱",
+    "admin": "管理",
+    "about": "关于",
+    "browse": "浏览",
+    "aiTools": "AI 工具",
+    "account": "账户",
+    "viewProfile": "查看个人资料",
+    "feedback": "反馈",
+    "feedbackUnread": "{count, plural, other {# 条反馈更新}}"
+  },
+  "fileUpload": {
+    "click": "点击上传",
+    "drag": "或拖放到此处",
+    "multiple": "支持多张图片"
+  },
+  "imageCrop": {
+    "title": "调整照片",
+    "description": "拖动框架调整位置，使用滑块缩放。",
+    "zoom": "缩放",
+    "dragHint": "拖动以调整裁剪区域",
+    "rotateCcw": "向左旋转",
+    "rotateCw": "向右旋转",
+    "cancel": "取消",
+    "confirm": "使用照片"
+  },
+  "recipeCard": {
+    "by": "作者",
+    "noPicture": "还没有添加照片。",
+    "title": "食谱标题",
+    "description": "食谱描述将显示在这里……",
+    "favorite": "加入收藏",
+    "unfavorite": "取消收藏",
+    "favoriteError": "无法更新收藏",
+    "variationCount": "{count} 个变体",
+    "diyBadge": "DIY"
+  },
+  "variationPicker": {
+    "title": "选择一个版本",
+    "description": "这个食谱有多个由不同用户提交的版本。",
+    "createTile": "提交你自己的变体",
+    "error": "无法加载此食谱的变体"
+  },
+  "home": {
+    "mainText": "今天吃什么？",
+    "secondaryText": "也许是这个，或者那个！要不试试……",
+    "search": "搜索食谱……",
+    "notFound": "未找到食谱",
+    "adjustSearch": "试试调整搜索词或筛选条件",
+    "moreFilters": "更多筛选",
+    "author": "作者",
+    "authorPlaceholder": "按作者搜索……",
+    "ingredients": "食材",
+    "ingredientsPlaceholder": "添加食材，按回车确认",
+    "readyIn": "大约用时",
+    "prepTime": "准备时间",
+    "totalTime": "总时间",
+    "closestMatch": "最接近的结果排在前面",
+    "quickestMatch": "最快的食谱排在前面",
+    "mostPopular": "最受欢迎",
+    "clearAll": "全部清除",
+    "timeAny": "不限时间",
+    "timeQuick": "最快",
+    "timeMinutes": "约 {minutes} 分钟",
+    "timeHour": "约 1 小时",
+    "activeAuthor": "作者：",
+    "activeTimePrep": "{time}（准备）",
+    "activeTimeTotal": "{time}（总计）",
+    "resultCount": "找到 {count} 个食谱",
+    "meta": {
+      "title": "食谱",
+      "description": "浏览和搜索 Sauté 社区分享的食谱。"
+    }
+  },
+  "login": {
+    "errors": {
+      "field": "请填写所有字段。"
+    },
+    "toasts": {
+      "success": "登录成功。",
+      "error": "登录失败。"
+    },
+    "meta": {
+      "title": "登录",
+      "description": "登录你的 Sauté 账户。"
+    },
+    "signIn": "登录 Sauté",
+    "welcome": "欢迎回来！请登录你的账户",
+    "id": {
+      "label": "邮箱 / 用户名",
+      "placeholder": "例如 jane@example.com 或 jane_doe"
+    },
+    "password": {
+      "label": "密码",
+      "placeholder": "输入你的密码"
+    },
+    "submit": "登录",
+    "noAccount": "还没有账户？",
+    "forgotPassword": "忘记密码？",
+    "signUp": "注册"
+  },
+  "register": {
+    "errors": {
+      "field": "请填写所有字段。",
+      "passwords": "两次输入的密码不一致。",
+      "password": "密码至少需要 12 个字符，并包含一个特殊字符和一个数字。"
+    },
+    "toasts": {
+      "success": "注册成功！",
+      "error": "注册失败。"
+    },
+    "meta": {
+      "title": "注册",
+      "description": "创建 Sauté 账户，开始分享食谱。"
+    },
+    "join": "加入 Sauté",
+    "create": "创建账户，开始分享食谱",
+    "email": {
+      "label": "邮箱地址",
+      "placeholder": "例如 jane@example.com"
+    },
+    "username": {
+      "label": "用户名",
+      "placeholder": "例如 jane_doe"
+    },
+    "password": {
+      "label": "密码",
+      "placeholder": "设置密码"
+    },
+    "passwordConfirm": {
+      "label": "确认密码",
+      "placeholder": "再次输入密码"
+    },
+    "submit": "创建账户",
+    "already": "已经有账户？",
+    "signIn": "登录"
+  },
+  "settings": {
+    "errors": {
+      "update": "更新个人资料时出错。",
+      "getRecipes": "服务器错误，无法获取食谱。",
+      "delete": "删除食谱时出错"
+    },
+    "meta": {
+      "title": "设置",
+      "description": "管理你的 Sauté 账户和食谱。"
+    },
+    "info": "个人资料",
+    "picture": {
+      "label": "头像",
+      "change": "更换照片"
+    },
+    "username": {
+      "label": "用户名",
+      "placeholder": "例如 jane_doe"
+    },
+    "email": {
+      "label": "邮箱",
+      "placeholder": "例如 jane@example.com"
+    },
+    "password": {
+      "label": "密码",
+      "placeholder": "输入新密码"
+    },
+    "delete": {
+      "title": "删除这个食谱？",
+      "cancel": "取消",
+      "confirm": "确认",
+      "success": "食谱已删除"
+    },
+    "submit": "更新个人资料",
+    "tabs": {
+      "myRecipes": "我的食谱",
+      "myFavorites": "我的收藏"
+    },
+    "favoritesTabs": {
+      "recipes": "食谱",
+      "diy": "DIY"
+    },
+    "favorites": {
+      "empty": {
+        "title": "还没有收藏",
+        "description": "你收藏的食谱和 DIY 项目会显示在这里。"
+      }
+    },
+    "noRecipes": "你还没有创建任何食谱。",
+    "createRecipe": "创建你的第一个食谱",
+    "filterAll": "全部",
+    "filterFood": "美食",
+    "filterDiy": "DIY",
+    "actions": {
+      "menu": "操作",
+      "edit": "编辑",
+      "remove": "删除",
+      "linkAsVariation": "关联为变体"
+    },
+    "linkVariation": {
+      "pickerTitle": "关联为变体",
+      "pickerDescription": "搜索要将此食谱作为其变体的食谱。",
+      "confirmTitle": "将“{title}”关联为“{target}”的变体？",
+      "confirmDescription": "此操作无法在网站上撤销——该食谱将显示在 {target} 的版本中，而不再单独显示。",
+      "cancel": "取消",
+      "confirm": "关联食谱",
+      "success": "食谱已关联为变体",
+      "error": "无法将此食谱关联为变体"
+    }
+  },
+  "recipe": {
+    "back": "返回食谱",
+    "prep": "准备",
+    "cook": "烹饪",
+    "rest": "静置",
+    "servings": "份数",
+    "decreaseServings": "减少份数",
+    "increaseServings": "增加份数",
+    "ingredients": "食材",
+    "instructions": "步骤",
+    "stepPhoto": "第 {step} 步照片",
+    "stepDone": "将第 {step} 步标记为完成",
+    "startTimer": "开始 {minutes} 分钟计时",
+    "timerRemaining": "剩余 {time}",
+    "timerPaused": "{time} — 已暂停",
+    "timerDone": "时间到！",
+    "cancelTimer": "取消计时",
+    "pauseTimer": "暂停计时",
+    "resumeTimer": "继续计时",
+    "timerWidgetLabel": "进行中的计时器",
+    "dismissTimer": "关闭",
+    "timerFor": "{recipe} — {step}",
+    "notFound": "未找到食谱",
+    "variations": "变体",
+    "variationBanner": "这是另一个食谱的变体。",
+    "viewOriginal": "查看原版",
+    "submitVariation": "提交变体",
+    "share": "分享",
+    "linkCopied": "链接已复制到剪贴板",
+    "shareError": "无法分享此食谱",
+    "referenceExpand": "显示食材",
+    "referenceCollapse": "隐藏食材",
+    "keepAwakeOn": "保持屏幕常亮",
+    "keepAwakeOff": "允许屏幕休眠",
+    "cookMode": "烹饪",
+    "cookModeExit": "退出烹饪模式",
+    "cookModeStepOf": "第 {current} 步，共 {total} 步",
+    "cookModeStep": "第 {step} 步",
+    "cookModePrevStep": "上一步",
+    "cookModeNextStep": "下一步",
+    "cookModeIngredients": "食材",
+    "cookModeIngredientChecked": "将 {name} 标记为已使用",
+    "addPhoto": "添加照片",
+    "removePhoto": "删除照片",
+    "photoAddedBy": "由 {username} 添加",
+    "addPhotoError": "无法添加照片",
+    "removePhotoError": "无法删除照片",
+    "addPhotoCapReached": "你已达到为此食谱添加 {count} 张照片的上限",
+    "suggestFix": "建议修改",
+    "suggestFixTitle": "建议修改翻译",
+    "suggestFixIntro": "为这个食谱的翻译提出修改建议。只需修改文字——食材和步骤的顺序和数量保持不变。",
+    "suggestFixDisclaimer": "如果原食谱以后在同一位置有改动，此修改可能会被覆盖。",
+    "suggestFixSectionLabel": "部分（可选）",
+    "suggestFixSubmit": "提交修改",
+    "suggestFixSuccess": "谢谢！你的修改已提交审核。",
+    "suggestFixError": "无法提交你的修改",
+    "suggestFixDuplicate": "你已经为这个食谱和语言提交过一条待审核的建议",
+    "nutrition": {
+      "title": "营养",
+      "kcal": "热量",
+      "protein": "蛋白质",
+      "carbs": "碳水化合物",
+      "fat": "脂肪",
+      "salt": "盐",
+      "sugar": "糖",
+      "coverageNote": "已计入 {matched}/{total} 种食材",
+      "noMatch": "目前能匹配到营养数据的食材还不够。",
+      "perIngredient": "按食材",
+      "kcalShort": "千卡",
+      "gShort": "克",
+      "proteinShort": "蛋白质",
+      "carbsShort": "碳水",
+      "fatShort": "脂肪",
+      "forServings": "{count, plural, other {# 份的总计}}",
+      "unavailable": "无法加载营养数据。",
+      "notCounted": "未计入（子食谱）：{names}",
+      "fix": {
+        "explanation": "营养数据来自将每种食材的名称匹配到参考食物条目，再加上密度或单位重量，以便将用量换算成克。你可以帮忙补全下面的食材。",
+        "button": "帮忙完善",
+        "modalTitle": "补全“{name}”的营养数据",
+        "searchLabel": "参考食物条目",
+        "alreadyLinkedTo": "当前关联到：{name}",
+        "submit": "保存",
+        "appliedSuccess": "已关联！",
+        "reviewSuccess": "已提交审核",
+        "error": "无法提交"
+      }
+    }
+  },
+  "edit": {
+    "toasts": {
+      "save": "无法保存食谱"
+    },
+    "headLabel": "编辑",
+    "commentLabel": "我就知道我忘了什么！",
+    "details": "食谱详情",
+    "title": {
+      "label": "食谱标题",
+      "placeholder": "例如 外婆的苹果派"
+    },
+    "duplicateNudge": {
+      "title": "发现了相似的食谱——你是想提交一个变体吗？",
+      "dismiss": "关闭",
+      "viewMatch": "查看 {title}",
+      "confirmTitle": "放弃这份草稿？",
+      "confirmDescription": "提交变体会基于那个食谱新建表单——你在这里输入的描述、食材、步骤和照片都会丢失。",
+      "confirmCancel": "继续编辑",
+      "confirmContinue": "改为提交变体"
+    },
+    "type": {
+      "label": "类型"
+    },
+    "description": {
+      "label": "描述",
+      "placeholder": "例如 一款酥皮香脆、暖心暖胃的苹果派，非常适合周日晚餐"
+    },
+    "servings": {
+      "label": "份数"
+    },
+    "prep": {
+      "label": "准备时间"
+    },
+    "cook": {
+      "label": "烹饪时间"
+    },
+    "rest": {
+      "label": "静置时间"
+    },
+    "ingredients": {
+      "addRecipeRef": "添加食谱作为食材",
+      "recipePicker": {
+        "title": "选择食谱",
+        "description": "搜索食谱。",
+        "ingredientDescription": "搜索要用作食材的食谱。",
+        "searchPlaceholder": "搜索食谱……",
+        "noResults": "未找到食谱",
+        "error": "无法搜索食谱",
+        "variationBadge": "变体",
+        "cancel": "取消",
+        "alreadyAdded": "已在你的列表中",
+        "addSelected": "添加所选的 {count} 个",
+        "chooseVariation": "选择一个版本",
+        "chooseVariationDescription": "这个食谱有多个版本——选择要添加的版本。",
+        "back": "返回",
+        "backToList": "返回列表"
+      },
+      "refLabel": {
+        "label": "自定义名称（可选）",
+        "placeholder": "例如 挞皮面团"
+      },
+      "addCategory": "添加分类",
+      "categoryNamePlaceholder": "分类名称",
+      "deleteCategory": "删除分类",
+      "renameCategory": "重命名分类",
+      "moveTo": "移动到",
+      "uncategorized": "无分类",
+      "dragHint": "拖动手柄重新排序，或使用食材的菜单将其移到其他分类。",
+      "name": {
+        "label": "名称",
+        "placeholder": "例如 面粉、糖、黄油"
+      },
+      "quantity": {
+        "label": "数量",
+        "placeholder": "例如 200、1.5、½"
+      },
+      "unit": {
+        "label": "单位（可选）",
+        "placeholder": "例如 克、毫升、片……"
+      },
+      "preview": "将显示为：“{text}”",
+      "remove": "删除食材",
+      "nutritionLink": {
+        "suggestion": "关联到营养数据：{name}？",
+        "accept": "关联",
+        "dismiss": "忽略营养关联建议",
+        "linkDifferently": "关联到其他营养数据",
+        "searchPlaceholder": "搜索营养数据……",
+        "link": "关联",
+        "cancel": "取消",
+        "submittedChip": "营养关联已提交审核",
+        "success": "营养关联已提交审核",
+        "error": "无法提交营养关联",
+        "linkedTo": "已关联到：{name}",
+        "linkedSuccess": "已关联！",
+        "densityLabel": "密度（克/100毫升）",
+        "densityHelp": "每 100 毫升该食材的克数——水 ≈ 100，蜂蜜 ≈ 141，橄榄油 ≈ 92。",
+        "gramsPerUnitLabel": "单位重量（克）",
+        "gramsPerUnitHelp": "一个完整单位的重量——一个洋葱 ≈ 150 克，一个鸡蛋 ≈ 50 克。",
+        "suggestUnit": "“{unit}”不是已知单位——建议添加它"
+      },
+      "enableNutrition": "启用营养计算"
+    },
+    "instructions": {
+      "title": {
+        "label": "步骤标题",
+        "placeholder": "例如 预热烤箱"
+      },
+      "description": {
+        "label": "描述",
+        "placeholder": "例如 将烤箱预热至 180°C（350°F），并在烤盘上抹油"
+      },
+      "remove": "删除",
+      "reorder": "调整步骤顺序",
+      "photo": {
+        "label": "照片",
+        "alt": "第 {step} 步照片",
+        "remove": "删除照片"
+      },
+      "timer": {
+        "label": "倒计时（分钟）",
+        "placeholder": "例如 30",
+        "hint": "为此步骤添加一个计时按钮，方便做菜时开始倒计时。这不是该步骤的总时长。",
+        "infoAria": "更多信息"
+      }
+    },
+    "submit": "保存食谱",
+    "preview": "实时预览",
+    "wizard": {
+      "stepLabel": "第 {current} 步，共 {total} 步",
+      "next": "下一步",
+      "back": "返回",
+      "basics": {
+        "name": "基本信息",
+        "hint": "为你的食谱取个名字，写一段简短描述并填写时间。"
+      },
+      "ingredients": {
+        "name": "食材",
+        "hint": "列出所需的全部食材，包括数量和单位。"
+      },
+      "instructions": {
+        "name": "步骤",
+        "hint": "把食谱拆分成清晰、有序的步骤。"
+      },
+      "photos": {
+        "name": "照片",
+        "hint": "添加诱人的照片，让你的食谱更生动。"
+      }
+    }
+  },
+  "create": {
+    "toasts": {
+      "save": "创建食谱失败",
+      "noAccount": "你需要先创建一个账户",
+      "negativeNumber": "数量/时间不能为负数"
+    },
+    "meta": {
+      "title": "创建食谱",
+      "description": "与 Sauté 社区分享一个新食谱。"
+    },
+    "headLabel": "创建",
+    "commentLabel": "今天我要用……给大家一个惊喜",
+    "noIngredient": "还没有添加食材……",
+    "noStep": "还没有添加步骤……",
+    "variationChoice": {
+      "title": "你想怎么开始？",
+      "description": "你正在创建一个现有食谱的变体。照片不会被复制——你需要添加自己的照片。",
+      "copyOption": "从副本开始",
+      "blankOption": "从空白开始"
+    }
+  },
+  "connectAi": {
+    "meta": {
+      "title": "连接 AI",
+      "description": "通过 MCP 将 AI 助手连接到你的 Sauté 食谱。"
+    },
+    "headLabel": "连接 AI",
+    "commentLabel": "让 AI 助手帮你管理食谱",
+    "toasts": {
+      "noAccount": "你需要先创建一个账户",
+      "generateError": "无法生成你的连接码",
+      "disconnectError": "无法断开 AI 访问",
+      "disconnectSuccess": "已断开 AI 访问"
+    },
+    "intro": {
+      "title": "这是什么？",
+      "body": "这会把 AI 助手连接到你的食谱，这样你就可以让它帮你查找、添加或编辑食谱。你需要一个支持“MCP”连接的 AI 应用。",
+      "tokenPurpose": "下面的地址和连接码是你的 AI 应用以你的身份登录时使用的。连接码就像密码：任何拿到它的人都能查看和编辑你的食谱，所以只把它粘贴到你信任的 AI 应用中，绝不要分享。如果你怀疑它已泄露，请在下方断开连接以使其失效，然后重新生成一个。"
+    },
+    "generate": {
+      "button": "生成我的连接码",
+      "loading": "正在生成……",
+      "urlLabel": "地址",
+      "tokenLabel": "连接码",
+      "copy": "复制",
+      "copied": "已复制！",
+      "regenerate": "生成新的连接码",
+      "steps": {
+        "title": "使用方法",
+        "one": "打开 AI 应用的设置，找到关于连接工具或服务器的部分（有时叫“MCP”、“连接器”或“集成”）。",
+        "two": "在要求填写服务器地址或 URL 的地方粘贴下面的地址。",
+        "three": "在要求填写令牌、密钥或密码的地方粘贴下面的连接码。",
+        "four": "保存，然后就可以向助手询问你的食谱了！"
+      },
+      "examples": {
+        "title": "示例",
+        "cliTools": {
+          "title": "命令行工具"
+        },
+        "claudeCli": {
+          "title": "Claude Code（命令行）",
+          "intro": "在终端中运行："
+        },
+        "chatgptCli": {
+          "title": "ChatGPT（Codex 命令行）",
+          "intro": "将以下内容添加到 Codex 配置中（通常是 ~/.codex/config.toml）："
+        },
+        "opencode": {
+          "title": "opencode",
+          "intro": "opencode 是一款免费的 AI 助手应用，聊天界面友好——如果你不想直接使用命令行工具，这是个不错的选择。",
+          "tabs": {
+            "macLinux": "macOS / Linux",
+            "windows": "Windows"
+          },
+          "steps": {
+            "download": "从以下地址下载并安装适用于你系统的 opencode：",
+            "node": "opencode 还需要安装 Node.js——可从以下地址获取：",
+            "nodeMacLinuxAlt": "或者，如果你使用 Homebrew：brew install node。",
+            "installCli": "打开终端并运行：",
+            "config": "打开 opencode 的设置，将以下内容粘贴到它的 MCP 配置文件中：",
+            "windowsRename": "在 Windows 上，opencode 可能无法识别 .jsonc 文件——粘贴后请将其重命名为 .json。"
+          }
+        },
+        "note": "随着这些应用更新，菜单、参数和配置名称会不时变化——如果和上面不完全一致，请查找与连接器、工具或 MCP 服务器相关的选项，或查看应用自己的文档/--help。"
+      }
+    },
+    "disconnect": {
+      "button": "断开 AI 访问",
+      "confirmTitle": "断开 AI 访问？",
+      "confirmBody": "你连接的所有 AI 助手将立即停止工作。你随时可以重新连接。",
+      "cancel": "取消",
+      "confirm": "是的，断开"
+    }
+  },
+  "recipes": {
+    "types": {
+      "all": "全部",
+      "breakfast": "早餐",
+      "starter": "前菜",
+      "dish": "主菜",
+      "side-dish": "配菜",
+      "sauce": "酱汁",
+      "baking": "烘焙",
+      "snack": "小吃",
+      "plate": "拼盘",
+      "dessert": "甜点",
+      "drink": "饮品"
+    },
+    "min": "分钟",
+    "h": "小时"
+  },
+  "forgot": {
+    "meta": {
+      "title": "忘记密码",
+      "description": "重置你的 Sauté 账户密码。"
+    },
+    "reset": "重置密码",
+    "resetDesc": "输入你的邮箱地址或用户名，如果账户存在，我们会向你发送重置密码的说明",
+    "id": {
+      "label": "邮箱地址 / 用户名",
+      "placeholder": "例如 jane@example.com 或 jane_doe"
+    },
+    "submit": "发送邮件",
+    "remember": "想起密码了？",
+    "back": "返回登录",
+    "sent": "邮件已发送",
+    "failed": "发送邮件时出错"
+  },
+  "reset": {
+    "meta": {
+      "title": "重置密码",
+      "description": "为你的 Sauté 账户设置新密码。"
+    },
+    "create": "设置新密码",
+    "enter": "在下方输入你的新密码",
+    "new": {
+      "label": "新密码",
+      "placeholder": "输入新密码"
+    },
+    "confirm": {
+      "label": "确认密码",
+      "placeholder": "再次输入新密码"
+    },
+    "submit": "重置密码",
+    "success": "密码重置成功",
+    "error": "重置密码时出错"
+  },
+  "diyHome": {
+    "meta": {
+      "title": "DIY 项目",
+      "description": "手工皂、居家小妙方、家居修补——浏览值得亲手做的项目。"
+    },
+    "mainText": "厨房之外",
+    "secondaryText": "手工皂、居家小妙方、家居修补——值得亲手做的项目。",
+    "createProject": "新项目",
+    "materials": "材料",
+    "materialsPlaceholder": "添加材料，按回车确认",
+    "notFound": "未找到项目",
+    "adjustSearch": "试试调整搜索词或筛选条件"
+  },
+  "diyRecipe": {
+    "ingredients": "材料",
+    "servings": "数量",
+    "prep": "所需时间",
+    "back": "返回 DIY"
+  },
+  "diyEdit": {
+    "meta": {
+      "title": "创建 DIY 项目",
+      "description": "与 Sauté 社区分享一个新的 DIY 项目。"
+    },
+    "headLabel": "新项目",
+    "commentLabel": "今天我要做……",
+    "editHeadLabel": "编辑项目",
+    "editCommentLabel": "完善你的项目",
+    "details": "项目详情",
+    "title": {
+      "label": "项目标题",
+      "placeholder": "例如 薰衣草燕麦皂"
+    },
+    "description": {
+      "placeholder": "例如 一款温和保湿的薰衣草燕麦皂，非常适合敏感肌肤"
+    },
+    "servings": {
+      "label": "数量"
+    },
+    "prep": {
+      "label": "所需时间"
+    },
+    "ingredients": {
+      "name": {
+        "label": "材料",
+        "placeholder": "例如 烧碱、橄榄油、精油"
+      }
+    },
+    "instructions": {
+      "title": {
+        "placeholder": "例如 融化皂基"
+      },
+      "description": {
+        "placeholder": "例如 用隔水加热的方式融化皂基，直到完全变成液体，期间偶尔搅拌"
+      }
+    },
+    "photos": {
+      "alt": "项目图片 {index}",
+      "newAlt": "新项目图片 {index}"
+    },
+    "submit": "保存项目",
+    "toasts": {
+      "save": "无法保存项目",
+      "create": "创建项目失败"
+    },
+    "wizard": {
+      "basics": {
+        "hint": "为你的项目取个名字，写一段简短描述并填写时间。"
+      },
+      "ingredients": {
+        "name": "材料",
+        "hint": "列出所需的全部材料，包括数量和单位。"
+      },
+      "instructions": {
+        "hint": "把项目拆分成清晰、有序的步骤。"
+      },
+      "photos": {
+        "hint": "添加清晰的照片，让你的项目更生动。"
+      }
+    }
+  },
+  "admin": {
+    "tags": {
+      "intro": "作者可以给食谱添加的标签。食谱也会存储隐含的标签，因此按某个标签筛选时，也会包含带有隐含它的标签的食谱。",
+      "new": "新建标签",
+      "editTitle": "编辑标签",
+      "edit": "编辑",
+      "delete": "删除",
+      "save": "保存",
+      "cancel": "取消",
+      "empty": "还没有标签。",
+      "slug": "标识符",
+      "slugHint": "小写字母、数字和连字符。食谱会存储它，所以以后不能更改。",
+      "group": "分组",
+      "categories": "适用于",
+      "category": {
+        "food": "食谱",
+        "diy": "DIY"
+      },
+      "labels": "名称",
+      "labelsHint": "某种语言留空时，会根据源名称自动机器翻译。",
+      "source": "源语言",
+      "implies": "隐含",
+      "impliesHint": "带有此标签的食谱会自动获得这些标签。添加后会更新现有食谱。",
+      "impliesList": "隐含",
+      "noImpliable": "没有其他适用于相同分类的标签。",
+      "icon": "图标",
+      "noIcon": "无",
+      "created": "标签已创建",
+      "updated": "标签已更新",
+      "deleted": "标签已删除",
+      "backfilled": "标签已更新，{count} 个食谱获得了新的隐含标签",
+      "saveError": "无法保存标签",
+      "deleteError": "无法删除标签",
+      "confirmDeleteTitle": "删除标签？",
+      "confirmDeleteDescription": "删除“{name}”？只有在没有食谱使用它、也没有其他标签隐含它时才能删除。"
+    },
+    "unauthorized": {
+      "title": "无权访问",
+      "description": "你没有访问后台的权限。"
+    },
+    "nav": {
+      "tags": "标签",
+      "dashboard": "仪表盘",
+      "users": "用户",
+      "recipes": "食谱",
+      "diy": "DIY",
+      "translations": "翻译",
+      "console": "控制台",
+      "nutrition": "营养",
+      "feedback": "反馈",
+      "mail": "邮件"
+    },
+    "mail": {
+      "title": "群发邮件",
+      "description": "使用 Sauté 邮件模板向所有用户发送公告。每位用户会单独收到一封以其用户名称呼的邮件。",
+      "subject": "主题",
+      "heading": "标题",
+      "message": "正文",
+      "messageHint": "纯文本。空一行开始新段落。",
+      "buttonLabel": "按钮文字（可选）",
+      "buttonUrl": "按钮链接（可选）",
+      "preview": "预览",
+      "previewEmpty": "填写主题、标题和正文，即可看到收件人看到的邮件效果。",
+      "sendTest": "给我发一封测试邮件",
+      "sending": "正在发送……",
+      "sendAll": "发送给所有用户",
+      "testSent": "测试邮件已发送到你的邮箱",
+      "started": "已开始发送",
+      "confirmTitle": "发送给所有用户？",
+      "confirmDescription": "“{subject}”将发送给 {count, plural, other {# 位用户}}。此操作无法撤销。",
+      "confirmDescriptionUnknown": "“{subject}”将发送给所有用户。此操作无法撤销。",
+      "confirmSend": "发送",
+      "cancel": "取消",
+      "statusRunning": "发送中",
+      "statusLast": "上次群发",
+      "progress": "共 {total} 封，已发送 {sent} 封，失败 {failed} 封",
+      "failures": "{count, plural, other {# 位收件人发送失败}}",
+      "errors": {
+        "preview": "无法生成预览",
+        "send": "无法发送邮件"
+      }
+    },
+    "errors": {
+      "loadStats": "无法加载统计数据",
+      "cleanup": "无法执行图片清理",
+      "loadUsers": "无法加载用户",
+      "setAdminStatus": "无法更新管理员状态",
+      "sendPasswordReset": "无法发送重置密码邮件",
+      "revokeMcpToken": "无法撤销 MCP 令牌",
+      "updatePicture": "无法更新头像",
+      "deleteUser": "无法删除此用户",
+      "loadRecipes": "无法加载食谱",
+      "deleteRecipe": "无法删除此食谱",
+      "loadDiy": "无法加载 DIY 项目",
+      "deleteDiy": "无法删除此 DIY 项目",
+      "retranslate": "无法安排重新翻译",
+      "loadTranslations": "无法加载翻译建议",
+      "resolveTranslation": "无法处理此建议",
+      "loadNutrition": "无法加载营养建议",
+      "resolveNutrition": "无法处理此建议"
+    },
+    "dashboard": {
+      "title": "仪表盘",
+      "totalUsers": "用户",
+      "totalAdmins": "管理员",
+      "totalRecipes": "食谱",
+      "byCategory": "按分类统计食谱",
+      "maintenance": "维护",
+      "cleanupDescription": "立即删除超过 24 小时且未被引用的图片文件。",
+      "cleanupButton": "执行图片清理",
+      "cleanupRunning": "正在执行……",
+      "cleanupSuccess": "已删除 {count} 张未被引用的图片"
+    },
+    "users": {
+      "title": "用户",
+      "searchPlaceholder": "按用户名搜索……",
+      "search": "搜索",
+      "changePicture": "更换头像",
+      "copyId": "复制用户 ID",
+      "adminBadge": "管理员",
+      "demote": "取消管理员",
+      "promote": "设为管理员",
+      "sendReset": "发送重置邮件",
+      "revokeMcp": "撤销 MCP 令牌",
+      "delete": "删除",
+      "none": "未找到用户",
+      "prev": "上一页",
+      "next": "下一页",
+      "deleteConfirmTitle": "删除此用户？",
+      "deleteConfirmDescription": "这将永久删除 {username} 及其头像。",
+      "cancel": "取消",
+      "confirmDelete": "删除",
+      "statusUpdated": "管理员状态已更新",
+      "resetSent": "重置密码邮件已发送",
+      "mcpRevoked": "MCP 令牌已撤销",
+      "deleted": "用户已删除"
+    },
+    "recipes": {
+      "title": "食谱",
+      "searchPlaceholder": "搜索食谱……",
+      "variationBadge": "变体",
+      "favorites": "{count} 次收藏",
+      "edit": "编辑",
+      "retranslate": "重新翻译",
+      "delete": "删除",
+      "none": "未找到食谱",
+      "prev": "上一页",
+      "next": "下一页",
+      "deleteConfirmTitle": "删除此食谱？",
+      "deleteConfirmDescription": "这将永久删除“{title}”。",
+      "cancel": "取消",
+      "confirmDelete": "删除",
+      "deleted": "食谱已删除",
+      "retranslateScheduled": "已安排重新翻译"
+    },
+    "diy": {
+      "title": "DIY",
+      "searchPlaceholder": "搜索 DIY 项目……",
+      "variationBadge": "变体",
+      "favorites": "{count} 次收藏",
+      "edit": "编辑",
+      "retranslate": "重新翻译",
+      "delete": "删除",
+      "none": "未找到 DIY 项目",
+      "prev": "上一页",
+      "next": "下一页",
+      "deleteConfirmTitle": "删除此 DIY 项目？",
+      "deleteConfirmDescription": "这将永久删除“{title}”。",
+      "cancel": "取消",
+      "confirmDelete": "删除",
+      "deleted": "DIY 项目已删除",
+      "retranslateScheduled": "已安排重新翻译"
+    },
+    "favoritesModal": {
+      "title": "收藏者",
+      "description": "收藏了“{title}”的用户。",
+      "none": "还没有人收藏。",
+      "prev": "上一页",
+      "next": "下一页",
+      "loadError": "无法加载收藏"
+    },
+    "translations": {
+      "title": "翻译",
+      "statusLabel": "状态",
+      "statusPending": "待处理",
+      "statusApproved": "已批准",
+      "statusRejected": "已拒绝",
+      "statusStale": "已过时",
+      "none": "未找到建议",
+      "prev": "上一页",
+      "next": "下一页",
+      "current": "当前翻译",
+      "suggested": "建议的修改",
+      "submittedBy": "由 {username} 提交",
+      "approve": "批准",
+      "reject": "拒绝",
+      "approved": "建议已批准",
+      "rejected": "建议已拒绝",
+      "staleError": "提交建议后，此食谱已有改动",
+      "pendingBadge": "{count} 条待处理的翻译建议"
+    },
+    "console": {
+      "loadError": "无法加载管理路由列表",
+      "title": "控制台",
+      "filterPlaceholder": "筛选操作……",
+      "none": "没有匹配的操作",
+      "categories": {
+        "tags": "标签",
+        "users": "用户",
+        "recipes": "食谱",
+        "translations": "翻译",
+        "system": "系统",
+        "toolbox": "工具箱",
+        "nutrition": "营养",
+        "feedback": "反馈"
+      },
+      "select": "选择",
+      "paramsFormTitle": "参数",
+      "pathLabel": "路径和查询",
+      "bodyLabel": "请求体（JSON）",
+      "bodyInvalid": "JSON 无效",
+      "fileChange": "点击更换",
+      "responseLabel": "响应",
+      "submitting": "正在提交……",
+      "submit": "提交",
+      "selectPrompt": "在左侧选择一个操作开始。",
+      "confirmTitle": "确定吗？",
+      "confirmDescription": "此操作具有破坏性，且无法撤销。",
+      "cancel": "取消",
+      "confirm": "确认",
+      "success": "完成",
+      "error": "操作失败",
+      "userPicker": {
+        "title": "选择用户",
+        "description": "按用户名搜索用户。",
+        "searchPlaceholder": "搜索用户……",
+        "noResults": "未找到用户",
+        "error": "无法搜索用户"
+      }
+    },
+    "nutrition": {
+      "title": "营养",
+      "statusPending": "待处理",
+      "statusApproved": "已批准",
+      "statusRejected": "已拒绝",
+      "none": "未找到建议",
+      "approve": "批准",
+      "reject": "拒绝",
+      "approved": "建议已批准",
+      "rejected": "建议已拒绝",
+      "linkedTo": "关联到",
+      "density": "密度",
+      "densityHelp": "每 100 毫升该食材的克数——水 ≈ 100，蜂蜜 ≈ 141，橄榄油 ≈ 92。",
+      "gramsPerUnit": "单位克数",
+      "gramsPerUnitHelp": "一个完整单位的重量——一个洋葱 ≈ 150 克，一个鸡蛋 ≈ 50 克。",
+      "unitAlias": "单位别名",
+      "correction": "修正",
+      "correctionOf": "对 {name} 的修正",
+      "note": "备注",
+      "pendingBadge": "{count} 条待处理的营养建议",
+      "tabLinks": "关联",
+      "tabPending": "待处理的修正",
+      "ingredientLinks": "食材关联",
+      "newLink": "新建关联",
+      "editLink": "编辑关联",
+      "noLinks": "还没有关联",
+      "searchLinksPlaceholder": "按食材或营养条目搜索……",
+      "noSearchResults": "没有符合搜索条件的关联",
+      "unitAliases": "单位别名",
+      "newAlias": "新建别名",
+      "editAlias": "编辑别名",
+      "noAliases": "还没有别名",
+      "aliasFor": "对应",
+      "edit": "编辑",
+      "delete": "删除",
+      "cancel": "取消",
+      "save": "保存",
+      "ingredientName": "食材名称",
+      "nutritionEntry": "营养条目",
+      "aliasText": "别名文字",
+      "unit": "单位",
+      "linkCreated": "关联已创建",
+      "linkUpdated": "关联已更新",
+      "linkDeleted": "关联已删除",
+      "linkSaveError": "无法保存关联",
+      "aliasCreated": "别名已创建",
+      "aliasUpdated": "别名已更新",
+      "aliasDeleted": "别名已删除",
+      "aliasSaveError": "无法保存别名",
+      "deleteError": "无法删除",
+      "confirmDeleteTitle": "删除此项？",
+      "confirmDeleteDescription": "“{name}”将被永久删除。"
+    },
+    "pendingBadge": "{count} 项待审核",
+    "feedback": {
+      "title": "反馈",
+      "pendingBadge": "{count, plural, other {# 条新反馈}}",
+      "tabs": {
+        "open": "进行中",
+        "done": "已完成",
+        "declined": "已拒绝",
+        "all": "全部"
+      },
+      "empty": "这里什么都没有。",
+      "selected": "已选反馈",
+      "votes": "{count, plural, other {# 票}}",
+      "viewOnBoard": "在反馈板上查看",
+      "markDone": "标记为完成",
+      "decline": "拒绝",
+      "reopen": "重新打开",
+      "statusHelp": "关闭后，作者的“反馈”链接上会显示一个标记。重新打开会保留投票。",
+      "deleteDescription": "无论状态如何，它都会连同投票和照片一起从反馈板上消失。此操作无法撤销。",
+      "toasts": {
+        "load": "无法加载反馈",
+        "status": "无法更改状态",
+        "done": "已标记为完成",
+        "declined": "已拒绝",
+        "open": "已重新打开",
+        "delete": "无法删除此反馈",
+        "deleted": "反馈已删除"
+      }
+    }
+  },
+  "about": {
+    "meta": {
+      "title": "关于",
+      "description": "快速了解 Sauté 的功能——你可能还没注意到的食谱和 DIY 功能。"
+    },
+    "headLabel": "Sauté 能做什么",
+    "commentLabel": "快速了解一些光看界面不一定能发现的功能。",
+    "sections": {
+      "discover": {
+        "title": "发现食谱"
+      },
+      "cooking": {
+        "title": "烹饪"
+      },
+      "creating": {
+        "title": "创建与编写"
+      },
+      "planning": {
+        "title": "规划与购物"
+      },
+      "sharing": {
+        "title": "分享与社区"
+      },
+      "integrations": {
+        "title": "集成"
+      }
+    },
+    "items": {
+      "tags": {
+        "title": "饮食与实用标签",
+        "description": "食谱带有素食、无麸质、一锅出等标签。在食谱列表或膳食计划的食谱选择器中，用“标签”按钮按标签筛选；只要一个食谱家族的原版或其中一个变体带有你选的全部标签，它就会显示出来。"
+      },
+      "variations": {
+        "title": "食谱变体",
+        "description": "用自己的方式做了别人的食谱？在那个食谱页面点击“提交变体”，它就会显示在原版旁边，而不是作为一篇全新的帖子。"
+      },
+      "recipeRef": {
+        "title": "关联食谱的食材",
+        "description": "如果某种食材本身就是一个食谱——酱汁、面团、腌菜——可以直接关联到那个食谱：在创建或编辑食谱时使用“添加食谱作为食材”。"
+      },
+      "photos": {
+        "title": "社区照片",
+        "description": "任何人都可以给任何食谱添加照片，不只是作者——在食谱页面找到“添加照片”，展示你做出来的样子。"
+      },
+      "diy": {
+        "title": "DIY 项目",
+        "description": "Sauté 不只有美食——在 DIY 标签页下浏览手工皂、居家小妙方和家居修补。"
+      },
+      "stepPhotos": {
+        "title": "每一步都能配照片",
+        "description": "除了食谱主图，创建或编辑食谱时每个步骤都有自己的“照片”栏，可以准确展示难点步骤应该是什么样子。"
+      },
+      "favorites": {
+        "title": "收藏",
+        "description": "用爱心图标收藏任意多的食谱或 DIY 项目——收藏是私密的，不会影响食谱在别人那里的排名——然后在“设置 › 我的收藏”里找到它们，这也是你口味的一幅持续更新的画像。"
+      },
+      "linkVariation": {
+        "title": "将现有食谱关联为变体",
+        "description": "单独发布了一个食谱，后来想把它并入某个食谱家族？在“设置 › 我的食谱”中将它关联为变体。"
+      },
+      "mcp": {
+        "title": "连接 AI 助手",
+        "description": "在“连接 AI”页面生成个人访问令牌，让 AI 工具代你在账户中读取、搜索和创建食谱。"
+      },
+      "cookMode": {
+        "title": "烹饪模式",
+        "description": "以大字体逐步查看食谱步骤，屏幕自动保持常亮——在任意食谱页面的步骤上方点击“烹饪”即可。"
+      },
+      "recipeTimers": {
+        "title": "食谱计时器",
+        "description": "在烹饪模式中或直接在食谱步骤里，为任何设有时长的步骤开始倒计时——它会在一个跟随你浏览全站的悬浮小部件中继续运行，时间到了就会响铃，即使你已经离开了那个页面。随时可以在小部件中暂停和继续。"
+      },
+      "share": {
+        "title": "分享食谱",
+        "description": "直接在食谱页面通过设备的分享菜单或复制链接分享任意食谱——对方看到的预览（标题、照片、描述）会自动附带。"
+      },
+      "shoppingList": {
+        "title": "购物清单",
+        "description": "在首页把食谱加入购物清单，所有食谱的食材会合并成一份清单——购物时逐项勾选。在购物清单页面点击“分享”，通过设备的分享菜单或剪贴板发送清单，还需购买和已有的物品会分开标注。"
+      },
+      "mealPlanning": {
+        "title": "膳食计划",
+        "description": "从收藏中拖动食谱，或为某个时段挑选食谱，安排一周的早餐、午餐和晚餐，然后点击“将本周加入购物清单”，一次性把所有计划食谱的食材合并到清单中——入口是首页的“膳食计划”按钮。"
+      },
+      "toolbox": {
+        "title": "工具箱",
+        "description": "按食材在重量和体积之间换算用量，在烤箱温度的 °C 和 °F 之间切换，查询食物每 100 克的营养成分，查找缺少某样东西时的替代品，或同时运行多个命名的厨房计时器——都在“工具箱”标签页下。"
+      },
+      "translationFix": {
+        "title": "建议修改翻译",
+        "description": "发现机器翻译得别扭的句子？点击已翻译食谱标题旁的铅笔图标提出修改——管理员审核后才会生效。"
+      },
+      "feedback": {
+        "title": "反馈板",
+        "description": "发现了 bug 或者有什么想法？通过页眉中的“反馈”链接发布，可以附上照片和相关页面的链接。给别人发布的内容点赞，让最受期待的改进排到前面；管理员把你的反馈标记为完成或拒绝时，你会看到通知。点击任意条目上的“翻译”，即可用你的语言阅读。"
+      },
+      "nutrition": {
+        "title": "营养信息",
+        "description": "食谱会显示一个尽力而为的营养估算（热量、蛋白质、碳水化合物、脂肪、盐、糖），会随份数调整，根据能可靠匹配到精选食物数据库的食材计算。它总会显示计入了多少种食材，绝不会把不完整的总数当作准确值——任何已登录用户都可以帮助完善它，无论是在编写食谱时，还是在食谱的营养面板说明某些食材未计入时直接操作。"
+      }
+    }
+  },
+  "tags": {
+    "filter": "标签",
+    "groups": {
+      "diet": "饮食",
+      "practical": "实用"
+    },
+    "showMore": "再显示 {count} 个标签",
+    "variationMatches": "{title} 符合你选的标签",
+    "editLabel": "标签",
+    "editHint": "选择适用的标签。勾选一个标签也会勾选它隐含的标签（纯素包含素食）。",
+    "lockedHint": "由你选的另一个标签隐含"
+  },
+  "shoppingList": {
+    "navButton": "购物清单",
+    "meta": {
+      "title": "购物清单",
+      "description": "把你选的食谱中的食材合并成一份购物清单。"
+    },
+    "title": "购物清单",
+    "addRecipes": "添加食谱",
+    "addError": "无法将此食谱加入购物清单",
+    "clearAll": "全部清除",
+    "clearChecked": "清除已勾选",
+    "removeRecipe": "移除食谱",
+    "recipesTitle": "清单中的食谱",
+    "ingredientsTitle": "食材",
+    "empty": {
+      "title": "你的购物清单是空的",
+      "description": "添加食谱，生成一份合并后的购物食材清单。"
+    },
+    "unauthorized": {
+      "title": "登录后使用购物清单",
+      "description": "登录后即可用你收藏的食谱创建购物清单。"
+    },
+    "picker": {
+      "title": "将食谱加入购物清单",
+      "description": "搜索并选择食谱——对于有多个变体的食谱，可以选择具体版本。"
+    },
+    "summary": "{recipes} 个食谱 · {items} 项",
+    "share": {
+      "button": "分享",
+      "heading": "购物清单",
+      "stillNeed": "还需购买",
+      "alreadyHave": "已有",
+      "copied": "购物清单已复制到剪贴板",
+      "error": "无法分享购物清单"
+    }
+  },
+  "mealPlanning": {
+    "navButton": "膳食计划",
+    "meta": {
+      "title": "膳食计划",
+      "description": "规划一周的膳食，并直接加入购物清单。"
+    },
+    "title": "膳食计划",
+    "prevWeek": "上一周",
+    "nextWeek": "下一周",
+    "today": "今天",
+    "addWeekToShoppingList": "将本周加入购物清单",
+    "addedToShoppingList": "本周的食谱已加入你的购物清单",
+    "addToShoppingListError": "有些食谱无法加入你的购物清单",
+    "yourFavorites": "你的收藏",
+    "dragHint": "拖到某一餐上进行安排",
+    "searchPlaceholder": "搜索你的收藏……",
+    "loading": "加载中……",
+    "noFavorites": "没有符合搜索条件的收藏",
+    "addRecipe": "添加食谱",
+    "removeMeal": "移除这一餐",
+    "servings": "{count} 份",
+    "editServings": "更改这一餐的份数",
+    "pickerTitle": "为这一餐添加食谱",
+    "pickerDescription": "搜索要加入这一餐的食谱。",
+    "weekServings": "本周份数",
+    "dayServings": "当天份数",
+    "editDayServings": "更改当天的份数",
+    "useWeekDefault": "使用本周默认值",
+    "useDayDefault": "使用当天默认值",
+    "mealType": {
+      "breakfast": "早餐",
+      "lunch": "午餐",
+      "dinner": "晚餐"
+    },
+    "unauthorized": {
+      "title": "登录后规划你的膳食",
+      "description": "登录后即可规划一周的膳食，并据此生成购物清单。"
+    }
+  },
+  "toolbox": {
+    "meta": {
+      "title": "工具箱",
+      "description": "用于换算用量、烤箱温度和替代食材的厨房小帮手。"
+    },
+    "title": "工具箱",
+    "subtitle": "用于换算用量、烤箱温度和替代食材的厨房小帮手。",
+    "tabs": {
+      "quantity": "用量换算",
+      "oven": "烤箱温度",
+      "nutrition": "营养成分",
+      "timers": "计时器",
+      "substitutions": "替代食材"
+    },
+    "quantity": {
+      "ingredientLabel": "食材",
+      "ingredientPlaceholder": "搜索食材……",
+      "noIngredientResults": "没有匹配的食材",
+      "amountLabel": "数量",
+      "fromLabel": "从",
+      "toLabel": "到",
+      "swap": "交换单位",
+      "result": "结果",
+      "disclaimer": "数值为近似值，基于食材的典型密度。",
+      "suggestIngredient": "建议添加食材",
+      "suggestUnit": "建议添加单位"
+    },
+    "oven": {
+      "temperatureLabel": "温度",
+      "unitLabel": "单位",
+      "unitCelsius": "摄氏度（°C）",
+      "unitFahrenheit": "华氏度（°F）",
+      "resultLabel": "结果"
+    },
+    "nutritionData": {
+      "ingredientLabel": "食物",
+      "placeholder": "搜索食物……",
+      "empty": "搜索一种食物以查看其营养成分。",
+      "per100g": "每 100 克",
+      "disclaimer": "数值来自精选的食物成分参考表，而不是你实际烹饪时的食材（生与熟、品牌等）。"
+    },
+    "substitutions": {
+      "searchLabel": "搜索替代食材",
+      "searchPlaceholder": "例如 鸡蛋、黄油、酪乳",
+      "noResults": "没有符合搜索条件的结果。",
+      "suggest": "建议一种替代",
+      "empty": "还没有替代建议——来做第一个建议的人吧。"
+    },
+    "timers": {
+      "nameLabel": "名称（可选）",
+      "namePlaceholder": "例如 意面",
+      "minutesLabel": "分钟",
+      "secondsLabel": "秒",
+      "start": "开始计时",
+      "presets": "快捷预设",
+      "presetMinutes": "{minutes} 分钟",
+      "autoLabel": "计时器 {n}",
+      "active": "进行中的计时器",
+      "empty": "还没有计时器在运行——在上方开始一个吧。"
+    },
+    "suggestIngredient": {
+      "title": "建议添加食材",
+      "nameLabel": "食材名称",
+      "densityLabel": "密度（克/100 毫升）",
+      "densityHint": "填写 100 毫升该食材的重量（克）——例如水 = 100，蜂蜜 ≈ 141。必须在 20 到 250 之间。",
+      "noteLabel": "来源或备注（可选）",
+      "duplicateWarning": "“{name}”已在列表中——这将作为对该条目的修正提交，而不是新条目。",
+      "newHint": "看起来是新的——这将作为新食材提交。",
+      "submitNew": "提交新食材以供审核",
+      "submitCorrection": "提交修正以供审核",
+      "success": "谢谢——管理员审核后才会出现在工具箱中。",
+      "error": "无法提交你的建议。",
+      "cancel": "取消"
+    },
+    "suggestUnit": {
+      "title": "建议添加单位",
+      "nameLabel": "单位名称",
+      "symbolLabel": "符号",
+      "kindLabel": "类型",
+      "kindWeight": "重量",
+      "kindVolume": "体积",
+      "toBaseLabel": "换算系数",
+      "toBaseHintWeight": "每单位的克数，例如一汤匙黄油 ≈ 14。",
+      "toBaseHintVolume": "每单位的毫升数，例如一美制杯 = 240。",
+      "noteLabel": "来源或备注（可选）",
+      "duplicateWarning": "“{name}”已存在——这将作为修正提交，而不是新单位。",
+      "newHint": "看起来是新的——这将作为新单位提交。",
+      "submitNew": "提交新单位以供审核",
+      "submitCorrection": "提交修正以供审核",
+      "success": "谢谢——管理员审核后才会出现在工具箱中。",
+      "error": "无法提交你的建议。",
+      "cancel": "取消"
+    },
+    "suggestSubstitution": {
+      "title": "建议一种替代",
+      "problemLabel": "缺少什么？",
+      "problemPlaceholder": "例如 没有酪乳",
+      "solutionLabel": "改用",
+      "tagLabel": "分类（可选）",
+      "noteLabel": "来源或备注（可选）",
+      "duplicateWarning": "“{problem}”的替代方案已存在——这将作为修正提交，而不是新条目。",
+      "newHint": "看起来是新的——这将作为新的替代方案提交。",
+      "submitNew": "提交新的替代方案以供审核",
+      "submitCorrection": "提交修正以供审核",
+      "success": "谢谢——管理员审核后才会出现在工具箱中。",
+      "error": "无法提交你的建议。",
+      "cancel": "取消"
+    }
+  },
+  "feedback": {
+    "title": "反馈",
+    "intro": "发现了问题，或者有让用 Sauté 做饭更好的想法？告诉我们。给别人发布的内容点赞，让我们知道什么最重要；你也可以在这里跟进自己的反馈，直到完成。",
+    "new": "新反馈",
+    "signInFirst": "你需要先登录。",
+    "board": "反馈板",
+    "open": "进行中",
+    "empty": "这里还没有内容。来做第一个分享 bug 或想法的人吧！",
+    "emptyFiltered": "没有符合这些筛选条件的进行中条目。",
+    "loadMore": "加载更多",
+    "showClosed": "显示 {count} 条已关闭",
+    "closedHeading": "已关闭 · {count}",
+    "back": "全部反馈",
+    "you": "你",
+    "deletedUser": "已删除的用户",
+    "unread": "自你上次查看后有更新",
+    "closedAgo": "{ago}关闭",
+    "voteLabel": "点赞，{count, plural, other {# 票}}",
+    "votesClosed": "{count, plural, other {# 票}}，投票已关闭",
+    "ownVote": "你自己的反馈已经算作你的一票。",
+    "openPhoto": "打开照片 {n}",
+    "copyLink": "复制链接",
+    "edit": "编辑",
+    "delete": "删除",
+    "locked": "已关闭的条目无法投票或编辑。",
+    "meta": {
+      "title": "反馈",
+      "description": "报告 Sauté 的 bug 或提出想法，并为你在意的内容点赞。"
+    },
+    "type": {
+      "bug": "Bug",
+      "idea": "想法"
+    },
+    "status": {
+      "open": "进行中",
+      "done": "已完成",
+      "declined": "已拒绝"
+    },
+    "filters": {
+      "all": "全部",
+      "bugs": "Bug",
+      "ideas": "想法",
+      "mine": "只看我的",
+      "search": "搜索反馈"
+    },
+    "sort": {
+      "label": "排序",
+      "votes": "票数最多",
+      "new": "最新"
+    },
+    "notice": {
+      "done": "你的反馈“{title}”已标记为完成。",
+      "declined": "你的反馈“{title}”已被拒绝。",
+      "open": "你的反馈“{title}”已重新打开。",
+      "view": "查看",
+      "dismiss": "关闭"
+    },
+    "link": {
+      "recipe": "食谱 · {title}",
+      "recipeUnknown": "一个已不存在的食谱"
+    },
+    "deleteConfirm": {
+      "title": "删除这条反馈？",
+      "description": "它会连同投票和照片一起从反馈板上消失。此操作无法撤销。"
+    },
+    "toasts": {
+      "load": "无法加载反馈板",
+      "notFound": "这条反馈已不存在",
+      "signInToVote": "登录后才能点赞",
+      "signInToPost": "登录后才能发送反馈",
+      "vote": "无法保存你的投票",
+      "delete": "无法删除这条反馈",
+      "deleted": "反馈已删除",
+      "linkCopied": "链接已复制",
+      "save": "无法保存你的反馈",
+      "notEditable": "只能编辑你自己的进行中反馈"
+    },
+    "newPage": {
+      "title": "新反馈",
+      "intro": "发现了 bug，或者有让用 Sauté 做饭更好的想法？告诉我们。每条反馈都会被阅读，你可以在反馈板上跟进，直到完成。",
+      "submit": "发送反馈"
+    },
+    "editPage": {
+      "title": "编辑反馈",
+      "intro": "在反馈仍进行中时可以补充细节或照片。关闭后将被锁定。",
+      "submit": "保存更改"
+    },
+    "form": {
+      "kind": "哪种反馈？",
+      "bug": {
+        "label": "有东西坏了",
+        "hint": "一个 bug、一个错误的数值、一个表现异常的页面。",
+        "titlePlaceholder": "例如 锁屏时计时器不响",
+        "descriptionLabel": "发生了什么？",
+        "descriptionPlaceholder": "你当时在做什么，你期望发生什么，实际发生了什么？",
+        "descriptionHint": "细节越多，修复越快。你的设备和浏览器信息也很有帮助。"
+      },
+      "idea": {
+        "label": "想法",
+        "hint": "你希望 Sauté 能做到或做得更好的事。",
+        "titlePlaceholder": "例如 按烤盘尺寸缩放食谱",
+        "descriptionLabel": "你想要什么？",
+        "descriptionPlaceholder": "你想做什么，它在厨房里会怎样帮到你？",
+        "descriptionHint": "带有具体例子的想法最容易被采纳。"
+      },
+      "title": "标题",
+      "similar": "可能已经有人发布过了。要不改为给它点赞？",
+      "upvoted": "已点赞",
+      "upvoteInstead": "改为点赞",
+      "photos": "照片",
+      "photosHint": "可选，最多 {max} 张",
+      "removePhoto": "删除照片 {n}",
+      "addPhoto": "添加照片（{count}/{max}）",
+      "link": "相关页面",
+      "optional": "可选",
+      "linkInput": "Sauté 页面链接",
+      "linkPlaceholder": "粘贴一个 Sauté 页面的链接",
+      "addLink": "添加链接",
+      "cancel": "取消",
+      "linkHelp": "粘贴一个食谱或 Sauté 任意其他页面的链接。",
+      "linkErrors": {
+        "invalid": "这看起来不像一个链接。",
+        "external": "这里只能使用 Sauté 页面的链接。",
+        "missingRecipe": "该食谱不存在。"
+      },
+      "removeLink": "移除关联页面",
+      "useAnotherLink": "使用另一个链接",
+      "linkSource": {
+        "from": "来自你刚才所在的页面。",
+        "pasted": "已确认：这是一个 Sauté 页面。",
+        "saved": "这条反馈相关的页面。"
+      },
+      "pasteLink": "粘贴一个 Sauté 页面的链接",
+      "public": "将以你的用户名公开发布。"
+    },
+    "translate": {
+      "button": "翻译",
+      "loading": "正在翻译……",
+      "showOriginal": "显示原文",
+      "note": "由 Google 从{language}翻译",
+      "same": "这条反馈已经是你的语言。",
+      "error": "无法翻译这条反馈"
+    }
+  }
+}

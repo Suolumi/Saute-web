@@ -7,6 +7,7 @@ export const locales = [
     { code: 'en', label: 'English', flag: '🇬🇧' },
     { code: 'fr', label: 'Français', flag: '🇫🇷' },
     { code: 'fi', label: 'Suomi', flag: '🇫🇮' },
+    { code: 'zh', label: '中文', flag: '🇨🇳' },
 ];
 
 locales.forEach(locale => {
