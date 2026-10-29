@@ -1085,6 +1085,10 @@
         "title": "Proposer une correction de traduction",
         "description": "Une phrase traduite automatiquement sonne mal ? Cliquez sur l'icône crayon à côté du titre d'une recette traduite pour proposer une correction — un administrateur la valide avant qu'elle soit publiée."
       },
+      "feedback": {
+        "title": "Tableau des retours",
+        "description": "Un bug ou une idée ? Publiez-le depuis le lien Retours dans l’en-tête, avec des photos et un lien vers la page concernée. Votez pour les retours des autres afin que les plus demandés remontent en tête, et une notification vous prévient quand un administrateur marque le vôtre comme traité ou refusé. Cliquez sur « Traduire » sur n’importe quel retour pour le lire dans votre langue."
+      },
       "nutrition": {
         "title": "Infos nutritionnelles",
         "description": "Les recettes affichent une estimation nutritionnelle indicative (calories, protéines, glucides, lipides, sel, sucres) qui s'ajuste avec le nombre de portions, calculée à partir des ingrédients associés avec confiance à une base alimentaire de référence. Le nombre d'ingrédients pris en compte est toujours affiché, jamais un total partiel présenté comme exact — tout utilisateur connecté peut aider à l'améliorer, en liant un ingrédient à la bonne entrée pendant la rédaction d'une recette, ou directement depuis le panneau Nutrition d'une recette lorsqu'il explique que quelque chose n'a pas été comptabilisé."

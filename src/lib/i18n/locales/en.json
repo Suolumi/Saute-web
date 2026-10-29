@@ -1085,6 +1085,10 @@
         "title": "Suggest a Translation Fix",
         "description": "Spot an awkward machine-translated line? Hit the pencil icon next to a translated recipe's title to propose a fix — an admin reviews it before it goes live."
       },
+      "feedback": {
+        "title": "Feedback Board",
+        "description": "Found a bug or have an idea? Post it from the Feedback link in the header, with photos and a link to the page it's about. Upvote what others posted so the most wanted fixes rise to the top, and you'll see a notice when an admin marks yours done or declined. Hit \"Translate\" on any item to read it in your language."
+      },
       "nutrition": {
         "title": "Nutrition Info",
         "description": "Recipes show a best-effort nutrition estimate (calories, protein, carbs, fat, salt, sugar) that scales with the servings stepper, computed from ingredients confidently matched to a curated food database. It always shows how many ingredients were counted, never a partial total presented as exact — any signed-in user can help it improve, either while authoring a recipe or right from a recipe's own Nutrition panel whenever it explains that something wasn't counted."

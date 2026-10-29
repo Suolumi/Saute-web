@@ -1085,6 +1085,10 @@
         "title": "Ehdota käännöskorjausta",
         "description": "Kuulostaako konekäännetty rivi kömpelöltä? Napsauta käännetyn reseptin otsikon vieressä olevaa kynäkuvaketta ehdottaaksesi korjausta — ylläpitäjä tarkistaa sen ennen julkaisua."
       },
+      "feedback": {
+        "title": "Palautetaulu",
+        "description": "Löysitkö bugin tai onko sinulla idea? Julkaise se yläpalkin Palaute-linkistä, kuvien ja linkin kera sivuun, jota se koskee. Äänestä muiden julkaisuja, jotta toivotuimmat nousevat kärkeen, ja saat ilmoituksen, kun ylläpitäjä merkitsee omasi tehdyksi tai hylätyksi. Napsauta \"Käännä\" missä tahansa palautteessa lukeaksesi sen omalla kielelläsi."
+      },
       "nutrition": {
         "title": "Ravintotiedot",
         "description": "Reseptit näyttävät suuntaa-antavan ravintoarvion (kalorit, proteiini, hiilihydraatit, rasva, suola, sokeri), joka skaalautuu annosmäärän mukaan ja lasketaan ainesosista, jotka on varmasti yhdistetty kuratoituun ruoka-tietokantaan. Sovellus näyttää aina, kuinka monta ainesosaa laskettiin mukaan, eikä koskaan esitä osittaista summaa tarkkana - kuka tahansa kirjautunut käyttäjä voi auttaa parantamaan sitä joko linkittämällä ainesosan oikeaan tietueeseen reseptiä kirjoittaessaan, tai suoraan reseptin omasta Ravinto-paneelista, kun se selittää, ettei jotain laskettu mukaan."
