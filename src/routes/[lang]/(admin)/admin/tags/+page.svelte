@@ -34,9 +34,15 @@
     const impliable = $derived([...$allTags.values()].filter(tag =>
         tag.slug !== editing?.slug && form.categories.every(c => tag.categories.includes(c))));
 
+    // Every locale gets a key: binding an input to a missing one throws
+    // (props_invalid_value). The API drops blank labels.
+    function allLocaleLabels(labels: Record<string, string> = {}): Record<string, string> {
+        return Object.fromEntries(locales.map(({code}) => [code, labels[code] ?? '']));
+    }
+
     function openCreate() {
         editing = null;
-        form = {slug: '', group: 'diet', categories: ['food'], implies: [], labels: {}, sourceLocale: $locale ?? 'en'};
+        form = {slug: '', group: 'diet', categories: ['food'], implies: [], labels: allLocaleLabels(), sourceLocale: $locale ?? 'en'};
         modalOpen = true;
     }
 
@@ -44,7 +50,7 @@
         editing = tag;
         form = {
             slug: tag.slug, group: tag.group, categories: [...tag.categories], implies: [...tag.implies],
-            labels: {...tag.labels}, sourceLocale: tag.source_locale,
+            labels: allLocaleLabels(tag.labels), sourceLocale: tag.source_locale,
         };
         modalOpen = true;
     }
