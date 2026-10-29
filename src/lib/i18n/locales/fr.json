@@ -709,6 +709,8 @@
       "impliesHint": "Les recettes avec cette étiquette reçoivent aussi celles-ci. En ajouter une met à jour les recettes existantes.",
       "impliesList": "implique",
       "noImpliable": "Aucune autre étiquette ne s'applique aux mêmes catégories.",
+      "icon": "Icône",
+      "noIcon": "Aucune",
       "created": "Étiquette créée",
       "updated": "Étiquette mise à jour",
       "deleted": "Étiquette supprimée",

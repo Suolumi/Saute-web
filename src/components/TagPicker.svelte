@@ -1,5 +1,6 @@
 <script lang="ts">
-    import {groupTags, impliedBy, tagGroupColors, tagLabel, tags as allTags, tagsForCategory, toggleTag} from "$lib/tags";
+    import {groupTags, impliedBy, tagGroupAccent, tagGroupSelected, tagLabel, tags as allTags, tagsForCategory, toggleTag} from "$lib/tags";
+    import {tagIcon} from "$lib/tagIcons";
     import type {RecipeCategory} from "$lib/recipes";
     import {locale, _} from "svelte-i18n";
     import {Check, Lock} from "@lucide/svelte";
@@ -21,20 +22,23 @@
                     {#each tags as tag (tag.slug)}
                         {@const isSelected = selected.includes(tag.slug)}
                         {@const isLocked = isSelected && locked.has(tag.slug)}
+                        {@const Icon = tagIcon(tag.icon)}
                         <button
                                 type="button"
                                 aria-pressed={isSelected}
                                 disabled={isLocked}
                                 title={isLocked ? $_('tags.lockedHint') : undefined}
                                 onclick={() => selected = toggleTag(selected, tag.slug, $allTags)}
-                                class="inline-flex items-center gap-1 px-3 py-1.5 rounded-full text-sm font-medium border-2 transition-colors
-                                    {isSelected ? tagGroupColors[group] + ' border-current' : 'bg-background text-foreground border-border hover:bg-accent'}
+                                class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm font-medium border-2 text-foreground transition-colors
+                                    {isSelected ? tagGroupSelected[group] : 'bg-background border-border hover:bg-accent'}
                                     {isLocked ? 'opacity-70 cursor-not-allowed' : ''}"
                         >
                             {#if isLocked}
-                                <Lock class="w-3.5 h-3.5" />
+                                <Lock class="w-4 h-4 flex-none {tagGroupAccent[group]}" />
                             {:else if isSelected}
-                                <Check class="w-3.5 h-3.5" />
+                                <Check class="w-4 h-4 flex-none {tagGroupAccent[group]}" />
+                            {:else}
+                                <Icon class="w-4 h-4 flex-none {tagGroupAccent[group]}" aria-hidden="true" />
                             {/if}
                             {tagLabel(tag, $locale)}
                         </button>

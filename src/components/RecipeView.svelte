@@ -199,7 +199,7 @@
 
             {#if recipe.tags?.length}
                 <div class="mb-4">
-                    <TagBadges slugs={recipe.tags} />
+                    <TagBadges slugs={recipe.tags} size="md" />
                 </div>
             {/if}
 

@@ -709,6 +709,8 @@
       "impliesHint": "Recipes with this tag automatically get these too. Adding one updates existing recipes.",
       "impliesList": "implies",
       "noImpliable": "No other tag applies to the same categories.",
+      "icon": "Icon",
+      "noIcon": "None",
       "created": "Tag created",
       "updated": "Tag updated",
       "deleted": "Tag deleted",

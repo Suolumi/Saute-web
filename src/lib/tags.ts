@@ -7,9 +7,17 @@ export type TagGroup = "diet" | "practical"
 // TAG_GROUPS is the display order, mirroring the API's models.TagGroups.
 export const TAG_GROUPS: TagGroup[] = ["diet", "practical"]
 
-export const tagGroupColors: Record<TagGroup, string> = {
-    diet: "bg-emerald-100 text-emerald-800 dark:bg-emerald-900/20 dark:text-emerald-300",
-    practical: "bg-slate-100 text-slate-800 dark:bg-slate-800/40 dark:text-slate-300",
+// tagGroupAccent colours a tag's icon; chips themselves stay neutral so they
+// don't compete with the recipe kind badge.
+export const tagGroupAccent: Record<TagGroup, string> = {
+    diet: "text-emerald-600 dark:text-emerald-400",
+    practical: "text-amber-600 dark:text-amber-400",
+}
+
+// tagGroupSelected styles a selected chip in the filter and picker.
+export const tagGroupSelected: Record<TagGroup, string> = {
+    diet: "border-emerald-500 bg-emerald-50 dark:border-emerald-400 dark:bg-emerald-900/20",
+    practical: "border-amber-500 bg-amber-50 dark:border-amber-400 dark:bg-amber-900/20",
 }
 
 export type RecipeTag = {
@@ -19,6 +27,7 @@ export type RecipeTag = {
     implies: string[]
     labels: Record<string, string>
     source_locale: string
+    icon?: string
 }
 
 export type TagMap = Map<string, RecipeTag>
@@ -37,6 +46,7 @@ export type RecipeTagRequest = {
     implies: string[]
     labels: Record<string, string>
     source_locale: string
+    icon: string
 }
 
 export function getTags() {

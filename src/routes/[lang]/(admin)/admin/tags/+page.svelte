@@ -7,9 +7,11 @@
     import Label from '../../../../../components/Label.svelte';
     import Checkbox from '../../../../../components/Checkbox.svelte';
     import {
-        createTag, deleteTag, groupTags, loadTags, tagGroupColors, tagLabel, tags as allTags, updateTag, TAG_GROUPS,
-        type RecipeTag, type RecipeTagRequest, type TagGroup,
+        createTag, deleteTag, groupTags, loadTags, tagGroupAccent, tagGroupSelected, tagLabel, tags as allTags, updateTag,
+        TAG_GROUPS, type RecipeTag, type RecipeTagRequest, type TagGroup,
     } from '$lib/tags';
+    import {tagIcon, tagIcons} from '$lib/tagIcons';
+    import TagChip from '../../../../../components/TagChip.svelte';
     import {RecipeCategories, type RecipeCategory} from '$lib/recipes';
     import {locales} from '$lib/i18n';
     import {apiErrorMessage} from '$lib/api';
@@ -27,6 +29,7 @@
         implies: [] as string[],
         labels: {} as Record<string, string>,
         sourceLocale: 'en',
+        icon: '',
     });
 
     // An implied tag must apply to every category the tag applies to (the
@@ -42,7 +45,7 @@
 
     function openCreate() {
         editing = null;
-        form = {slug: '', group: 'diet', categories: ['food'], implies: [], labels: allLocaleLabels(), sourceLocale: $locale ?? 'en'};
+        form = {slug: '', group: 'diet', categories: ['food'], implies: [], labels: allLocaleLabels(), sourceLocale: $locale ?? 'en', icon: ''};
         modalOpen = true;
     }
 
@@ -50,7 +53,7 @@
         editing = tag;
         form = {
             slug: tag.slug, group: tag.group, categories: [...tag.categories], implies: [...tag.implies],
-            labels: allLocaleLabels(tag.labels), sourceLocale: tag.source_locale,
+            labels: allLocaleLabels(tag.labels), sourceLocale: tag.source_locale, icon: tag.icon ?? '',
         };
         modalOpen = true;
     }
@@ -75,7 +78,7 @@
         saving = true;
         const body: RecipeTagRequest = {
             group: form.group, categories: form.categories, implies: form.implies,
-            labels: form.labels, source_locale: form.sourceLocale,
+            labels: form.labels, source_locale: form.sourceLocale, icon: form.icon,
         };
         const {response, data} = editing
             ? await updateTag(editing.slug, body)
@@ -122,7 +125,7 @@
                     <div class="p-3 flex flex-wrap items-center justify-between gap-2">
                         <div class="space-y-1">
                             <p class="font-medium text-card-foreground">
-                                <span class="{tagGroupColors[tag.group]} px-2 py-0.5 rounded-full text-sm">{tagLabel(tag, $locale)}</span>
+                                <TagChip {tag} size="md" />
                                 <span class="ml-2 text-xs text-muted-foreground font-mono">{tag.slug}</span>
                             </p>
                             <p class="text-xs text-muted-foreground">
@@ -184,18 +187,47 @@
             </div>
         </div>
         <div>
+            <p class="text-sm font-medium text-foreground mb-1">{$_('admin.tags.icon')}</p>
+            <div class="flex flex-wrap gap-1.5">
+                <button
+                        type="button"
+                        aria-pressed={form.icon === ''}
+                        onclick={() => form.icon = ''}
+                        class="px-2 h-9 rounded-lg border-2 text-xs text-muted-foreground transition-colors
+                            {form.icon === '' ? tagGroupSelected[form.group] : 'border-border hover:bg-accent'}"
+                >
+                    {$_('admin.tags.noIcon')}
+                </button>
+                {#each Object.entries(tagIcons) as [name, Icon] (name)}
+                    <button
+                            type="button"
+                            aria-pressed={form.icon === name}
+                            title={name}
+                            aria-label={name}
+                            onclick={() => form.icon = name}
+                            class="w-9 h-9 flex items-center justify-center rounded-lg border-2 transition-colors
+                                {form.icon === name ? tagGroupSelected[form.group] : 'border-border hover:bg-accent'}"
+                    >
+                        <Icon class="w-4 h-4 {tagGroupAccent[form.group]}" aria-hidden="true" />
+                    </button>
+                {/each}
+            </div>
+        </div>
+        <div>
             <p class="text-sm font-medium text-foreground mb-1">{$_('admin.tags.implies')}</p>
             <p class="text-xs text-muted-foreground mb-2">{$_('admin.tags.impliesHint')}</p>
             <div class="flex flex-wrap gap-2">
                 {#each impliable as tag (tag.slug)}
                     {@const isSelected = form.implies.includes(tag.slug)}
+                    {@const Icon = tagIcon(tag.icon)}
                     <button
                             type="button"
                             aria-pressed={isSelected}
                             onclick={() => toggleImplied(tag.slug)}
-                            class="px-3 py-1 rounded-full text-sm font-medium border-2 transition-colors
-                                {isSelected ? tagGroupColors[tag.group] + ' border-current' : 'bg-background text-foreground border-border hover:bg-accent'}"
+                            class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-sm font-medium border-2 text-foreground transition-colors
+                                {isSelected ? tagGroupSelected[tag.group] : 'bg-background border-border hover:bg-accent'}"
                     >
+                        <Icon class="w-4 h-4 flex-none {tagGroupAccent[tag.group]}" aria-hidden="true" />
                         {tagLabel(tag, $locale)}
                     </button>
                 {:else}

@@ -709,6 +709,8 @@
       "impliesHint": "Tämän tunnisteen reseptit saavat automaattisesti myös nämä. Lisäys päivittää olemassa olevat reseptit.",
       "impliesList": "sisältää",
       "noImpliable": "Mikään muu tunniste ei koske samoja luokkia.",
+      "icon": "Kuvake",
+      "noIcon": "Ei mitään",
       "created": "Tunniste luotu",
       "updated": "Tunniste päivitetty",
       "deleted": "Tunniste poistettu",

@@ -213,7 +213,7 @@
         {/if}
     </div>
 
-    <div class="p-6 flex-1">
+    <div class="p-6 flex-1 flex flex-col">
         <div class="flex items-start justify-between mb-3">
             <h3 class="text-xl font-semibold text-card-foreground text-balance">{#if recipe.title}<HighlightText text={recipe.title} query={highlightQuery} />{:else}{$_('recipeCard.title')}{/if}</h3>
             <div class="flex items-center gap-2 ml-2 flex-shrink-0">
@@ -236,7 +236,7 @@
 
         <p class="text-muted-foreground mb-4 text-pretty whitespace-pre-line">{recipe.description ? (truncateDescription && recipe.description.length > 200 ? recipe.description.slice(0, 200) + '...' : recipe.description) : $_('recipeCard.description')}</p>
 
-        <TagBadges slugs={recipe.tags} max={2} />
+        <TagBadges slugs={recipe.tags} fit />
 
         {#if recipe.tag_matches && recipe.tag_matches.length > 0}
             <div class="mt-3 flex flex-col gap-1 text-sm">
