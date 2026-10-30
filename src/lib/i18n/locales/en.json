@@ -710,7 +710,7 @@
       "impliesList": "implies",
       "noImpliable": "No other tag applies to the same categories.",
       "icon": "Icon",
-      "noIcon": "None",
+      "missingIcon": "No icon yet",
       "created": "Tag created",
       "updated": "Tag updated",
       "deleted": "Tag deleted",

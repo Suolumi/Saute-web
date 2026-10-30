@@ -710,7 +710,7 @@
       "impliesList": "隐含",
       "noImpliable": "没有其他适用于相同分类的标签。",
       "icon": "图标",
-      "noIcon": "无",
+      "missingIcon": "尚无图标",
       "created": "标签已创建",
       "updated": "标签已更新",
       "deleted": "标签已删除",

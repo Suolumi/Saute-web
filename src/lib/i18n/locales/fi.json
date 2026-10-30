@@ -710,7 +710,7 @@
       "impliesList": "sisältää",
       "noImpliable": "Mikään muu tunniste ei koske samoja luokkia.",
       "icon": "Kuvake",
-      "noIcon": "Ei mitään",
+      "missingIcon": "Ei vielä kuvaketta",
       "created": "Tunniste luotu",
       "updated": "Tunniste päivitetty",
       "deleted": "Tunniste poistettu",

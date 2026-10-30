@@ -70,6 +70,7 @@
     const canSave = $derived(
         (editing !== null || form.slug.trim() !== '') &&
         form.categories.length > 0 &&
+        form.icon !== '' &&
         Object.values(form.labels).some(label => label.trim() !== ''));
 
     async function save(event: SubmitEvent) {
@@ -127,6 +128,9 @@
                             <p class="font-medium text-card-foreground">
                                 <TagChip {tag} size="md" />
                                 <span class="ml-2 text-xs text-muted-foreground font-mono">{tag.slug}</span>
+                                {#if !tag.icon}
+                                    <span class="ml-2 text-xs text-destructive">{$_('admin.tags.missingIcon')}</span>
+                                {/if}
                             </p>
                             <p class="text-xs text-muted-foreground">
                                 {tag.categories.map(c => $_('admin.tags.category.' + c)).join(', ')}
@@ -187,17 +191,8 @@
             </div>
         </div>
         <div>
-            <p class="text-sm font-medium text-foreground mb-1">{$_('admin.tags.icon')}</p>
+            <Label required class="mb-1">{$_('admin.tags.icon')}</Label>
             <div class="flex flex-wrap gap-1.5">
-                <button
-                        type="button"
-                        aria-pressed={form.icon === ''}
-                        onclick={() => form.icon = ''}
-                        class="px-2 h-9 rounded-lg border-2 text-xs text-muted-foreground transition-colors
-                            {form.icon === '' ? tagGroupSelected[form.group] : 'border-border hover:bg-accent'}"
-                >
-                    {$_('admin.tags.noIcon')}
-                </button>
                 {#each Object.entries(tagIcons) as [name, Icon] (name)}
                     <button
                             type="button"

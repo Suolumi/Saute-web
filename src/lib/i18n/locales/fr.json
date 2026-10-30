@@ -710,7 +710,7 @@
       "impliesList": "implique",
       "noImpliable": "Aucune autre étiquette ne s'applique aux mêmes catégories.",
       "icon": "Icône",
-      "noIcon": "Aucune",
+      "missingIcon": "Pas encore d'icône",
       "created": "Étiquette créée",
       "updated": "Étiquette mise à jour",
       "deleted": "Étiquette supprimée",
