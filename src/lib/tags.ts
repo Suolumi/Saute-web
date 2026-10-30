@@ -139,7 +139,11 @@ export function toggleTag(selected: string[], slug: string, all: TagMap): string
     return selected.filter(s => s !== slug)
 }
 
-export function tagsForCategory(all: TagMap, category: RecipeCategory | undefined): RecipeTag[] {
+// tagsForCategory lists the tags that apply to category; 'all' lists every
+// tag, undefined means food.
+export function tagsForCategory(all: TagMap, category: RecipeCategory | 'all' | undefined): RecipeTag[] {
+    if (category === 'all')
+        return [...all.values()]
     const c = category || 'food'
     return [...all.values()].filter(tag => tag.categories.includes(c))
 }

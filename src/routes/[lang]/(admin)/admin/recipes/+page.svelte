@@ -23,6 +23,7 @@
     let timeBasis: 'prep' | 'total' = $state('total');
     let timeTarget: TimePreset = $state('any');
     let popular = $state(false);
+    let tags: string[] = $state([]);
 
     let recipes: RecipePreview[] = $state([]);
     let total = $state(0);
@@ -36,6 +37,7 @@
             author: author || undefined,
             kind: selectedType !== 'all' ? (selectedType as RecipeType) : undefined,
             ingredients: ingredients.length > 0 ? ingredients : undefined,
+            tags: tags.length > 0 ? tags : undefined,
             popular: popular || undefined,
             quickest_prep: !popular && timeTarget === 'quick' && timeBasis === 'prep' ? true : undefined,
             quickest_total: !popular && timeTarget === 'quick' && timeBasis === 'total' ? true : undefined,
@@ -53,7 +55,7 @@
     }
 
     $effect(() => {
-        searchTerm; selectedType; author; ingredients; timeBasis; timeTarget; popular;
+        searchTerm; selectedType; author; ingredients; timeBasis; timeTarget; popular; tags;
         untrack(() => {
             offset = 0;
             load();
@@ -98,6 +100,9 @@
             bind:timeBasis
             bind:timeTarget
             bind:popular
+            showTags
+            bind:tags
+            tagCategory="all"
             searchPlaceholder={$_('admin.recipes.searchPlaceholder')}
             ingredientsLabel={$_('home.ingredients')}
             ingredientsPlaceholder={$_('home.ingredientsPlaceholder')}

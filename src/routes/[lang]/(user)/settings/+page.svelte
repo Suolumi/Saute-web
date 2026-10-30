@@ -6,6 +6,7 @@
     import {goto} from "$app/navigation";
     import {getRecipes, linkRecipeVariation, type GetRecipesRequest, type RecipeCategory, type RecipePreview, type RecipeType, type TimePreset} from "$lib/recipes";
     import {user} from "$lib/stores";
+    import {tags as allTags, tagsForCategory} from "$lib/tags";
     import { SquarePen, Trash, MoreVertical, Link2, SearchX } from '@lucide/svelte';
     import {toastError, toastSuccess} from "$lib/utils";
     import {apiErrorMessage} from "$lib/api";
@@ -21,6 +22,7 @@
     let timeBasis: 'prep' | 'total' = $state('total')
     let timeTarget: TimePreset = $state('any')
     let popular = $state(false)
+    let tags: string[] = $state([])
     let categoryFilter: 'all' | RecipeCategory = $state('all')
     // The backend's own_recipes listing only narrows server-side for an
     // explicit "diy" category (see GetRecipesRequest.Category) - "food"
@@ -30,6 +32,12 @@
     const matchesCategoryFilter = (r: RecipePreview) =>
         categoryFilter !== 'food' || !r.category || r.category === 'food'
     let filteredRecipes = $derived(userRecipes.filter(matchesCategoryFilter))
+
+    function selectCategory(category: 'all' | RecipeCategory) {
+        categoryFilter = category
+        const offered = new Set(tagsForCategory($allTags, category).map(tag => tag.slug))
+        tags = tags.filter(slug => offered.has(slug))
+    }
     let modal = $state({
         isOpen: false,
         recipeId: ""
@@ -112,6 +120,8 @@
             request.title = searchTerm
         if (ingredients.length > 0)
             request.ingredients = ingredients
+        if (tags.length > 0)
+            request.tags = tags
         if (popular) {
             request.popular = true
         } else if (timeTarget === 'quick') {
@@ -133,7 +143,7 @@
     }
 
     $effect(() => {
-        categoryFilter; searchTerm; selectedType; ingredients; timeBasis; timeTarget; popular; $locale;
+        categoryFilter; searchTerm; selectedType; ingredients; timeBasis; timeTarget; popular; tags; $locale;
         loading = true
         getRecipes(buildRequest()).then(({response, data}) => {
             loading = false
@@ -155,7 +165,7 @@
     {#each [['all', 'settings.filterAll'], ['food', 'settings.filterFood'], ['diy', 'settings.filterDiy']] as [value, key] (value)}
         <button
                 type="button"
-                onclick={() => categoryFilter = value as 'all' | RecipeCategory}
+                onclick={() => selectCategory(value as 'all' | RecipeCategory)}
                 class="px-3 py-1.5 text-sm font-medium rounded-md transition-colors hover:cursor-pointer {categoryFilter === value ? 'bg-primary text-primary-foreground' : 'text-muted-foreground hover:text-foreground'}"
         >
             {$_(key)}
@@ -170,6 +180,9 @@
         bind:timeBasis
         bind:timeTarget
         bind:popular
+        showTags
+        bind:tags
+        tagCategory={categoryFilter}
         author=""
         showAuthor={false}
         searchPlaceholder={$_('home.search')}

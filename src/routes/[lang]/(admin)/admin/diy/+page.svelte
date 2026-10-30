@@ -19,6 +19,7 @@
     let searchTerm = $state('');
     let author = $state('');
     let ingredients: string[] = $state([]);
+    let tags: string[] = $state([]);
 
     let recipes: RecipePreview[] = $state([]);
     let total = $state(0);
@@ -32,6 +33,7 @@
             title: searchTerm || undefined,
             author: author || undefined,
             ingredients: ingredients.length > 0 ? ingredients : undefined,
+            tags: tags.length > 0 ? tags : undefined,
             limit: PAGE_SIZE, offset, locale: $locale ?? undefined, search_locale: $locale ?? 'en',
         }).then(({response, data}) => {
             if (response.ok && data) {
@@ -44,7 +46,7 @@
     }
 
     $effect(() => {
-        searchTerm; author; ingredients;
+        searchTerm; author; ingredients; tags;
         untrack(() => {
             offset = 0;
             load();
@@ -87,6 +89,9 @@
             bind:searchTerm
             bind:author
             bind:ingredients
+            showTags
+            bind:tags
+            tagCategory="diy"
             searchPlaceholder={$_('admin.diy.searchPlaceholder')}
             ingredientsLabel={$_('diyHome.materials')}
             ingredientsPlaceholder={$_('diyHome.materialsPlaceholder')}

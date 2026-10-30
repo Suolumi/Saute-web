@@ -36,10 +36,10 @@
         showAuthor?: boolean;
         // tags are filter tag slugs a recipe must all carry; the Tags panel
         // (shown only with showTags) offers the ones that apply to
-        // tagCategory.
+        // tagCategory ('all' offers every tag).
         tags?: string[];
         showTags?: boolean;
-        tagCategory?: RecipeCategory;
+        tagCategory?: RecipeCategory | 'all';
         searchPlaceholder: string;
         ingredientsLabel: string;
         ingredientsPlaceholder: string;

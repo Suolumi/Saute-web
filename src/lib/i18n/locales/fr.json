@@ -1025,7 +1025,7 @@
     "items": {
       "tags": {
         "title": "Étiquettes régime et pratiques",
-        "description": "Les recettes portent des étiquettes comme végan, sans gluten ou plat unique. Filtrez avec le bouton Étiquettes de la liste des recettes ou dans le sélecteur de recettes du planning des repas ; une famille apparaît quand l'original ou l'une de ses variantes porte toutes les étiquettes choisies."
+        "description": "Les recettes portent des étiquettes comme végan, sans gluten ou plat unique. Filtrez avec le bouton Étiquettes des listes de recettes, de vos favoris et de vos propres recettes, ou dans le sélecteur de recettes du planning des repas ; une famille apparaît quand l'original ou l'une de ses variantes porte toutes les étiquettes choisies."
       },
       "variations": {
         "title": "Variations de recette",

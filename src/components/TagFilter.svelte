@@ -7,7 +7,7 @@
     // selected are filter tags: a recipe must carry all of them. Unlike
     // TagPicker, implications aren't applied here - recipes store them
     // expanded, so filtering on "vegetarian" already includes vegan recipes.
-    let {selected = $bindable([]), category}: { selected: string[], category: RecipeCategory } = $props();
+    let {selected = $bindable([]), category}: { selected: string[], category: RecipeCategory | 'all' } = $props();
 
     const groups = $derived(groupTags(tagsForCategory($allTags, category), $locale));
 

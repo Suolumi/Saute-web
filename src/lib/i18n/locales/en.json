@@ -1025,7 +1025,7 @@
     "items": {
       "tags": {
         "title": "Diet & Practical Tags",
-        "description": "Recipes carry tags like vegan, gluten-free or one-pot. Filter by them with the Tags button on the recipe list or in the meal planner's recipe picker; a family shows up when its original or one of its variations has every tag you picked."
+        "description": "Recipes carry tags like vegan, gluten-free or one-pot. Filter by them with the Tags button on the recipe lists, your favorites and your own recipes, or in the meal planner's recipe picker; a family shows up when its original or one of its variations has every tag you picked."
       },
       "variations": {
         "title": "Recipe Variations",
