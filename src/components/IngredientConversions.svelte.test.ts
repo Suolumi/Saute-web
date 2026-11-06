@@ -16,7 +16,7 @@ describe('IngredientConversions', () => {
     it('shows the conversions when tapped and hides them on Escape', async () => {
         const screen = render(IngredientConversions, {lines: ['≈ 42 g', '≈ 30 ml'], children: label});
         const button = screen.getByRole('button');
-        await button.click();
+        (button.element() as HTMLElement).click();
         await expect.element(screen.getByText('≈ 42 g')).toBeVisible();
         await expect.element(button).toHaveAttribute('aria-expanded', 'true');
         await userEvent.keyboard('{Escape}');

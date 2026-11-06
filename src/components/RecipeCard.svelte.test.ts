@@ -48,7 +48,7 @@ describe('RecipeCard', () => {
 
     it('opens the recipe directly even when it has variations', async () => {
         const screen = render(RecipeCard, {recipe: preview({family_size: 3, variation_count: 2})});
-        await screen.getByText('Lasagna').click();
+        (screen.getByText('Lasagna').element() as HTMLElement).click();
         expect(goto).toHaveBeenCalledWith('/en/recipes/r1');
     });
 });

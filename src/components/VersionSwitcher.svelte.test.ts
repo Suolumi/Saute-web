@@ -29,7 +29,7 @@ describe('VersionSwitcher', () => {
 
         const onAdd = vi.fn();
         const screen = render(VersionSwitcher, {root, variations, currentId: 'r', onAdd});
-        await screen.getByRole('button', {name: 'Add yours'}).click();
+        (screen.getByRole('button', {name: 'Add yours'}).element() as HTMLElement).click();
         expect(onAdd).toHaveBeenCalledOnce();
     });
 });
