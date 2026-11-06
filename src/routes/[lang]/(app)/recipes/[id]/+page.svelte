@@ -83,12 +83,16 @@
         }
         familyRoot = null
         familyVariations = []
+        let stale = false
         getFamily(rootId, $locale ?? undefined).then(({root, variations}) => {
+            if (stale)
+                return
             if (root.response.ok && root.data && variations.response.ok && variations.data) {
                 familyRoot = {...root.data, pictures: root.data.pictures.map(p => p.filename)}
                 familyVariations = variations.data.items
             }
         })
+        return () => { stale = true }
     })
 
     function submitVariation() {

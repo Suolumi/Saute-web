@@ -366,13 +366,13 @@ export function getRecipes(params: GetRecipesRequest) {
 }
 
 // getFamily fetches rootId's recipe and its variations (never rootId itself)
-// together, for the detail page's Variations panel and the variation picker
-// modal. Callers must already have resolved rootId (recipe.variation_of ??
+// together, for the recipe page's version switcher. It asks for the API's
+// maximum page so the switcher can include the recipe being viewed. Callers must already have resolved rootId (recipe.variation_of ??
 // recipe.id) - a variation's own id here would return an empty family.
 export async function getFamily(rootId: string, locale?: string) {
     const [root, variations] = await Promise.all([
         getRecipe(rootId, locale),
-        getRecipes({variation_of: rootId, locale}),
+        getRecipes({variation_of: rootId, locale, limit: 100}),
     ])
     return {root, variations}
 }
