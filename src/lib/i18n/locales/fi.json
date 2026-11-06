@@ -740,7 +740,8 @@
       "console": "Konsoli",
       "nutrition": "Ravinto",
       "feedback": "Palaute",
-      "mail": "Sähköposti"
+      "mail": "Sähköposti",
+      "foods": "Ruoka-aineet"
     },
     "mail": {
       "title": "Sähköposti kaikille käyttäjille",
@@ -1010,6 +1011,52 @@
         "open": "Avattu uudelleen",
         "delete": "Palautteen poistaminen epäonnistui",
         "deleted": "Palaute poistettu"
+      }
+    },
+    "foods": {
+      "title": "Ruoka-aineet ja yksiköt",
+      "tabFoods": "Ruoka-aineet",
+      "tabUnits": "Yksiköt",
+      "searchPlaceholder": "Hae nimellä tai aliaksella",
+      "newFood": "Uusi ruoka-aine",
+      "newUnit": "Uusi yksikkö",
+      "editUnit": "Muokkaa yksikköä",
+      "edit": "Muokkaa",
+      "delete": "Poista",
+      "cancel": "Peruuta",
+      "save": "Tallenna",
+      "noResults": "Yksikään ruoka-aine ei vastaa hakua.",
+      "showMore": "Näytä lisää ({count} jäljellä)",
+      "piece": "kpl",
+      "id": "Tunniste",
+      "idHelp": "Pieniä kirjaimia, numeroita ja väliviivoja. Sitä ei voi muuttaa myöhemmin.",
+      "name": "Nimi",
+      "aliases": "Aliakset",
+      "aliasesHelp": "Aliakset ovat muita nimiä, joita ainesosalla voi olla, pilkuilla erotettuina. Reseptin ainesosa vastaa ruoka-ainetta, kun sen nimi on jokin ruoka-aineen nimistä tai aliaksista reseptin kielellä.",
+      "gramsPerPiece": "Grammaa kappaleelta",
+      "density": "Grammaa 100 ml:ssa",
+      "symbol": "Symboli",
+      "kind": "Tyyppi",
+      "weight": "Paino",
+      "volume": "Tilavuus",
+      "gramsPerUnit": "Grammaa yksikköä kohti",
+      "mlPerUnit": "Millilitraa yksikköä kohti",
+      "created": "Ruoka-aine lisätty",
+      "saved": "Ruoka-aine tallennettu",
+      "unitCreated": "Yksikkö lisätty",
+      "unitSaved": "Yksikkö tallennettu",
+      "deleted": "Poistettu",
+      "saveError": "Tallennus epäonnistui",
+      "deleteError": "Poisto epäonnistui",
+      "confirmDeleteTitle": "Poistetaanko?",
+      "confirmDeleteDescription": "Poistetaanko \"{name}\"? Tätä ei voi perua.",
+      "nutrient": {
+        "kcal": "kcal / 100 g",
+        "protein": "Proteiini (g)",
+        "carbs": "Hiilihydraatit (g)",
+        "fat": "Rasva (g)",
+        "salt": "Suola (g)",
+        "sugar": "Sokeri (g)"
       }
     }
   },

@@ -740,7 +740,8 @@
       "console": "控制台",
       "nutrition": "营养",
       "feedback": "反馈",
-      "mail": "邮件"
+      "mail": "邮件",
+      "foods": "食物"
     },
     "mail": {
       "title": "群发邮件",
@@ -1010,6 +1011,52 @@
         "open": "已重新打开",
         "delete": "无法删除此反馈",
         "deleted": "反馈已删除"
+      }
+    },
+    "foods": {
+      "title": "食物和单位",
+      "tabFoods": "食物",
+      "tabUnits": "单位",
+      "searchPlaceholder": "搜索名称或别名",
+      "newFood": "新建食物",
+      "newUnit": "新建单位",
+      "editUnit": "编辑单位",
+      "edit": "编辑",
+      "delete": "删除",
+      "cancel": "取消",
+      "save": "保存",
+      "noResults": "没有匹配的食物。",
+      "showMore": "显示更多（还剩 {count} 个）",
+      "piece": "个",
+      "id": "标识",
+      "idHelp": "小写字母、数字和连字符。之后无法更改。",
+      "name": "名称",
+      "aliases": "别名",
+      "aliasesHelp": "别名是食材可能使用的其他名称，用逗号分隔。当食谱食材的名称与该食物在食谱语言中的某个名称或别名相同时，即匹配到该食物。",
+      "gramsPerPiece": "每个的克数",
+      "density": "每 100 毫升的克数",
+      "symbol": "符号",
+      "kind": "类型",
+      "weight": "重量",
+      "volume": "体积",
+      "gramsPerUnit": "每单位克数",
+      "mlPerUnit": "每单位毫升数",
+      "created": "已添加食物",
+      "saved": "已保存食物",
+      "unitCreated": "已添加单位",
+      "unitSaved": "已保存单位",
+      "deleted": "已删除",
+      "saveError": "无法保存",
+      "deleteError": "无法删除",
+      "confirmDeleteTitle": "删除？",
+      "confirmDeleteDescription": "删除“{name}”？此操作无法撤销。",
+      "nutrient": {
+        "kcal": "每 100 克千卡",
+        "protein": "蛋白质（克）",
+        "carbs": "碳水化合物（克）",
+        "fat": "脂肪（克）",
+        "salt": "盐（克）",
+        "sugar": "糖（克）"
       }
     }
   },

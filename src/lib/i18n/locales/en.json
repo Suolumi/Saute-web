@@ -740,7 +740,8 @@
       "console": "Console",
       "nutrition": "Nutrition",
       "feedback": "Feedback",
-      "mail": "Mail"
+      "mail": "Mail",
+      "foods": "Foods"
     },
     "mail": {
       "title": "Mail all users",
@@ -1010,6 +1011,52 @@
         "open": "Reopened",
         "delete": "Could not delete this feedback",
         "deleted": "Feedback deleted"
+      }
+    },
+    "foods": {
+      "title": "Foods and units",
+      "tabFoods": "Foods",
+      "tabUnits": "Units",
+      "searchPlaceholder": "Search any name or alias",
+      "newFood": "New food",
+      "newUnit": "New unit",
+      "editUnit": "Edit unit",
+      "edit": "Edit",
+      "delete": "Delete",
+      "cancel": "Cancel",
+      "save": "Save",
+      "noResults": "No food matches.",
+      "showMore": "Show more ({count} left)",
+      "piece": "piece",
+      "id": "Id",
+      "idHelp": "Lowercase letters, digits and dashes. It can't be changed later.",
+      "name": "Name",
+      "aliases": "Aliases",
+      "aliasesHelp": "Aliases are other names an ingredient may use, separated by commas. A recipe ingredient matches a food when its name equals one of the food's names or aliases in the recipe's language.",
+      "gramsPerPiece": "Grams per piece",
+      "density": "Grams per 100 ml",
+      "symbol": "Symbol",
+      "kind": "Kind",
+      "weight": "Weight",
+      "volume": "Volume",
+      "gramsPerUnit": "Grams per unit",
+      "mlPerUnit": "Millilitres per unit",
+      "created": "Food added",
+      "saved": "Food saved",
+      "unitCreated": "Unit added",
+      "unitSaved": "Unit saved",
+      "deleted": "Deleted",
+      "saveError": "Could not save",
+      "deleteError": "Could not delete",
+      "confirmDeleteTitle": "Delete?",
+      "confirmDeleteDescription": "Delete \"{name}\"? This can't be undone.",
+      "nutrient": {
+        "kcal": "kcal per 100 g",
+        "protein": "Protein (g)",
+        "carbs": "Carbs (g)",
+        "fat": "Fat (g)",
+        "salt": "Salt (g)",
+        "sugar": "Sugar (g)"
       }
     }
   },

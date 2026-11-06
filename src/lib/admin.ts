@@ -3,6 +3,9 @@ import {apiFetchJson} from "$lib/api";
 import type {User} from "$lib/user";
 import type {GetRecipesRequest, RecipePreview, Ingredient, Step, TranslationSuggestion} from "$lib/recipes";
 import type {IngredientNutritionLink, UnitAlias} from "$lib/nutrition";
+import type {Food} from "$lib/foods";
+import type {ToolboxUnit} from "$lib/toolbox";
+import type {AdminFoodRequest} from "$lib/adminFoods";
 
 // AdminUser is the full user document the back-office sees (unlike the
 // public User type, which the API redacts for non-admin callers).
@@ -319,6 +322,38 @@ export function adminUpdateUnitAlias(id: string, body: AdminUnitAliasRequest) {
 
 export function adminDeleteUnitAlias(id: string) {
     return apiFetchJson<null>(`/admin/unit-aliases/${id}`, 'DELETE')
+}
+
+// Admin CRUD over the food list and the units, applied immediately.
+export function adminCreateFood(body: AdminFoodRequest) {
+    return apiFetchJson<Food>('/admin/foods', 'POST', body)
+}
+
+export function adminUpdateFood(id: string, body: AdminFoodRequest) {
+    return apiFetchJson<Food>(`/admin/foods/${id}`, 'PUT', body)
+}
+
+export function adminDeleteFood(id: string) {
+    return apiFetchJson<null>(`/admin/foods/${id}`, 'DELETE')
+}
+
+export type AdminUnitRequest = {
+    name: string
+    symbol: string
+    kind: 'weight' | 'volume'
+    to_base: number
+}
+
+export function adminCreateUnit(body: AdminUnitRequest) {
+    return apiFetchJson<ToolboxUnit>('/admin/units', 'POST', body)
+}
+
+export function adminUpdateUnit(id: string, body: AdminUnitRequest) {
+    return apiFetchJson<ToolboxUnit>(`/admin/units/${id}`, 'PUT', body)
+}
+
+export function adminDeleteUnit(id: string) {
+    return apiFetchJson<null>(`/admin/units/${id}`, 'DELETE')
 }
 
 // callAdminRoute fires an arbitrary route from the manifest. pathAndQuery is

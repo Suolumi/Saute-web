@@ -740,7 +740,8 @@
       "console": "Console",
       "nutrition": "Nutrition",
       "feedback": "Retours",
-      "mail": "E-mail"
+      "mail": "E-mail",
+      "foods": "Aliments"
     },
     "mail": {
       "title": "E-mail à tous les utilisateurs",
@@ -1010,6 +1011,52 @@
         "open": "Rouvert",
         "delete": "Impossible de supprimer ce retour",
         "deleted": "Retour supprimé"
+      }
+    },
+    "foods": {
+      "title": "Aliments et unités",
+      "tabFoods": "Aliments",
+      "tabUnits": "Unités",
+      "searchPlaceholder": "Chercher un nom ou un alias",
+      "newFood": "Nouvel aliment",
+      "newUnit": "Nouvelle unité",
+      "editUnit": "Modifier l'unité",
+      "edit": "Modifier",
+      "delete": "Supprimer",
+      "cancel": "Annuler",
+      "save": "Enregistrer",
+      "noResults": "Aucun aliment ne correspond.",
+      "showMore": "Afficher plus ({count} restants)",
+      "piece": "pièce",
+      "id": "Identifiant",
+      "idHelp": "Lettres minuscules, chiffres et tirets. Il ne peut plus être modifié ensuite.",
+      "name": "Nom",
+      "aliases": "Alias",
+      "aliasesHelp": "Les alias sont d'autres noms qu'un ingrédient peut porter, séparés par des virgules. Un ingrédient de recette correspond à un aliment quand son nom est l'un des noms ou alias de l'aliment dans la langue de la recette.",
+      "gramsPerPiece": "Grammes par pièce",
+      "density": "Grammes pour 100 ml",
+      "symbol": "Symbole",
+      "kind": "Type",
+      "weight": "Poids",
+      "volume": "Volume",
+      "gramsPerUnit": "Grammes par unité",
+      "mlPerUnit": "Millilitres par unité",
+      "created": "Aliment ajouté",
+      "saved": "Aliment enregistré",
+      "unitCreated": "Unité ajoutée",
+      "unitSaved": "Unité enregistrée",
+      "deleted": "Supprimé",
+      "saveError": "Impossible d'enregistrer",
+      "deleteError": "Impossible de supprimer",
+      "confirmDeleteTitle": "Supprimer ?",
+      "confirmDeleteDescription": "Supprimer « {name} » ? Cette action est définitive.",
+      "nutrient": {
+        "kcal": "kcal pour 100 g",
+        "protein": "Protéines (g)",
+        "carbs": "Glucides (g)",
+        "fat": "Lipides (g)",
+        "salt": "Sel (g)",
+        "sugar": "Sucres (g)"
       }
     }
   },
