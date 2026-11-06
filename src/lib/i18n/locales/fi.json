@@ -1071,7 +1071,7 @@
       },
       "conversions": {
         "title": "Pikamuunnokset",
-        "description": "Napauta reseptin ainesosaa nähdäksesi sen määrän grammoina, millilitroina ja keittiömittana. Ainesosan tiheys huomioidaan, kun se tiedetään."
+        "description": "Napauta reseptin ainesosaa nähdäksesi sen määrän grammoina, millilitroina ja keittiömittana. Vastaavan ruoka-aineen tiheys huomioidaan, kun se tiedetään."
       },
       "share": {
         "title": "Jaa resepti",
@@ -1095,7 +1095,7 @@
       },
       "nutrition": {
         "title": "Ravintotiedot",
-        "description": "Reseptit näyttävät suuntaa-antavan ravintoarvion (kalorit, proteiini, hiilihydraatit, rasva, suola, sokeri), joka skaalautuu annosmäärän mukaan ja lasketaan ainesosista, jotka on varmasti yhdistetty kuratoituun ruoka-tietokantaan. Sovellus näyttää aina, kuinka monta ainesosaa laskettiin mukaan, eikä koskaan esitä osittaista summaa tarkkana - kuka tahansa kirjautunut käyttäjä voi auttaa parantamaan sitä joko linkittämällä ainesosan oikeaan tietueeseen reseptiä kirjoittaessaan, tai suoraan reseptin omasta Ravinto-paneelista, kun se selittää, ettei jotain laskettu mukaan."
+        "description": "Reseptit näyttävät suuntaa-antavan ravintoarvion (kalorit, proteiini, hiilihydraatit, rasva, suola, sokeri), joka skaalautuu annosmäärän mukaan. Ainesosa lasketaan mukaan, kun sen nimi vastaa reseptin kielellä jotakin noin 700 yleisen ruoka-aineen luettelon ruokaa, tai kun joku on linkittänyt sen sellaiseen. Sovellus näyttää aina, kuinka monta ainesosaa laskettiin mukaan, eikä koskaan esitä osittaista summaa tarkkana - kuka tahansa kirjautunut käyttäjä voi auttaa parantamaan sitä reseptiä kirjoittaessaan tai suoraan reseptin Ravinto-paneelista, kun se selittää, ettei jotain laskettu mukaan."
       }
     }
   },

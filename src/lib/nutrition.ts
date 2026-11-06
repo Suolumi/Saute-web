@@ -1,18 +1,6 @@
 import {apiFetchJson} from "$lib/api";
 import type {ToolboxUnit} from "$lib/toolbox";
-
-export type NutritionIngredient = {
-    id: string
-    name: string
-    names: Record<string, string>
-    kcal_per_100g: number
-    protein_g_per_100g: number
-    carbs_g_per_100g: number
-    fat_g_per_100g: number
-    salt_g_per_100g: number
-    sugar_g_per_100g: number
-    created_at: string
-}
+import type {Food} from "$lib/foods";
 
 // IngredientNutrition is one recipe ingredient's own contribution, at the
 // same index as the recipe's `ingredients` array (translation preserves
@@ -44,14 +32,10 @@ export type RecipeNutrition = {
     ingredients: IngredientNutrition[]
 }
 
-export function getNutritionIngredients() {
-    return apiFetchJson<{ items: NutritionIngredient[] }>('/nutrition/ingredients')
-}
-
 export type IngredientNutritionLink = {
     id: string
     name: string
-    nutrition_id: string
+    food_id: string
     g_per_100ml?: number
     grams_per_unit?: number
     created_at: string
@@ -84,7 +68,7 @@ export type NutritionLinkSuggestionRequest = {
     // resolve (see requiredNutritionField below, which mirrors that same
     // decision client-side). Never itself persisted.
     ingredient_unit?: string
-    nutrition_id: string
+    food_id: string
     g_per_100ml?: number
     grams_per_unit?: number
     unit_alias?: string
@@ -95,19 +79,25 @@ export type NutritionLinkSuggestionRequest = {
 // requiredNutritionField mirrors the backend's unit-aware requirement
 // (Service.validateIngredientUnitRequirement): a weight unit needs neither
 // field to resolve to grams, a volume unit needs a density, and a blank or
-// unrecognized unit needs a per-unit weight. Only a direct case-insensitive
+// unrecognized unit needs a per-unit weight - unless food already has that
+// default, in which case nothing is needed. Only a direct case-insensitive
 // match against a unit's own name/symbol is checked here (unlike the
 // backend, this doesn't consult unit aliases) - an unmatched unit falls
 // back to 'grams_per_unit', the same conservative default the backend uses
 // for "blank or unrecognized". The backend remains the authoritative gate
 // regardless of what this returns.
-export function requiredNutritionField(unitText: string, units: ToolboxUnit[]): 'density' | 'grams_per_unit' | null {
+export function requiredNutritionField(
+    unitText: string, units: ToolboxUnit[], food?: Pick<Food, 'g_per_100ml' | 'grams_per_piece'>,
+): 'density' | 'grams_per_unit' | null {
     const text = unitText.trim().toLowerCase()
     if (text) {
         const unit = units.find(u => u.name.toLowerCase() === text || u.symbol.toLowerCase() === text)
-        if (unit) return unit.kind === 'weight' ? null : 'density'
+        if (unit) {
+            if (unit.kind === 'weight') return null
+            return food?.g_per_100ml ? null : 'density'
+        }
     }
-    return 'grams_per_unit'
+    return food?.grams_per_piece ? null : 'grams_per_unit'
 }
 
 // parsePositiveNumberInput reads a required-field numeric input's bound

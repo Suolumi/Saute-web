@@ -475,7 +475,7 @@
             {/snippet}
 
             {#snippet nutrition(servings)}
-                <RecipeNutritionPanel recipeId={recipe!.id} {servings} ingredients={recipe!.ingredients} canonicalIngredients={canonicalIngredients ?? recipe!.ingredients} />
+                <RecipeNutritionPanel recipeId={recipe!.id} {servings} ingredients={recipe!.ingredients} canonicalIngredients={canonicalIngredients ?? recipe!.ingredients} sourceLocale={recipe!.source_locale} />
             {/snippet}
         </RecipeView>
 

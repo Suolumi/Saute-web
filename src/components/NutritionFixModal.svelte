@@ -8,8 +8,9 @@
     import type {ToolboxUnit} from '$lib/toolbox';
     import {
         submitNutritionLinkSuggestion, requiredNutritionField, parsePositiveNumberInput,
-        type NutritionIngredient, type IngredientNutritionLink, type SubmitNutritionLinkResult
+        type IngredientNutritionLink, type SubmitNutritionLinkResult
     } from '$lib/nutrition';
+    import {foodKeywords, foodName, type Food} from '$lib/foods';
     import {toastError, toastSuccess} from '$lib/utils';
     import {apiErrorMessage} from '$lib/api';
 
@@ -19,7 +20,8 @@
     // not just the recipe's author, can open this for one unmatched
     // ingredient, whether it has no link at all yet or already has a link
     // that's just missing the field its unit needs (existingLink covers
-    // both: undefined for the former). Submission goes through the same
+    // both: undefined for the former). matchedFood is the food the name
+    // already matches without a link, pre-selected. Submission goes through the same
     // Service.SubmitNutritionLinkSuggestion endpoint (and the same
     // apply-directly-vs-review rule) as the authoring flow's
     // NutritionLinkSuggestion.svelte.
@@ -28,8 +30,9 @@
         onClose,
         ingredientName,
         ingredientUnit,
-        nutritionIngredients,
+        foods,
         existingLink,
+        matchedFood,
         toolboxUnits,
         onResult
     }: {
@@ -37,13 +40,14 @@
         onClose: () => void
         ingredientName: string
         ingredientUnit: string
-        nutritionIngredients: NutritionIngredient[]
+        foods: Food[]
         existingLink?: IngredientNutritionLink
+        matchedFood?: Food
         toolboxUnits: ToolboxUnit[]
         onResult: (result: SubmitNutritionLinkResult) => void
     } = $props();
 
-    let nutritionId = $state('');
+    let foodId = $state('');
     // comboboxOpen tracks whether the ingredient search's dropdown is
     // currently shown, so the layout space it needs (see the template
     // below) is only reserved while it's actually open, not permanently.
@@ -54,33 +58,33 @@
     let fieldValue: string | number = $state('');
     let submitting = $state(false);
 
-    const requiredField = $derived(requiredNutritionField(ingredientUnit, toolboxUnits));
+    const selectedFood = $derived(foods.find(f => f.id === foodId));
+    // The link's own overrides stay on a resubmitted link (the API merges
+    // them), so they count as defaults here too.
+    const requiredField = $derived(requiredNutritionField(ingredientUnit, toolboxUnits, {
+        g_per_100ml: existingLink?.g_per_100ml ?? selectedFood?.g_per_100ml,
+        grams_per_piece: existingLink?.grams_per_unit ?? selectedFood?.grams_per_piece,
+    }));
     const fieldValueNumber = $derived(parsePositiveNumberInput(fieldValue));
     const fieldValueValid = $derived(requiredField === null || (fieldValueNumber !== null && fieldValueNumber > 0));
-    const canSubmit = $derived(!!nutritionId && fieldValueValid && !submitting);
+    const canSubmit = $derived(!!foodId && fieldValueValid && !submitting);
 
-    // Reset the form to this ingredient's current state every time the
-    // modal opens - existingLink pre-fills the nutrition entry (and
-    // whichever field it already has, if any) so a viewer completing a
-    // partially-linked ingredient isn't asked to redo what's already there.
+    // Reset the form every time the modal opens, pre-selecting the food the
+    // ingredient already resolves to.
     $effect(() => {
         if (!open) return;
-        nutritionId = existingLink?.nutrition_id ?? '';
-        const current = requiredField === 'density' ? existingLink?.g_per_100ml : existingLink?.grams_per_unit;
-        fieldValue = current != null ? String(current) : '';
+        foodId = existingLink?.food_id ?? matchedFood?.id ?? '';
+        fieldValue = '';
     });
 
-    function displayName(item: NutritionIngredient): string {
-        return item.names?.[$locale ?? ''] ?? item.name;
-    }
-
-    const localizedNutritionIngredients = $derived(nutritionIngredients.map(n => ({id: n.id, name: displayName(n)})));
+    const currentFood = $derived(foods.find(f => f.id === (existingLink?.food_id ?? matchedFood?.id)));
+    const localizedFoods = $derived(foods.map(f => ({id: f.id, name: foodName(f, $locale), keywords: foodKeywords(f)})));
 
     async function submit() {
         if (!canSubmit) return;
         submitting = true;
         const {response, data} = await submitNutritionLinkSuggestion({
-            ingredient_name: ingredientName, ingredient_unit: ingredientUnit, nutrition_id: nutritionId,
+            ingredient_name: ingredientName, ingredient_unit: ingredientUnit, food_id: foodId,
             g_per_100ml: requiredField === 'density' && fieldValueNumber != null ? fieldValueNumber : undefined,
             grams_per_unit: requiredField === 'grams_per_unit' && fieldValueNumber != null ? fieldValueNumber : undefined,
         });
@@ -97,8 +101,8 @@
 
 <Modal {open} {onClose} title={$_('recipe.nutrition.fix.modalTitle', {values: {name: ingredientName}})}>
     <div class="space-y-4">
-        {#if existingLink}
-            <p class="text-xs text-muted-foreground">{$_('recipe.nutrition.fix.alreadyLinkedTo', {values: {name: displayName(nutritionIngredients.find(n => n.id === existingLink!.nutrition_id) ?? {name: existingLink.name} as NutritionIngredient)}})}</p>
+        {#if currentFood}
+            <p class="text-xs text-muted-foreground">{$_('recipe.nutrition.fix.alreadyLinkedTo', {values: {name: foodName(currentFood, $locale)}})}</p>
         {/if}
         <!-- min-height reserves enough room for the combobox's open dropdown
              (roughly 7-8 rows at its own max-h-64) so the modal's box is
@@ -113,7 +117,7 @@
              the field whenever the dropdown was closed. -->
         <div class={comboboxOpen ? 'min-h-[21rem]' : ''}>
             <Label for="fix-nutrition-entry" required>{$_('recipe.nutrition.fix.searchLabel')}</Label>
-            <IngredientCombobox id="fix-nutrition-entry" ingredients={localizedNutritionIngredients} bind:value={nutritionId} bind:open={comboboxOpen} placeholder={$_('edit.ingredients.nutritionLink.searchPlaceholder')} />
+            <IngredientCombobox id="fix-nutrition-entry" ingredients={localizedFoods} bind:value={foodId} bind:open={comboboxOpen} placeholder={$_('edit.ingredients.nutritionLink.searchPlaceholder')} />
         </div>
         {#if requiredField !== null}
             <div>

@@ -226,7 +226,7 @@ export async function refreshPendingTranslationSuggestionCount() {
 
 // NutritionSuggestionView is one row in the admin review list: the
 // suggestion's own content plus its resolved submitter username, the target
-// nutrition entry's display name, and - for a correction - the link's
+// food's English name, and - for a correction - the link's
 // current name it would replace.
 export type NutritionSuggestionView = {
     id: string
@@ -239,8 +239,8 @@ export type NutritionSuggestionView = {
     created_at: string
     reviewed_at?: string
     ingredient_name: string
-    nutrition_id: string
-    nutrition_name?: string
+    food_id: string
+    food_name?: string
     g_per_100ml?: number
     grams_per_unit?: number
     unit_alias?: string
@@ -287,7 +287,7 @@ export async function refreshPendingNutritionSuggestionCount() {
 // still goes through review for a correction, while these never do).
 export type AdminNutritionLinkRequest = {
     ingredient_name: string
-    nutrition_id: string
+    food_id: string
     g_per_100ml?: number
     grams_per_unit?: number
 }

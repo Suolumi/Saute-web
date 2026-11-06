@@ -3,10 +3,9 @@
     import HighlightText from '../HighlightText.svelte';
     import {normalizeForMatch} from '$lib/highlight';
 
-    // NamedItem is deliberately minimal - both ToolboxIngredient and
-    // NutritionIngredient satisfy it structurally, so this one combobox is
-    // reused against either list rather than rebuilt per list.
-    type NamedItem = { id: string, name: string }
+    // NamedItem is shown by name; keywords (e.g. a food's names in other
+    // languages and its aliases) also match a search.
+    type NamedItem = { id: string, name: string, keywords?: string[] }
 
     let {
         ingredients,
@@ -41,6 +40,7 @@
     // Normalized once per ingredient list (not per keystroke) so filtering/
     // ranking on every keystroke is just map lookups.
     const normalizedNames = $derived(new Map(ingredients.map(i => [i.id, normalizeForMatch(i.name)])));
+    const normalizedKeywords = $derived(new Map(ingredients.map(i => [i.id, (i.keywords ?? []).map(normalizeForMatch)])));
 
     // A starts-with match (e.g. "Oeuf" for query "oeuf") ranks above a
     // contains-elsewhere match (e.g. "Boeuf") - alphabetical order alone was
@@ -54,7 +54,8 @@
         if (q.length === 0) return [...ingredients].sort((a, b) => collator.compare(a.name, b.name));
         const normalizedQuery = normalizeForMatch(q);
         return ingredients
-            .filter(i => (normalizedNames.get(i.id) ?? '').includes(normalizedQuery))
+            .filter(i => (normalizedNames.get(i.id) ?? '').includes(normalizedQuery)
+                || (normalizedKeywords.get(i.id) ?? []).some(k => k.includes(normalizedQuery)))
             .sort((a, b) => {
                 const tierA = (normalizedNames.get(a.id) ?? '').startsWith(normalizedQuery) ? 0 : 1;
                 const tierB = (normalizedNames.get(b.id) ?? '').startsWith(normalizedQuery) ? 0 : 1;

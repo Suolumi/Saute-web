@@ -1,7 +1,8 @@
 <script lang="ts">
     import {_, locale} from 'svelte-i18n';
     import {X, Search, Check} from '@lucide/svelte';
-    import {submitNutritionLinkSuggestion, requiredNutritionField, parsePositiveNumberInput, type NutritionIngredient, type IngredientNutritionLink} from '$lib/nutrition';
+    import {submitNutritionLinkSuggestion, requiredNutritionField, parsePositiveNumberInput, type IngredientNutritionLink} from '$lib/nutrition';
+    import {foodKeywords, foodName, type Food, type FoodMatcher} from '$lib/foods';
     import type {ToolboxUnit} from '$lib/toolbox';
     import {toastError, toastSuccess} from '$lib/utils';
     import {apiErrorMessage} from '$lib/api';
@@ -9,28 +10,23 @@
     import Button from './Button.svelte';
     import Input from './Input.svelte';
 
-    // NutritionLinkSuggestion offers a best-effort match from the curated
-    // Ciqual-derived reference list for one ingredient row while authoring -
-    // same dismissible, non-blocking posture as DuplicateNudge. existingLinks
-    // (fetched once by the caller from GET /nutrition/ingredient-links) is
-    // what lets this tell "already linked" from "no link yet". Accepting a
-    // match for a not-yet-linked ingredient applies immediately (no review);
-    // accepting one for an ingredient that already has a link submits a
-    // correction for admin review instead - see
-    // Service.SubmitNutritionLinkSuggestion's docs for why. ingredientUnit
-    // (this row's own unit text, may be blank) decides via
-    // requiredNutritionField whether a density or a per-unit weight must
-    // also be collected before a link can be submitted at all - a weight
-    // unit needs neither. ingredientQuantity gates the whole component: a
-    // quantity-less ingredient (e.g. "Salt", entered with no amount) can
-    // never resolve to grams regardless of what's linked -
-    // resolveIngredientGrams bails immediately on Quantity <= 0 - so there's
-    // nothing to gain from asking anyone to link or correct it.
+    // NutritionLinkSuggestion shows, under one ingredient row while
+    // authoring, which food the ingredient resolves to - same dismissible,
+    // non-blocking posture as DuplicateNudge. An ingredient named like a food
+    // (matcher, built from the food list in the draft's language) needs no
+    // link; one that isn't gets a best-guess food to accept or a search.
+    // Linking a not-yet-linked name applies immediately; relinking one that
+    // already has a link submits a correction for admin review (see
+    // Service.SubmitNutritionLinkSuggestion). A density or per-piece weight
+    // is asked for only when the row's unit needs one and the chosen food
+    // has no default (requiredNutritionField). ingredientQuantity gates the
+    // whole component: an ingredient with no amount never resolves to grams.
     let {
         ingredientName,
         ingredientUnit,
         ingredientQuantity,
-        nutritionIngredients,
+        foods,
+        matcher,
         existingLinks,
         toolboxUnits,
         onApplied = () => {}
@@ -38,7 +34,8 @@
         ingredientName: string
         ingredientUnit: string
         ingredientQuantity: number
-        nutritionIngredients: NutritionIngredient[]
+        foods: Food[]
+        matcher: FoodMatcher
         existingLinks: Record<string, IngredientNutritionLink>
         toolboxUnits: ToolboxUnit[]
         onApplied?: (link: IngredientNutritionLink) => void
@@ -46,60 +43,41 @@
 
     let dismissedKey: string | null = $state(null);
     let submittedFor: string | null = $state(null);
-    // justAppliedLink is set once this component itself applies a link
-    // directly (Applied response) - merged with the existingLinks prop so
-    // the "linked" chip shows immediately without waiting for the parent to
-    // refetch GET /nutrition/ingredient-links.
+    // justAppliedLink is set once this component itself applies a link, so
+    // the "linked" chip shows without waiting for the parent's list.
     let justAppliedLink: IngredientNutritionLink | null = $state(null);
     let searching = $state(false);
     let searchValue = $state('');
     let submitting = $state(false);
 
-    // awaitingFieldFor holds the nutrition entry id once "Accept" has been
-    // clicked but a required density/grams-per-unit value still needs
-    // collecting first (see requiredField below) - the inline expand shows
-    // a number input for it instead of submitting immediately.
-    let awaitingFieldFor: string | null = $state(null);
+    // awaitingField holds the food once "Accept" was clicked but a density
+    // or per-piece weight still has to be collected before submitting.
+    let awaitingField: Food | null = $state(null);
     // Declared/initialized as a string, but bind:value on the number input
     // below silently turns this into an actual number once typed into (see
     // parsePositiveNumberInput) - never call string-only methods on it.
     let fieldValue: string | number = $state('');
 
-    const requiredField = $derived(requiredNutritionField(ingredientUnit, toolboxUnits));
-    const fieldValueNumber = $derived(parsePositiveNumberInput(fieldValue));
-    const fieldValueValid = $derived(requiredField === null || (fieldValueNumber !== null && fieldValueNumber > 0));
-
     const trimmedName = $derived(ingredientName.trim());
 
-    // displayName resolves a curated entry's name in the site's current
-    // language - NutritionIngredient.name is always Ciqual's own French
-    // name; .names holds the en/fi translations baked in at import (see
-    // CLAUDE.md's Nutrition Info entry). Falls back to the French name for
-    // fr itself (not present in .names, since it *is* the canonical name)
-    // or if a translation is somehow missing.
-    function displayName(item: NutritionIngredient): string {
-        return item.names?.[$locale ?? ''] ?? item.name;
+    function fieldFor(food: Food | undefined) {
+        return requiredNutritionField(ingredientUnit, toolboxUnits, food);
     }
 
     const effectiveLink = $derived(justAppliedLink ?? existingLinks[trimmedName.toLowerCase()]);
-    const effectiveLinkTarget = $derived(effectiveLink ? nutritionIngredients.find(n => n.id === effectiveLink.nutrition_id) : undefined);
+    const effectiveLinkTarget = $derived(effectiveLink ? foods.find(f => f.id === effectiveLink.food_id) : undefined);
+    // autoFood is the food the name already matches with no link.
+    const autoFood = $derived(effectiveLink ? undefined : matcher.match(trimmedName)?.food);
 
-    // Best match: shortest curated name (in the site's current language) that
-    // contains the typed ingredient name, or vice versa, case-insensitively.
-    // Matching only against the current locale's own display name (rather
-    // than merging in the other languages' names too) is what keeps an
-    // English "Flour" from matching via some unrelated entry's French name -
-    // and keeps the shortest-name tie-break comparing like with like. Exact
-    // matching is what the backend actually uses to resolve nutrition later;
-    // this is only a starting suggestion for the author to accept or search
-    // past.
-    const bestMatch = $derived.by(() => {
+    // Best guess when nothing matches: the shortest food name in the site's
+    // language that contains the typed name, or is contained in it.
+    const bestGuess = $derived.by(() => {
         const q = trimmedName.toLowerCase();
         if (q.length < 3) return null;
-        let best: NutritionIngredient | null = null;
+        let best: Food | null = null;
         let bestName = '';
-        for (const candidate of nutritionIngredients) {
-            const name = displayName(candidate).toLowerCase();
+        for (const candidate of foods) {
+            const name = foodName(candidate, $locale).toLowerCase();
             if (!(name.includes(q) || q.includes(name))) continue;
             if (!best || name.length < bestName.length) {
                 best = candidate;
@@ -108,47 +86,52 @@
         }
         return best;
     });
+    // suggested is what the pill offers: the matched food when it still
+    // lacks the number this row's unit needs, else the best guess.
+    const suggested = $derived(autoFood ?? bestGuess);
+
+    const searchFood = $derived(foods.find(f => f.id === searchValue));
+    const requiredField = $derived(fieldFor(awaitingField ?? (searching ? searchFood : suggested) ?? undefined));
+    const fieldValueNumber = $derived(parsePositiveNumberInput(fieldValue));
+    const fieldValueValid = $derived(requiredField === null || (fieldValueNumber !== null && fieldValueNumber > 0));
 
     const visible = $derived(
         !effectiveLink &&
         trimmedName.length >= 3 &&
-        bestMatch !== null &&
+        suggested !== null &&
         submittedFor !== trimmedName &&
-        dismissedKey !== `${trimmedName}:${bestMatch?.id}`
+        dismissedKey !== `${trimmedName}:${suggested?.id}`
     );
 
-    // localizedNutritionIngredients feeds IngredientCombobox's search list -
-    // it only takes a plain {id, name}[] shape, so the locale resolution
-    // happens here rather than inside that (locale-agnostic, shared with
-    // Toolbox) component.
-    const localizedNutritionIngredients = $derived(nutritionIngredients.map(n => ({id: n.id, name: displayName(n)})));
+    const localizedFoods = $derived(foods.map(f => ({id: f.id, name: foodName(f, $locale), keywords: foodKeywords(f)})));
 
     function dismiss() {
-        if (bestMatch) dismissedKey = `${trimmedName}:${bestMatch.id}`;
+        if (suggested) dismissedKey = `${trimmedName}:${suggested.id}`;
     }
 
     async function accept() {
-        if (!bestMatch) return;
-        if (requiredField !== null) {
-            awaitingFieldFor = bestMatch.id;
+        if (!suggested) return;
+        if (fieldFor(suggested) !== null) {
+            awaitingField = suggested;
             fieldValue = '';
             return;
         }
-        await submit(bestMatch.id);
+        await submit(suggested);
     }
 
     async function confirmAwaitingField() {
-        if (!awaitingFieldFor || !fieldValueValid) return;
-        await submit(awaitingFieldFor, fieldValueNumber);
-        awaitingFieldFor = null;
+        if (!awaitingField || !fieldValueValid) return;
+        await submit(awaitingField, fieldValueNumber);
+        awaitingField = null;
     }
 
-    async function submit(nutritionId: string, value?: number | null) {
+    async function submit(food: Food, value?: number | null) {
+        const field = fieldFor(food);
         submitting = true;
         const {response, data} = await submitNutritionLinkSuggestion({
-            ingredient_name: trimmedName, ingredient_unit: ingredientUnit, nutrition_id: nutritionId,
-            g_per_100ml: requiredField === 'density' && value != null ? value : undefined,
-            grams_per_unit: requiredField === 'grams_per_unit' && value != null ? value : undefined,
+            ingredient_name: trimmedName, ingredient_unit: ingredientUnit, food_id: food.id,
+            g_per_100ml: field === 'density' && value != null ? value : undefined,
+            grams_per_unit: field === 'grams_per_unit' && value != null ? value : undefined,
         });
         submitting = false;
         if (response.ok && data) {
@@ -170,11 +153,11 @@
         searching = true;
         searchValue = '';
         fieldValue = '';
-        awaitingFieldFor = null;
+        awaitingField = null;
     }
 
     async function confirmSearch() {
-        if (searchValue && fieldValueValid) await submit(searchValue, fieldValueNumber);
+        if (searchFood && fieldValueValid) await submit(searchFood, fieldValueNumber);
     }
 </script>
 
@@ -195,20 +178,20 @@
     <div class="mt-1.5 inline-flex items-center gap-1.5 rounded-full bg-primary/10 text-primary px-3 py-1 text-xs font-medium">
         {$_('edit.ingredients.nutritionLink.submittedChip')}
     </div>
-{:else if awaitingFieldFor}
+{:else if awaitingField}
     <div class="mt-1.5 rounded-lg border border-primary/30 bg-primary/5 p-3">
-        <p class="text-xs text-foreground">{$_('edit.ingredients.nutritionLink.suggestion', {values: {name: bestMatch ? displayName(bestMatch) : ''}})}</p>
+        <p class="text-xs text-foreground">{$_('edit.ingredients.nutritionLink.suggestion', {values: {name: foodName(awaitingField, $locale)}})}</p>
         {@render fieldInput()}
         <div class="mt-2 flex items-center gap-2">
             <Button type="button" size="sm" disabled={!fieldValueValid || submitting} onclick={confirmAwaitingField}>{$_('edit.ingredients.nutritionLink.link')}</Button>
-            <Button type="button" size="sm" variant="outline" onclick={() => awaitingFieldFor = null}>{$_('edit.ingredients.nutritionLink.cancel')}</Button>
+            <Button type="button" size="sm" variant="outline" onclick={() => awaitingField = null}>{$_('edit.ingredients.nutritionLink.cancel')}</Button>
         </div>
     </div>
 {:else if searching}
     <div class="mt-1.5 rounded-lg border border-border p-3">
         <div class="flex items-center gap-2">
             <div class="flex-1 max-w-xs">
-                <IngredientCombobox ingredients={localizedNutritionIngredients} bind:value={searchValue} placeholder={$_('edit.ingredients.nutritionLink.searchPlaceholder')} />
+                <IngredientCombobox ingredients={localizedFoods} bind:value={searchValue} placeholder={$_('edit.ingredients.nutritionLink.searchPlaceholder')} />
             </div>
             <Button type="button" size="sm" disabled={!searchValue || !fieldValueValid || submitting} onclick={confirmSearch}>{$_('edit.ingredients.nutritionLink.link')}</Button>
             <Button type="button" size="sm" variant="outline" onclick={() => searching = false}>{$_('edit.ingredients.nutritionLink.cancel')}</Button>
@@ -217,17 +200,17 @@
             {@render fieldInput()}
         {/if}
     </div>
-{:else if effectiveLink}
+{:else if effectiveLink || (autoFood && fieldFor(autoFood) === null)}
     <div class="mt-1.5 inline-flex items-center gap-1.5 flex-wrap rounded-full border border-border bg-muted/50 pl-3 pr-1.5 py-1 text-xs">
         <Check class="w-3 h-3 text-primary" />
-        <span class="text-foreground">{$_('edit.ingredients.nutritionLink.linkedTo', {values: {name: effectiveLinkTarget ? displayName(effectiveLinkTarget) : effectiveLink.name}})}</span>
+        <span class="text-foreground">{$_('edit.ingredients.nutritionLink.linkedTo', {values: {name: effectiveLinkTarget ? foodName(effectiveLinkTarget, $locale) : autoFood ? foodName(autoFood, $locale) : effectiveLink?.name ?? ''}})}</span>
         <button type="button" onclick={openSearch} aria-label={$_('edit.ingredients.nutritionLink.linkDifferently')} title={$_('edit.ingredients.nutritionLink.linkDifferently')} class="p-1 rounded-full text-muted-foreground hover:text-foreground hover:bg-accent hover:cursor-pointer">
             <Search class="w-3 h-3" />
         </button>
     </div>
-{:else if visible && bestMatch}
+{:else if visible && suggested}
     <div class="mt-1.5 inline-flex items-center gap-1.5 flex-wrap rounded-full border border-primary/30 bg-primary/5 pl-3 pr-1.5 py-1 text-xs">
-        <span class="text-foreground">{$_('edit.ingredients.nutritionLink.suggestion', {values: {name: displayName(bestMatch)}})}</span>
+        <span class="text-foreground">{$_('edit.ingredients.nutritionLink.suggestion', {values: {name: foodName(suggested, $locale)}})}</span>
         <button type="button" disabled={submitting} onclick={accept} class="font-semibold text-primary hover:underline hover:cursor-pointer">
             {$_('edit.ingredients.nutritionLink.accept')}
         </button>

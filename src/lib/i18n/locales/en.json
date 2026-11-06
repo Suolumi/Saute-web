@@ -1071,7 +1071,7 @@
       },
       "conversions": {
         "title": "Quick Conversions",
-        "description": "Tap an ingredient on a recipe to see its quantity in grams, millilitres and a kitchen measure, using the ingredient's density when it's known."
+        "description": "Tap an ingredient on a recipe to see its quantity in grams, millilitres and a kitchen measure, using the matching food's density when it's known."
       },
       "share": {
         "title": "Share a Recipe",
@@ -1095,7 +1095,7 @@
       },
       "nutrition": {
         "title": "Nutrition Info",
-        "description": "Recipes show a best-effort nutrition estimate (calories, protein, carbs, fat, salt, sugar) that scales with the servings stepper, computed from ingredients confidently matched to a curated food database. It always shows how many ingredients were counted, never a partial total presented as exact — any signed-in user can help it improve, either while authoring a recipe or right from a recipe's own Nutrition panel whenever it explains that something wasn't counted."
+        "description": "Recipes show a best-effort nutrition estimate (calories, protein, carbs, fat, salt, sugar) that scales with the servings stepper. An ingredient counts when its name matches a food of a curated list of about 700 generic foods, in the recipe's language, or when someone linked it to one. It always shows how many ingredients were counted, never a partial total presented as exact — any signed-in user can help it improve, either while authoring a recipe or right from a recipe's own Nutrition panel whenever it explains that something wasn't counted."
       }
     }
   },

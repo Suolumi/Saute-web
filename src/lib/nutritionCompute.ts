@@ -1,9 +1,10 @@
 import type {Ingredient} from "$lib/recipes";
-import {getToolboxIngredients, getToolboxUnits, type ToolboxIngredient, type ToolboxUnit} from "$lib/toolbox";
+import {getToolboxUnits, type ToolboxUnit} from "$lib/toolbox";
 import {
-    getIngredientNutritionLinks, getNutritionIngredients, getUnitAliases,
-    type IngredientNutrition, type IngredientNutritionLink, type NutritionIngredient, type RecipeNutrition, type UnitAlias
+    getIngredientNutritionLinks, getUnitAliases,
+    type IngredientNutrition, type IngredientNutritionLink, type RecipeNutrition, type UnitAlias
 } from "$lib/nutrition";
+import {foodMatcher, getFoods, type Food} from "$lib/foods";
 
 // Client-side port of Saute-api's GetRecipeNutrition/computeRecipeNutrition
 // (internal/recipe_service/nutrition.go), used by the edit page's live
@@ -13,61 +14,38 @@ import {
 
 export type NutritionReferenceData = {
     units: {id: string, name: string, symbol: string, kind: string, to_base: number}[]
-    toolbox_ingredients: {name: string, g_per_100ml: number}[]
     unit_aliases: {alias: string, unit_id: string}[]
-    links: Pick<IngredientNutritionLink, 'id' | 'name' | 'nutrition_id' | 'g_per_100ml' | 'grams_per_unit'>[]
-    foods: {
-        id: string
-        kcal_per_100g: number
-        protein_g_per_100g: number
-        carbs_g_per_100g: number
-        fat_g_per_100g: number
-        salt_g_per_100g: number
-        sugar_g_per_100g: number
-    }[]
+    links: Pick<IngredientNutritionLink, 'id' | 'name' | 'food_id' | 'g_per_100ml' | 'grams_per_unit'>[]
+    foods: Food[]
 }
 
 // LoadedNutritionReferenceData is NutritionReferenceData as the API returns it.
 export type LoadedNutritionReferenceData = {
     units: ToolboxUnit[]
-    toolbox_ingredients: ToolboxIngredient[]
     unit_aliases: UnitAlias[]
     links: IngredientNutritionLink[]
-    foods: NutritionIngredient[]
+    foods: Food[]
 }
 
 type NutritionIngredientInput = Pick<Ingredient, 'name' | 'quantity' | 'unit' | 'recipe_ref'>
 
 type Unit = NutritionReferenceData['units'][number]
-type Link = NutritionReferenceData['links'][number]
 
 // loadNutritionReferenceData fetches every public list the computation
-// needs, in their canonical (source-locale) form. Toolbox ingredients are
-// followed by their names in sourceLocale, the language the draft is
-// presumably written in, as the API matches densities on both. Resolves to
-// null if any request fails.
-export async function loadNutritionReferenceData(sourceLocale?: string | null): Promise<LoadedNutritionReferenceData | null> {
+// needs. Resolves to null if any request fails.
+export async function loadNutritionReferenceData(): Promise<LoadedNutritionReferenceData | null> {
     let results
     try {
-        results = await Promise.all([
-            getToolboxUnits(), getToolboxIngredients(), getUnitAliases(), getIngredientNutritionLinks(), getNutritionIngredients(),
-            getToolboxIngredients(sourceLocale ?? null),
-        ])
+        results = await Promise.all([getToolboxUnits(), getUnitAliases(), getIngredientNutritionLinks(), getFoods()])
     } catch {
         return null
     }
-    const [units, toolboxIngredients, aliases, links, foods, translatedToolboxIngredients] = results
-    if (!units.response.ok || !toolboxIngredients.response.ok || !aliases.response.ok || !links.response.ok || !foods.response.ok || !translatedToolboxIngredients.response.ok)
+    const [units, aliases, links, foods] = results
+    if (!units.response.ok || !aliases.response.ok || !links.response.ok || !foods.response.ok)
         return null
-    if (!units.data || !toolboxIngredients.data || !aliases.data || !links.data || !foods.data || !translatedToolboxIngredients.data)
+    if (!units.data || !aliases.data || !links.data || !foods.data)
         return null
-    return {
-        units: units.data.items,
-        toolbox_ingredients: [...toolboxIngredients.data.items, ...translatedToolboxIngredients.data.items],
-        unit_aliases: aliases.data.items,
-        links: links.data.items,
-        foods: foods.data.items,
-    }
+    return {units: units.data.items, unit_aliases: aliases.data.items, links: links.data.items, foods: foods.data.items}
 }
 
 // withLink returns data with link added, replacing any link with the same id.
@@ -102,26 +80,21 @@ function firstByKey<T>(items: T[], key: (item: T) => string): Map<string, T> {
 }
 
 // computeRecipeNutrition mirrors GetRecipeNutrition for an in-memory
-// ingredient list: totals for `servings` (<= 0 means baseQuantity), with one
-// line per ingredient at the same index.
+// ingredient list written in locale: totals for `servings` (<= 0 means
+// baseQuantity), with one line per ingredient at the same index.
 export function computeRecipeNutrition(
     ingredients: NutritionIngredientInput[],
     baseQuantity: number,
     servings: number,
     data: NutritionReferenceData,
+    locale?: string | null,
 ): RecipeNutrition {
     if (servings <= 0) servings = baseQuantity
     let ratio = 1
     if (baseQuantity > 0) ratio = servings / baseQuantity
 
-    const linksByNameLower = firstByKey(data.links, l => l.name.toLowerCase())
+    const foods = foodMatcher(data.foods, data.links, locale)
     const aliasesByLower = firstByKey(data.unit_aliases, a => a.alias.toLowerCase())
-    const foodsById = firstByKey(data.foods, f => f.id)
-    const densityByNameLower = new Map<string, number>()
-    for (const ti of data.toolbox_ingredients) {
-        const key = ti.name.toLowerCase()
-        if (!densityByNameLower.has(key)) densityByNameLower.set(key, ti.g_per_100ml)
-    }
 
     function resolveUnit(text: string): Unit | null {
         const q = text.toLowerCase()
@@ -132,20 +105,19 @@ export function computeRecipeNutrition(
         return data.units.find(u => u.id === alias.unit_id) ?? null
     }
 
-    function resolveGrams(ingredient: NutritionIngredientInput, link: Link): number | null {
+    function resolveGrams(ingredient: NutritionIngredientInput, gPer100ml: number | null, gramsPerPiece: number | null): number | null {
         if (!(ingredient.quantity > 0)) return null
         const unitText = (ingredient.unit ?? '').trim()
         if (unitText !== '') {
             const unit = resolveUnit(unitText)
             if (unit) {
                 if (unit.kind === 'weight') return ingredient.quantity * unit.to_base
-                const density = link.g_per_100ml ?? densityByNameLower.get(ingredient.name.toLowerCase())
-                if (density === undefined) return null
-                return ingredient.quantity * unit.to_base * density / 100
+                if (gPer100ml === null) return null
+                return ingredient.quantity * unit.to_base * gPer100ml / 100
             }
         }
-        if (link.grams_per_unit !== undefined && link.grams_per_unit !== null)
-            return ingredient.quantity * link.grams_per_unit
+        if (gramsPerPiece !== null)
+            return ingredient.quantity * gramsPerPiece
         return null
     }
 
@@ -156,12 +128,11 @@ export function computeRecipeNutrition(
 
     ingredients.forEach((ingredient, i) => {
         if (ingredient.recipe_ref || (ingredient.name ?? '').trim() === '') return
-        const link = linksByNameLower.get(ingredient.name.toLowerCase())
-        if (!link) return
-        const grams = resolveGrams(ingredient, link)
+        const match = foods.match(ingredient.name)
+        if (!match) return
+        const grams = resolveGrams(ingredient, match.g_per_100ml, match.grams_per_piece)
         if (grams === null) return
-        const food = foodsById.get(link.nutrition_id)
-        if (!food) return
+        const food = match.food
         matched++
         const factor = grams / 100
         const line: Totals = {

@@ -1,47 +1,60 @@
 import {formatScaledQuantity, type Ingredient} from "$lib/recipes";
-import {getToolboxIngredients, getToolboxUnits, type ToolboxUnit} from "$lib/toolbox";
-import {getIngredientNutritionLinks, getUnitAliases, type UnitAlias} from "$lib/nutrition";
+import {getToolboxUnits, type ToolboxUnit} from "$lib/toolbox";
+import {getIngredientNutritionLinks, getUnitAliases, type IngredientNutritionLink, type UnitAlias} from "$lib/nutrition";
+import {foodMatcher, getFoods, type Food, type FoodMatcher} from "$lib/foods";
 
+// ConversionData is what ingredientConversions needs; locale is the
+// recipe's source locale, the language its canonical ingredient names are in.
 export type ConversionData = {
     units: ToolboxUnit[]
-    densities: {name: string, g_per_100ml: number}[]
+    foods: Food[]
     unit_aliases: UnitAlias[]
-    links: {name: string, g_per_100ml?: number | null}[]
+    links: Pick<IngredientNutritionLink, 'name' | 'food_id' | 'g_per_100ml' | 'grams_per_unit'>[]
+    locale: string | null
 }
 
 export type Conversion = {amount: number, unit: ToolboxUnit}
 
 const KITCHEN_UNITS = ['cup', 'tbsp', 'tsp']
 
-// loadConversionData fetches the lists ingredientConversions needs. Toolbox
-// ingredients come twice, canonical and in sourceLocale, so a density
-// matches the recipe's own wording too. Resolves to null if any request fails.
+// loadConversionData fetches the lists ingredientConversions needs. Resolves
+// to null if any request fails.
 export async function loadConversionData(sourceLocale?: string | null): Promise<ConversionData | null> {
     let results
     try {
-        results = await Promise.all([
-            getToolboxUnits(), getToolboxIngredients(), getToolboxIngredients(sourceLocale ?? null),
-            getUnitAliases(), getIngredientNutritionLinks(),
-        ])
+        results = await Promise.all([getToolboxUnits(), getFoods(), getUnitAliases(), getIngredientNutritionLinks()])
     } catch {
         return null
     }
-    const [units, ingredients, translated, aliases, links] = results
-    if (!units.data || !ingredients.data || !translated.data || !aliases.data || !links.data)
+    const [units, foods, aliases, links] = results
+    if (!units.data || !foods.data || !aliases.data || !links.data)
         return null
-    if (!units.response.ok || !ingredients.response.ok || !translated.response.ok || !aliases.response.ok || !links.response.ok)
+    if (!units.response.ok || !foods.response.ok || !aliases.response.ok || !links.response.ok)
         return null
     return {
         units: units.data.items,
-        densities: [...ingredients.data.items, ...translated.data.items],
+        foods: foods.data.items,
         unit_aliases: aliases.data.items,
         links: links.data.items,
+        locale: sourceLocale ?? null,
     }
 }
 
+// One matcher per loaded data set: a recipe page asks once per ingredient.
+const matchers = new WeakMap<ConversionData, FoodMatcher>()
+
+function matcherFor(data: ConversionData): FoodMatcher {
+    let matcher = matchers.get(data)
+    if (!matcher) {
+        matcher = foodMatcher(data.foods, data.links, data.locale)
+        matchers.set(data, matcher)
+    }
+    return matcher
+}
+
 // ingredientConversions expresses quantity of unitText in grams, ml and one
-// kitchen unit, crossing between weight and volume only when name has a
-// known density. Units are resolved like the nutrition computation does.
+// kitchen unit, crossing between weight and volume only when name matches a
+// food with a density. Units and foods are resolved like nutrition does.
 export function ingredientConversions(quantity: number, unitText: string, name: string, data: ConversionData): Conversion[] {
     const text = unitText.trim().toLowerCase()
     if (!(quantity > 0) || text === '')
@@ -50,9 +63,7 @@ export function ingredientConversions(quantity: number, unitText: string, name: 
     if (!source)
         return []
 
-    const nameLower = name.trim().toLowerCase()
-    const density = data.links.find(l => l.name.toLowerCase() === nameLower && (l.g_per_100ml ?? 0) > 0)?.g_per_100ml
-        ?? data.densities.find(d => d.name.toLowerCase() === nameLower)?.g_per_100ml
+    const density = matcherFor(data).match(name)?.g_per_100ml
 
     const base = quantity * source.to_base
     const grams = source.kind === 'weight' ? base : density ? base * density / 100 : null

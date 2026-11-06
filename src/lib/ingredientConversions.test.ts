@@ -1,6 +1,7 @@
 import {describe, expect, it} from 'vitest';
 import {canonicalConversions, formatConversion, ingredientConversions, type ConversionData} from './ingredientConversions';
 import type {ToolboxUnit} from './toolbox';
+import type {Food} from './foods';
 
 function unit(symbol: string, kind: 'weight' | 'volume', to_base: number): ToolboxUnit {
     return {id: symbol, name: symbol, symbol, kind, to_base, created_at: ''};
@@ -9,11 +10,19 @@ function unit(symbol: string, kind: 'weight' | 'volume', to_base: number): Toolb
 const grams = unit('g', 'weight', 1);
 const tbsp = unit('tbsp', 'volume', 15);
 
+function food(id: string, names: Record<string, string>, g_per_100ml: number): Food {
+    return {
+        id, names, aliases: {}, g_per_100ml, kcal_per_100g: 0, protein_g_per_100g: 0, carbs_g_per_100g: 0,
+        fat_g_per_100g: 0, salt_g_per_100g: 0, sugar_g_per_100g: 0,
+    };
+}
+
 const data: ConversionData = {
     units: [grams, unit('kg', 'weight', 1000), unit('ml', 'volume', 1), unit('L', 'volume', 1000), unit('cup', 'volume', 240), tbsp, unit('tsp', 'volume', 5)],
-    densities: [{name: 'Honey', g_per_100ml: 141}, {name: 'Flour (all-purpose)', g_per_100ml: 53}],
+    foods: [food('honey', {en: 'Honey', fr: 'Miel'}, 141), food('flour', {en: 'Flour (all-purpose)'}, 53)],
     unit_aliases: [{id: 'a1', alias: 'cuillères à soupe', unit_id: 'tbsp', created_at: ''}],
     links: [],
+    locale: 'en',
 };
 
 describe('ingredientConversions', () => {
@@ -37,7 +46,7 @@ describe('ingredientConversions', () => {
     });
 
     it('prefers the nutrition link density', () => {
-        const withLink = {...data, links: [{name: 'honey', g_per_100ml: 100}]};
+        const withLink = {...data, links: [{name: 'honey', food_id: 'honey', g_per_100ml: 100}]};
         expect(ingredientConversions(2, 'tbsp', 'Honey', withLink).map(formatConversion)).toEqual(['≈ 30 g', '≈ 30 ml']);
     });
 
@@ -45,6 +54,11 @@ describe('ingredientConversions', () => {
         expect(ingredientConversions(0, 'g', 'x', data)).toEqual([]);
         expect(ingredientConversions(3, '', 'eggs', data)).toEqual([]);
         expect(ingredientConversions(1, 'pinch', 'salt', data)).toEqual([]);
+    });
+
+    it('matches the food by its name in the recipe locale', () => {
+        expect(ingredientConversions(2, 'tbsp', 'miel', {...data, locale: 'fr'}).map(formatConversion)).toEqual(['≈ 42 g', '≈ 30 ml']);
+        expect(ingredientConversions(2, 'tbsp', 'miel', data).map(formatConversion)).toEqual(['≈ 30 ml']);
     });
 
     it('falls back to tsp for small volumes', () => {

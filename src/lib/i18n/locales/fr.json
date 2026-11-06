@@ -1071,7 +1071,7 @@
       },
       "conversions": {
         "title": "Conversions rapides",
-        "description": "Touchez un ingrédient d'une recette pour voir sa quantité en grammes, en millilitres et en mesure de cuisine, en tenant compte de sa densité quand elle est connue."
+        "description": "Touchez un ingrédient d'une recette pour voir sa quantité en grammes, en millilitres et en mesure de cuisine, en tenant compte de la densité de l'aliment correspondant quand elle est connue."
       },
       "share": {
         "title": "Partager une recette",
@@ -1095,7 +1095,7 @@
       },
       "nutrition": {
         "title": "Infos nutritionnelles",
-        "description": "Les recettes affichent une estimation nutritionnelle indicative (calories, protéines, glucides, lipides, sel, sucres) qui s'ajuste avec le nombre de portions, calculée à partir des ingrédients associés avec confiance à une base alimentaire de référence. Le nombre d'ingrédients pris en compte est toujours affiché, jamais un total partiel présenté comme exact — tout utilisateur connecté peut aider à l'améliorer, en liant un ingrédient à la bonne entrée pendant la rédaction d'une recette, ou directement depuis le panneau Nutrition d'une recette lorsqu'il explique que quelque chose n'a pas été comptabilisé."
+        "description": "Les recettes affichent une estimation nutritionnelle indicative (calories, protéines, glucides, lipides, sel, sucres) qui s'ajuste avec le nombre de portions. Un ingrédient est compté quand son nom correspond à un aliment d'une liste d'environ 700 aliments génériques, dans la langue de la recette, ou quand quelqu'un l'a lié à l'un d'eux. Le nombre d'ingrédients pris en compte est toujours affiché, jamais un total partiel présenté comme exact — tout utilisateur connecté peut aider à l'améliorer, pendant la rédaction d'une recette ou directement depuis le panneau Nutrition d'une recette lorsqu'il explique que quelque chose n'a pas été comptabilisé."
       }
     }
   },

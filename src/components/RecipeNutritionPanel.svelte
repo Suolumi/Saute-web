@@ -2,9 +2,10 @@
     import {_} from "svelte-i18n";
     import {Flame} from "@lucide/svelte";
     import {
-        getRecipeNutrition, getNutritionIngredients, getIngredientNutritionLinks,
-        type RecipeNutrition, type NutritionIngredient, type IngredientNutritionLink, type SubmitNutritionLinkResult
+        getRecipeNutrition, getIngredientNutritionLinks,
+        type RecipeNutrition, type IngredientNutritionLink, type SubmitNutritionLinkResult
     } from "$lib/nutrition";
+    import {foodMatcher, getFoods, type Food} from "$lib/foods";
     import {computeRecipeNutrition, type LoadedNutritionReferenceData} from "$lib/nutritionCompute";
     import {getToolboxUnits, type ToolboxUnit} from "$lib/toolbox";
     import {user} from "$lib/stores";
@@ -35,6 +36,7 @@
         canonicalIngredients = ingredients,
         referenceData = null,
         referenceFailed = false,
+        sourceLocale = null,
         onLinkApplied = () => {}
     }: {
         recipeId?: string
@@ -44,6 +46,9 @@
         canonicalIngredients?: Ingredient[]
         referenceData?: LoadedNutritionReferenceData | null
         referenceFailed?: boolean
+        // sourceLocale is the language canonicalIngredients are written in,
+        // which decides the food names they match.
+        sourceLocale?: string | null
         onLinkApplied?: (link: IngredientNutritionLink) => void
     } = $props();
 
@@ -75,14 +80,14 @@
     const nutrition: RecipeNutrition | null = $derived.by(() => {
         if (!live) return serverNutrition;
         if (!referenceData) return null;
-        return computeRecipeNutrition(canonicalIngredients, baseServings, servings, referenceData);
+        return computeRecipeNutrition(canonicalIngredients, baseServings, servings, referenceData, sourceLocale);
     });
     const failed = $derived(live ? referenceFailed : serverFailed);
 
     // The self-service "help fix this" flow (see NutritionFixModal.svelte)
     // is only offered to a logged-in viewer. In live mode its lists come from
     // referenceData; otherwise they're only fetched when a viewer is present.
-    let fetchedFoods: NutritionIngredient[] = $state([]);
+    let fetchedFoods: Food[] = $state([]);
     let fetchedLinks: IngredientNutritionLink[] = $state([]);
     let fetchedUnits: ToolboxUnit[] = $state([]);
 
@@ -94,7 +99,7 @@
 
     $effect(() => {
         if (!$user || live) return;
-        getNutritionIngredients().then(({response, data}) => {
+        getFoods().then(({response, data}) => {
             if (response.ok && data) fetchedFoods = data.items;
         });
         refetchLinks();
@@ -103,11 +108,13 @@
         });
     });
 
-    const nutritionIngredients = $derived(live ? referenceData?.foods ?? [] : fetchedFoods);
+    const foods = $derived(live ? referenceData?.foods ?? [] : fetchedFoods);
     const toolboxUnits = $derived(live ? referenceData?.units ?? [] : fetchedUnits);
+    const links = $derived(live ? referenceData?.links ?? [] : fetchedLinks);
     const existingLinksByName: Record<string, IngredientNutritionLink> = $derived(
-        Object.fromEntries((live ? referenceData?.links ?? [] : fetchedLinks).map(link => [link.name.toLowerCase(), link]))
+        Object.fromEntries(links.map(link => [link.name.trim().toLowerCase(), link]))
     );
+    const matcher = $derived(foodMatcher(foods, links, sourceLocale));
 
     let fixModalFor: {name: string, unit: string} | null = $state(null);
 
@@ -282,8 +289,9 @@
             onClose={() => fixModalFor = null}
             ingredientName={fixModalFor.name}
             ingredientUnit={fixModalFor.unit}
-            {nutritionIngredients}
-            existingLink={existingLinksByName[fixModalFor.name.toLowerCase()]}
+            {foods}
+            existingLink={existingLinksByName[fixModalFor.name.trim().toLowerCase()]}
+            matchedFood={matcher.match(fixModalFor.name)?.food}
             {toolboxUnits}
             onResult={onFixResult}
     />

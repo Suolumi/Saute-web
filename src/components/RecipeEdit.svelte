@@ -36,6 +36,7 @@
     import {tags as allTags, tagsForCategory} from "$lib/tags";
     import {getUnitAliases, type IngredientNutritionLink} from "$lib/nutrition";
     import {loadNutritionReferenceData, withLink, type LoadedNutritionReferenceData} from "$lib/nutritionCompute";
+    import {foodMatcher} from "$lib/foods";
     import RecipeNutritionPanel from "./RecipeNutritionPanel.svelte";
     import {Trash2, GripVertical, EllipsisVertical, Plus, Pencil, Link2} from "@lucide/svelte";
 
@@ -86,15 +87,17 @@
     // still needs a suggestion (see NutritionLinkSuggestion.svelte). The
     // preview's nutrition is computed from the same data, so a link applied
     // from either place is merged in here rather than refetched.
-    let nutritionReference: LoadedNutritionReferenceData | null = $state(null);
+    let nutritionReference = $state<LoadedNutritionReferenceData | null>(null);
     let nutritionReferenceFailed = $state(false);
     onMount(() => {
-        loadNutritionReferenceData($locale).then(data => {
+        loadNutritionReferenceData().then(data => {
             nutritionReference = data;
             nutritionReferenceFailed = data === null;
         });
     });
-    const nutritionIngredients = $derived(nutritionReference?.foods ?? []);
+    const foods = $derived(nutritionReference?.foods ?? []);
+    // Matches names only (no links): NutritionLinkSuggestion checks links itself.
+    const foodNameMatcher = $derived(foodMatcher(foods, [], $locale));
     const existingLinksByName: Record<string, IngredientNutritionLink> = $derived(
         Object.fromEntries((nutritionReference?.links ?? []).map(link => [link.name.toLowerCase(), link]))
     );
@@ -1275,7 +1278,7 @@
                                   </p>
                                   {#if $user && nutritionEnabled && formData.category !== 'diy'}
                                     <div class="pl-1">
-                                      <NutritionLinkSuggestion ingredientName={ingredient.name} ingredientUnit={ingredient.unit} ingredientQuantity={ingredient.quantity} {nutritionIngredients} existingLinks={existingLinksByName} {toolboxUnits} onApplied={onNutritionLinkApplied} />
+                                      <NutritionLinkSuggestion ingredientName={ingredient.name} ingredientUnit={ingredient.unit} ingredientQuantity={ingredient.quantity} {foods} matcher={foodNameMatcher} existingLinks={existingLinksByName} {toolboxUnits} onApplied={onNutritionLinkApplied} />
                                     </div>
                                   {/if}
                                 {/if}
@@ -1537,6 +1540,7 @@
                         ingredients={previewRecipe.ingredients}
                         referenceData={nutritionReference}
                         referenceFailed={nutritionReferenceFailed}
+                        sourceLocale={$locale}
                         onLinkApplied={onNutritionLinkApplied}
                     />
                   {/snippet}

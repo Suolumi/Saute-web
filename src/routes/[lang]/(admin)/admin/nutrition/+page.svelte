@@ -1,6 +1,6 @@
 <script lang="ts">
     import {untrack} from 'svelte';
-    import {_} from 'svelte-i18n';
+    import {_, locale} from 'svelte-i18n';
     import Button from '../../../../../components/Button.svelte';
     import Select from '../../../../../components/Select.svelte';
     import Modal from '../../../../../components/Modal.svelte';
@@ -14,7 +14,8 @@
         adminCreateUnitAlias, adminUpdateUnitAlias, adminDeleteUnitAlias, type AdminUnitAliasRequest,
         refreshPendingNutritionSuggestionCount,
     } from '$lib/admin';
-    import {getNutritionIngredients, getIngredientNutritionLinks, getUnitAliases, type NutritionIngredient, type IngredientNutritionLink, type UnitAlias} from '$lib/nutrition';
+    import {getIngredientNutritionLinks, getUnitAliases, type IngredientNutritionLink, type UnitAlias} from '$lib/nutrition';
+    import {foodKeywords, foodName, getFoods, type Food} from '$lib/foods';
     import {getToolboxUnits, type ToolboxUnit} from '$lib/toolbox';
     import {apiErrorMessage} from '$lib/api';
     import {toastError, toastSuccess} from '$lib/utils';
@@ -29,13 +30,13 @@
     let activeTab: 'links' | 'pending' = $state('links');
 
     // --- Links tab ---
-    let nutritionIngredients: NutritionIngredient[] = $state([]);
+    let foods: Food[] = $state([]);
     let links: IngredientNutritionLink[] = $state([]);
     let aliases: UnitAlias[] = $state([]);
     let units: ToolboxUnit[] = $state([]);
 
     function loadLinksTab() {
-        getNutritionIngredients().then(({response, data}) => { if (response.ok && data) nutritionIngredients = data.items; });
+        getFoods().then(({response, data}) => { if (response.ok && data) foods = data.items; });
         getIngredientNutritionLinks().then(({response, data}) => { if (response.ok && data) links = data.items; });
         getUnitAliases().then(({response, data}) => { if (response.ok && data) aliases = data.items; });
         getToolboxUnits().then(({response, data}) => { if (response.ok && data) units = data.items; });
@@ -46,8 +47,10 @@
     });
 
     function nutritionName(id: string): string {
-        return nutritionIngredients.find(n => n.id === id)?.name ?? id;
+        const food = foods.find(f => f.id === id);
+        return food ? foodName(food, $locale) : id;
     }
+    const localizedFoods = $derived(foods.map(f => ({id: f.id, name: foodName(f, $locale), keywords: foodKeywords(f)})));
     function unitLabel(id: string): string {
         const u = units.find(u => u.id === id);
         return u ? `${u.name} (${u.symbol})` : id;
@@ -57,24 +60,24 @@
     const filteredLinks = $derived.by(() => {
         const q = linkSearch.trim().toLowerCase();
         if (!q) return links;
-        return links.filter(l => `${l.name} ${nutritionName(l.nutrition_id)}`.toLowerCase().includes(q));
+        return links.filter(l => `${l.name} ${nutritionName(l.food_id)}`.toLowerCase().includes(q));
     });
 
     // Link create/edit modal
     let linkModalOpen = $state(false);
     let editingLink: IngredientNutritionLink | null = $state(null);
-    let linkForm = $state({ingredientName: '', nutritionId: '', gPer100ml: '', gramsPerUnit: ''});
+    let linkForm = $state({ingredientName: '', foodId: '', gPer100ml: '', gramsPerUnit: ''});
     let savingLink = $state(false);
 
     function openCreateLink() {
         editingLink = null;
-        linkForm = {ingredientName: '', nutritionId: '', gPer100ml: '', gramsPerUnit: ''};
+        linkForm = {ingredientName: '', foodId: '', gPer100ml: '', gramsPerUnit: ''};
         linkModalOpen = true;
     }
     function openEditLink(link: IngredientNutritionLink) {
         editingLink = link;
         linkForm = {
-            ingredientName: link.name, nutritionId: link.nutrition_id,
+            ingredientName: link.name, foodId: link.food_id,
             gPer100ml: link.g_per_100ml?.toString() ?? '', gramsPerUnit: link.grams_per_unit?.toString() ?? '',
         };
         linkModalOpen = true;
@@ -82,11 +85,11 @@
 
     async function saveLink(event: SubmitEvent) {
         event.preventDefault();
-        if (!linkForm.ingredientName.trim() || !linkForm.nutritionId) return;
+        if (!linkForm.ingredientName.trim() || !linkForm.foodId) return;
         savingLink = true;
         const body: AdminNutritionLinkRequest = {
             ingredient_name: linkForm.ingredientName.trim(),
-            nutrition_id: linkForm.nutritionId,
+            food_id: linkForm.foodId,
             g_per_100ml: linkForm.gPer100ml ? Number(linkForm.gPer100ml) : undefined,
             grams_per_unit: linkForm.gramsPerUnit ? Number(linkForm.gramsPerUnit) : undefined,
         };
@@ -248,7 +251,7 @@
                             <div>
                                 <p class="font-medium text-card-foreground"><HighlightText text={link.name} query={linkSearch} /></p>
                                 <p class="text-xs text-muted-foreground">
-                                    {$_('admin.nutrition.linkedTo')}: <HighlightText text={nutritionName(link.nutrition_id)} query={linkSearch} />
+                                    {$_('admin.nutrition.linkedTo')}: <HighlightText text={nutritionName(link.food_id)} query={linkSearch} />
                                     {#if link.g_per_100ml} · {link.g_per_100ml} g/100ml{/if}
                                     {#if link.grams_per_unit} · {link.grams_per_unit} g/unit{/if}
                                 </p>
@@ -329,7 +332,7 @@
                             <tbody>
                             <tr class="border-t border-border">
                                 <td class="pr-4 py-2 text-muted-foreground whitespace-nowrap">{$_('admin.nutrition.linkedTo')}</td>
-                                <td class="py-2 text-card-foreground font-medium">{item.nutrition_name}</td>
+                                <td class="py-2 text-card-foreground font-medium">{item.food_name}</td>
                             </tr>
                             {#if item.g_per_100ml}
                                 <tr class="border-t border-border">
@@ -379,7 +382,7 @@
         </div>
         <div>
             <Label for="link-nutrition" required>{$_('admin.nutrition.nutritionEntry')}</Label>
-            <IngredientCombobox id="link-nutrition" ingredients={nutritionIngredients} bind:value={linkForm.nutritionId} />
+            <IngredientCombobox id="link-nutrition" ingredients={localizedFoods} bind:value={linkForm.foodId} />
         </div>
         <div>
             <Label for="link-density">{$_('admin.nutrition.density')}</Label>
@@ -393,7 +396,7 @@
         </div>
         <div class="flex justify-end gap-2 pt-2">
             <Button type="button" variant="outline" onclick={() => linkModalOpen = false} disabled={savingLink}>{$_('admin.nutrition.cancel')}</Button>
-            <Button type="submit" disabled={savingLink || !linkForm.ingredientName.trim() || !linkForm.nutritionId}>{$_('admin.nutrition.save')}</Button>
+            <Button type="submit" disabled={savingLink || !linkForm.ingredientName.trim() || !linkForm.foodId}>{$_('admin.nutrition.save')}</Button>
         </div>
     </form>
 </Modal>
