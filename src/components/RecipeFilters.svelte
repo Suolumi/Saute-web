@@ -4,10 +4,9 @@
     import {recipeTypeColors, RecipeTypes, TIME_PRESETS, type RecipeCategory, type RecipeType, type TimePreset} from "$lib/recipes";
     import {tagLabel, tags as allTags, tagsForCategory} from "$lib/tags";
     import {_, locale} from 'svelte-i18n';
-    import {Search, SlidersHorizontal, ChevronDown, User, X, Flame, Tag} from '@lucide/svelte';
+    import {Search, SlidersHorizontal, ChevronDown, User, X, Flame, Tag, Layers} from '@lucide/svelte';
     import HighlightText from './HighlightText.svelte';
     import TagFilter from './TagFilter.svelte';
-    import Checkbox from './Checkbox.svelte';
 
     interface Props {
         searchTerm: string;
@@ -207,6 +206,19 @@
             {$_('home.mostPopular')}
         </button>
 
+        {#if showCollapse}
+            <button
+                    type="button"
+                    aria-pressed={collapseFamilies}
+                    onclick={() => collapseFamilies = !collapseFamilies}
+                    class="flex items-center justify-center gap-2 px-4 py-3 rounded-lg border-2 text-sm font-medium whitespace-nowrap transition-colors
+                        {collapseFamilies ? 'bg-primary text-primary-foreground border-primary' : 'bg-background text-foreground border-border hover:bg-accent hover:text-accent-foreground'}"
+            >
+                <Layers class="w-4 h-4" />
+                {$_('home.collapseFamilies')}
+            </button>
+        {/if}
+
         {#if hasTags}
             <button
                     type="button"
@@ -381,12 +393,6 @@
                 {:else if timeTarget !== 'any'}
                     <p class="text-xs text-muted-foreground">{$_('home.closestMatch')}</p>
                 {/if}
-            </div>
-            {/if}
-            {#if showCollapse}
-            <div class="flex items-center gap-2 min-w-[220px] flex-1 self-end py-2">
-                <Checkbox checked={collapseFamilies} onchange={(value) => collapseFamilies = value} ariaLabel={$_('home.collapseFamilies')} />
-                <button type="button" class="text-sm font-medium text-foreground text-left" onclick={() => collapseFamilies = !collapseFamilies}>{$_('home.collapseFamilies')}</button>
             </div>
             {/if}
         </div>
