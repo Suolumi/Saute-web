@@ -1,5 +1,5 @@
 import {describe, expect, it} from 'vitest';
-import {formatConversion, ingredientConversions, type ConversionData} from './ingredientConversions';
+import {canonicalConversions, formatConversion, ingredientConversions, type ConversionData} from './ingredientConversions';
 import type {ToolboxUnit} from './toolbox';
 
 function unit(symbol: string, kind: 'weight' | 'volume', to_base: number): ToolboxUnit {
@@ -60,5 +60,22 @@ describe('formatConversion', () => {
 
     it('formats kitchen units as friendly fractions', () => {
         expect(formatConversion({amount: 0.5, unit: tbsp})).toBe('≈ 1/2 tbsp');
+    });
+});
+
+describe('canonicalConversions', () => {
+    const shown = [{name: 'miel', quantity: 2, unit: 'c. à soupe', label: ''}];
+    const canonical = [{name: 'Honey', quantity: 2, unit: 'tbsp', label: ''}];
+
+    it('matches a translated ingredient on its canonical name and unit', () => {
+        expect(canonicalConversions(shown[0], 1, shown, canonical, data)).toEqual(['≈ 42 g', '≈ 30 ml']);
+    });
+
+    it('scales by the servings ratio', () => {
+        expect(canonicalConversions(shown[0], 2, shown, canonical, data)).toEqual(['≈ 85 g', '≈ 60 ml']);
+    });
+
+    it('falls back to the shown ingredient without a canonical copy', () => {
+        expect(canonicalConversions(canonical[0], 1, canonical, undefined, data)).toEqual(['≈ 42 g', '≈ 30 ml']);
     });
 });

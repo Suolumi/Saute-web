@@ -1,4 +1,4 @@
-import {formatScaledQuantity} from "$lib/recipes";
+import {formatScaledQuantity, type Ingredient} from "$lib/recipes";
 import {getToolboxIngredients, getToolboxUnits, type ToolboxUnit} from "$lib/toolbox";
 import {getIngredientNutritionLinks, getUnitAliases, type UnitAlias} from "$lib/nutrition";
 
@@ -74,6 +74,20 @@ export function ingredientConversions(quantity: number, unitText: string, name: 
             out.push({amount: ml / pick.to_base, unit: pick})
     }
     return out
+}
+
+// canonicalConversions formats the conversions of one ingredient of
+// shown (the displayed, possibly translated, list), matching on the
+// canonical copy's name and unit: the API translates both.
+export function canonicalConversions(
+    ingredient: Pick<Ingredient, 'name' | 'quantity' | 'unit'>,
+    ratio: number,
+    shown: Pick<Ingredient, 'name' | 'quantity' | 'unit'>[],
+    canonical: Pick<Ingredient, 'name' | 'unit'>[] | undefined,
+    data: ConversionData,
+): string[] {
+    const source = canonical?.[shown.indexOf(ingredient)] ?? ingredient
+    return ingredientConversions(ingredient.quantity * ratio, source.unit, source.name, data).map(formatConversion)
 }
 
 // formatConversion renders "≈ 42 g"; kitchen units use friendly fractions.

@@ -31,7 +31,7 @@
     import {unlockAlarmAudio} from "$lib/timerAlarm";
     import {onMount} from "svelte";
     import {ScreenWakeLock} from "$lib/wakeLock.svelte";
-    import {formatConversion, ingredientConversions, loadConversionData, type ConversionData} from "$lib/ingredientConversions";
+    import {canonicalConversions, loadConversionData, type ConversionData} from "$lib/ingredientConversions";
 
     let id = $derived(page.params.id)
     const { data } = $props()
@@ -105,13 +105,10 @@
         loadConversionData(sourceLocale).then(data => conversionData = data)
     })
 
-    // Densities match the canonical ingredient name, like nutrition does.
     function conversionsFor(ingredient: Ingredient, ratio: number): string[] {
         if (!recipe || !conversionData)
             return []
-        const i = recipe.ingredients.indexOf(ingredient)
-        const name = canonicalIngredients?.[i]?.name ?? ingredient.name
-        return ingredientConversions(ingredient.quantity * ratio, ingredient.unit, name, conversionData).map(formatConversion)
+        return canonicalConversions(ingredient, ratio, recipe.ingredients, canonicalIngredients, conversionData)
     }
 
     function submitVariation() {
