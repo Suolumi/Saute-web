@@ -1,11 +1,14 @@
 import {
-    Baby, Beef, CakeSlice, Carrot, Clock, Coins, Cookie, CookingPot, Croissant, Drumstick, Dumbbell, EggOff, Fish,
+    Baby, Beef, CakeSlice, CalendarClock, Carrot, Clock, Coins, Cookie, CookingPot, Croissant, Drumstick, Dumbbell, EggOff, Fish,
     Flame, FlameKindling, Gift, HeartPulse, Heater, Hourglass, Layers, Leaf, LeafyGreen, MilkOff, Microwave, NutOff,
     Package, PiggyBank, Recycle, Refrigerator, Salad, Sandwich, Snowflake, Soup, Sparkles, Sprout, Star, Sun, Tag, Tent, Timer,
     Trees, Users, Utensils, Vegan, WheatOff, WineOff, Zap,
 } from "@lucide/svelte";
 import FlameOff from "./icons/FlameOff.svelte";
 import OvenOff from "./icons/OvenOff.svelte";
+import SlowCooker from "./icons/SlowCooker.svelte";
+import MealPrep from "./icons/MealPrep.svelte";
+import Leftovers from "./icons/Leftovers.svelte";
 
 // tagIcons is the icons an admin can give a tag, by Lucide name (or a
 // Lucide-style name for the custom ones). A curated list keeps the bundle
@@ -16,7 +19,8 @@ export const tagIcons: Record<string, typeof Tag> = {
     "egg-off": EggOff, "nut-off": NutOff, "wine-off": WineOff, "dumbbell": Dumbbell, "heart-pulse": HeartPulse,
     "cooking-pot": CookingPot, "soup": Soup, "flame": Flame, "flame-kindling": FlameKindling, "flame-off": FlameOff, "heater": Heater,
     "microwave": Microwave, "oven-off": OvenOff, "refrigerator": Refrigerator, "snowflake": Snowflake, "hourglass": Hourglass,
-    "timer": Timer, "clock": Clock, "zap": Zap, "layers": Layers, "recycle": Recycle, "piggy-bank": PiggyBank, "package": Package,
+    "timer": Timer, "clock": Clock, "calendar-clock": CalendarClock, "slow-cooker": SlowCooker,
+    "meal-prep": MealPrep, "leftovers": Leftovers, "zap": Zap, "layers": Layers, "recycle": Recycle, "piggy-bank": PiggyBank, "package": Package,
     "coins": Coins, "sandwich": Sandwich, "baby": Baby, "users": Users, "gift": Gift, "trees": Trees, "tent": Tent,
     "sun": Sun, "cake-slice": CakeSlice, "cookie": Cookie, "croissant": Croissant, "utensils": Utensils,
     "sparkles": Sparkles, "star": Star,

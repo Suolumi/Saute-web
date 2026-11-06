@@ -3,7 +3,10 @@
     import {goto} from "$app/navigation";
     import type {RecipePreview} from "$lib/recipes";
     import emblaCarouselSvelte from "embla-carousel-svelte";
-    import {ArrowLeft, ArrowRight, CornerDownRight, Heart, Layers} from "@lucide/svelte";
+    import {
+        ArrowLeft, ArrowRight, Carrot, Cookie, CookingPot, CornerDownRight, Croissant, CupSoda, EggFried, Heart, IceCreamCone,
+        Layers, Salad, Utensils, UtensilsCrossed, Wrench,
+    } from "@lucide/svelte";
     import {serverUrl, user} from "$lib/stores";
     import {locale, _} from "svelte-i18n";
     import {toastError, pictureUrl} from "$lib/utils";
@@ -105,6 +108,11 @@
         }
     }
 
+    const kindIcons: Record<string, typeof Utensils> = {
+        breakfast: EggFried, starter: Salad, dish: UtensilsCrossed, "side-dish": Carrot, sauce: CookingPot,
+        baking: Croissant, snack: Cookie, plate: Utensils, dessert: IceCreamCone, drink: CupSoda,
+    };
+    const PlaceholderIcon = $derived(recipe.category === 'diy' ? Wrench : kindIcons[recipe.kind] ?? Utensils);
     const typeColorClass = $derived(recipeTypeColors[recipe.kind] || "bg-gray-100 text-gray-800 dark:bg-gray-900/20 dark:text-gray-300");
     // DIY projects only have a preparation time; older ones may still store cook/rest values.
     const totalTime = $derived(recipe.category === 'diy' ? recipe.preparation_time : recipe.preparation_time + recipe.cooking_time + recipe.resting_time)
@@ -150,7 +158,13 @@
                     {/each}
                 </div>
             {:else}
-                <p class="embla__slide flex items-center justify-center h-full border-b border-b-border">{$_('recipeCard.noPicture')}</p>
+                <div
+                        role="img"
+                        aria-label={$_('recipeCard.noPicture')}
+                        class="aspect-video w-full flex items-center justify-center border-b border-b-border {recipe.category === 'diy' ? 'bg-muted text-muted-foreground' : typeColorClass}"
+                >
+                    <PlaceholderIcon class="w-1/4 h-1/4 opacity-40" strokeWidth={1.5} />
+                </div>
             {/if}
         </div>
         {#if !disabled && $user}

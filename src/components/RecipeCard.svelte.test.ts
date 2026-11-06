@@ -3,6 +3,7 @@ import {render} from 'vitest-browser-svelte';
 import {addMessages, init} from 'svelte-i18n';
 import {goto} from '$app/navigation';
 import RecipeCard from './RecipeCard.svelte';
+import '../app.css';
 import type {RecipePreview} from '$lib/recipes';
 
 vi.mock('$app/navigation', () => ({goto: vi.fn()}));
@@ -16,7 +17,7 @@ vi.mock('$lib/api', () => ({
 
 beforeAll(async () => {
     addMessages('en', {
-        recipeCard: {familySize: '{count} versions', variationCount: '{count} variations', diyBadge: 'DIY', title: 'Untitled', description: 'No description'},
+        recipeCard: {familySize: '{count} versions', variationCount: '{count} variations', diyBadge: 'DIY', title: 'Untitled', description: 'No description', noPicture: 'No picture yet'},
         recipes: {types: {dish: 'Dish'}},
     });
     await init({fallbackLocale: 'en', initialLocale: 'en'});
@@ -44,6 +45,14 @@ describe('RecipeCard', () => {
         const screen = render(RecipeCard, {recipe: preview({family_size: 1})});
         await expect.element(screen.getByText('Lasagna')).toBeVisible();
         expect(screen.container.textContent).not.toMatch(/versions|variations/);
+    });
+
+    it('shows a photo-sized placeholder when the recipe has no picture', async () => {
+        const screen = render(RecipeCard, {recipe: preview({pictures: []})});
+        const placeholder = screen.getByRole('img', {name: 'No picture yet'});
+        await expect.element(placeholder).toBeVisible();
+        const box = (placeholder.element() as HTMLElement).getBoundingClientRect();
+        expect(box.height).toBeCloseTo(box.width * 9 / 16, 0);
     });
 
     it('opens the recipe directly even when it has variations', async () => {

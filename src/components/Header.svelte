@@ -159,6 +159,12 @@
                             ></span>
                         {/if}
                     </a>
+                    <button
+                            onclick={() => goto(`/${$locale}/connect-ai`)}
+                            class="text-ai-accent hover:text-ai-accent/80 transition-colors font-medium hover:cursor-pointer"
+                    >
+                        {$_('header.connectAI')}
+                    </button>
                 </div>
             </div>
 
@@ -222,12 +228,6 @@
                                         class="block w-full text-left px-4 py-2 text-sm text-foreground transition-colors hover:cursor-pointer hover:bg-gray-200 dark:hover:bg-gray-800"
                                 >
                                     {$_('header.myFavorites')}
-                                </button>
-                                <button
-                                        onclick={() => { goto(`/${$locale}/connect-ai`); showProfileDropdown = false; }}
-                                        class="block w-full text-left px-4 py-2 text-sm text-foreground transition-colors hover:cursor-pointer hover:bg-gray-200 dark:hover:bg-gray-800"
-                                >
-                                    {$_('header.connectAI')}
                                 </button>
                                 <button
                                         onclick={() => { goto(`/${$locale}/about`); showProfileDropdown = false; }}
@@ -375,6 +375,15 @@
                                                 <div class="ml-auto mr-1.5 h-1.5 w-1.5 rounded-full bg-primary"></div>
                                             {/if}
                                         </button>
+                                        <button
+                                                onclick={() => {drawerOpen = false; goto(`/${$locale}/connect-ai`)}}
+                                                class="flex w-full items-center gap-3 rounded-2xl px-2 py-2.5 text-left hover:bg-ai-accent/5"
+                                        >
+                                            <div class="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full bg-ai-accent/15 text-ai-accent">
+                                                <Sparkles class="w-4 h-4" />
+                                            </div>
+                                            <div class="text-[15px] font-medium text-ai-accent">{$_('header.connectAI')}</div>
+                                        </button>
                                     </div>
 
                                     {#if $user}
@@ -408,15 +417,6 @@
                                                     <Heart class="w-4 h-4" />
                                                 </div>
                                                 <div class={navLabelClass(false)}>{$_('header.myFavorites')}</div>
-                                            </button>
-                                            <button
-                                                    onclick={() => { goto(`/${$locale}/connect-ai`); drawerOpen = false; }}
-                                                    class={navRowClass(pathSegment === 'connect-ai')}
-                                            >
-                                                <div class={navChipClass(pathSegment === 'connect-ai')}>
-                                                    <Sparkles class="w-4 h-4" />
-                                                </div>
-                                                <div class={navLabelClass(pathSegment === 'connect-ai')}>{$_('header.connectAI')}</div>
                                             </button>
                                             <button
                                                     onclick={() => { goto(`/${$locale}/about`); drawerOpen = false; }}
