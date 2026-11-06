@@ -1,4 +1,8 @@
 {
+  "ingredientCombobox": {
+    "placeholder": "搜索食材……",
+    "noResults": "没有匹配的食材"
+  },
   "adHocTimer": {
     "title": "新计时器",
     "button": "计时器",
@@ -407,8 +411,7 @@
         "densityLabel": "密度（克/100毫升）",
         "densityHelp": "每 100 毫升该食材的克数——水 ≈ 100，蜂蜜 ≈ 141，橄榄油 ≈ 92。",
         "gramsPerUnitLabel": "单位重量（克）",
-        "gramsPerUnitHelp": "一个完整单位的重量——一个洋葱 ≈ 150 克，一个鸡蛋 ≈ 50 克。",
-        "suggestUnit": "“{unit}”不是已知单位——建议添加它"
+        "gramsPerUnitHelp": "一个完整单位的重量——一个洋葱 ≈ 150 克，一个鸡蛋 ≈ 50 克。"
       },
       "enableNutrition": "启用营养计算"
     },
@@ -1076,7 +1079,11 @@
       },
       "recipeTimers": {
         "title": "食谱计时器",
-        "description": "直接在食谱步骤里，为任何设有时长的步骤开始倒计时——它会在一个跟随你浏览全站的悬浮小部件中继续运行，时间到了就会响铃，即使你已经离开了那个页面。随时可以在小部件中暂停和继续。"
+        "description": "直接在食谱步骤里，为任何设有时长的步骤开始倒计时——它会在一个跟随你浏览全站的悬浮小部件中继续运行，时间到了就会响铃，即使你已经离开了那个页面。随时可以在小部件中暂停和继续。需要一个与步骤无关的计时器？在任意食谱上点击“+ 计时器”，或从计时器小部件中开始一个。"
+      },
+      "conversions": {
+        "title": "快速换算",
+        "description": "点击食谱中的食材，即可查看它以克、毫升和厨房量具表示的用量；已知密度时会据此换算。"
       },
       "share": {
         "title": "分享食谱",
@@ -1089,10 +1096,6 @@
       "mealPlanning": {
         "title": "膳食计划",
         "description": "从收藏中拖动食谱，或为某个时段挑选食谱，安排一周的早餐、午餐和晚餐，然后点击“将本周加入购物清单”，一次性把所有计划食谱的食材合并到清单中——入口是首页的“膳食计划”按钮。"
-      },
-      "toolbox": {
-        "title": "工具箱",
-        "description": "按食材在重量和体积之间换算用量，在烤箱温度的 °C 和 °F 之间切换，查询食物每 100 克的营养成分，查找缺少某样东西时的替代品，或同时运行多个命名的厨房计时器——都在“工具箱”标签页下。"
       },
       "translationFix": {
         "title": "建议修改翻译",
@@ -1193,115 +1196,6 @@
     "unauthorized": {
       "title": "登录后规划你的膳食",
       "description": "登录后即可规划一周的膳食，并据此生成购物清单。"
-    }
-  },
-  "toolbox": {
-    "meta": {
-      "title": "工具箱",
-      "description": "用于换算用量、烤箱温度和替代食材的厨房小帮手。"
-    },
-    "title": "工具箱",
-    "subtitle": "用于换算用量、烤箱温度和替代食材的厨房小帮手。",
-    "tabs": {
-      "quantity": "用量换算",
-      "oven": "烤箱温度",
-      "nutrition": "营养成分",
-      "timers": "计时器",
-      "substitutions": "替代食材"
-    },
-    "quantity": {
-      "ingredientLabel": "食材",
-      "ingredientPlaceholder": "搜索食材……",
-      "noIngredientResults": "没有匹配的食材",
-      "amountLabel": "数量",
-      "fromLabel": "从",
-      "toLabel": "到",
-      "swap": "交换单位",
-      "result": "结果",
-      "disclaimer": "数值为近似值，基于食材的典型密度。",
-      "suggestIngredient": "建议添加食材",
-      "suggestUnit": "建议添加单位"
-    },
-    "oven": {
-      "temperatureLabel": "温度",
-      "unitLabel": "单位",
-      "unitCelsius": "摄氏度（°C）",
-      "unitFahrenheit": "华氏度（°F）",
-      "resultLabel": "结果"
-    },
-    "nutritionData": {
-      "ingredientLabel": "食物",
-      "placeholder": "搜索食物……",
-      "empty": "搜索一种食物以查看其营养成分。",
-      "per100g": "每 100 克",
-      "disclaimer": "数值来自精选的食物成分参考表，而不是你实际烹饪时的食材（生与熟、品牌等）。"
-    },
-    "substitutions": {
-      "searchLabel": "搜索替代食材",
-      "searchPlaceholder": "例如 鸡蛋、黄油、酪乳",
-      "noResults": "没有符合搜索条件的结果。",
-      "suggest": "建议一种替代",
-      "empty": "还没有替代建议——来做第一个建议的人吧。"
-    },
-    "timers": {
-      "nameLabel": "名称（可选）",
-      "namePlaceholder": "例如 意面",
-      "minutesLabel": "分钟",
-      "secondsLabel": "秒",
-      "start": "开始计时",
-      "presets": "快捷预设",
-      "presetMinutes": "{minutes} 分钟",
-      "autoLabel": "计时器 {n}",
-      "active": "进行中的计时器",
-      "empty": "还没有计时器在运行——在上方开始一个吧。"
-    },
-    "suggestIngredient": {
-      "title": "建议添加食材",
-      "nameLabel": "食材名称",
-      "densityLabel": "密度（克/100 毫升）",
-      "densityHint": "填写 100 毫升该食材的重量（克）——例如水 = 100，蜂蜜 ≈ 141。必须在 20 到 250 之间。",
-      "noteLabel": "来源或备注（可选）",
-      "duplicateWarning": "“{name}”已在列表中——这将作为对该条目的修正提交，而不是新条目。",
-      "newHint": "看起来是新的——这将作为新食材提交。",
-      "submitNew": "提交新食材以供审核",
-      "submitCorrection": "提交修正以供审核",
-      "success": "谢谢——管理员审核后才会出现在工具箱中。",
-      "error": "无法提交你的建议。",
-      "cancel": "取消"
-    },
-    "suggestUnit": {
-      "title": "建议添加单位",
-      "nameLabel": "单位名称",
-      "symbolLabel": "符号",
-      "kindLabel": "类型",
-      "kindWeight": "重量",
-      "kindVolume": "体积",
-      "toBaseLabel": "换算系数",
-      "toBaseHintWeight": "每单位的克数，例如一汤匙黄油 ≈ 14。",
-      "toBaseHintVolume": "每单位的毫升数，例如一美制杯 = 240。",
-      "noteLabel": "来源或备注（可选）",
-      "duplicateWarning": "“{name}”已存在——这将作为修正提交，而不是新单位。",
-      "newHint": "看起来是新的——这将作为新单位提交。",
-      "submitNew": "提交新单位以供审核",
-      "submitCorrection": "提交修正以供审核",
-      "success": "谢谢——管理员审核后才会出现在工具箱中。",
-      "error": "无法提交你的建议。",
-      "cancel": "取消"
-    },
-    "suggestSubstitution": {
-      "title": "建议一种替代",
-      "problemLabel": "缺少什么？",
-      "problemPlaceholder": "例如 没有酪乳",
-      "solutionLabel": "改用",
-      "tagLabel": "分类（可选）",
-      "noteLabel": "来源或备注（可选）",
-      "duplicateWarning": "“{problem}”的替代方案已存在——这将作为修正提交，而不是新条目。",
-      "newHint": "看起来是新的——这将作为新的替代方案提交。",
-      "submitNew": "提交新的替代方案以供审核",
-      "submitCorrection": "提交修正以供审核",
-      "success": "谢谢——管理员审核后才会出现在工具箱中。",
-      "error": "无法提交你的建议。",
-      "cancel": "取消"
     }
   },
   "feedback": {

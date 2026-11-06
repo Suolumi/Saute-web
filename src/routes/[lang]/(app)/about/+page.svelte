@@ -17,6 +17,7 @@
             key: "cooking",
             items: [
                 { key: "recipeTimers", icon: Timer },
+                { key: "conversions", icon: Calculator },
             ],
         },
         {
@@ -35,7 +36,6 @@
             items: [
                 { key: "shoppingList", icon: ShoppingCart },
                 { key: "mealPlanning", icon: CalendarDays },
-                { key: "toolbox", icon: Calculator },
             ],
         },
         {

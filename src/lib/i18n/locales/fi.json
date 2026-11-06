@@ -1,4 +1,8 @@
 {
+  "ingredientCombobox": {
+    "placeholder": "Hae ainesosia…",
+    "noResults": "Ei vastaavia ainesosia"
+  },
   "adHocTimer": {
     "title": "Uusi ajastin",
     "button": "Ajastin",
@@ -407,8 +411,7 @@
         "densityLabel": "Tiheys (grammaa per 100ml)",
         "densityHelp": "Grammaa per 100ml tätä ainesosaa — vesi ≈ 100, hunaja ≈ 141, oliiviöljy ≈ 92.",
         "gramsPerUnitLabel": "Paino per yksikkö (grammaa)",
-        "gramsPerUnitHelp": "Yhden kokonaisen yksikön paino — yksi sipuli ≈ 150g, yksi muna ≈ 50g.",
-        "suggestUnit": "\"{unit}\" ei ole tunnettu yksikkö — ehdota sitä yksiköksi"
+        "gramsPerUnitHelp": "Yhden kokonaisen yksikön paino — yksi sipuli ≈ 150g, yksi muna ≈ 50g."
       },
       "enableNutrition": "Ota ravinto käyttöön"
     },
@@ -1064,7 +1067,11 @@
       },
       "recipeTimers": {
         "title": "Reseptiajastimet",
-        "description": "Käynnistä ajastin millä tahansa vaiheella, jolle on asetettu kesto, suoraan reseptin ohjeista — se jatkaa käyntiään kelluvassa widgetissä, joka seuraa mukana koko sivustolla ja soi ajan loputtua, vaikka olisit siirtynyt muualle. Voit keskeyttää ja jatkaa sitä milloin tahansa samasta widgetistä."
+        "description": "Käynnistä ajastin millä tahansa vaiheella, jolle on asetettu kesto, suoraan reseptin ohjeista — se jatkaa käyntiään kelluvassa widgetissä, joka seuraa mukana koko sivustolla ja soi ajan loputtua, vaikka olisit siirtynyt muualle. Voit keskeyttää ja jatkaa sitä milloin tahansa samasta widgetistä. Tarvitsetko ajastimen, joka ei liity mihinkään vaiheeseen? Käynnistä sellainen minkä tahansa reseptin \"+ Ajastin\" -painikkeella tai ajastinwidgetistä."
+      },
+      "conversions": {
+        "title": "Pikamuunnokset",
+        "description": "Napauta reseptin ainesosaa nähdäksesi sen määrän grammoina, millilitroina ja keittiömittana. Ainesosan tiheys huomioidaan, kun se tiedetään."
       },
       "share": {
         "title": "Jaa resepti",
@@ -1077,10 +1084,6 @@
       "mealPlanning": {
         "title": "Ateriasuunnittelu",
         "description": "Suunnittele aamiainen, lounas ja päivällinen viikoksi vetämällä reseptejä suosikeistasi tai valitsemalla yksi kullekin paikalle, ja paina sitten \"Lisää viikko ostoslistalle\" yhdistääksesi kaikkien suunniteltujen reseptien ainesosat kerralla listalle — etusivun Ateriasuunnittelu-painikkeesta."
-      },
-      "toolbox": {
-        "title": "Työkalupakki",
-        "description": "Muunna määrä painon ja tilavuuden välillä valitulle ainesosalle, vaihda uunin lämpötila °C:n ja °F:n välillä, katso elintarvikkeen ravintosisältö 100 g kohti, etsi korvike jollekin, joka on loppu, tai käytä useita nimettyjä ajastimia yhtä aikaa — kaikki Työkalupakki-välilehdellä."
       },
       "translationFix": {
         "title": "Ehdota käännöskorjausta",
@@ -1181,115 +1184,6 @@
     "unauthorized": {
       "title": "Kirjaudu sisään suunnitellaksesi ateriasi",
       "description": "Kirjaudu sisään suunnitellaksesi viikkosi ja luodaksesi siitä ostoslistan."
-    }
-  },
-  "toolbox": {
-    "meta": {
-      "title": "Työkalupakki",
-      "description": "Keittiöapuja määrille, uunin lämpötiloille ja korvaaville aineksille."
-    },
-    "title": "Työkalupakki",
-    "subtitle": "Keittiöapuja määrille, uunin lämpötiloille ja korvaaville aineksille.",
-    "tabs": {
-      "quantity": "Määrämuunnin",
-      "oven": "Uunin lämpötilat",
-      "nutrition": "Ravintosisältö",
-      "timers": "Ajastimet",
-      "substitutions": "Korvaavat ainekset"
-    },
-    "quantity": {
-      "ingredientLabel": "Ainesosa",
-      "ingredientPlaceholder": "Hae ainesosia…",
-      "noIngredientResults": "Ei vastaavia ainesosia",
-      "amountLabel": "Määrä",
-      "fromLabel": "Mistä",
-      "toLabel": "Mihin",
-      "swap": "Vaihda yksiköt",
-      "result": "Tulos",
-      "disclaimer": "Arvot ovat suuntaa antavia, perustuen ainesosan tyypilliseen tiheyteen.",
-      "suggestIngredient": "Ehdota ainesosaa",
-      "suggestUnit": "Ehdota yksikköä"
-    },
-    "oven": {
-      "temperatureLabel": "Lämpötila",
-      "unitLabel": "Yksikkö",
-      "unitCelsius": "Celsius (°C)",
-      "unitFahrenheit": "Fahrenheit (°F)",
-      "resultLabel": "Tulos"
-    },
-    "nutritionData": {
-      "ingredientLabel": "Elintarvike",
-      "placeholder": "Hae elintarvikkeita…",
-      "empty": "Hae elintarviketta nähdäksesi sen ravintosisällön.",
-      "per100g": "100 g kohti",
-      "disclaimer": "Arvot ovat peräisin kuratoidusta elintarvikkeiden koostumustietokannasta, eivät ainesosasta sellaisena kuin todella valmistat sen (raaka vai kypsä, merkki jne.)."
-    },
-    "substitutions": {
-      "searchLabel": "Hae korvaavia aineksia",
-      "searchPlaceholder": "esim. kananmunat, voi, kirnupiimä",
-      "noResults": "Ei osumia haulle.",
-      "suggest": "Ehdota korvaavaa ainesta",
-      "empty": "Ei vielä korvaavia aineksia — ehdota ensimmäistä."
-    },
-    "timers": {
-      "nameLabel": "Nimi (valinnainen)",
-      "namePlaceholder": "esim. Pasta",
-      "minutesLabel": "Minuuttia",
-      "secondsLabel": "Sekuntia",
-      "start": "Käynnistä ajastin",
-      "presets": "Pika-asetukset",
-      "presetMinutes": "{minutes} min",
-      "autoLabel": "Ajastin {n}",
-      "active": "Käynnissä olevat ajastimet",
-      "empty": "Ei käynnissä olevia ajastimia — käynnistä yksi yllä."
-    },
-    "suggestIngredient": {
-      "title": "Ehdota ainesosaa",
-      "nameLabel": "Ainesosan nimi",
-      "densityLabel": "Tiheys (grammaa per 100 ml)",
-      "densityHint": "Kerro kuinka monta grammaa 100 ml tätä ainesosaa painaa — esim. vesi = 100, hunaja ≈ 141. Oltava välillä 20–250.",
-      "noteLabel": "Lähde tai huomautus (valinnainen)",
-      "duplicateWarning": "”{name}” on jo listalla — tämä lähetetään korjauksena kyseiseen merkintään, ei uutena ainesosana.",
-      "newHint": "Vaikuttaa uudelta — tämä lähetetään uutena ainesosana.",
-      "submitNew": "Lähetä uusi ainesosa tarkistettavaksi",
-      "submitCorrection": "Lähetä korjaus tarkistettavaksi",
-      "success": "Kiitos — ylläpitäjä tarkistaa tämän ennen kuin se näkyy työkalupakissa.",
-      "error": "Ehdotuksen lähettäminen epäonnistui.",
-      "cancel": "Peruuta"
-    },
-    "suggestUnit": {
-      "title": "Ehdota yksikköä",
-      "nameLabel": "Yksikön nimi",
-      "symbolLabel": "Symboli",
-      "kindLabel": "Tyyppi",
-      "kindWeight": "Paino",
-      "kindVolume": "Tilavuus",
-      "toBaseLabel": "Muuntokerroin",
-      "toBaseHintWeight": "Grammaa yksikköä kohti, esim. ruokalusikallinen voita ≈ 14.",
-      "toBaseHintVolume": "Millilitraa yksikköä kohti, esim. yhdysvaltalainen kuppi = 240.",
-      "noteLabel": "Lähde tai huomautus (valinnainen)",
-      "duplicateWarning": "”{name}” on jo olemassa — tämä lähetetään korjauksena, ei uutena yksikkönä.",
-      "newHint": "Vaikuttaa uudelta — tämä lähetetään uutena yksikkönä.",
-      "submitNew": "Lähetä uusi yksikkö tarkistettavaksi",
-      "submitCorrection": "Lähetä korjaus tarkistettavaksi",
-      "success": "Kiitos — ylläpitäjä tarkistaa tämän ennen kuin se näkyy työkalupakissa.",
-      "error": "Ehdotuksen lähettäminen epäonnistui.",
-      "cancel": "Peruuta"
-    },
-    "suggestSubstitution": {
-      "title": "Ehdota korvaavaa ainesta",
-      "problemLabel": "Mikä puuttuu?",
-      "problemPlaceholder": "esim. Ei kirnupiimää",
-      "solutionLabel": "Käytä sen sijaan",
-      "tagLabel": "Kategoria (valinnainen)",
-      "noteLabel": "Lähde tai huomautus (valinnainen)",
-      "duplicateWarning": "Korvaava aines merkinnälle ”{problem}” on jo olemassa — tämä lähetetään korjauksena, ei uutena merkintänä.",
-      "newHint": "Vaikuttaa uudelta — tämä lähetetään uutena korvaavana aineksena.",
-      "submitNew": "Lähetä uusi korvaava aines tarkistettavaksi",
-      "submitCorrection": "Lähetä korjaus tarkistettavaksi",
-      "success": "Kiitos — ylläpitäjä tarkistaa tämän ennen kuin se näkyy työkalupakissa.",
-      "error": "Ehdotuksen lähettäminen epäonnistui.",
-      "cancel": "Peruuta"
     }
   },
   "feedback": {

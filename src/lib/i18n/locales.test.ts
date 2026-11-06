@@ -17,6 +17,10 @@ describe('locales', () => {
         for (const loc of [en, fr, fi, zh])
             expect(keys(loc).filter(k => /cookMode/.test(k))).toEqual([]);
     });
+    it('has no Toolbox page strings', () => {
+        for (const loc of [en, fr, fi, zh])
+            expect(keys(loc).filter(k => k.startsWith('toolbox.') || k === 'about.items.toolbox.title')).toEqual([]);
+    });
     it('recipeTimers copy no longer mentions cook mode', () => {
         expect(en.about.items.recipeTimers.description).not.toMatch(/cook mode/i);
         expect(fr.about.items.recipeTimers.description).not.toMatch(/mode cuisine/i);

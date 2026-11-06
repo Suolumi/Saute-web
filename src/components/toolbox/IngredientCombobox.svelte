@@ -103,7 +103,7 @@
             aria-controls="{id}-listbox"
             aria-autocomplete="list"
             autocomplete="off"
-            placeholder={placeholder || $_('toolbox.quantity.ingredientPlaceholder')}
+            placeholder={placeholder || $_('ingredientCombobox.placeholder')}
             bind:value={query}
             onfocus={onFocus}
             onblur={onBlur}
@@ -113,7 +113,7 @@
     {#if open}
         <div id="{id}-listbox" role="listbox" class="absolute z-10 mt-1 w-full max-h-64 overflow-y-auto rounded-lg border border-border bg-card shadow-lg">
             {#if filtered.length === 0}
-                <div class="px-4 py-3 text-sm text-muted-foreground">{$_('toolbox.quantity.noIngredientResults')}</div>
+                <div class="px-4 py-3 text-sm text-muted-foreground">{$_('ingredientCombobox.noResults')}</div>
             {:else}
                 {#each filtered as ingredient (ingredient.id)}
                     <button

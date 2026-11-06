@@ -1,4 +1,8 @@
 {
+  "ingredientCombobox": {
+    "placeholder": "Search ingredients…",
+    "noResults": "No matching ingredients"
+  },
   "adHocTimer": {
     "title": "New timer",
     "button": "Timer",
@@ -407,8 +411,7 @@
         "densityLabel": "Density (grams per 100ml)",
         "densityHelp": "Grams per 100ml of this ingredient — water ≈ 100, honey ≈ 141, olive oil ≈ 92.",
         "gramsPerUnitLabel": "Weight per unit (grams)",
-        "gramsPerUnitHelp": "Weight of one whole unit — one onion ≈ 150g, one egg ≈ 50g.",
-        "suggestUnit": "\"{unit}\" isn't a known unit — suggest it as one"
+        "gramsPerUnitHelp": "Weight of one whole unit — one onion ≈ 150g, one egg ≈ 50g."
       },
       "enableNutrition": "Enable nutrition"
     },
@@ -1064,7 +1067,11 @@
       },
       "recipeTimers": {
         "title": "Recipe Timers",
-        "description": "Start a countdown on any step with a set duration, straight from a recipe's instructions — it keeps running in a floating widget that follows you across the site and rings when it's done, even if you've navigated away. Pause and resume it anytime from that widget."
+        "description": "Start a countdown on any step with a set duration, straight from a recipe's instructions — it keeps running in a floating widget that follows you across the site and rings when it's done, even if you've navigated away. Pause and resume it anytime from that widget. Need a timer that isn't tied to a step? Start one with \"+ Timer\" on any recipe, or from the timer widget."
+      },
+      "conversions": {
+        "title": "Quick Conversions",
+        "description": "Tap an ingredient on a recipe to see its quantity in grams, millilitres and a kitchen measure, using the ingredient's density when it's known."
       },
       "share": {
         "title": "Share a Recipe",
@@ -1077,10 +1084,6 @@
       "mealPlanning": {
         "title": "Meal Planning",
         "description": "Lay out breakfast, lunch, and dinner across the week by dragging recipes from your favorites or picking one for a slot, then hit \"Add week to Shopping List\" to merge every planned recipe's ingredients into your list at once — from the Meal Planning button on the home page."
-      },
-      "toolbox": {
-        "title": "Toolbox",
-        "description": "Convert a quantity between weight and volume for a given ingredient, flip between °C and °F for oven temperatures, look up a food's nutrition facts per 100 g, look up a substitution for something you're out of, or run multiple named kitchen timers at once — all under the Toolbox tab."
       },
       "translationFix": {
         "title": "Suggest a Translation Fix",
@@ -1181,115 +1184,6 @@
     "unauthorized": {
       "title": "Log in to plan your meals",
       "description": "Log in to plan your week and generate a shopping list from it."
-    }
-  },
-  "toolbox": {
-    "meta": {
-      "title": "Toolbox",
-      "description": "Kitchen helpers for quantities, oven temperatures, and swaps."
-    },
-    "title": "Toolbox",
-    "subtitle": "Kitchen helpers for quantities, oven temperatures, and swaps.",
-    "tabs": {
-      "quantity": "Quantity converter",
-      "oven": "Oven temperatures",
-      "nutrition": "Nutrition facts",
-      "timers": "Timers",
-      "substitutions": "Substitutions"
-    },
-    "quantity": {
-      "ingredientLabel": "Ingredient",
-      "ingredientPlaceholder": "Search ingredients…",
-      "noIngredientResults": "No matching ingredients",
-      "amountLabel": "Amount",
-      "fromLabel": "From",
-      "toLabel": "To",
-      "swap": "Swap units",
-      "result": "Result",
-      "disclaimer": "Values are approximate, based on typical ingredient density.",
-      "suggestIngredient": "Suggest an ingredient",
-      "suggestUnit": "Suggest a unit"
-    },
-    "oven": {
-      "temperatureLabel": "Temperature",
-      "unitLabel": "Unit",
-      "unitCelsius": "Celsius (°C)",
-      "unitFahrenheit": "Fahrenheit (°F)",
-      "resultLabel": "Result"
-    },
-    "nutritionData": {
-      "ingredientLabel": "Food",
-      "placeholder": "Search foods…",
-      "empty": "Search for a food to see its nutrition facts.",
-      "per100g": "Per 100 g",
-      "disclaimer": "Values come from a curated food-composition reference list, not the ingredient as you'd actually cook it (raw vs. cooked, brand, etc.)."
-    },
-    "substitutions": {
-      "searchLabel": "Search substitutions",
-      "searchPlaceholder": "e.g. eggs, butter, buttermilk",
-      "noResults": "No matches for that search.",
-      "suggest": "Suggest a substitution",
-      "empty": "No substitutions yet — be the first to suggest one."
-    },
-    "timers": {
-      "nameLabel": "Name (optional)",
-      "namePlaceholder": "e.g. Pasta",
-      "minutesLabel": "Minutes",
-      "secondsLabel": "Seconds",
-      "start": "Start timer",
-      "presets": "Quick presets",
-      "presetMinutes": "{minutes} min",
-      "autoLabel": "Timer {n}",
-      "active": "Running timers",
-      "empty": "No timers running yet — start one above."
-    },
-    "suggestIngredient": {
-      "title": "Suggest an ingredient",
-      "nameLabel": "Ingredient name",
-      "densityLabel": "Density (grams per 100 ml)",
-      "densityHint": "Enter how many grams 100 ml of it weighs — e.g. water = 100, honey ≈ 141. Must be between 20 and 250.",
-      "noteLabel": "Source or note (optional)",
-      "duplicateWarning": "\"{name}\" is already in the list — this will be submitted as a correction to that entry instead of a new one.",
-      "newHint": "Looks new — this will be submitted as a new ingredient.",
-      "submitNew": "Submit new ingredient for review",
-      "submitCorrection": "Submit correction for review",
-      "success": "Thanks — an admin will review this before it appears in the Toolbox.",
-      "error": "Could not submit your suggestion.",
-      "cancel": "Cancel"
-    },
-    "suggestUnit": {
-      "title": "Suggest a unit",
-      "nameLabel": "Unit name",
-      "symbolLabel": "Symbol",
-      "kindLabel": "Kind",
-      "kindWeight": "Weight",
-      "kindVolume": "Volume",
-      "toBaseLabel": "Conversion factor",
-      "toBaseHintWeight": "Grams per unit, e.g. a tablespoon of butter ≈ 14.",
-      "toBaseHintVolume": "Milliliters per unit, e.g. a US cup = 240.",
-      "noteLabel": "Source or note (optional)",
-      "duplicateWarning": "\"{name}\" already exists — this will be submitted as a correction instead of a new unit.",
-      "newHint": "Looks new — this will be submitted as a new unit.",
-      "submitNew": "Submit new unit for review",
-      "submitCorrection": "Submit correction for review",
-      "success": "Thanks — an admin will review this before it appears in the Toolbox.",
-      "error": "Could not submit your suggestion.",
-      "cancel": "Cancel"
-    },
-    "suggestSubstitution": {
-      "title": "Suggest a substitution",
-      "problemLabel": "What's missing?",
-      "problemPlaceholder": "e.g. No buttermilk",
-      "solutionLabel": "Use instead",
-      "tagLabel": "Category (optional)",
-      "noteLabel": "Source or note (optional)",
-      "duplicateWarning": "A substitution for \"{problem}\" already exists — this will be submitted as a correction instead of a new one.",
-      "newHint": "Looks new — this will be submitted as a new substitution.",
-      "submitNew": "Submit new substitution for review",
-      "submitCorrection": "Submit correction for review",
-      "success": "Thanks — an admin will review this before it appears in the Toolbox.",
-      "error": "Could not submit your suggestion.",
-      "cancel": "Cancel"
     }
   },
   "feedback": {

@@ -8,7 +8,7 @@
     import {_, locale} from "svelte-i18n";
     import LanguageSelect from "./LanguageSelect.svelte";
     import {Drawer} from "vaul-svelte";
-    import {Home, Wrench, Calculator, Info, Sparkles, Settings, BookOpen, Heart, ShieldCheck, LogOut, ChevronRight, X, MessageSquare} from "@lucide/svelte";
+    import {Home, Wrench, Info, Sparkles, Settings, BookOpen, Heart, ShieldCheck, LogOut, ChevronRight, X, MessageSquare} from "@lucide/svelte";
     import {pendingTranslationSuggestionCount, refreshPendingTranslationSuggestionCount, pendingNutritionSuggestionCount, refreshPendingNutritionSuggestionCount} from "$lib/admin";
     import {feedbackUpdates, refreshFeedbackUpdates, pendingFeedbackCount, refreshPendingFeedbackCount} from "$lib/feedback";
 
@@ -145,13 +145,6 @@
                         aria-label="DIY"
                     >
                         {$_('header.diy')}
-                    </button>
-                    <button
-                        onclick={() => goto(`/${$locale}/toolbox`)}
-                        class="text-foreground hover:text-primary transition-colors font-medium hover:cursor-pointer"
-                        aria-label="Toolbox"
-                    >
-                        {$_('header.toolbox')}
                     </button>
                     <a
                             href={feedbackHref}
@@ -363,18 +356,6 @@
                                             </div>
                                             <div class={navLabelClass(pathSegment === 'diy')}>{$_('header.diy')}</div>
                                             {#if pathSegment === 'diy'}
-                                                <div class="ml-auto mr-1.5 h-1.5 w-1.5 rounded-full bg-primary"></div>
-                                            {/if}
-                                        </button>
-                                        <button
-                                                onclick={() => {drawerOpen = false; goto(`/${$locale}/toolbox`)}}
-                                                class={navRowClass(pathSegment === 'toolbox')}
-                                        >
-                                            <div class={navChipClass(pathSegment === 'toolbox')}>
-                                                <Calculator class="w-4 h-4" />
-                                            </div>
-                                            <div class={navLabelClass(pathSegment === 'toolbox')}>{$_('header.toolbox')}</div>
-                                            {#if pathSegment === 'toolbox'}
                                                 <div class="ml-auto mr-1.5 h-1.5 w-1.5 rounded-full bg-primary"></div>
                                             {/if}
                                         </button>

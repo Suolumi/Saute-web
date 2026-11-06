@@ -1,4 +1,8 @@
 {
+  "ingredientCombobox": {
+    "placeholder": "Rechercher un ingrédient…",
+    "noResults": "Aucun ingrédient trouvé"
+  },
   "adHocTimer": {
     "title": "Nouveau minuteur",
     "button": "Minuteur",
@@ -407,8 +411,7 @@
         "densityLabel": "Densité (grammes pour 100ml)",
         "densityHelp": "Grammes pour 100ml de cet ingrédient — eau ≈ 100, miel ≈ 141, huile d'olive ≈ 92.",
         "gramsPerUnitLabel": "Poids par unité (grammes)",
-        "gramsPerUnitHelp": "Poids d'une unité entière — un oignon ≈ 150g, un œuf ≈ 50g.",
-        "suggestUnit": "« {unit} » n'est pas une unité connue — la proposer comme unité"
+        "gramsPerUnitHelp": "Poids d'une unité entière — un oignon ≈ 150g, un œuf ≈ 50g."
       },
       "enableNutrition": "Activer la nutrition"
     },
@@ -1064,7 +1067,11 @@
       },
       "recipeTimers": {
         "title": "Minuteurs de recette",
-        "description": "Lancez un compte à rebours sur n'importe quelle étape ayant une durée définie, directement depuis les instructions d'une recette — il continue de tourner dans un widget flottant qui vous suit sur tout le site et sonne une fois terminé, même si vous avez changé de page. Mettez-le en pause et reprenez-le à tout moment depuis ce widget."
+        "description": "Lancez un compte à rebours sur n'importe quelle étape ayant une durée définie, directement depuis les instructions d'une recette — il continue de tourner dans un widget flottant qui vous suit sur tout le site et sonne une fois terminé, même si vous avez changé de page. Mettez-le en pause et reprenez-le à tout moment depuis ce widget. Besoin d'un minuteur qui ne dépend d'aucune étape ? Lancez-en un avec « + Minuteur » sur n'importe quelle recette, ou depuis le widget des minuteurs."
+      },
+      "conversions": {
+        "title": "Conversions rapides",
+        "description": "Touchez un ingrédient d'une recette pour voir sa quantité en grammes, en millilitres et en mesure de cuisine, en tenant compte de sa densité quand elle est connue."
       },
       "share": {
         "title": "Partager une recette",
@@ -1077,10 +1084,6 @@
       "mealPlanning": {
         "title": "Planification des repas",
         "description": "Organisez petit-déjeuner, déjeuner et dîner sur la semaine en glissant des recettes depuis vos favoris ou en en choisissant une pour un créneau, puis cliquez sur « Ajouter la semaine à la liste de courses » pour regrouper d'un coup les ingrédients de toutes les recettes prévues — depuis le bouton Planification des repas sur la page d'accueil."
-      },
-      "toolbox": {
-        "title": "Boîte à outils",
-        "description": "Convertissez une quantité entre poids et volume pour un ingrédient donné, basculez entre °C et °F pour les températures de four, consultez les valeurs nutritionnelles d'un aliment pour 100 g, cherchez un substitut à ce qui vous manque, ou lancez plusieurs minuteurs nommés à la fois — le tout dans l'onglet Boîte à outils."
       },
       "translationFix": {
         "title": "Proposer une correction de traduction",
@@ -1181,115 +1184,6 @@
     "unauthorized": {
       "title": "Connectez-vous pour planifier vos repas",
       "description": "Connectez-vous pour planifier votre semaine et en générer une liste de courses."
-    }
-  },
-  "toolbox": {
-    "meta": {
-      "title": "Boîte à outils",
-      "description": "Des aides de cuisine pour les quantités, les températures de four et les remplacements."
-    },
-    "title": "Boîte à outils",
-    "subtitle": "Des aides de cuisine pour les quantités, les températures de four et les remplacements.",
-    "tabs": {
-      "quantity": "Convertisseur de quantités",
-      "oven": "Températures de four",
-      "nutrition": "Valeurs nutritionnelles",
-      "timers": "Minuteurs",
-      "substitutions": "Remplacements"
-    },
-    "quantity": {
-      "ingredientLabel": "Ingrédient",
-      "ingredientPlaceholder": "Rechercher un ingrédient…",
-      "noIngredientResults": "Aucun ingrédient trouvé",
-      "amountLabel": "Quantité",
-      "fromLabel": "De",
-      "toLabel": "Vers",
-      "swap": "Inverser les unités",
-      "result": "Résultat",
-      "disclaimer": "Valeurs approximatives, basées sur la densité habituelle de l'ingrédient.",
-      "suggestIngredient": "Suggérer un ingrédient",
-      "suggestUnit": "Suggérer une unité"
-    },
-    "oven": {
-      "temperatureLabel": "Température",
-      "unitLabel": "Unité",
-      "unitCelsius": "Celsius (°C)",
-      "unitFahrenheit": "Fahrenheit (°F)",
-      "resultLabel": "Résultat"
-    },
-    "nutritionData": {
-      "ingredientLabel": "Aliment",
-      "placeholder": "Rechercher un aliment…",
-      "empty": "Recherchez un aliment pour voir ses valeurs nutritionnelles.",
-      "per100g": "Pour 100 g",
-      "disclaimer": "Les valeurs proviennent d'une liste de référence de composition des aliments, pas de l'ingrédient tel que vous le cuisinez réellement (cru ou cuit, marque, etc.)."
-    },
-    "substitutions": {
-      "searchLabel": "Rechercher un remplacement",
-      "searchPlaceholder": "ex. œufs, beurre, babeurre",
-      "noResults": "Aucun résultat pour cette recherche.",
-      "suggest": "Suggérer un remplacement",
-      "empty": "Aucun remplacement pour le moment — soyez le premier à en suggérer un."
-    },
-    "timers": {
-      "nameLabel": "Nom (facultatif)",
-      "namePlaceholder": "ex. Pâtes",
-      "minutesLabel": "Minutes",
-      "secondsLabel": "Secondes",
-      "start": "Démarrer le minuteur",
-      "presets": "Réglages rapides",
-      "presetMinutes": "{minutes} min",
-      "autoLabel": "Minuteur {n}",
-      "active": "Minuteurs en cours",
-      "empty": "Aucun minuteur en cours — démarrez-en un ci-dessus."
-    },
-    "suggestIngredient": {
-      "title": "Suggérer un ingrédient",
-      "nameLabel": "Nom de l'ingrédient",
-      "densityLabel": "Densité (grammes pour 100 ml)",
-      "densityHint": "Indiquez combien 100 ml de cet ingrédient pèsent en grammes — ex. eau = 100, miel ≈ 141. Doit être compris entre 20 et 250.",
-      "noteLabel": "Source ou remarque (facultatif)",
-      "duplicateWarning": "« {name} » existe déjà dans la liste — ceci sera soumis comme une correction de cette entrée plutôt qu'un nouvel ajout.",
-      "newHint": "Cet ingrédient semble nouveau — ceci sera soumis comme un nouvel ingrédient.",
-      "submitNew": "Soumettre le nouvel ingrédient",
-      "submitCorrection": "Soumettre la correction",
-      "success": "Merci — un administrateur vérifiera cette suggestion avant qu'elle apparaisse dans la boîte à outils.",
-      "error": "Impossible d'envoyer votre suggestion.",
-      "cancel": "Annuler"
-    },
-    "suggestUnit": {
-      "title": "Suggérer une unité",
-      "nameLabel": "Nom de l'unité",
-      "symbolLabel": "Symbole",
-      "kindLabel": "Type",
-      "kindWeight": "Poids",
-      "kindVolume": "Volume",
-      "toBaseLabel": "Facteur de conversion",
-      "toBaseHintWeight": "Grammes par unité, ex. une cuillère à soupe de beurre ≈ 14.",
-      "toBaseHintVolume": "Millilitres par unité, ex. une tasse US = 240.",
-      "noteLabel": "Source ou remarque (facultatif)",
-      "duplicateWarning": "« {name} » existe déjà — ceci sera soumis comme une correction plutôt qu'une nouvelle unité.",
-      "newHint": "Cette unité semble nouvelle — ceci sera soumis comme une nouvelle unité.",
-      "submitNew": "Soumettre la nouvelle unité",
-      "submitCorrection": "Soumettre la correction",
-      "success": "Merci — un administrateur vérifiera cette suggestion avant qu'elle apparaisse dans la boîte à outils.",
-      "error": "Impossible d'envoyer votre suggestion.",
-      "cancel": "Annuler"
-    },
-    "suggestSubstitution": {
-      "title": "Suggérer un remplacement",
-      "problemLabel": "Qu'est-ce qui manque ?",
-      "problemPlaceholder": "ex. Pas de babeurre",
-      "solutionLabel": "Utiliser à la place",
-      "tagLabel": "Catégorie (facultatif)",
-      "noteLabel": "Source ou remarque (facultatif)",
-      "duplicateWarning": "Un remplacement pour « {problem} » existe déjà — ceci sera soumis comme une correction plutôt qu'un nouvel ajout.",
-      "newHint": "Ce remplacement semble nouveau — ceci sera soumis comme un nouveau remplacement.",
-      "submitNew": "Soumettre le nouveau remplacement",
-      "submitCorrection": "Soumettre la correction",
-      "success": "Merci — un administrateur vérifiera cette suggestion avant qu'elle apparaisse dans la boîte à outils.",
-      "error": "Impossible d'envoyer votre suggestion.",
-      "cancel": "Annuler"
     }
   },
   "feedback": {

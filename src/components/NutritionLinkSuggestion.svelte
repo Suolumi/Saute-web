@@ -6,7 +6,6 @@
     import {toastError, toastSuccess} from '$lib/utils';
     import {apiErrorMessage} from '$lib/api';
     import IngredientCombobox from './toolbox/IngredientCombobox.svelte';
-    import SuggestUnitModal from './toolbox/SuggestUnitModal.svelte';
     import Button from './Button.svelte';
     import Input from './Input.svelte';
 
@@ -69,15 +68,6 @@
     const requiredField = $derived(requiredNutritionField(ingredientUnit, toolboxUnits));
     const fieldValueNumber = $derived(parsePositiveNumberInput(fieldValue));
     const fieldValueValid = $derived(requiredField === null || (fieldValueNumber !== null && fieldValueNumber > 0));
-
-    // The grams-per-unit fallback covers a genuinely blank unit (a bare
-    // count) and unrecognized unit text alike (see requiredNutritionField),
-    // but only the latter has actual text worth registering as a real unit
-    // - offered as a secondary, durable-fix option alongside the quick
-    // per-ingredient shortcut, reusing the Toolbox's own unit-suggestion
-    // flow rather than a bespoke one here.
-    const unknownUnitText = $derived(requiredField === 'grams_per_unit' ? ingredientUnit.trim() : '');
-    let suggestingUnit = $state(false);
 
     const trimmedName = $derived(ingredientName.trim());
 
@@ -197,11 +187,6 @@
         <p class="mt-1 text-[11px] text-muted-foreground max-w-xs">
             {$_(requiredField === 'density' ? 'edit.ingredients.nutritionLink.densityHelp' : 'edit.ingredients.nutritionLink.gramsPerUnitHelp')}
         </p>
-        {#if unknownUnitText}
-            <button type="button" onclick={() => suggestingUnit = true} class="mt-1.5 text-[11px] text-primary hover:underline hover:cursor-pointer">
-                {$_('edit.ingredients.nutritionLink.suggestUnit', {values: {unit: unknownUnitText}})}
-            </button>
-        {/if}
     </div>
 {/snippet}
 
@@ -261,4 +246,3 @@
 {/if}
 {/if}
 
-<SuggestUnitModal bind:open={suggestingUnit} units={toolboxUnits} initialName={unknownUnitText} />
