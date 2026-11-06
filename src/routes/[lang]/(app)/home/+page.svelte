@@ -6,7 +6,7 @@
     import PageMeta from '../../../../components/PageMeta.svelte';
     import {getRecipes, type GetRecipesRequest, type RecipePreview, type RecipeType, type TimePreset} from "$lib/recipes";
     import { shoppingList } from '$lib/shoppingList';
-    import { user } from '$lib/stores';
+    import { collapseFamilies, user } from '$lib/stores';
     import { _, locale } from 'svelte-i18n';
     import { goto } from '$app/navigation';
     import { Plus, SearchX, ShoppingCart, CalendarDays } from '@lucide/svelte';
@@ -60,6 +60,7 @@
         }
         request.locale = $locale ?? 'en'
         request.search_locale = $locale ?? 'en'
+        request.flat = !$collapseFamilies
         request.limit = PAGE_SIZE
         request.offset = offset
         return request
@@ -95,7 +96,7 @@
     }
 
     $effect(() => {
-        searchTerm; selectedType; $locale; author; ingredients; tags; timeBasis; timeTarget; popular;
+        searchTerm; selectedType; $locale; author; ingredients; tags; timeBasis; timeTarget; popular; $collapseFamilies;
         untrack(() => {
             recipes = []
             hasMore = true
@@ -160,6 +161,8 @@
             bind:author
             bind:ingredients
             showTags
+            showCollapse
+            bind:collapseFamilies={() => $collapseFamilies, (value) => collapseFamilies.set(value)}
             bind:tags
             bind:timeBasis
             bind:timeTarget

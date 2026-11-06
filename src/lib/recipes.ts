@@ -129,6 +129,9 @@ export type RecipePreview = {
     favorite_count: number
     variation_of?: string
     variation_count: number
+    // family_size counts the preview's family (root + variations), set by
+    // listings; 1 for a standalone recipe.
+    family_size?: number
 }
 
 export type RecipeForm = {
@@ -223,6 +226,8 @@ export type GetRecipesRequest = {
     // variations alike, no collapsing) - only the Settings "My Recipes" view
     // sets this.
     own_recipes?: boolean
+    // flat lists the public feed uncollapsed: roots and variations alike.
+    flat?: boolean
     // favorites_only lists only recipes the caller has favorited - flat, the
     // exact recipe/variation favorited (not collapsed to its family root),
     // sorted alphabetically by default. Unlike own_recipes, category here

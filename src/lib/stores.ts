@@ -39,4 +39,7 @@ export const darkMode = persisted<boolean>('darkMode', false, {
     syncTabs: true,
     serializer: jsonParser,
 })
+export const collapseFamilies = persisted<boolean>('collapseFamilies', false, {
+    serializer: jsonParser,
+})
 export const serverUrl = writable<string>(env.PUBLIC_SERVER_URL || 'https://recipes-api.suolumi.fr/api/v1')

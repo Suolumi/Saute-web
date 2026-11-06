@@ -1,4 +1,5 @@
 <script lang="ts">
+    import {collapseFamilies} from '$lib/stores';
     import { untrack } from 'svelte';
     import RecipeCard from '../../../../components/RecipeCard.svelte';
     import RecipeFilters from '../../../../components/RecipeFilters.svelte';
@@ -39,6 +40,7 @@
             request.popular = true
         request.locale = $locale ?? 'en'
         request.search_locale = $locale ?? 'en'
+        request.flat = !$collapseFamilies
         request.limit = PAGE_SIZE
         request.offset = offset
         return request
@@ -74,7 +76,7 @@
     }
 
     $effect(() => {
-        searchTerm; $locale; author; ingredients; tags; popular;
+        searchTerm; $locale; author; ingredients; tags; popular; $collapseFamilies;
         untrack(() => {
             recipes = []
             hasMore = true
@@ -115,6 +117,8 @@
             bind:author
             bind:ingredients
             showTags
+            showCollapse
+            bind:collapseFamilies={() => $collapseFamilies, (value) => collapseFamilies.set(value)}
             bind:tags
             tagCategory="diy"
             bind:popular

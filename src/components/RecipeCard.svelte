@@ -1,21 +1,16 @@
 <script lang="ts">
-    import {favoriteRecipe, formatDuration, getFamily, getRecipe, recipeTypeColors, unfavoriteRecipe} from '$lib/recipes';
+    import {favoriteRecipe, formatDuration, getRecipe, recipeTypeColors, unfavoriteRecipe} from '$lib/recipes';
     import {goto} from "$app/navigation";
     import type {RecipePreview} from "$lib/recipes";
     import emblaCarouselSvelte from "embla-carousel-svelte";
-    import {ArrowLeft, ArrowRight, CornerDownRight, Heart, Plus} from "@lucide/svelte";
+    import {ArrowLeft, ArrowRight, CornerDownRight, Heart, Layers} from "@lucide/svelte";
     import {serverUrl, user} from "$lib/stores";
     import {locale, _} from "svelte-i18n";
     import {toastError, pictureUrl} from "$lib/utils";
     import Lightbox from "./Lightbox.svelte";
-    import Modal from "./Modal.svelte";
-    import RecipeCard from "./RecipeCard.svelte";
     import HighlightText from "./HighlightText.svelte";
     import TagBadges from "./TagBadges.svelte";
 
-    // suppressPicker forces a direct navigation on click, bypassing the
-    // variation picker below - used for cards rendered inside the picker
-    // modal itself, so picking the root there doesn't recursively reopen it.
     // onFavoriteChange, when given, fires after a successful favorite toggle
     // - the My Favorites tab uses it to drop a card the moment it's
     // unfavorited, since this component only updates its own local copy of
@@ -26,8 +21,8 @@
     // highlightQuery, when given, highlights the portion of the title that
     // matches a search box driving this card's listing (e.g. RecipeFilters'
     // searchTerm) - omitted entirely for cards shown outside a search
-    // context (variation pickers, related-recipe sections, etc.).
-    let { recipe, disabled = false, suppressPicker = false, onFavoriteChange, truncateDescription = true, highlightQuery = '' }: { recipe: RecipePreview, disabled?: boolean, suppressPicker?: boolean, onFavoriteChange?: (favorite: boolean) => void, truncateDescription?: boolean, highlightQuery?: string } = $props();
+    // context (related-recipe sections, etc.).
+    let { recipe, disabled = false, onFavoriteChange, truncateDescription = true, highlightQuery = '' }: { recipe: RecipePreview, disabled?: boolean, onFavoriteChange?: (favorite: boolean) => void, truncateDescription?: boolean, highlightQuery?: string } = $props();
     let emblaApi: any = $state();
     let lightboxOpen = $state(false);
     let lightboxIndex = $state(0);
@@ -39,11 +34,6 @@
     let canScrollPrev = $state(false);
     let canScrollNext = $state(false);
 
-    let pickerOpen = $state(false);
-    let pickerLoading = $state(false);
-    let familyRoot: RecipePreview | null = $state(null);
-    let familyVariations: RecipePreview[] = $state([]);
-
     function viewRecipe(id: string) {
         goto(`/${$locale}/recipes/${id}`);
     }
@@ -54,39 +44,9 @@
             viewRecipe(id);
     }
 
-    // A root with variations opens a picker instead of navigating straight
-    // through - a variation's own card (recipe.variation_of set) always
-    // navigates directly, since it already represents one specific version.
     function handleClick() {
-        if (disabled)
-            return;
-        if (!suppressPicker && !recipe.variation_of && recipe.variation_count > 0) {
-            openPicker();
-            return;
-        }
-        viewRecipe(recipe.id);
-    }
-
-    async function openPicker() {
-        pickerOpen = true;
-        pickerLoading = true;
-        try {
-            const {root, variations} = await getFamily(recipe.id, $locale ?? undefined);
-            if (root.response.ok && root.data && variations.response.ok && variations.data) {
-                // The picker's own card only ever needs preview-shaped
-                // fields; drop the detail-only picture attribution.
-                familyRoot = {...root.data, pictures: root.data.pictures.map(p => p.filename)};
-                familyVariations = variations.data.items;
-            } else
-                toastError($_('variationPicker.error'));
-        } finally {
-            pickerLoading = false;
-        }
-    }
-
-    function submitVariation() {
-        pickerOpen = false;
-        goto(`/${$locale}/create?variation_of=${recipe.id}`);
+        if (!disabled)
+            viewRecipe(recipe.id);
     }
 
     function updateScrollState() {
@@ -217,9 +177,10 @@
         <div class="flex items-start justify-between mb-3">
             <h3 class="text-xl font-semibold text-card-foreground text-balance">{#if recipe.title}<HighlightText text={recipe.title} query={highlightQuery} />{:else}{$_('recipeCard.title')}{/if}</h3>
             <div class="flex items-center gap-2 ml-2 flex-shrink-0">
-                {#if !recipe.variation_of && recipe.variation_count > 0}
-                    <span class="bg-primary/10 text-primary px-2 py-1 rounded-full text-sm font-medium whitespace-nowrap">
-                        {$_('recipeCard.variationCount', {values: {count: recipe.variation_count}})}
+                {#if (recipe.family_size ?? 0) > 1}
+                    <span class="inline-flex items-center gap-1 bg-primary/10 text-primary px-2 py-1 rounded-full text-sm font-medium whitespace-nowrap">
+                        <Layers size="14" />
+                        {$_('recipeCard.familySize', {values: {count: recipe.family_size}})}
                     </span>
                 {/if}
                 {#if recipe.category === 'diy'}
@@ -297,37 +258,6 @@
         alt={recipe.title || 'Recipe Title'}
         onClose={() => lightboxOpen = false}
 />
-
-{#if !suppressPicker}
-    <Modal
-            open={pickerOpen}
-            title={$_('variationPicker.title')}
-            description={$_('variationPicker.description')}
-            onClose={() => pickerOpen = false}
-            style="width: 60vw; max-width: 1600px; height: 85vh;"
-    >
-        {#if pickerLoading}
-            <div class="py-8 text-center text-muted-foreground">…</div>
-        {:else}
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {#if familyRoot}
-                    <RecipeCard recipe={familyRoot} suppressPicker={true} />
-                {/if}
-                {#each familyVariations as variation (variation.id)}
-                    <RecipeCard recipe={variation} suppressPicker={true} />
-                {/each}
-                <button
-                        type="button"
-                        onclick={submitVariation}
-                        class="flex flex-col items-center justify-center gap-2 rounded-lg border-2 border-dashed border-border p-6 text-muted-foreground hover:border-primary hover:text-primary transition-colors hover:cursor-pointer min-h-[160px]"
-                >
-                    <Plus size="28" />
-                    <span class="font-medium text-center">{$_('variationPicker.createTile')}</span>
-                </button>
-            </div>
-        {/if}
-    </Modal>
-{/if}
 
 <style>
     @keyframes heart-bump {

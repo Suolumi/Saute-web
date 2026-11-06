@@ -44,13 +44,8 @@
     "unfavorite": "Poista suosikeista",
     "favoriteError": "Suosikin päivitys epäonnistui",
     "variationCount": "{count} muunnelmaa",
+    "familySize": "{count} versiota",
     "diyBadge": "DIY"
-  },
-  "variationPicker": {
-    "title": "Valitse versio",
-    "description": "Tällä reseptillä on useita eri henkilöiden lähettämiä versioita.",
-    "createTile": "Ehdota omaa muunnelmaa",
-    "error": "Reseptin muunnelmien lataaminen epäonnistui"
   },
   "home": {
     "mainText": "Mitä on tänään ruokalistalla?",
@@ -69,6 +64,7 @@
     "closestMatch": "Lähimmät tulokset näytetään ensin",
     "quickestMatch": "Nopeimmat reseptit näytetään ensin",
     "mostPopular": "Suosituimmat",
+    "collapseFamilies": "Ryhmittele reseptin versiot",
     "clearAll": "Tyhjennä kaikki",
     "timeAny": "Mikä tahansa aika",
     "timeQuick": "Nopein",

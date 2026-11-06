@@ -44,13 +44,8 @@
     "unfavorite": "Remove from favorites",
     "favoriteError": "Couldn't update favorite",
     "variationCount": "{count} variations",
+    "familySize": "{count} versions",
     "diyBadge": "DIY"
-  },
-  "variationPicker": {
-    "title": "Choose a version",
-    "description": "This recipe has multiple versions submitted by different people.",
-    "createTile": "Submit your own variation",
-    "error": "Couldn't load this recipe's variations"
   },
   "home": {
     "mainText": "What's on the menu today?",
@@ -69,6 +64,7 @@
     "closestMatch": "Closest matches shown first",
     "quickestMatch": "Fastest recipes shown first",
     "mostPopular": "Most Popular",
+    "collapseFamilies": "Group versions of a recipe",
     "clearAll": "Clear all",
     "timeAny": "Any time",
     "timeQuick": "Quickest",

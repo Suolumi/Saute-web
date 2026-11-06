@@ -7,6 +7,7 @@
     import {Search, SlidersHorizontal, ChevronDown, User, X, Flame, Tag} from '@lucide/svelte';
     import HighlightText from './HighlightText.svelte';
     import TagFilter from './TagFilter.svelte';
+    import Checkbox from './Checkbox.svelte';
 
     interface Props {
         searchTerm: string;
@@ -39,6 +40,11 @@
         // tagCategory ('all' offers every tag).
         tags?: string[];
         showTags?: boolean;
+        // collapseFamilies groups a family into one card. It's a view
+        // preference, not a filter: clearAll and the active chips ignore it.
+        // The checkbox only shows with showCollapse.
+        collapseFamilies?: boolean;
+        showCollapse?: boolean;
         tagCategory?: RecipeCategory | 'all';
         searchPlaceholder: string;
         ingredientsLabel: string;
@@ -58,6 +64,8 @@
         showAuthor = true,
         tags = $bindable([]),
         showTags = false,
+        collapseFamilies = $bindable(false),
+        showCollapse = false,
         tagCategory = 'food',
         searchPlaceholder,
         ingredientsLabel,
@@ -373,6 +381,12 @@
                 {:else if timeTarget !== 'any'}
                     <p class="text-xs text-muted-foreground">{$_('home.closestMatch')}</p>
                 {/if}
+            </div>
+            {/if}
+            {#if showCollapse}
+            <div class="flex items-center gap-2 min-w-[220px] flex-1 self-end py-2">
+                <Checkbox checked={collapseFamilies} onchange={(value) => collapseFamilies = value} ariaLabel={$_('home.collapseFamilies')} />
+                <button type="button" class="text-sm font-medium text-foreground text-left" onclick={() => collapseFamilies = !collapseFamilies}>{$_('home.collapseFamilies')}</button>
             </div>
             {/if}
         </div>

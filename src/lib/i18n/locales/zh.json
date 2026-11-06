@@ -44,13 +44,8 @@
     "unfavorite": "取消收藏",
     "favoriteError": "无法更新收藏",
     "variationCount": "{count} 个变体",
+    "familySize": "{count} 个版本",
     "diyBadge": "DIY"
-  },
-  "variationPicker": {
-    "title": "选择一个版本",
-    "description": "这个食谱有多个由不同用户提交的版本。",
-    "createTile": "提交你自己的变体",
-    "error": "无法加载此食谱的变体"
   },
   "home": {
     "mainText": "今天吃什么？",
@@ -69,6 +64,7 @@
     "closestMatch": "最接近的结果排在前面",
     "quickestMatch": "最快的食谱排在前面",
     "mostPopular": "最受欢迎",
+    "collapseFamilies": "合并同一食谱的不同版本",
     "clearAll": "全部清除",
     "timeAny": "不限时间",
     "timeQuick": "最快",

@@ -44,13 +44,8 @@
     "unfavorite": "Retirer des favoris",
     "favoriteError": "Impossible de mettre à jour le favori",
     "variationCount": "{count} variantes",
+    "familySize": "{count} versions",
     "diyBadge": "DIY"
-  },
-  "variationPicker": {
-    "title": "Choisissez une version",
-    "description": "Cette recette a plusieurs versions proposées par différentes personnes.",
-    "createTile": "Proposer votre propre variante",
-    "error": "Impossible de charger les variantes de cette recette"
   },
   "home": {
     "mainText": "Qu'y a-t-il au menu aujourd'hui ?",
@@ -69,6 +64,7 @@
     "closestMatch": "Résultats les plus proches affichés en premier",
     "quickestMatch": "Recettes les plus rapides affichées en premier",
     "mostPopular": "Les plus populaires",
+    "collapseFamilies": "Regrouper les versions d'une recette",
     "clearAll": "Tout effacer",
     "timeAny": "N'importe quand",
     "timeQuick": "Le plus rapide",
