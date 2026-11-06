@@ -8,6 +8,7 @@
         formatDuration,
         getIngredientName,
         groupIngredients,
+        type Ingredient,
         type RecipeViewData,
         type RecipePicture,
         type Step,
@@ -17,6 +18,7 @@
     import {pictureUrl} from "$lib/utils";
     import Lightbox from "./Lightbox.svelte";
     import RecipeRefIngredient from "./RecipeRefIngredient.svelte";
+    import IngredientConversions from "./IngredientConversions.svelte";
 
     // RecipeView renders a recipe the way its published page shows it. The
     // detail page feeds it the published recipe and fills the snippets with
@@ -29,6 +31,7 @@
         selectedServings = $bindable(),
         headerActions,
         versions,
+        conversions,
         pictureOverlay,
         instructionsActions,
         stepAside,
@@ -41,6 +44,8 @@
         headerActions?: Snippet
         // versions replaces the "this is a variation" note under the title.
         versions?: Snippet
+        // conversions lists an ingredient's scaled quantity in other units.
+        conversions?: (ingredient: Ingredient, ratio: number) => string[]
         pictureOverlay?: Snippet<[RecipePicture | undefined]>
         instructionsActions?: Snippet
         stepAside?: Snippet<[number]>
@@ -292,7 +297,7 @@
                                             {#if ingredient.recipe_ref}
                                                 <RecipeRefIngredient {ingredient} ratio={servingsRatio} />
                                             {:else}
-                                                <span class="text-card-foreground">{getIngredientName(ingredient, servingsRatio)}</span>
+                                                <IngredientConversions lines={conversions?.(ingredient, servingsRatio) ?? []}>{getIngredientName(ingredient, servingsRatio)}</IngredientConversions>
                                             {/if}
                                         </li>
                                     {/each}

@@ -8,6 +8,7 @@
         getFamily,
         getRecipe,
         PICTURE_CAP_PER_CONTRIBUTOR,
+        type Ingredient,
         type Recipe,
         type RecipePicture,
         type RecipePreview,
@@ -29,6 +30,7 @@
     import {unlockAlarmAudio} from "$lib/timerAlarm";
     import {onMount} from "svelte";
     import {ScreenWakeLock} from "$lib/wakeLock.svelte";
+    import {formatConversion, ingredientConversions, loadConversionData, type ConversionData} from "$lib/ingredientConversions";
 
     let id = $derived(page.params.id)
     const { data } = $props()
@@ -94,6 +96,21 @@
         })
         return () => { stale = true }
     })
+
+    let conversionData: ConversionData | null = $state(null)
+    $effect(() => {
+        const sourceLocale = recipe?.source_locale
+        loadConversionData(sourceLocale).then(data => conversionData = data)
+    })
+
+    // Densities match the canonical ingredient name, like nutrition does.
+    function conversionsFor(ingredient: Ingredient, ratio: number): string[] {
+        if (!recipe || !conversionData)
+            return []
+        const i = recipe.ingredients.indexOf(ingredient)
+        const name = canonicalIngredients?.[i]?.name ?? ingredient.name
+        return ingredientConversions(ingredient.quantity * ratio, ingredient.unit, name, conversionData).map(formatConversion)
+    }
 
     function submitVariation() {
         if (rootId)
@@ -305,7 +322,7 @@
             {t('back')}
         </button>
 
-        <RecipeView {recipe} bind:selectedServings stepDone={(index) => isStepDone($recipeStepProgress, recipe!.id, index)}>
+        <RecipeView {recipe} bind:selectedServings conversions={recipe.category === 'diy' ? undefined : conversionsFor} stepDone={(index) => isStepDone($recipeStepProgress, recipe!.id, index)}>
             {#snippet pictureOverlay(currentPicture)}
                 {#if currentPicture && canRemovePicture(currentPicture)}
                     <button
