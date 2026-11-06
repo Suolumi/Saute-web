@@ -235,7 +235,11 @@
     "dismissTimer": "Dismiss",
     "timerFor": "{recipe} — {step}",
     "notFound": "Recipe not found",
-    "variations": "Variations",
+    "versions": {
+      "label": "Versions",
+      "original": "Original",
+      "add": "Add yours"
+    },
     "variationBanner": "This is a variation of another recipe.",
     "viewOriginal": "View the original",
     "submitVariation": "Submit a variation",
@@ -1016,7 +1020,7 @@
       },
       "variations": {
         "title": "Recipe Variations",
-        "description": "Cooked someone else's recipe your own way? Hit \"Submit a variation\" on that recipe's page, and it shows up alongside the original instead of as a brand-new post."
+        "description": "Cooked someone else's recipe your own way? Hit \"Submit a variation\" on its page. Every version gets its own card in the listings, and the recipe page lets you switch between them."
       },
       "recipeRef": {
         "title": "Recipe-Linked Ingredients",

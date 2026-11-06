@@ -235,7 +235,11 @@
     "dismissTimer": "关闭",
     "timerFor": "{recipe} — {step}",
     "notFound": "未找到食谱",
-    "variations": "变体",
+    "versions": {
+      "label": "版本",
+      "original": "原版",
+      "add": "添加你的版本"
+    },
     "variationBanner": "这是另一个食谱的变体。",
     "viewOriginal": "查看原版",
     "submitVariation": "提交变体",
@@ -1028,7 +1032,7 @@
       },
       "variations": {
         "title": "食谱变体",
-        "description": "用自己的方式做了别人的食谱？在那个食谱页面点击“提交变体”，它就会显示在原版旁边，而不是作为一篇全新的帖子。"
+        "description": "用自己的方式做了别人的食谱？在那个食谱页面点击“提交变体”。每个版本在列表中都有自己的卡片，在食谱页面可以在各个版本之间切换。"
       },
       "recipeRef": {
         "title": "关联食谱的食材",

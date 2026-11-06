@@ -18,7 +18,7 @@
     import {serverUrl, user} from "$lib/stores";
     import {_, locale} from "svelte-i18n";
     import {pictureUrl, toastError, toastSuccess} from "$lib/utils";
-    import RecipeCard from "../../../../../components/RecipeCard.svelte";
+    import VersionSwitcher from "../../../../../components/VersionSwitcher.svelte";
     import RecipeView from "../../../../../components/RecipeView.svelte";
     import RecipeNutritionPanel from "../../../../../components/RecipeNutritionPanel.svelte";
     import PageMeta from "../../../../../components/PageMeta.svelte";
@@ -34,7 +34,8 @@
     const { data } = $props()
     let recipe: Recipe | null | undefined = $state(data.recipe)
     let selectedServings = $state(data.recipe?.quantity ?? 1)
-    let siblingVariations: RecipePreview[] = $state([])
+    let familyRoot: RecipePreview | null = $state(null)
+    let familyVariations: RecipePreview[] = $state([])
 
     // The recipe currently viewed may itself be a variation; siblings are
     // always fetched relative to the family root, never the variation.
@@ -76,15 +77,17 @@
 
     $effect(() => {
         if (!rootId) {
-            siblingVariations = []
+            familyRoot = null
+            familyVariations = []
             return
         }
-        getFamily(rootId, $locale ?? undefined).then(({variations}) => {
-            // Exclude the recipe currently being viewed: when it's itself a
-            // variation, it's included in "this root's variations" like any
-            // sibling, but it isn't its own sibling.
-            if (variations.response.ok && variations.data)
-                siblingVariations = variations.data.items.filter(v => v.id !== id)
+        familyRoot = null
+        familyVariations = []
+        getFamily(rootId, $locale ?? undefined).then(({root, variations}) => {
+            if (root.response.ok && root.data && variations.response.ok && variations.data) {
+                familyRoot = {...root.data, pictures: root.data.pictures.map(p => p.filename)}
+                familyVariations = variations.data.items
+            }
         })
     })
 
@@ -334,6 +337,12 @@
                 {/if}
             {/snippet}
 
+            {#snippet versions()}
+                {#if familyRoot && familyVariations.length > 0}
+                    <VersionSwitcher root={familyRoot} variations={familyVariations} currentId={recipe!.id} onAdd={$user ? submitVariation : undefined} />
+                {/if}
+            {/snippet}
+
             {#snippet headerActions()}
                 {#if $user}
                     <button
@@ -361,7 +370,7 @@
                 >
                     <Share2 size="20" />
                 </button>
-                {#if $user}
+                {#if $user && familyVariations.length === 0}
                     <button
                             onclick={submitVariation}
                             class="bg-background hover:cursor-pointer hover:bg-accent border-2 border-primary text-primary px-3 py-2 rounded-lg transition-all flex items-center gap-2 shadow-sm hover:shadow-md whitespace-nowrap"
@@ -439,17 +448,6 @@
                 <RecipeNutritionPanel recipeId={recipe!.id} {servings} ingredients={recipe!.ingredients} canonicalIngredients={canonicalIngredients ?? recipe!.ingredients} />
             {/snippet}
         </RecipeView>
-
-        {#if siblingVariations.length > 0}
-            <div class="bg-card rounded-lg border border-border p-6 mt-8">
-                <h2 class="text-2xl font-semibold text-card-foreground mb-6">{$_('recipe.variations')}</h2>
-                <div class="grid grid-cols-cards gap-6">
-                    {#each siblingVariations as variation (variation.id)}
-                        <RecipeCard recipe={variation} />
-                    {/each}
-                </div>
-            </div>
-        {/if}
 
     </div>
 {:else if recipe === null}

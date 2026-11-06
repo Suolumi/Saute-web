@@ -235,7 +235,11 @@
     "dismissTimer": "Ignorer",
     "timerFor": "{recipe} — {step}",
     "notFound": "Recette non trouvée",
-    "variations": "Variantes",
+    "versions": {
+      "label": "Versions",
+      "original": "Originale",
+      "add": "Ajouter la vôtre"
+    },
     "variationBanner": "Ceci est une variante d'une autre recette.",
     "viewOriginal": "Voir la recette originale",
     "submitVariation": "Proposer une variante",
@@ -1016,7 +1020,7 @@
       },
       "variations": {
         "title": "Variations de recette",
-        "description": "Vous avez cuisiné la recette de quelqu'un d'autre à votre façon ? Utilisez « Proposer une variante » sur la page de cette recette : elle apparaîtra aux côtés de l'originale plutôt que comme une nouvelle publication."
+        "description": "Vous avez cuisiné la recette de quelqu'un d'autre à votre façon ? Utilisez « Proposer une variante » sur sa page. Chaque version a sa propre carte dans les listes, et la page de la recette permet de passer de l'une à l'autre."
       },
       "recipeRef": {
         "title": "Ingrédients liés à une recette",

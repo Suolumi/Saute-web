@@ -28,6 +28,7 @@
         recipe,
         selectedServings = $bindable(),
         headerActions,
+        versions,
         pictureOverlay,
         instructionsActions,
         stepAside,
@@ -38,6 +39,8 @@
         recipe: RecipeViewData
         selectedServings: number
         headerActions?: Snippet
+        // versions replaces the "this is a variation" note under the title.
+        versions?: Snippet
         pictureOverlay?: Snippet<[RecipePicture | undefined]>
         instructionsActions?: Snippet
         stepAside?: Snippet<[number]>
@@ -190,7 +193,9 @@
                 </div>
             </div>
 
-            {#if recipe.variation_of}
+            {#if versions}
+                {@render versions()}
+            {:else if recipe.variation_of}
                 <p class="text-sm text-muted-foreground mb-4">
                     {$_('recipe.variationBanner')}
                     <a href={`/${$locale}/recipes/${recipe.variation_of}`} class="text-primary hover:underline font-medium">{$_('recipe.viewOriginal')}</a>

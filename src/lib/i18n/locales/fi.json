@@ -235,7 +235,11 @@
     "dismissTimer": "Hylkää",
     "timerFor": "{recipe} — {step}",
     "notFound": "Reseptiä ei löytynyt",
-    "variations": "Muunnelmat",
+    "versions": {
+      "label": "Versiot",
+      "original": "Alkuperäinen",
+      "add": "Lisää omasi"
+    },
     "variationBanner": "Tämä on muunnelma toisesta reseptistä.",
     "viewOriginal": "Näytä alkuperäinen resepti",
     "submitVariation": "Ehdota muunnelmaa",
@@ -1016,7 +1020,7 @@
       },
       "variations": {
         "title": "Reseptien versiot",
-        "description": "Valmistitko jonkun toisen reseptin omalla tavallasi? Käytä reseptin sivulla \"Ehdota muunnelmaa\", niin se näkyy alkuperäisen rinnalla uuden julkaisun sijaan."
+        "description": "Valmistitko jonkun toisen reseptin omalla tavallasi? Käytä reseptin sivulla \"Ehdota muunnelmaa\". Jokainen versio näkyy listauksissa omana korttinaan, ja reseptin sivulla voit vaihtaa versioiden välillä."
       },
       "recipeRef": {
         "title": "Reseptiin linkitetyt raaka-aineet",
