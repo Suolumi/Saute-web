@@ -251,14 +251,6 @@
     "referenceCollapse": "Masquer les ingrédients",
     "keepAwakeOn": "Empêcher la mise en veille de l'écran",
     "keepAwakeOff": "Autoriser la mise en veille de l'écran",
-    "cookMode": "Cuisiner",
-    "cookModeExit": "Quitter le mode cuisine",
-    "cookModeStepOf": "Étape {current} sur {total}",
-    "cookModeStep": "Étape {step}",
-    "cookModePrevStep": "Étape précédente",
-    "cookModeNextStep": "Étape suivante",
-    "cookModeIngredients": "Ingrédients",
-    "cookModeIngredientChecked": "Marquer {name} comme utilisé",
     "addPhoto": "Ajouter une photo",
     "removePhoto": "Supprimer la photo",
     "photoAddedBy": "Ajoutée par {username}",
@@ -1059,13 +1051,9 @@
         "title": "Connecter un assistant IA",
         "description": "Générez un jeton d'accès personnel depuis la page Connecter une IA pour qu'un outil d'IA puisse lire, rechercher et créer des recettes sur votre compte, pour vous."
       },
-      "cookMode": {
-        "title": "Mode cuisine",
-        "description": "Parcourez les instructions d'une recette une étape à la fois, en gros caractères, avec l'écran maintenu allumé automatiquement — cliquez sur « Cuisiner » au-dessus des instructions, sur la page de n'importe quelle recette."
-      },
       "recipeTimers": {
         "title": "Minuteurs de recette",
-        "description": "Lancez un compte à rebours sur n'importe quelle étape ayant une durée définie, depuis le mode cuisine ou directement depuis les instructions d'une recette — il continue de tourner dans un widget flottant qui vous suit sur tout le site et sonne une fois terminé, même si vous avez changé de page. Mettez-le en pause et reprenez-le à tout moment depuis ce widget."
+        "description": "Lancez un compte à rebours sur n'importe quelle étape ayant une durée définie, directement depuis les instructions d'une recette — il continue de tourner dans un widget flottant qui vous suit sur tout le site et sonne une fois terminé, même si vous avez changé de page. Mettez-le en pause et reprenez-le à tout moment depuis ce widget."
       },
       "share": {
         "title": "Partager une recette",

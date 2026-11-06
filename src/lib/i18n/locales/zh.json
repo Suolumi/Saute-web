@@ -251,14 +251,6 @@
     "referenceCollapse": "隐藏食材",
     "keepAwakeOn": "保持屏幕常亮",
     "keepAwakeOff": "允许屏幕休眠",
-    "cookMode": "烹饪",
-    "cookModeExit": "退出烹饪模式",
-    "cookModeStepOf": "第 {current} 步，共 {total} 步",
-    "cookModeStep": "第 {step} 步",
-    "cookModePrevStep": "上一步",
-    "cookModeNextStep": "下一步",
-    "cookModeIngredients": "食材",
-    "cookModeIngredientChecked": "将 {name} 标记为已使用",
     "addPhoto": "添加照片",
     "removePhoto": "删除照片",
     "photoAddedBy": "由 {username} 添加",
@@ -1071,13 +1063,9 @@
         "title": "连接 AI 助手",
         "description": "在“连接 AI”页面生成个人访问令牌，让 AI 工具代你在账户中读取、搜索和创建食谱。"
       },
-      "cookMode": {
-        "title": "烹饪模式",
-        "description": "以大字体逐步查看食谱步骤，屏幕自动保持常亮——在任意食谱页面的步骤上方点击“烹饪”即可。"
-      },
       "recipeTimers": {
         "title": "食谱计时器",
-        "description": "在烹饪模式中或直接在食谱步骤里，为任何设有时长的步骤开始倒计时——它会在一个跟随你浏览全站的悬浮小部件中继续运行，时间到了就会响铃，即使你已经离开了那个页面。随时可以在小部件中暂停和继续。"
+        "description": "直接在食谱步骤里，为任何设有时长的步骤开始倒计时——它会在一个跟随你浏览全站的悬浮小部件中继续运行，时间到了就会响铃，即使你已经离开了那个页面。随时可以在小部件中暂停和继续。"
       },
       "share": {
         "title": "分享食谱",

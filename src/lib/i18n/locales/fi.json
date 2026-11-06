@@ -251,14 +251,6 @@
     "referenceCollapse": "Piilota ainekset",
     "keepAwakeOn": "Estä näytön sammuminen",
     "keepAwakeOff": "Salli näytön sammuminen",
-    "cookMode": "Kokkaustila",
-    "cookModeExit": "Poistu kokkaustilasta",
-    "cookModeStepOf": "Vaihe {current}/{total}",
-    "cookModeStep": "Vaihe {step}",
-    "cookModePrevStep": "Edellinen vaihe",
-    "cookModeNextStep": "Seuraava vaihe",
-    "cookModeIngredients": "Ainekset",
-    "cookModeIngredientChecked": "Merkitse {name} käytetyksi",
     "addPhoto": "Lisää kuva",
     "removePhoto": "Poista kuva",
     "photoAddedBy": "Lisännyt {username}",
@@ -1059,13 +1051,9 @@
         "title": "Yhdistä tekoälyavustaja",
         "description": "Luo henkilökohtainen käyttöoikeustunnus Yhdistä tekoäly -sivulta, jotta tekoälytyökalu voi lukea, hakea ja luoda reseptejä tilillesi puolestasi."
       },
-      "cookMode": {
-        "title": "Kokkaustila",
-        "description": "Käy reseptin ohjeet läpi vaihe kerrallaan, suurella tekstillä, näytön pysyessä automaattisesti päällä — paina \"Kokkaa\" ohjeiden yläpuolella minkä tahansa reseptin sivulla."
-      },
       "recipeTimers": {
         "title": "Reseptiajastimet",
-        "description": "Käynnistä ajastin millä tahansa vaiheella, jolle on asetettu kesto, joko kokkaustilassa tai suoraan reseptin ohjeista — se jatkaa käyntiään kelluvassa widgetissä, joka seuraa mukana koko sivustolla ja soi ajan loputtua, vaikka olisit siirtynyt muualle. Voit keskeyttää ja jatkaa sitä milloin tahansa samasta widgetistä."
+        "description": "Käynnistä ajastin millä tahansa vaiheella, jolle on asetettu kesto, suoraan reseptin ohjeista — se jatkaa käyntiään kelluvassa widgetissä, joka seuraa mukana koko sivustolla ja soi ajan loputtua, vaikka olisit siirtynyt muualle. Voit keskeyttää ja jatkaa sitä milloin tahansa samasta widgetistä."
       },
       "share": {
         "title": "Jaa resepti",

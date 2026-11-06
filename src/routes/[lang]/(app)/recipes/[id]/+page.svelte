@@ -14,7 +14,7 @@
         removeRecipePicture,
         unfavoriteRecipe
     } from "$lib/recipes";
-    import {Heart, Plus, Coffee, Camera, Share2, X, ChefHat, Pencil, Timer} from "@lucide/svelte";
+    import {Heart, Plus, Coffee, Camera, Share2, X, Pencil, Timer} from "@lucide/svelte";
     import {serverUrl, user} from "$lib/stores";
     import {_, locale} from "svelte-i18n";
     import {pictureUrl, toastError, toastSuccess} from "$lib/utils";
@@ -22,7 +22,6 @@
     import RecipeView from "../../../../../components/RecipeView.svelte";
     import RecipeNutritionPanel from "../../../../../components/RecipeNutritionPanel.svelte";
     import PageMeta from "../../../../../components/PageMeta.svelte";
-    import CookMode from "../../../../../components/CookMode.svelte";
     import Checkbox from "../../../../../components/Checkbox.svelte";
     import ImageCropModal from "../../../../../components/ImageCropModal.svelte";
     import {recipeStepProgress, isStepDone, toggleStepDone} from "$lib/recipeProgress";
@@ -295,64 +294,6 @@
         };
     });
 
-    // Cook mode's open/step state lives in the URL (?cookStep=<n>, 1-indexed)
-    // rather than local state, so a reload or shared link reopens it at the
-    // same step. Entering pushes one history entry; every step change after
-    // that replaces it in place (never pushes), so a single browser back
-    // press always exits cook mode outright, from any step. +page.server.ts
-    // only reads params (not searchParams), so these navigations never
-    // re-fetch the recipe.
-    const cookStepParam = $derived(page.url.searchParams.get('cookStep'));
-    const cookModeOpen = $derived(cookStepParam !== null && !!recipe && recipe.steps.length > 0);
-    const cookModeStartIndex = $derived.by(() => {
-        const total = recipe?.steps.length ?? 0;
-        if (total === 0)
-            return 0;
-        const requested = cookStepParam ? parseInt(cookStepParam, 10) : 1;
-        const step = Number.isFinite(requested) ? Math.min(Math.max(requested, 1), total) : 1;
-        return step - 1;
-    });
-
-    // Tracks whether *this* page instance pushed the cook-mode history entry
-    // (via the Cook button) as opposed to cook mode having been open on
-    // arrival (deep link / reload) - only then is it safe for the explicit
-    // close control to pop it with history.back() instead of replacing it.
-    let cookModeEnteredViaPush = $state(false);
-
-    $effect(() => {
-        if (!cookModeOpen)
-            cookModeEnteredViaPush = false;
-    });
-
-    function cookStepUrl(step: number | null): string {
-        const url = new URL(page.url);
-        if (step === null)
-            url.searchParams.delete('cookStep');
-        else
-            url.searchParams.set('cookStep', String(step));
-        return `${url.pathname}${url.search}`;
-    }
-
-    function openCookMode() {
-        if (!recipe || recipe.steps.length === 0)
-            return;
-        cookModeEnteredViaPush = true;
-        goto(cookStepUrl(1), {replaceState: false, noScroll: true, keepFocus: true});
-    }
-
-    function setCookModeStep(index: number) {
-        goto(cookStepUrl(index + 1), {replaceState: true, noScroll: true, keepFocus: true});
-    }
-
-    function closeCookMode() {
-        if (cookModeEnteredViaPush) {
-            cookModeEnteredViaPush = false;
-            history.back();
-        } else {
-            goto(cookStepUrl(null), {replaceState: true, noScroll: true, keepFocus: true});
-        }
-    }
-
     // Terminology lookup: for a diy-category recipe, tries `diyRecipe.<key>`
     // first and falls back to `recipe.<key>` when no diy-specific override
     // exists (svelte-i18n returns the key itself on a miss).
@@ -470,18 +411,6 @@
             {/snippet}
 
             {#snippet instructionsActions()}
-                {#if recipe!.steps.length > 0}
-                    <button
-                            type="button"
-                            onclick={openCookMode}
-                            class="hover:cursor-pointer border-2 border-primary bg-primary text-primary-foreground px-3 py-2 rounded-lg transition-all flex items-center gap-2 shadow-sm hover:shadow-md hover:bg-primary/90 whitespace-nowrap"
-                            aria-label={t('cookMode')}
-                            title={t('cookMode')}
-                    >
-                        <ChefHat size="18" />
-                        <span class="hidden sm:inline text-sm font-medium">{t('cookMode')}</span>
-                    </button>
-                {/if}
                 {#if wakeLockSupported}
                     <button
                             onclick={toggleWakeLock}
@@ -549,23 +478,6 @@
         {/if}
 
     </div>
-
-    {#if cookModeOpen}
-        <CookMode
-                recipeId={recipe.id}
-                recipeTitle={recipe.title}
-                steps={recipe.steps}
-                startIndex={cookModeStartIndex}
-                ingredients={recipe.ingredients}
-                {servingsRatio}
-                {wakeLockSupported}
-                {wakeLockActive}
-                {requestWakeLock}
-                {releaseWakeLock}
-                onStepChange={setCookModeStep}
-                onClose={closeCookMode}
-        />
-    {/if}
 {:else if recipe === null}
 <!--    @TODO skeleton loading-->
 {:else}

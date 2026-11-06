@@ -1,7 +1,7 @@
 <script lang="ts">
     import PageMeta from "../../../../components/PageMeta.svelte";
     import { _ } from "svelte-i18n";
-    import { GitBranch, Link, Camera, Hammer, Image, Heart, Link2, Sparkles, ChefHat, Share2, MessageSquare, ShoppingCart, Pencil, Flame, Timer, CalendarDays, Calculator, Tag } from "@lucide/svelte";
+    import { GitBranch, Link, Camera, Hammer, Image, Heart, Link2, Sparkles, Share2, MessageSquare, ShoppingCart, Pencil, Flame, Timer, CalendarDays, Calculator, Tag } from "@lucide/svelte";
     import type { Component } from "svelte";
 
     const sections: { key: string; items: { key: string; icon: Component }[] }[] = [
@@ -16,7 +16,6 @@
         {
             key: "cooking",
             items: [
-                { key: "cookMode", icon: ChefHat },
                 { key: "recipeTimers", icon: Timer },
             ],
         },

@@ -251,14 +251,6 @@
     "referenceCollapse": "Hide ingredients",
     "keepAwakeOn": "Keep screen awake",
     "keepAwakeOff": "Allow screen to sleep",
-    "cookMode": "Cook",
-    "cookModeExit": "Exit cook mode",
-    "cookModeStepOf": "Step {current} of {total}",
-    "cookModeStep": "Step {step}",
-    "cookModePrevStep": "Previous step",
-    "cookModeNextStep": "Next step",
-    "cookModeIngredients": "Ingredients",
-    "cookModeIngredientChecked": "Mark {name} as used",
     "addPhoto": "Add a photo",
     "removePhoto": "Remove photo",
     "photoAddedBy": "Added by {username}",
@@ -1059,13 +1051,9 @@
         "title": "Connect an AI Assistant",
         "description": "Generate a personal access token from the Connect to AI page so an AI tool can read, search, and create recipes on your account for you."
       },
-      "cookMode": {
-        "title": "Cook Mode",
-        "description": "Step through a recipe's instructions one at a time, in large type, with your screen kept awake automatically — hit \"Cook\" above the instructions on any recipe's page."
-      },
       "recipeTimers": {
         "title": "Recipe Timers",
-        "description": "Start a countdown on any step with a set duration, from Cook Mode or straight from a recipe's instructions — it keeps running in a floating widget that follows you across the site and rings when it's done, even if you've navigated away. Pause and resume it anytime from that widget."
+        "description": "Start a countdown on any step with a set duration, straight from a recipe's instructions — it keeps running in a floating widget that follows you across the site and rings when it's done, even if you've navigated away. Pause and resume it anytime from that widget."
       },
       "share": {
         "title": "Share a Recipe",
