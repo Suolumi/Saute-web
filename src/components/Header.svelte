@@ -153,37 +153,23 @@
                     >
                         {$_('header.toolbox')}
                     </button>
-                    <button
-                        onclick={() => goto(`/${$locale}/about`)}
-                        class="text-foreground hover:text-primary transition-colors font-medium hover:cursor-pointer"
-                        aria-label="About"
+                    <a
+                            href={feedbackHref}
+                            aria-current={pathSegment === 'feedback' ? 'page' : undefined}
+                            class="relative transition-colors hover:text-primary font-medium {pathSegment === 'feedback' ? 'text-primary' : 'text-foreground'}"
                     >
-                        {$_('header.about')}
-                    </button>
-                    <button
-                            onclick={() => goto(`/${$locale}/connect-ai`)}
-                            class="text-ai-accent hover:text-ai-accent/80 transition-colors text-sm font-medium hover:cursor-pointer"
-                            aria-label="Connect to AI"
-                    >
-                        {$_('header.connectAI')}
-                    </button>
+                        {$_('header.feedback')}
+                        {#if feedbackUnreadCount > 0}
+                            <span
+                                    class="absolute -top-0.5 -right-2 h-2 w-2 rounded-full bg-destructive ring-2 ring-card"
+                                    title={$_('header.feedbackUnread', {values: {count: feedbackUnreadCount}})}
+                            ></span>
+                        {/if}
+                    </a>
                 </div>
             </div>
 
             <div class="flex items-center gap-2 md:gap-4">
-                <a
-                        href={feedbackHref}
-                        aria-current={pathSegment === 'feedback' ? 'page' : undefined}
-                        class="relative hidden md:inline-block py-2 text-sm transition-colors hover:text-primary {pathSegment === 'feedback' ? 'font-semibold text-primary' : 'font-medium text-foreground'}"
-                >
-                    {$_('header.feedback')}
-                    {#if feedbackUnreadCount > 0}
-                        <span
-                                class="absolute top-1 -right-2 h-2 w-2 rounded-full bg-destructive ring-2 ring-card"
-                                title={$_('header.feedbackUnread', {values: {count: feedbackUnreadCount}})}
-                        ></span>
-                    {/if}
-                </a>
                 <LanguageSelect />
                 <button
                         onclick={toggleDarkMode}
@@ -243,6 +229,18 @@
                                         class="block w-full text-left px-4 py-2 text-sm text-foreground transition-colors hover:cursor-pointer hover:bg-gray-200 dark:hover:bg-gray-800"
                                 >
                                     {$_('header.myFavorites')}
+                                </button>
+                                <button
+                                        onclick={() => { goto(`/${$locale}/connect-ai`); showProfileDropdown = false; }}
+                                        class="block w-full text-left px-4 py-2 text-sm text-foreground transition-colors hover:cursor-pointer hover:bg-gray-200 dark:hover:bg-gray-800"
+                                >
+                                    {$_('header.connectAI')}
+                                </button>
+                                <button
+                                        onclick={() => { goto(`/${$locale}/about`); showProfileDropdown = false; }}
+                                        class="block w-full text-left px-4 py-2 text-sm text-foreground transition-colors hover:cursor-pointer hover:bg-gray-200 dark:hover:bg-gray-800"
+                                >
+                                    {$_('header.about')}
                                 </button>
                                 {#if $user.admin}
                                     <button
@@ -381,18 +379,6 @@
                                             {/if}
                                         </button>
                                         <button
-                                                onclick={() => {drawerOpen = false; goto(`/${$locale}/about`)}}
-                                                class={navRowClass(pathSegment === 'about')}
-                                        >
-                                            <div class={navChipClass(pathSegment === 'about')}>
-                                                <Info class="w-4 h-4" />
-                                            </div>
-                                            <div class={navLabelClass(pathSegment === 'about')}>{$_('header.about')}</div>
-                                            {#if pathSegment === 'about'}
-                                                <div class="ml-auto mr-1.5 h-1.5 w-1.5 rounded-full bg-primary"></div>
-                                            {/if}
-                                        </button>
-                                        <button
                                                 onclick={() => {drawerOpen = false; goto(feedbackHref)}}
                                                 class={navRowClass(pathSegment === 'feedback')}
                                         >
@@ -409,24 +395,6 @@
                                             {/if}
                                         </button>
                                     </div>
-
-                                    {#if !$user}
-                                        <div class="px-5 pb-1.5 pt-4 text-[11px] font-bold uppercase tracking-wide text-muted-foreground/80">
-                                            {$_('header.aiTools')}
-                                        </div>
-                                        <div class="px-3">
-                                            <button
-                                                    onclick={() => {drawerOpen = false; goto(`/${$locale}/connect-ai`)}}
-                                                    class="flex w-full items-center gap-3 rounded-2xl px-2 py-2.5 text-left hover:bg-ai-accent/5"
-                                            >
-                                                <div class="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full bg-ai-accent/15 text-ai-accent">
-                                                    <Sparkles class="w-4 h-4" />
-                                                </div>
-                                                <div class="text-[15px] font-medium text-ai-accent">{$_('header.connectAI')}</div>
-                                                <div class="ml-auto mr-1.5 rounded-full bg-ai-accent/15 px-2 py-0.5 text-[10px] font-bold tracking-wide text-ai-accent">AI</div>
-                                            </button>
-                                        </div>
-                                    {/if}
 
                                     {#if $user}
                                         <div class="px-5 pb-1.5 pt-4 text-[11px] font-bold uppercase tracking-wide text-muted-foreground/80">
@@ -460,6 +428,24 @@
                                                 </div>
                                                 <div class={navLabelClass(false)}>{$_('header.myFavorites')}</div>
                                             </button>
+                                            <button
+                                                    onclick={() => { goto(`/${$locale}/connect-ai`); drawerOpen = false; }}
+                                                    class={navRowClass(pathSegment === 'connect-ai')}
+                                            >
+                                                <div class={navChipClass(pathSegment === 'connect-ai')}>
+                                                    <Sparkles class="w-4 h-4" />
+                                                </div>
+                                                <div class={navLabelClass(pathSegment === 'connect-ai')}>{$_('header.connectAI')}</div>
+                                            </button>
+                                            <button
+                                                    onclick={() => { goto(`/${$locale}/about`); drawerOpen = false; }}
+                                                    class={navRowClass(pathSegment === 'about')}
+                                            >
+                                                <div class={navChipClass(pathSegment === 'about')}>
+                                                    <Info class="w-4 h-4" />
+                                                </div>
+                                                <div class={navLabelClass(pathSegment === 'about')}>{$_('header.about')}</div>
+                                            </button>
                                             {#if $user.admin}
                                                 <button
                                                         onclick={() => { drawerOpen = false; goto(`/${$locale}/admin`) }}
@@ -476,16 +462,6 @@
                                                     {/if}
                                                 </button>
                                             {/if}
-                                            <button
-                                                    onclick={() => {drawerOpen = false; goto(`/${$locale}/connect-ai`)}}
-                                                    class="flex w-full items-center gap-3 rounded-2xl px-2 py-2.5 text-left hover:bg-ai-accent/5"
-                                            >
-                                                <div class="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full bg-ai-accent/15 text-ai-accent">
-                                                    <Sparkles class="w-4 h-4" />
-                                                </div>
-                                                <div class="text-[15px] font-medium text-ai-accent">{$_('header.connectAI')}</div>
-                                                <div class="ml-auto mr-1.5 rounded-full bg-ai-accent/15 px-2 py-0.5 text-[10px] font-bold tracking-wide text-ai-accent">AI</div>
-                                            </button>
                                         </div>
 
                                         <div class="flex-1"></div>
