@@ -28,6 +28,7 @@
     import {activeTimers, startTimer, cancelTimer, getTimerFor, remainingMs, formatRemaining} from "$lib/recipeTimers";
     import {unlockAlarmAudio} from "$lib/timerAlarm";
     import {onMount} from "svelte";
+    import {ScreenWakeLock} from "$lib/wakeLock.svelte";
 
     let id = $derived(page.params.id)
     const { data } = $props()
@@ -249,48 +250,21 @@
     }
 
     // Wake Lock API keeps the screen on while cooking so it doesn't dim/lock
-    // mid-recipe. The lock is auto-released by the browser whenever the tab
-    // is hidden, so it's re-acquired on visibilitychange while still enabled.
+    // mid-recipe.
     const wakeLockSupported = browser && 'wakeLock' in navigator;
-    let wakeLockActive = $state(false);
-    let wakeLockSentinel: WakeLockSentinel | null = null;
-
-    async function requestWakeLock() {
-        if (!wakeLockSupported)
-            return;
-        try {
-            wakeLockSentinel = await navigator.wakeLock.request('screen');
-            wakeLockSentinel.addEventListener('release', () => wakeLockActive = false);
-            wakeLockActive = true;
-        } catch {
-            wakeLockActive = false;
-        }
-    }
-
-    function releaseWakeLock() {
-        wakeLockSentinel?.release();
-        wakeLockSentinel = null;
-        wakeLockActive = false;
-    }
-
-    function toggleWakeLock() {
-        if (wakeLockActive)
-            releaseWakeLock();
-        else
-            requestWakeLock();
-    }
+    const wakeLock = new ScreenWakeLock(() => navigator.wakeLock.request('screen'));
 
     $effect(() => {
         if (!browser)
             return;
         function handleVisibility() {
-            if (wakeLockActive && document.visibilityState === 'visible' && !wakeLockSentinel)
-                requestWakeLock();
+            if (document.visibilityState === 'visible')
+                wakeLock.onVisible();
         }
         document.addEventListener('visibilitychange', handleVisibility);
         return () => {
             document.removeEventListener('visibilitychange', handleVisibility);
-            releaseWakeLock();
+            wakeLock.release();
         };
     });
 
@@ -413,14 +387,14 @@
             {#snippet instructionsActions()}
                 {#if wakeLockSupported}
                     <button
-                            onclick={toggleWakeLock}
-                            class="hover:cursor-pointer border-2 px-3 py-2 rounded-lg transition-all flex items-center gap-2 shadow-sm hover:shadow-md whitespace-nowrap {wakeLockActive ? 'bg-primary text-primary-foreground border-primary' : 'bg-background hover:bg-accent border-primary text-primary'}"
-                            aria-pressed={wakeLockActive}
-                            aria-label={$_(wakeLockActive ? 'recipe.keepAwakeOff' : 'recipe.keepAwakeOn')}
-                            title={$_(wakeLockActive ? 'recipe.keepAwakeOff' : 'recipe.keepAwakeOn')}
+                            onclick={() => wakeLock.toggle()}
+                            class="hover:cursor-pointer border-2 px-3 py-2 rounded-lg transition-all flex items-center gap-2 shadow-sm hover:shadow-md whitespace-nowrap {wakeLock.wanted ? 'bg-primary text-primary-foreground border-primary' : 'bg-background hover:bg-accent border-primary text-primary'}"
+                            aria-pressed={wakeLock.wanted}
+                            aria-label={$_(wakeLock.wanted ? 'recipe.keepAwakeOff' : 'recipe.keepAwakeOn')}
+                            title={$_(wakeLock.wanted ? 'recipe.keepAwakeOff' : 'recipe.keepAwakeOn')}
                     >
-                        <Coffee size="18" fill={wakeLockActive ? 'currentColor' : 'none'} />
-                        <span class="text-sm font-medium">{$_(wakeLockActive ? 'recipe.keepAwakeOff' : 'recipe.keepAwakeOn')}</span>
+                        <Coffee size="18" fill={wakeLock.wanted ? 'currentColor' : 'none'} />
+                        <span class="text-sm font-medium">{$_(wakeLock.wanted ? 'recipe.keepAwakeOff' : 'recipe.keepAwakeOn')}</span>
                     </button>
                 {/if}
             {/snippet}
