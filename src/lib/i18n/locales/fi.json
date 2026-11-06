@@ -1,4 +1,16 @@
 {
+  "adHocTimer": {
+    "title": "Uusi ajastin",
+    "button": "Ajastin",
+    "nameLabel": "Nimi (valinnainen)",
+    "namePlaceholder": "esim. Pasta",
+    "minutesLabel": "Minuuttia",
+    "secondsLabel": "Sekuntia",
+    "start": "Käynnistä ajastin",
+    "presets": "Pika-asetukset",
+    "presetMinutes": "{minutes} min",
+    "autoLabel": "Ajastin {n}"
+  },
   "header": {
     "appName": "Sauté",
     "allRecipes": "Reseptit",

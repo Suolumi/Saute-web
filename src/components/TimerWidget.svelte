@@ -7,9 +7,11 @@
         type ActiveTimer
     } from '$lib/recipeTimers';
     import {playAlarmBeep} from '$lib/timerAlarm';
-    import {Timer, X, Pause, Play, ChevronUp, ChevronDown} from '@lucide/svelte';
+    import {Timer, X, Pause, Play, ChevronUp, ChevronDown, Plus} from '@lucide/svelte';
+    import AdHocTimerModal from './AdHocTimerModal.svelte';
 
     let expanded = $state(false);
+    let newTimerOpen = $state(false);
     let now = $state(Date.now());
     let lastBeepAt = 0;
 
@@ -109,6 +111,14 @@
                         </div>
                     {/each}
                 </div>
+                <button
+                        type="button"
+                        onclick={() => newTimerOpen = true}
+                        class="w-full flex items-center justify-center gap-1.5 p-2.5 border-t border-border text-sm font-medium text-primary hover:bg-accent hover:cursor-pointer"
+                >
+                    <Plus size="16" />
+                    {$_('adHocTimer.title')}
+                </button>
             </div>
         {/if}
 
@@ -138,3 +148,5 @@
         </button>
     </div>
 {/if}
+
+<AdHocTimerModal bind:open={newTimerOpen} />

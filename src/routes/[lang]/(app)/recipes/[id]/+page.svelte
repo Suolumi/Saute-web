@@ -20,6 +20,7 @@
     import {_, locale} from "svelte-i18n";
     import {pictureUrl, toastError, toastSuccess} from "$lib/utils";
     import VersionSwitcher from "../../../../../components/VersionSwitcher.svelte";
+    import AdHocTimerModal from "../../../../../components/AdHocTimerModal.svelte";
     import RecipeView from "../../../../../components/RecipeView.svelte";
     import RecipeNutritionPanel from "../../../../../components/RecipeNutritionPanel.svelte";
     import PageMeta from "../../../../../components/PageMeta.svelte";
@@ -97,6 +98,7 @@
         return () => { stale = true }
     })
 
+    let timerModalOpen = $state(false)
     let conversionData: ConversionData | null = $state(null)
     $effect(() => {
         const sourceLocale = recipe?.source_locale
@@ -415,6 +417,16 @@
             {/snippet}
 
             {#snippet instructionsActions()}
+                <button
+                        type="button"
+                        onclick={() => timerModalOpen = true}
+                        class="hover:cursor-pointer border-2 px-3 py-2 rounded-lg transition-all flex items-center gap-2 shadow-sm hover:shadow-md whitespace-nowrap bg-background hover:bg-accent border-primary text-primary"
+                        aria-label={$_('adHocTimer.title')}
+                        title={$_('adHocTimer.title')}
+                >
+                    <Plus size="18" />
+                    <span class="hidden sm:inline text-sm font-medium">{$_('adHocTimer.button')}</span>
+                </button>
                 {#if wakeLockSupported}
                     <button
                             onclick={() => wakeLock.toggle()}
@@ -471,6 +483,8 @@
         </RecipeView>
 
     </div>
+
+    <AdHocTimerModal bind:open={timerModalOpen} />
 {:else if recipe === null}
 <!--    @TODO skeleton loading-->
 {:else}

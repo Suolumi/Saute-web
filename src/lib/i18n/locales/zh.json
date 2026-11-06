@@ -1,4 +1,16 @@
 {
+  "adHocTimer": {
+    "title": "新计时器",
+    "button": "计时器",
+    "nameLabel": "名称（可选）",
+    "namePlaceholder": "例如 意面",
+    "minutesLabel": "分钟",
+    "secondsLabel": "秒",
+    "start": "开始计时",
+    "presets": "快捷预设",
+    "presetMinutes": "{minutes} 分钟",
+    "autoLabel": "计时器 {n}"
+  },
   "header": {
     "appName": "Sauté",
     "allRecipes": "食谱",

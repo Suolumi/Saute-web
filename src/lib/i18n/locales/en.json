@@ -1,4 +1,16 @@
 {
+  "adHocTimer": {
+    "title": "New timer",
+    "button": "Timer",
+    "nameLabel": "Name (optional)",
+    "namePlaceholder": "e.g. Pasta",
+    "minutesLabel": "Minutes",
+    "secondsLabel": "Seconds",
+    "start": "Start timer",
+    "presets": "Quick presets",
+    "presetMinutes": "{minutes} min",
+    "autoLabel": "Timer {n}"
+  },
   "header": {
     "appName": "Sauté",
     "allRecipes": "Recipes",

@@ -1,4 +1,16 @@
 {
+  "adHocTimer": {
+    "title": "Nouveau minuteur",
+    "button": "Minuteur",
+    "nameLabel": "Nom (facultatif)",
+    "namePlaceholder": "ex. Pâtes",
+    "minutesLabel": "Minutes",
+    "secondsLabel": "Secondes",
+    "start": "Démarrer le minuteur",
+    "presets": "Réglages rapides",
+    "presetMinutes": "{minutes} min",
+    "autoLabel": "Minuteur {n}"
+  },
   "header": {
     "appName": "Sauté",
     "allRecipes": "Recettes",
