@@ -3,7 +3,6 @@
 
     let props: IconProps = $props();
 
-    // A lidded box with a reuse arrow.
     const iconNode: IconNode = [
         ["rect", {x: "3", y: "4", width: "18", height: "3", rx: "1"}],
         ["path", {d: "M4.5 7v12a2 2 0 0 0 2 2h11a2 2 0 0 0 2-2V7"}],

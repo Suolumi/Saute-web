@@ -3,7 +3,6 @@
 
     let props: IconProps = $props();
 
-    // A pot with a clock.
     const iconNode: IconNode = [
         ["path", {d: "M2 13h13"}],
         ["path", {d: "M13.5 13v6a2 2 0 0 1-2 2h-6a2 2 0 0 1-2-2v-6"}],
@@ -13,6 +12,6 @@
     ];
 </script>
 
-<Icon name="slow-cooker" {...props} {iconNode}>
+<Icon name="slow-cooking" {...props} {iconNode}>
     {@render props.children?.()}
 </Icon>

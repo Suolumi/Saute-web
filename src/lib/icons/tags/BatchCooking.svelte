@@ -3,7 +3,6 @@
 
     let props: IconProps = $props();
 
-    // Three stacked lidded boxes.
     const iconNode: IconNode = [
         ["rect", {x: "2", y: "13", width: "9", height: "8", rx: "1.5"}],
         ["rect", {x: "13", y: "13", width: "9", height: "8", rx: "1.5"}],
@@ -14,6 +13,6 @@
     ];
 </script>
 
-<Icon name="meal-prep" {...props} {iconNode}>
+<Icon name="batch-cooking" {...props} {iconNode}>
     {@render props.children?.()}
 </Icon>
