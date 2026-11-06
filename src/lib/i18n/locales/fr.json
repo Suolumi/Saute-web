@@ -311,7 +311,8 @@
         "reviewSuccess": "Soumis pour validation",
         "error": "Impossible de soumettre"
       }
-    }
+    },
+    "substitutes": "Substituts"
   },
   "edit": {
     "toasts": {
@@ -1057,7 +1058,9 @@
         "fat": "Lipides (g)",
         "salt": "Sel (g)",
         "sugar": "Sucres (g)"
-      }
+      },
+      "substitutes": "Substituts",
+      "substitutesHelp": "Ce qu'on peut utiliser à la place, un par ligne. Affichés quand on touche l'ingrédient dans une recette ; l'anglais est utilisé si une langue n'en a pas."
     }
   },
   "about": {
@@ -1118,7 +1121,7 @@
       },
       "conversions": {
         "title": "Conversions rapides",
-        "description": "Touchez un ingrédient d'une recette pour voir sa quantité en grammes, en millilitres et en mesure de cuisine, en tenant compte de la densité de l'aliment correspondant quand elle est connue."
+        "description": "Touchez un ingrédient d'une recette pour voir sa quantité en grammes, en millilitres et en mesure de cuisine, en tenant compte de la densité de l'aliment correspondant quand elle est connue, et ce que vous pouvez utiliser à la place."
       },
       "share": {
         "title": "Partager une recette",

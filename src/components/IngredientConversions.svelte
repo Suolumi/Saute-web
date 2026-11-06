@@ -1,9 +1,10 @@
 <script lang="ts">
     import type {Snippet} from "svelte";
+    import {_} from "svelte-i18n";
 
-    // lines are the ingredient's quantity in other units; with none, the
-    // label renders as plain text.
-    let {lines, children}: {lines: string[], children: Snippet} = $props();
+    // lines are the ingredient's quantity in other units, substitutes what
+    // to use instead; with neither, the label renders as plain text.
+    let {lines, substitutes = [], children}: {lines: string[], substitutes?: string[], children: Snippet} = $props();
 
     let open = $state(false);
     let root: HTMLElement | undefined = $state();
@@ -28,7 +29,7 @@
     });
 </script>
 
-{#if lines.length === 0}
+{#if lines.length === 0 && substitutes.length === 0}
     <span class="text-card-foreground">{@render children()}</span>
 {:else}
     <span class="relative inline-block" bind:this={root}>
@@ -41,10 +42,16 @@
             {@render children()}
         </button>
         {#if open}
-            <span class="absolute left-0 top-full mt-1 z-10 flex flex-col gap-0.5 whitespace-nowrap bg-card border border-border rounded-lg shadow-md p-3 text-sm text-card-foreground">
+            <span class="absolute left-0 top-full mt-1 z-10 flex flex-col gap-0.5 w-max max-w-[min(18rem,80vw)] bg-card border border-border rounded-lg shadow-md p-3 text-sm text-card-foreground">
                 {#each lines as line}
-                    <span>{line}</span>
+                    <span class="whitespace-nowrap">{line}</span>
                 {/each}
+                {#if substitutes.length > 0}
+                    <span class="font-semibold text-xs text-muted-foreground {lines.length > 0 ? 'mt-2' : ''}">{$_('recipe.substitutes')}</span>
+                    {#each substitutes as substitute}
+                        <span>{substitute}</span>
+                    {/each}
+                {/if}
             </span>
         {/if}
     </span>

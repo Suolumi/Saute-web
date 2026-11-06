@@ -213,6 +213,16 @@
             </div>
         {/each}
         <p class="text-xs text-muted-foreground">{$_('admin.foods.aliasesHelp')}</p>
+        <div class="grid gap-2 sm:grid-cols-2">
+            {#each FOOD_LOCALES as l (l)}
+                <div>
+                    <Label for="food-subs-{l}">{$_('admin.foods.substitutes')} ({l})</Label>
+                    <textarea id="food-subs-{l}" rows="2" bind:value={foodForm.substitutes[l]}
+                              class="w-full px-3 py-2 bg-input border border-border rounded-lg text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-ring"></textarea>
+                </div>
+            {/each}
+        </div>
+        <p class="text-xs text-muted-foreground">{$_('admin.foods.substitutesHelp')}</p>
         <div class="grid gap-2 grid-cols-2">
             <div>
                 <Label for="food-gpp">{$_('admin.foods.gramsPerPiece')}</Label>

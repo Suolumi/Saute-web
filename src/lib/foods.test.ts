@@ -1,5 +1,5 @@
 import {describe, expect, it} from 'vitest';
-import {foodMatcher, foodName, type Food} from './foods';
+import {foodMatcher, foodName, foodSubstitutes, type Food} from './foods';
 
 function food(id: string, names: Record<string, string>, aliases: Record<string, string[]> = {}, extra: Partial<Food> = {}): Food {
     return {
@@ -46,5 +46,15 @@ describe('foodName', () => {
         expect(foodName(foods[0], 'fr')).toBe('Œuf');
         expect(foodName(foods[0], 'fi')).toBe('Egg');
         expect(foodName(food('x', {}), 'fr')).toBe('x');
+    });
+});
+
+describe('foodSubstitutes', () => {
+    const butter = food('butter', {en: 'Butter'}, {}, {substitutes: {en: ['Olive oil'], fr: ["Huile d'olive"]}});
+
+    it('uses the locale, then English, else nothing', () => {
+        expect(foodSubstitutes(butter, 'fr')).toEqual(["Huile d'olive"]);
+        expect(foodSubstitutes(butter, 'fi')).toEqual(['Olive oil']);
+        expect(foodSubstitutes(foods[0], 'en')).toEqual([]);
     });
 });

@@ -311,7 +311,8 @@
         "reviewSuccess": "Submitted for review",
         "error": "Couldn't submit this"
       }
-    }
+    },
+    "substitutes": "Substitutes"
   },
   "edit": {
     "toasts": {
@@ -1057,7 +1058,9 @@
         "fat": "Fat (g)",
         "salt": "Salt (g)",
         "sugar": "Sugar (g)"
-      }
+      },
+      "substitutes": "Substitutes",
+      "substitutesHelp": "What to use instead, one per line. Shown when someone taps the ingredient on a recipe; English is used when a language has none."
     }
   },
   "about": {
@@ -1118,7 +1121,7 @@
       },
       "conversions": {
         "title": "Quick Conversions",
-        "description": "Tap an ingredient on a recipe to see its quantity in grams, millilitres and a kitchen measure, using the matching food's density when it's known."
+        "description": "Tap an ingredient on a recipe to see its quantity in grams, millilitres and a kitchen measure, using the matching food's density when it's known, and what you can use instead of it."
       },
       "share": {
         "title": "Share a Recipe",

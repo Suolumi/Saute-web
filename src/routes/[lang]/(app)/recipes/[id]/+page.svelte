@@ -31,7 +31,7 @@
     import {unlockAlarmAudio} from "$lib/timerAlarm";
     import {onMount} from "svelte";
     import {ScreenWakeLock} from "$lib/wakeLock.svelte";
-    import {canonicalConversions, loadConversionData, type ConversionData} from "$lib/ingredientConversions";
+    import {canonicalConversions, canonicalSubstitutes, loadConversionData, type ConversionData} from "$lib/ingredientConversions";
 
     let id = $derived(page.params.id)
     const { data } = $props()
@@ -109,6 +109,12 @@
         if (!recipe || !conversionData)
             return []
         return canonicalConversions(ingredient, ratio, recipe.ingredients, canonicalIngredients, conversionData)
+    }
+
+    function substitutesFor(ingredient: Ingredient): string[] {
+        if (!recipe || !conversionData)
+            return []
+        return canonicalSubstitutes(ingredient, recipe.ingredients, canonicalIngredients, conversionData, $locale)
     }
 
     function submitVariation() {
@@ -321,7 +327,7 @@
             {t('back')}
         </button>
 
-        <RecipeView {recipe} bind:selectedServings conversions={recipe.category === 'diy' ? undefined : conversionsFor} stepDone={(index) => isStepDone($recipeStepProgress, recipe!.id, index)}>
+        <RecipeView {recipe} bind:selectedServings conversions={recipe.category === 'diy' ? undefined : conversionsFor} substitutes={recipe.category === 'diy' ? undefined : substitutesFor} stepDone={(index) => isStepDone($recipeStepProgress, recipe!.id, index)}>
             {#snippet pictureOverlay(currentPicture)}
                 {#if currentPicture && canRemovePicture(currentPicture)}
                     <button

@@ -311,7 +311,8 @@
         "reviewSuccess": "Lähetetty tarkistettavaksi",
         "error": "Lähettäminen epäonnistui"
       }
-    }
+    },
+    "substitutes": "Korvikkeet"
   },
   "edit": {
     "toasts": {
@@ -1057,7 +1058,9 @@
         "fat": "Rasva (g)",
         "salt": "Suola (g)",
         "sugar": "Sokeri (g)"
-      }
+      },
+      "substitutes": "Korvikkeet",
+      "substitutesHelp": "Mitä voi käyttää tilalla, yksi riviä kohden. Näytetään, kun reseptin ainesosaa napautetaan; jos kielellä ei ole korvikkeita, käytetään englantia."
     }
   },
   "about": {
@@ -1118,7 +1121,7 @@
       },
       "conversions": {
         "title": "Pikamuunnokset",
-        "description": "Napauta reseptin ainesosaa nähdäksesi sen määrän grammoina, millilitroina ja keittiömittana. Vastaavan ruoka-aineen tiheys huomioidaan, kun se tiedetään."
+        "description": "Napauta reseptin ainesosaa nähdäksesi sen määrän grammoina, millilitroina ja keittiömittana sekä mitä voit käyttää sen tilalla. Vastaavan ruoka-aineen tiheys huomioidaan, kun se tiedetään."
       },
       "share": {
         "title": "Jaa resepti",

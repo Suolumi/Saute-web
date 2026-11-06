@@ -4,6 +4,7 @@ import type {Food} from './foods';
 
 const egg: Food = {
     id: 'egg', names: {en: 'Egg', fr: 'Œuf'}, aliases: {en: ['eggs'], fr: ['oeuf', 'oeufs']}, grams_per_piece: 50,
+    substitutes: {en: ['1 tbsp ground flax + 3 tbsp water', 'Mashed banana']},
     kcal_per_100g: 140, protein_g_per_100g: 12.7, carbs_g_per_100g: 0.3, fat_g_per_100g: 9.8, salt_g_per_100g: 0.3, sugar_g_per_100g: 0.3,
 };
 
@@ -19,6 +20,7 @@ describe('food form', () => {
         expect(formToRequest(foodToForm(egg))).toEqual({
             id: 'egg', names: {en: 'Egg', fr: 'Œuf', fi: '', zh: ''},
             aliases: {en: ['eggs'], fr: ['oeuf', 'oeufs'], fi: [], zh: []},
+            substitutes: {en: ['1 tbsp ground flax + 3 tbsp water', 'Mashed banana'], fr: [], fi: [], zh: []},
             grams_per_piece: 50, g_per_100ml: null,
             kcal_per_100g: 140, protein_g_per_100g: 12.7, carbs_g_per_100g: 0.3, fat_g_per_100g: 9.8, salt_g_per_100g: 0.3, sugar_g_per_100g: 0.3,
         });

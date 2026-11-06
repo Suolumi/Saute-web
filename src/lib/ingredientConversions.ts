@@ -1,7 +1,7 @@
 import {formatScaledQuantity, type Ingredient} from "$lib/recipes";
 import {getToolboxUnits, type ToolboxUnit} from "$lib/toolbox";
 import {getIngredientNutritionLinks, getUnitAliases, type IngredientNutritionLink, type UnitAlias} from "$lib/nutrition";
-import {foodMatcher, getFoods, type Food, type FoodMatcher} from "$lib/foods";
+import {foodMatcher, foodSubstitutes, getFoods, type Food, type FoodMatcher} from "$lib/foods";
 
 // ConversionData is what ingredientConversions needs; locale is the
 // recipe's source locale, the language its canonical ingredient names are in.
@@ -99,6 +99,20 @@ export function canonicalConversions(
 ): string[] {
     const source = canonical?.[shown.indexOf(ingredient)] ?? ingredient
     return ingredientConversions(ingredient.quantity * ratio, source.unit, source.name, data).map(formatConversion)
+}
+
+// canonicalSubstitutes lists, in viewerLocale, the substitutes of the food
+// the canonical copy of ingredient matches (see canonicalConversions).
+export function canonicalSubstitutes(
+    ingredient: Pick<Ingredient, 'name'>,
+    shown: Pick<Ingredient, 'name'>[],
+    canonical: Pick<Ingredient, 'name'>[] | undefined,
+    data: ConversionData,
+    viewerLocale: string | null | undefined,
+): string[] {
+    const source = canonical?.[shown.indexOf(ingredient)] ?? ingredient
+    const food = matcherFor(data).match(source.name)?.food
+    return food ? foodSubstitutes(food, viewerLocale) : []
 }
 
 // formatConversion renders "≈ 42 g"; kitchen units use friendly fractions.

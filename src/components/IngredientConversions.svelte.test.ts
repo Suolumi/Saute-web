@@ -2,7 +2,11 @@ import {describe, expect, it} from 'vitest';
 import {render} from 'vitest-browser-svelte';
 import {userEvent} from '@vitest/browser/context';
 import {createRawSnippet} from 'svelte';
+import {addMessages, init} from 'svelte-i18n';
 import IngredientConversions from './IngredientConversions.svelte';
+
+addMessages('en', {recipe: {substitutes: 'Substitutes'}});
+init({fallbackLocale: 'en', initialLocale: 'en'});
 
 const label = createRawSnippet(() => ({render: () => '<span>2 tbsp - honey</span>'}));
 
@@ -21,5 +25,12 @@ describe('IngredientConversions', () => {
         await expect.element(button).toHaveAttribute('aria-expanded', 'true');
         await userEvent.keyboard('{Escape}');
         expect(screen.container.textContent).not.toContain('≈ 42 g');
+    });
+
+    it('opens on substitutes alone', async () => {
+        const screen = render(IngredientConversions, {lines: [], substitutes: ['Maple syrup'], children: label});
+        (screen.getByRole('button').element() as HTMLElement).click();
+        await expect.element(screen.getByText('Maple syrup')).toBeVisible();
+        await expect.element(screen.getByText('Substitutes')).toBeVisible();
     });
 });

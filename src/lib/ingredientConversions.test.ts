@@ -1,5 +1,5 @@
 import {describe, expect, it} from 'vitest';
-import {canonicalConversions, formatConversion, ingredientConversions, type ConversionData} from './ingredientConversions';
+import {canonicalConversions, canonicalSubstitutes, formatConversion, ingredientConversions, type ConversionData} from './ingredientConversions';
 import type {ToolboxUnit} from './toolbox';
 import type {Food} from './foods';
 
@@ -91,5 +91,19 @@ describe('canonicalConversions', () => {
 
     it('falls back to the shown ingredient without a canonical copy', () => {
         expect(canonicalConversions(canonical[0], 1, canonical, undefined, data)).toEqual(['≈ 42 g', '≈ 30 ml']);
+    });
+});
+
+describe('canonicalSubstitutes', () => {
+    const withSubs: ConversionData = {...data, foods: data.foods.map(f => f.id === 'honey' ? {...f, substitutes: {en: ['Maple syrup'], fr: ["Sirop d'érable"]}} : f)};
+    const shown = [{name: 'miel', quantity: 2, unit: 'c. à soupe', label: ''}];
+    const canonical = [{name: 'Honey', quantity: 2, unit: 'tbsp', label: ''}];
+
+    it("lists the canonical ingredient's food substitutes in the viewer's language", () => {
+        expect(canonicalSubstitutes(shown[0], shown, canonical, withSubs, 'fr')).toEqual(["Sirop d'érable"]);
+    });
+
+    it('is empty for an ingredient with no food', () => {
+        expect(canonicalSubstitutes({name: 'water'}, [], undefined, withSubs, 'en')).toEqual([]);
     });
 });

@@ -7,6 +7,8 @@ export type Food = {
     aliases: Record<string, string[]> | null
     grams_per_piece?: number | null
     g_per_100ml?: number | null
+    // substitutes are what to use instead, one line each, per locale.
+    substitutes?: Record<string, string[]> | null
     kcal_per_100g: number
     protein_g_per_100g: number
     carbs_g_per_100g: number
@@ -27,6 +29,13 @@ const FOOD_LOCALES = ['en', 'fr', 'fi', 'zh']
 export function foodName(food: Food, locale: string | null | undefined): string {
     const base = (locale ?? '').split('-')[0]
     return food.names[base] || food.names.en || food.id
+}
+
+// foodSubstitutes is food's substitutes in locale, else in English.
+export function foodSubstitutes(food: Food, locale: string | null | undefined): string[] {
+    const base = (locale ?? '').split('-')[0]
+    const own = food.substitutes?.[base] ?? []
+    return own.length > 0 ? own : food.substitutes?.en ?? []
 }
 
 // foodKeywords is every name and alias of food, for search.

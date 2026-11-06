@@ -32,6 +32,7 @@
         headerActions,
         versions,
         conversions,
+        substitutes,
         pictureOverlay,
         instructionsActions,
         stepAside,
@@ -46,6 +47,8 @@
         versions?: Snippet
         // conversions lists an ingredient's scaled quantity in other units.
         conversions?: (ingredient: Ingredient, ratio: number) => string[]
+        // substitutes lists what to use instead of an ingredient.
+        substitutes?: (ingredient: Ingredient) => string[]
         pictureOverlay?: Snippet<[RecipePicture | undefined]>
         instructionsActions?: Snippet
         stepAside?: Snippet<[number]>
@@ -297,7 +300,7 @@
                                             {#if ingredient.recipe_ref}
                                                 <RecipeRefIngredient {ingredient} ratio={servingsRatio} />
                                             {:else}
-                                                <IngredientConversions lines={conversions?.(ingredient, servingsRatio) ?? []}>{getIngredientName(ingredient, servingsRatio)}</IngredientConversions>
+                                                <IngredientConversions lines={conversions?.(ingredient, servingsRatio) ?? []} substitutes={substitutes?.(ingredient) ?? []}>{getIngredientName(ingredient, servingsRatio)}</IngredientConversions>
                                             {/if}
                                         </li>
                                     {/each}
