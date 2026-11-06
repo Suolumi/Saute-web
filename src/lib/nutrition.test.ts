@@ -21,4 +21,9 @@ describe('requiredNutritionField', () => {
         expect(requiredNutritionField('', units, {g_per_100ml: 103})).toBe('grams_per_unit');
         expect(requiredNutritionField('whole', units, {grams_per_piece: 50})).toBeNull();
     });
+
+    it('resolves a unit alias like the API does', () => {
+        const aliases = [{alias: '汤匙', unit_id: 'cup'}];
+        expect(requiredNutritionField('汤匙', units, {grams_per_piece: 5}, aliases)).toBe('density');
+    });
 });

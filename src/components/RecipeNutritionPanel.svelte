@@ -2,8 +2,8 @@
     import {_} from "svelte-i18n";
     import {Flame} from "@lucide/svelte";
     import {
-        getRecipeNutrition, getIngredientNutritionLinks,
-        type RecipeNutrition, type IngredientNutritionLink, type SubmitNutritionLinkResult
+        getRecipeNutrition, getIngredientNutritionLinks, getUnitAliases,
+        type RecipeNutrition, type UnitAlias, type IngredientNutritionLink, type SubmitNutritionLinkResult
     } from "$lib/nutrition";
     import {foodMatcher, getFoods, type Food} from "$lib/foods";
     import {computeRecipeNutrition, type LoadedNutritionReferenceData} from "$lib/nutritionCompute";
@@ -90,6 +90,7 @@
     let fetchedFoods: Food[] = $state([]);
     let fetchedLinks: IngredientNutritionLink[] = $state([]);
     let fetchedUnits: ToolboxUnit[] = $state([]);
+    let fetchedAliases: UnitAlias[] = $state([]);
 
     function refetchLinks() {
         getIngredientNutritionLinks().then(({response, data}) => {
@@ -106,10 +107,14 @@
         getToolboxUnits().then(({response, data}) => {
             if (response.ok && data) fetchedUnits = data.items;
         });
+        getUnitAliases().then(({response, data}) => {
+            if (response.ok && data) fetchedAliases = data.items;
+        });
     });
 
     const foods = $derived(live ? referenceData?.foods ?? [] : fetchedFoods);
     const toolboxUnits = $derived(live ? referenceData?.units ?? [] : fetchedUnits);
+    const unitAliases = $derived(live ? referenceData?.unit_aliases ?? [] : fetchedAliases);
     const links = $derived(live ? referenceData?.links ?? [] : fetchedLinks);
     const existingLinksByName: Record<string, IngredientNutritionLink> = $derived(
         Object.fromEntries(links.map(link => [link.name.trim().toLowerCase(), link]))
@@ -293,6 +298,7 @@
             existingLink={existingLinksByName[fixModalFor.name.trim().toLowerCase()]}
             matchedFood={matcher.match(fixModalFor.name)?.food}
             {toolboxUnits}
+            {unitAliases}
             onResult={onFixResult}
     />
 {/if}

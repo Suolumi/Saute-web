@@ -8,7 +8,7 @@
     import type {ToolboxUnit} from '$lib/toolbox';
     import {
         submitNutritionLinkSuggestion, requiredNutritionField, parsePositiveNumberInput,
-        type IngredientNutritionLink, type SubmitNutritionLinkResult
+        type IngredientNutritionLink, type SubmitNutritionLinkResult, type UnitAlias
     } from '$lib/nutrition';
     import {foodKeywords, foodName, type Food} from '$lib/foods';
     import {toastError, toastSuccess} from '$lib/utils';
@@ -34,6 +34,7 @@
         existingLink,
         matchedFood,
         toolboxUnits,
+        unitAliases = [],
         onResult
     }: {
         open: boolean
@@ -44,6 +45,7 @@
         existingLink?: IngredientNutritionLink
         matchedFood?: Food
         toolboxUnits: ToolboxUnit[]
+        unitAliases?: UnitAlias[]
         onResult: (result: SubmitNutritionLinkResult) => void
     } = $props();
 
@@ -64,7 +66,7 @@
     const requiredField = $derived(requiredNutritionField(ingredientUnit, toolboxUnits, {
         g_per_100ml: existingLink?.g_per_100ml ?? selectedFood?.g_per_100ml,
         grams_per_piece: existingLink?.grams_per_unit ?? selectedFood?.grams_per_piece,
-    }));
+    }, unitAliases));
     const fieldValueNumber = $derived(parsePositiveNumberInput(fieldValue));
     const fieldValueValid = $derived(requiredField === null || (fieldValueNumber !== null && fieldValueNumber > 0));
     const canSubmit = $derived(!!foodId && fieldValueValid && !submitting);

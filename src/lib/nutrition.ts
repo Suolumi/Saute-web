@@ -80,18 +80,20 @@ export type NutritionLinkSuggestionRequest = {
 // (Service.validateIngredientUnitRequirement): a weight unit needs neither
 // field to resolve to grams, a volume unit needs a density, and a blank or
 // unrecognized unit needs a per-unit weight - unless food already has that
-// default, in which case nothing is needed. Only a direct case-insensitive
-// match against a unit's own name/symbol is checked here (unlike the
-// backend, this doesn't consult unit aliases) - an unmatched unit falls
-// back to 'grams_per_unit', the same conservative default the backend uses
-// for "blank or unrecognized". The backend remains the authoritative gate
+// default, in which case nothing is needed. Units resolve by name/symbol,
+// then aliases, like the API; an unmatched unit falls back to
+// 'grams_per_unit', the same default the backend uses for "blank or
+// unrecognized". The backend remains the authoritative gate
 // regardless of what this returns.
 export function requiredNutritionField(
     unitText: string, units: ToolboxUnit[], food?: Pick<Food, 'g_per_100ml' | 'grams_per_piece'>,
+    aliases: Pick<UnitAlias, 'alias' | 'unit_id'>[] = [],
 ): 'density' | 'grams_per_unit' | null {
     const text = unitText.trim().toLowerCase()
     if (text) {
+        const aliased = aliases.find(a => a.alias.toLowerCase() === text)?.unit_id
         const unit = units.find(u => u.name.toLowerCase() === text || u.symbol.toLowerCase() === text)
+            ?? units.find(u => u.id === aliased)
         if (unit) {
             if (unit.kind === 'weight') return null
             return food?.g_per_100ml ? null : 'density'

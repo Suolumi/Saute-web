@@ -15,6 +15,7 @@
     let recipe: RecipeForm | undefined = $state(undefined);
     let excludeFamily: string | undefined = $state(undefined);
     let author: User | undefined = $state(undefined);
+    let sourceLocale: string | undefined = $state(undefined);
     // pictureAttribution is only populated when fullPictureAccess is true
     // (an admin editing a recipe they don't author) - it's what lets the
     // wizard's photo step show who added each picture and offer removing
@@ -62,6 +63,7 @@
             if (response.ok && data) {
                 const fullPictureAccess = !!$user?.admin && $user.id !== data.author.id
                 recipe = recipeFormFromSource(data, fullPictureAccess)
+                sourceLocale = data.source_locale
                 pictureAttribution = fullPictureAccess ? data.pictures : []
                 excludeFamily = data.variation_of ?? data.id
                 author = data.author
@@ -80,6 +82,7 @@
         onSubmit={submit}
         {recipe}
         recipeId={id}
+        {sourceLocale}
         {excludeFamily}
         {pictureAttribution}
         {author}

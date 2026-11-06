@@ -1,7 +1,7 @@
 <script lang="ts">
     import {_, locale} from 'svelte-i18n';
     import {X, Search, Check} from '@lucide/svelte';
-    import {submitNutritionLinkSuggestion, requiredNutritionField, parsePositiveNumberInput, type IngredientNutritionLink} from '$lib/nutrition';
+    import {submitNutritionLinkSuggestion, requiredNutritionField, parsePositiveNumberInput, type IngredientNutritionLink, type UnitAlias} from '$lib/nutrition';
     import {foodKeywords, foodName, type Food, type FoodMatcher} from '$lib/foods';
     import type {ToolboxUnit} from '$lib/toolbox';
     import {toastError, toastSuccess} from '$lib/utils';
@@ -29,6 +29,7 @@
         matcher,
         existingLinks,
         toolboxUnits,
+        unitAliases,
         onApplied = () => {}
     }: {
         ingredientName: string
@@ -38,6 +39,7 @@
         matcher: FoodMatcher
         existingLinks: Record<string, IngredientNutritionLink>
         toolboxUnits: ToolboxUnit[]
+        unitAliases: UnitAlias[]
         onApplied?: (link: IngredientNutritionLink) => void
     } = $props();
 
@@ -61,7 +63,7 @@
     const trimmedName = $derived(ingredientName.trim());
 
     function fieldFor(food: Food | undefined) {
-        return requiredNutritionField(ingredientUnit, toolboxUnits, food);
+        return requiredNutritionField(ingredientUnit, toolboxUnits, food, unitAliases);
     }
 
     const effectiveLink = $derived(justAppliedLink ?? existingLinks[trimmedName.toLowerCase()]);

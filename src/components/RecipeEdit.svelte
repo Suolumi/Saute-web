@@ -45,6 +45,9 @@
         onSubmit?: (recipe: RecipeForm, newPictures: File[], newStepPictures: Record<number, File>) => void;
         recipe?: RecipeForm
         recipeId?: string
+        // sourceLocale is the edited recipe's own language; a new draft is
+        // assumed to be in the site's language.
+        sourceLocale?: string
         // excludeFamily is this recipe's own root id (if it has one yet) -
         // passed to the recipe-reference picker so a recipe can't offer
         // itself/its own family as a reference target.
@@ -73,6 +76,7 @@
         onSubmit = (recipe: RecipeForm, newPictures: File[], newStepPictures: Record<number, File>) => {},
         recipe = undefined,
         recipeId = undefined,
+        sourceLocale = undefined,
         excludeFamily = undefined,
         pictureAttribution = [],
         author = undefined,
@@ -97,7 +101,8 @@
     });
     const foods = $derived(nutritionReference?.foods ?? []);
     // Matches names only (no links): NutritionLinkSuggestion checks links itself.
-    const foodNameMatcher = $derived(foodMatcher(foods, [], $locale));
+    const draftLocale = $derived(sourceLocale ?? $locale);
+    const foodNameMatcher = $derived(foodMatcher(foods, [], draftLocale));
     const existingLinksByName: Record<string, IngredientNutritionLink> = $derived(
         Object.fromEntries((nutritionReference?.links ?? []).map(link => [link.name.toLowerCase(), link]))
     );
@@ -1278,7 +1283,7 @@
                                   </p>
                                   {#if $user && nutritionEnabled && formData.category !== 'diy'}
                                     <div class="pl-1">
-                                      <NutritionLinkSuggestion ingredientName={ingredient.name} ingredientUnit={ingredient.unit} ingredientQuantity={ingredient.quantity} {foods} matcher={foodNameMatcher} existingLinks={existingLinksByName} {toolboxUnits} onApplied={onNutritionLinkApplied} />
+                                      <NutritionLinkSuggestion ingredientName={ingredient.name} ingredientUnit={ingredient.unit} ingredientQuantity={ingredient.quantity} {foods} matcher={foodNameMatcher} existingLinks={existingLinksByName} {toolboxUnits} unitAliases={nutritionReference?.unit_aliases ?? []} onApplied={onNutritionLinkApplied} />
                                     </div>
                                   {/if}
                                 {/if}
@@ -1540,7 +1545,7 @@
                         ingredients={previewRecipe.ingredients}
                         referenceData={nutritionReference}
                         referenceFailed={nutritionReferenceFailed}
-                        sourceLocale={$locale}
+                        sourceLocale={draftLocale}
                         onLinkApplied={onNutritionLinkApplied}
                     />
                   {/snippet}
