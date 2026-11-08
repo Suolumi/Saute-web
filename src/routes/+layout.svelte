@@ -2,7 +2,7 @@
 	import '../app.css';
 	import Header from "../components/Header.svelte";
 	import TimerWidget from "../components/TimerWidget.svelte";
-    import {afterNavigate, goto} from "$app/navigation";
+    import {afterNavigate} from "$app/navigation";
 	import {onMount} from "svelte";
     import {accessToken, refreshToken, user} from "$lib/stores";
     import {getSelf} from "$lib/user";
@@ -14,8 +14,6 @@
 
 	onMount(() => {
 		loadTags()
-		if (window.location.pathname === "/")
-			goto(`/${$locale ?? 'en'}/home`)
 	})
 
     // app.html ships lang="en"; for Chinese, lang also picks the CJK glyph forms.
