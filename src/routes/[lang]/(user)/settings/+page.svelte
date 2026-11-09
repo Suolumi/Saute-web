@@ -78,7 +78,7 @@
             if (response.ok) {
                 toastSuccess($_('settings.linkVariation.success'));
                 userRecipes = userRecipes.map(r =>
-                    r.id === recipe.id ? {...r, family_id: target.family_id} : r
+                    r.id === recipe.id ? {...r, family_id: data?.family_id ?? target.family_id, family_size: data?.family_size ?? r.family_size} : r
                 );
                 linkConfirm = {isOpen: false, recipe: null, target: null};
             } else {

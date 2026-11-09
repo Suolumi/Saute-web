@@ -17,12 +17,12 @@
         // target. UX nicety only; the server is the authoritative check.
         excludeFamily?: string;
         // category, when set, restricts results to that category (e.g. the
-        // "link as variation" flow only offers same-category targets). Also
+        // "link as version" flow only offers same-category targets). Also
         // a UX nicety - the server is the authoritative check wherever one
         // applies.
         category?: RecipeCategory;
         // title/description override the default generic picker copy (e.g.
-        // ingredient picking, linking a recipe as a variation).
+        // ingredient picking, linking a recipe as a version).
         title?: string;
         description?: string;
         // flat lists every matching recipe ungrouped - every version of

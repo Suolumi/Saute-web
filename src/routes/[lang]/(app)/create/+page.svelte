@@ -6,7 +6,7 @@
     import Modal from "../../../../components/Modal.svelte";
     import Button from "../../../../components/Button.svelte";
     import PageMeta from "../../../../components/PageMeta.svelte";
-    import {onMount} from "svelte";
+    import {onMount, untrack} from "svelte";
     import {accessToken, createRecipeCache} from "$lib/stores";
     import {toastError} from "$lib/utils";
     import {apiErrorMessage} from "$lib/api";
@@ -14,7 +14,7 @@
 
     let variationOf = $derived(page.url.searchParams.get('variation_of') ?? undefined)
     // categoryParam only matters for a plain (non-variation) create; a
-    // variation always inherits its category from the fetched root recipe
+    // variation always inherits its category from the fetched source recipe
     // instead (see recipeFormFromSource) so it can't be forked into the
     // wrong category by an untrusted query param.
     let categoryParam = $derived((page.url.searchParams.get('category') as RecipeCategory | null) ?? 'food')
@@ -31,6 +31,7 @@
         // Reset if the target changes (e.g. navigating directly between two
         // different variation_of links without an intervening page).
         void variationOf
+        // $locale is read untracked: switching language must not reset the draft.
         choiceMade = false
         seedRecipe = undefined
         sourceFamilyId = undefined
@@ -38,7 +39,7 @@
             return
         // Needed on both the copy and the blank path, so fetched up front.
         let stale = false
-        getRecipe(variationOf, $locale ?? undefined).then(({response, data}) => {
+        getRecipe(variationOf, untrack(() => $locale) ?? undefined).then(({response, data}) => {
             if (!stale && response.ok && data)
                 sourceFamilyId = data.family_id
         })

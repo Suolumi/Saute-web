@@ -48,7 +48,7 @@
         // sourceLocale is the edited recipe's own language; a new draft is
         // assumed to be in the site's language.
         sourceLocale?: string
-        // excludeFamily is this recipe's own root id (if it has one yet) -
+        // excludeFamily is this recipe's own family id (if it has one yet) -
         // passed to the recipe-reference picker so a recipe can't offer
         // itself/its own family as a reference target.
         excludeFamily?: string
@@ -63,7 +63,7 @@
         // not the editor, e.g. for an admin editing someone else's recipe).
         author?: User
         // category drives the blank-form default when no recipe/cache exists
-        // yet (a variation or edit's own recipe.category always wins once
+        // yet (a new version or edit's own recipe.category always wins once
         // loaded, see getRecipe/normalizeRecipe) and picks the terminology
         // set (t()) plus whether the food kind/type selector shows.
         category?: RecipeCategory

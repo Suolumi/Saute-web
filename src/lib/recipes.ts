@@ -57,7 +57,7 @@ export type Ingredient = {
     unit: string
     label: string
     // recipe_ref, when set, makes this ingredient a reference to another
-    // recipe's root/family instead of free text (name is then always empty).
+    // recipe's family instead of free text (name is then always empty).
     // Quantity/unit still mean "how much of that sub-recipe", scaling with
     // the parent's serving scaler like any other ingredient.
     recipe_ref?: string
@@ -213,14 +213,14 @@ export type GetRecipesRequest = {
     favorite?: boolean
     // family lists every version of that family_id, newest first, flat.
     family?: string
-    // own_recipes lists every recipe matching author flatly (roots and
-    // variations alike, no collapsing) - only the Settings "My Recipes" view
+    // own_recipes lists every recipe matching author flatly (every
+    // version, no collapsing) - only the Settings "My Recipes" view
     // sets this.
     own_recipes?: boolean
-    // flat lists the public feed uncollapsed: roots and variations alike.
+    // flat lists the public feed uncollapsed: every version.
     flat?: boolean
     // favorites_only lists only recipes the caller has favorited - flat, the
-    // exact recipe/variation favorited (not collapsed to its family root),
+    // exact version favorited (not collapsed to its family),
     // sorted alphabetically by default. Unlike own_recipes, category here
     // always narrows (matches the default listing's food-excludes-diy
     // behavior) since the Settings "My Favorites" view is split into
@@ -405,10 +405,9 @@ export function deleteRecipe(id: string) {
     return apiFetchJson<Recipe>(`/recipes/${id}`, "DELETE", null)
 }
 
-// linkRecipeVariation turns an existing standalone recipe the caller owns
-// (or, for an admin, any recipe) into a variation of variationOf - a genuine
-// root, never auto-flattened server-side (unlike createRecipe's
-// variation_of). Irreversible through the website; only the admin console
+// linkRecipeVariation moves an existing standalone recipe the caller owns
+// (or, for an admin, any recipe) into the family of variationOf, which may be
+// any version of that family. Irreversible through the website; only the admin console
 // can detach a recipe back to standalone.
 export function linkRecipeVariation(id: string, variationOf: string) {
     return apiFetchJson<Recipe>(`/recipes/${id}/variation-of`, "PATCH", {variation_of: variationOf})

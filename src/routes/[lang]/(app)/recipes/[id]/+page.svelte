@@ -38,6 +38,7 @@
     let recipe: Recipe | null | undefined = $state(data.recipe)
     let selectedServings = $state(data.recipe?.quantity ?? 1)
     let familyVersions: RecipePreview[] = $state([])
+    let familyFetchFailed = $state(false)
 
     $effect(() => {
         if (!id)
@@ -80,12 +81,17 @@
 
     $effect(() => {
         familyVersions = []
+        familyFetchFailed = false
         if (!familyId || familySize <= 1)
             return
         let stale = false
         getFamily(familyId, $locale ?? undefined).then(({response, data}) => {
-            if (!stale && response.ok && data)
+            if (stale)
+                return
+            if (response.ok && data)
                 familyVersions = data.items
+            else
+                familyFetchFailed = true
         })
         return () => { stale = true }
     })
@@ -388,7 +394,7 @@
                 >
                     <Share2 size="20" />
                 </button>
-                {#if $user && recipe?.family_size === 1}
+                {#if $user && recipe && (familySize <= 1 || familyFetchFailed)}
                     <button
                             onclick={submitVariation}
                             class="bg-background hover:cursor-pointer hover:bg-accent border-2 border-primary text-primary px-3 py-2 rounded-lg transition-all flex items-center gap-2 shadow-sm hover:shadow-md whitespace-nowrap"

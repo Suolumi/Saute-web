@@ -43,7 +43,7 @@
         recipe: RecipeViewData
         selectedServings: number
         headerActions?: Snippet
-        // versions replaces the "this is a variation" note under the title.
+        // versions replaces the "this is a version" note under the title.
         versions?: Snippet
         // conversions lists an ingredient's scaled quantity in other units.
         conversions?: (ingredient: Ingredient, ratio: number) => string[]
