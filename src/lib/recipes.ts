@@ -1,6 +1,5 @@
 import type {User} from "$lib/user";
 import {apiFetchJson} from "$lib/api";
-import type {TagMatch} from "$lib/tags";
 
 type FetchFn = typeof fetch;
 
@@ -95,11 +94,10 @@ export type Recipe = {
     pictures: RecipePicture[]
     favorite: boolean
     favorite_count: number
-    // variation_of is the id of the recipe this one is a variation of, unset
-    // for an original/root recipe. variation_count is how many variations a
-    // root has (always 0 for a variation itself).
-    variation_of?: string
-    variation_count: number
+    // family_id is shared by every version of a recipe (its own id when
+    // standalone); family_size counts the versions, 1 when standalone.
+    family_id: string
+    family_size: number
     // locale is the language this recipe is currently rendered in (the
     // requested locale when a current translation exists, else source_locale);
     // source_locale is the language the recipe was originally authored in.
@@ -122,16 +120,10 @@ export type RecipePreview = {
     category: RecipeCategory
     pictures: string[]
     tags: string[]
-    // tag_matches, on a tag-filtered family listing, are the variations that
-    // carry every filtered tag when the root itself doesn't.
-    tag_matches?: TagMatch[]
     favorite: boolean
     favorite_count: number
-    variation_of?: string
-    variation_count: number
-    // family_size counts the preview's family (root + variations), set by
-    // listings; 1 for a standalone recipe.
-    family_size?: number
+    family_id: string
+    family_size: number
 }
 
 export type RecipeForm = {
@@ -153,7 +145,7 @@ export type RecipeForm = {
 // edit-page draft shaped like one.
 export type RecipeViewData = Pick<Recipe,
     'title' | 'description' | 'author' | 'quantity' | 'preparation_time' | 'cooking_time' | 'resting_time' |
-    'kind' | 'category' | 'ingredients' | 'steps' | 'tags' | 'pictures' | 'variation_of'>
+    'kind' | 'category' | 'ingredients' | 'steps' | 'tags' | 'pictures'>
 
 // normalizeIngredientsForSave mirrors what the backend's validateRecipe
 // stores: blank rows dropped, text fields trimmed, a reference's name and a
@@ -210,18 +202,17 @@ export type GetRecipesRequest = {
     popular?: boolean
     ingredients?: string[]
     kind?: RecipeType
-    // tags keeps recipes carrying every listed tag; on a family listing, a
-    // family matches when its root or one single variation carries them all.
+    // tags keeps recipes carrying every listed tag.
     tags?: string[]
     // category, omitted, lists the food feed (server excludes diy by
     // default); pass 'diy' for the DIY browse page. Ignored by
-    // variation_of/own_recipes requests, which are category-agnostic.
+    // family/own_recipes requests, which are category-agnostic.
     category?: RecipeCategory
     locale?: string
     search_locale?: string
     favorite?: boolean
-    // variation_of lists only that recipe's variations, never the root.
-    variation_of?: string
+    // family lists every version of that family_id, newest first, flat.
+    family?: string
     // own_recipes lists every recipe matching author flatly (roots and
     // variations alike, no collapsing) - only the Settings "My Recipes" view
     // sets this.
@@ -235,7 +226,7 @@ export type GetRecipesRequest = {
     // behavior) since the Settings "My Favorites" view is split into
     // separate Recipes/DIY sub-tabs, each setting this.
     favorites_only?: boolean
-    // exclude_family hides that root id from a listing - used by the "add
+    // exclude_family hides that family_id from a listing - used by the "add
     // recipe as ingredient" picker so a recipe can't offer itself/its own
     // family as a reference target.
     exclude_family?: string
@@ -365,16 +356,11 @@ export function getRecipes(params: GetRecipesRequest) {
     return apiFetchJson<GetRecipesResponse>('/recipes', "GET", null, params)
 }
 
-// getFamily fetches rootId's recipe and its variations (never rootId itself)
-// together, for the recipe page's version switcher. It asks for the API's
-// maximum page so the switcher can include the recipe being viewed. Callers must already have resolved rootId (recipe.variation_of ??
-// recipe.id) - a variation's own id here would return an empty family.
-export async function getFamily(rootId: string, locale?: string) {
-    const [root, variations] = await Promise.all([
-        getRecipe(rootId, locale),
-        getRecipes({variation_of: rootId, locale, limit: 100}),
-    ])
-    return {root, variations}
+// getFamily lists every version of a family (the viewed recipe included) in
+// one request, for the recipe page's version switcher. It asks for the API's
+// maximum page.
+export function getFamily(familyId: string, locale?: string) {
+    return getRecipes({family: familyId, locale, limit: 100})
 }
 
 function recipeBody(recipe: RecipeForm, keepPictureIDs?: string[]) {

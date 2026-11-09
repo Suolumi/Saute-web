@@ -98,7 +98,7 @@ export function revokeMcpToken(id: string) {
     return apiFetchJson<{ message: string }>(`/admin/users/${id}/mcp-token`, 'DELETE', null)
 }
 
-export function getAdminRecipes(params: Omit<GetRecipesRequest, 'own_recipes' | 'variation_of' | 'exclude_family' | 'favorite'>) {
+export function getAdminRecipes(params: Omit<GetRecipesRequest, 'own_recipes' | 'family' | 'exclude_family' | 'favorite'>) {
     return apiFetchJson<GetAdminRecipesResponse>('/admin/recipes', 'GET', null, params)
 }
 

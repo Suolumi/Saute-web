@@ -6,8 +6,11 @@ vi.mock('./api', () => ({
     apiFetchJson: vi.fn(async () => ({response: {ok: true}, data: {items: []}})),
 }));
 
-it('getFamily asks for every variation the API allows in one page', async () => {
-    await getFamily('root1', 'en');
-    const listCall = vi.mocked(apiFetchJson).mock.calls.find(([path]) => path === '/recipes');
-    expect(listCall?.[3]).toMatchObject({variation_of: 'root1', limit: 100});
+it('getFamily asks for every member of the family in one request', async () => {
+    await getFamily('F', 'en');
+    const calls = vi.mocked(apiFetchJson).mock.calls;
+    expect(calls).toHaveLength(1);
+    expect(calls[0][0]).toBe('/recipes');
+    expect(calls[0][3]).toMatchObject({family: 'F', limit: 100});
+    expect(calls[0][3]).not.toHaveProperty('variation_of');
 });
