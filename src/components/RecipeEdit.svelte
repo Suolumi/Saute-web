@@ -680,7 +680,7 @@
             const refIngredient: Ingredient = {
                 name: '', quantity: 1, unit: '', label: s.name ?? '',
                 recipe_ref: recipe.id, ref_label: '', resolved_ref_title: recipe.title,
-                variation_count: recipe.variation_count,
+                family_size: recipe.family_size,
             };
             if (lastIdx >= 0 && isEmptyIngredient(ingredients[lastIdx]))
                 ingredients[lastIdx] = refIngredient;
@@ -1191,9 +1191,9 @@
                                         <div class="flex items-center gap-1 text-sm font-medium text-card-foreground">
                                           <Link2 class="w-3.5 h-3.5 text-muted-foreground flex-shrink-0" />
                                           <span class="truncate">{ingredient.ref_label || ingredient.resolved_ref_title}</span>
-                                          {#if ingredient.variation_count && ingredient.variation_count > 0}
+                                          {#if ingredient.family_size && ingredient.family_size > 1}
                                               <span class="ml-auto flex-shrink-0 bg-primary/10 text-primary px-2 py-1 rounded-full text-sm font-medium whitespace-nowrap">
-                                                  {$_('recipeCard.variationCount', {values: {count: ingredient.variation_count}})}
+                                                  {$_('recipeCard.familySize', {values: {count: ingredient.family_size}})}
                                               </span>
                                           {/if}
                                         </div>

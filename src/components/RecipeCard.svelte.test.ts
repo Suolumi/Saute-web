@@ -17,7 +17,7 @@ vi.mock('$lib/api', () => ({
 
 beforeAll(async () => {
     addMessages('en', {
-        recipeCard: {familySize: '{count} versions', variationCount: '{count} variations', diyBadge: 'DIY', title: 'Untitled', description: 'No description', noPicture: 'No picture yet'},
+        recipeCard: {familySize: '{count} versions', diyBadge: 'DIY', title: 'Untitled', description: 'No description', noPicture: 'No picture yet'},
         recipes: {types: {dish: 'Dish'}},
     });
     await init({fallbackLocale: 'en', initialLocale: 'en'});
@@ -30,21 +30,21 @@ function preview(overrides: Partial<RecipePreview>): RecipePreview {
         id: 'r1', title: 'Lasagna', description: '', author: {username: 'flo'},
         preparation_time: 10, cooking_time: 30, resting_time: 0, quantity: 4,
         kind: 'dish', category: 'food', pictures: [], tags: [],
-        favorite: false, favorite_count: 0, variation_count: 0,
+        favorite: false, favorite_count: 0, family_id: 'f1', family_size: 1,
         ...overrides,
     } as RecipePreview;
 }
 
 describe('RecipeCard', () => {
     it('shows the family badge when the family has several recipes', async () => {
-        const screen = render(RecipeCard, {recipe: preview({family_size: 3, variation_count: 2})});
+        const screen = render(RecipeCard, {recipe: preview({family_size: 3})});
         await expect.element(screen.getByText('3 versions')).toBeVisible();
     });
 
     it('shows no badge for a standalone recipe', async () => {
         const screen = render(RecipeCard, {recipe: preview({family_size: 1})});
         await expect.element(screen.getByText('Lasagna')).toBeVisible();
-        expect(screen.container.textContent).not.toMatch(/versions|variations/);
+        expect(screen.container.textContent).not.toMatch(/versions/);
     });
 
     it('shows a photo-sized placeholder when the recipe has no picture', async () => {
@@ -56,7 +56,7 @@ describe('RecipeCard', () => {
     });
 
     it('opens the recipe directly even when it has variations', async () => {
-        const screen = render(RecipeCard, {recipe: preview({family_size: 3, variation_count: 2})});
+        const screen = render(RecipeCard, {recipe: preview({family_size: 3})});
         (screen.getByText('Lasagna').element() as HTMLElement).click();
         expect(goto).toHaveBeenCalledWith('/en/recipes/r1');
     });

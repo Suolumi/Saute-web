@@ -32,13 +32,6 @@ export type RecipeTag = {
 
 export type TagMap = Map<string, RecipeTag>
 
-// TagMatch is a variation that satisfies a tag filter its family root
-// doesn't; the listing card links to it.
-export type TagMatch = {
-    id: string
-    title: string
-}
-
 export type RecipeTagRequest = {
     slug?: string
     group: TagGroup

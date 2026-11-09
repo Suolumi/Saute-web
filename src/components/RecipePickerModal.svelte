@@ -4,16 +4,15 @@
     import Checkbox from './Checkbox.svelte';
     import HighlightText from './HighlightText.svelte';
     import TagFilter from './TagFilter.svelte';
-    import {getFamily, getRecipe, getRecipes, type RecipeCategory, type RecipePreview} from '$lib/recipes';
+    import {getFamily, getRecipes, type RecipeCategory, type RecipePreview} from '$lib/recipes';
     import {tags as allTags, tagsForCategory} from '$lib/tags';
-    import {CornerDownRight} from '@lucide/svelte';
     import {serverUrl} from '$lib/stores';
     import {locale, _} from 'svelte-i18n';
     import {toastError} from '$lib/utils';
 
     interface Props {
         open: boolean;
-        // excludeFamily is this recipe's own root id (if it has one yet) -
+        // excludeFamily is this recipe's own family id (if it has one yet) -
         // a recipe can't offer itself or its own family as a reference
         // target. UX nicety only; the server is the authoritative check.
         excludeFamily?: string;
@@ -165,38 +164,27 @@
             select(recipe);
             return;
         }
-        if (!recipe.variation_of && recipe.variation_count > 0) {
+        if (recipe.family_size > 1) {
             openDrill(recipe);
             return;
         }
         toggleSelected(recipe);
     }
 
-    async function openDrill(root: RecipePreview) {
-        drillRoot = root;
+    async function openDrill(preview: RecipePreview) {
+        drillRoot = preview;
         drillVariations = [];
         drillLoading = true;
         try {
-            const {root: rootRes, variations} = await getFamily(root.id, $locale ?? undefined);
-            if (rootRes.response.ok && rootRes.data && variations.response.ok && variations.data) {
-                drillVariations = variations.data.items;
+            const {response, data} = await getFamily(preview.family_id, $locale ?? undefined);
+            if (response.ok && data) {
+                drillVariations = data.items;
             } else {
                 toastError($_('edit.ingredients.recipePicker.error'));
             }
         } finally {
             drillLoading = false;
         }
-    }
-
-    // pickTagMatch fetches a matching variation the listing only named, so it
-    // can be picked like any other row.
-    async function pickTagMatch(id: string) {
-        const {response, data} = await getRecipe(id, $locale ?? undefined);
-        if (!response.ok || !data) {
-            toastError($_('edit.ingredients.recipePicker.error'));
-            return;
-        }
-        handleRowClick({...data, pictures: data.pictures.map(p => p.filename)});
     }
 
     function closeDrill() {
@@ -237,13 +225,9 @@
             <span class="ml-auto flex-shrink-0 bg-muted text-muted-foreground px-2 py-1 rounded-full text-sm font-medium whitespace-nowrap">
                 {$_('edit.ingredients.recipePicker.alreadyAdded')}
             </span>
-        {:else if !recipe.variation_of && recipe.variation_count > 0}
+        {:else if recipe.family_size > 1}
             <span class="ml-auto flex-shrink-0 bg-primary/10 text-primary px-2 py-1 rounded-full text-sm font-medium whitespace-nowrap">
-                {$_('recipeCard.variationCount', {values: {count: recipe.variation_count}})}
-            </span>
-        {:else if recipe.variation_of}
-            <span class="ml-auto flex-shrink-0 bg-muted text-muted-foreground px-2 py-1 rounded-full text-sm font-medium whitespace-nowrap">
-                {$_('edit.ingredients.recipePicker.variationBadge')}
+                {$_('recipeCard.familySize', {values: {count: recipe.family_size}})}
             </span>
         {/if}
     </button>
@@ -286,21 +270,7 @@
             <div class="py-8 text-center text-muted-foreground">{$_('edit.ingredients.recipePicker.noResults')}</div>
         {:else}
             {#each results.filter(r => !excluded.has(r.id)) as recipe (recipe.id)}
-                {#if recipe.tag_matches?.length}
-                    <p class="px-2 pt-1 text-xs text-muted-foreground truncate">{recipe.title}</p>
-                    {#each recipe.tag_matches as match (match.id)}
-                        <button
-                                type="button"
-                                onclick={() => pickTagMatch(match.id)}
-                                class="flex items-center gap-2 rounded-lg p-2 pl-4 text-left text-sm hover:bg-muted hover:cursor-pointer"
-                        >
-                            <CornerDownRight class="w-4 h-4 flex-none text-muted-foreground" />
-                            <span class="font-medium text-card-foreground truncate">{match.title}</span>
-                        </button>
-                    {/each}
-                {:else}
-                    {@render recipeRow(recipe, {selectable: true, isSelected: isSelected(recipe), onClick: () => handleRowClick(recipe)})}
-                {/if}
+                {@render recipeRow(recipe, {selectable: true, isSelected: isSelected(recipe), onClick: () => handleRowClick(recipe)})}
             {/each}
             {#if searched && hasMore}
                 <div bind:this={resultsSentinel} class="h-1"></div>
@@ -331,7 +301,6 @@
             {#if drillLoading}
                 <div class="py-8 text-center text-muted-foreground">…</div>
             {:else if drillRoot}
-                {@render recipeRow(drillRoot, {selectable: !excluded.has(drillRoot.id), isSelected: isSelected(drillRoot), onClick: () => toggleSelected(drillRoot!)})}
                 {#each drillVariations as variation (variation.id)}
                     {@render recipeRow(variation, {selectable: !excluded.has(variation.id), isSelected: isSelected(variation), onClick: () => toggleSelected(variation)})}
                 {/each}

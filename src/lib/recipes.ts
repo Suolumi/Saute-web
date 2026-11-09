@@ -69,11 +69,11 @@ export type Ingredient = {
     // recipe's live current title (display ref_label || resolved_ref_title).
     // Never send this back on write.
     resolved_ref_title?: string
-    // variation_count is carried over client-side from the RecipePreview
+    // family_size is carried over client-side from the RecipePreview
     // picked in RecipePickerModal - the server doesn't decorate it on
     // existing recipe_ref ingredients yet, so it's only known for a
     // reference picked during the current edit session.
-    variation_count?: number
+    family_size?: number
 }
 
 export type Recipe = {
@@ -178,7 +178,7 @@ export function normalizeIngredientsForSave(ingredients: Ingredient[]): Ingredie
 export function sameRecipeForm(a: RecipeForm, b: RecipeForm): boolean {
     const stored = (form: RecipeForm) => JSON.stringify({
         ...form,
-        ingredients: form.ingredients.map(({resolved_ref_title, variation_count, ...rest}) => rest),
+        ingredients: form.ingredients.map(({resolved_ref_title, family_size, ...rest}) => rest),
     })
     return stored(a) === stored(b)
 }

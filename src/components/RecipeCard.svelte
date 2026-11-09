@@ -4,7 +4,7 @@
     import type {RecipePreview} from "$lib/recipes";
     import emblaCarouselSvelte from "embla-carousel-svelte";
     import {
-        ArrowLeft, ArrowRight, Carrot, Cookie, CookingPot, CornerDownRight, Croissant, CupSoda, EggFried, Heart, IceCreamCone,
+        ArrowLeft, ArrowRight, Carrot, Cookie, CookingPot, Croissant, CupSoda, EggFried, Heart, IceCreamCone,
         Layers, Salad, Utensils, UtensilsCrossed, Wrench,
     } from "@lucide/svelte";
     import {serverUrl, user} from "$lib/stores";
@@ -39,12 +39,6 @@
 
     function viewRecipe(id: string) {
         goto(`/${$locale}/recipes/${id}`);
-    }
-
-    function viewTagMatch(e: MouseEvent | KeyboardEvent, id: string) {
-        e.stopPropagation();
-        if (!disabled)
-            viewRecipe(id);
     }
 
     function handleClick() {
@@ -212,22 +206,6 @@
         <p class="text-muted-foreground mb-4 text-pretty whitespace-pre-line wrap-break-word">{recipe.description ? (truncateDescription && recipe.description.length > 200 ? recipe.description.slice(0, 200) + '...' : recipe.description) : $_('recipeCard.description')}</p>
 
         <TagBadges slugs={recipe.tags} fit />
-
-        {#if recipe.tag_matches && recipe.tag_matches.length > 0}
-            <div class="mt-3 flex flex-col gap-1 text-sm">
-                {#each recipe.tag_matches as match (match.id)}
-                    <button
-                            type="button"
-                            onclick={(e) => viewTagMatch(e, match.id)}
-                            onkeydown={(e) => e.key === 'Enter' && viewTagMatch(e, match.id)}
-                            class="inline-flex items-center gap-1.5 text-left text-primary hover:underline"
-                    >
-                        <CornerDownRight class="w-4 h-4 flex-none" />
-                        <span class="min-w-0 wrap-break-word">{$_('tags.variationMatches', {values: {title: match.title}})}</span>
-                    </button>
-                {/each}
-            </div>
-        {/if}
 
     </div>
     <div class="px-6 pb-6 flex items-center justify-between text-sm text-muted-foreground">

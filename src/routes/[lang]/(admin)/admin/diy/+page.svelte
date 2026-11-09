@@ -109,8 +109,8 @@
                 <div class="min-w-0 flex-1">
                     <p class="font-medium text-card-foreground truncate">
                         <HighlightText text={recipe.title} query={searchTerm} />
-                        {#if recipe.variation_of}
-                            <span class="ml-1 text-xs bg-muted text-muted-foreground px-2 py-0.5 rounded-full">{$_('admin.recipes.variationBadge')}</span>
+                        {#if recipe.family_size > 1}
+                            <span class="ml-1 text-xs bg-muted text-muted-foreground px-2 py-0.5 rounded-full">{$_('recipeCard.familySize', {values: {count: recipe.family_size}})}</span>
                         {/if}
                     </p>
                     <p class="text-xs text-muted-foreground truncate">{recipe.author?.username}</p>

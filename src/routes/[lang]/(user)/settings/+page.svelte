@@ -78,7 +78,7 @@
             if (response.ok) {
                 toastSuccess($_('settings.linkVariation.success'));
                 userRecipes = userRecipes.map(r =>
-                    r.id === recipe.id ? {...r, variation_of: target.id} : r
+                    r.id === recipe.id ? {...r, family_id: target.family_id} : r
                 );
                 linkConfirm = {isOpen: false, recipe: null, target: null};
             } else {
@@ -286,7 +286,7 @@
 
 <RecipePickerModal
         open={linkPicker.isOpen}
-        excludeFamily={linkPicker.recipe?.variation_of ?? linkPicker.recipe?.id}
+        excludeFamily={linkPicker.recipe?.family_id}
         category={linkPicker.recipe?.category}
         title={$_('settings.linkVariation.pickerTitle')}
         description={$_('settings.linkVariation.pickerDescription')}
