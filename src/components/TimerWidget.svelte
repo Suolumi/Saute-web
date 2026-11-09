@@ -59,6 +59,8 @@
 </script>
 
 {#if $activeTimers.length > 0}
+    <!-- Lets the end of the page scroll clear of the fixed widget; the root layout renders this after the page. -->
+    <div class="h-20" aria-hidden="true"></div>
     <div class="fixed bottom-5 right-5 z-40 flex flex-col items-end gap-2">
         {#if expanded}
             <div class="w-72 max-w-[calc(100vw-2.5rem)] bg-card border border-border rounded-lg shadow-lg overflow-hidden">

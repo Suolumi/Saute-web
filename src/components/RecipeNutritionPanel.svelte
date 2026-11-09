@@ -243,7 +243,7 @@
                         <ul class="divide-y divide-border rounded-lg border border-border overflow-hidden">
                             {#each breakdown as row}
                                 <li class="flex items-center justify-between gap-3 px-4 py-2.5">
-                                    <span class="text-sm text-card-foreground truncate">{row.label}</span>
+                                    <span class="text-sm text-card-foreground min-w-0 wrap-break-word">{row.label}</span>
                                     <div class="text-right shrink-0">
                                         <span class="text-sm font-medium text-card-foreground">{Math.round(row.line.kcal)} {$_('recipe.nutrition.kcalShort')}</span>
                                         <p class="text-xs text-muted-foreground">
@@ -273,7 +273,7 @@
                         <ul class="mt-2 divide-y divide-border">
                             {#each unmatchedRows as row}
                                 <li class="flex items-center justify-between gap-3 py-1.5">
-                                    <span class="text-sm text-card-foreground truncate">{ingredientLabel(row.ingredient)}</span>
+                                    <span class="text-sm text-card-foreground min-w-0 wrap-break-word">{ingredientLabel(row.ingredient)}</span>
                                     <button type="button" onclick={() => openFixModal(row.canonical.name, row.canonical.unit)}
                                             class="shrink-0 text-xs font-semibold text-primary hover:underline hover:cursor-pointer">
                                         {$_('recipe.nutrition.fix.button')}

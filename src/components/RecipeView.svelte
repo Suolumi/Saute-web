@@ -184,9 +184,9 @@
             {@render pictureOverlay?.(currentPicture)}
         </div>
 
-        <div class="p-8">
+        <div class="p-5 @xl:p-8">
             <div class="flex flex-col @xl:flex-row @xl:items-start @xl:justify-between gap-4 mb-4">
-                <h1 class="text-3xl @xl:text-4xl font-bold text-card-foreground text-balance">{recipe.title}</h1>
+                <h1 class="text-3xl @xl:text-4xl font-bold text-card-foreground text-balance min-w-0 wrap-break-word">{recipe.title}</h1>
                 <div class="flex items-center justify-between @xl:justify-start w-full @xl:w-auto gap-2 @xl:gap-3 @xl:flex-shrink-0">
                     {#if recipe.category === 'diy'}
                         <span class="bg-muted text-muted-foreground px-3 py-2 rounded-full text-sm font-medium whitespace-nowrap ml-4">
@@ -216,7 +216,7 @@
                 </div>
             {/if}
 
-            <p class="text-xl text-muted-foreground mb-6 text-pretty whitespace-pre-line">{recipe.description}</p>
+            <p class="text-lg @xl:text-xl text-muted-foreground mb-6 text-pretty whitespace-pre-line wrap-break-word">{recipe.description}</p>
 
             <div class="flex flex-col @xl:flex-row @xl:flex-wrap @xl:items-center @xl:justify-between gap-4">
                 <div class="flex items-center gap-x-2">
@@ -231,7 +231,7 @@
                             {recipe.author.username.charAt(0) || "?"}
                         </div>
                     {/if}
-                    <span class="text-lg font-medium text-card-foreground">{$_('recipeCard.by')} {recipe.author?.username || 'Author Name'}</span>
+                    <span class="text-lg font-medium text-card-foreground min-w-0 wrap-break-word">{$_('recipeCard.by')} {recipe.author?.username || 'Author Name'}</span>
                 </div>
 
                 <div class="grid grid-cols-2 @xl:flex @xl:flex-nowrap @xl:items-center gap-3 @xl:gap-4 @3xl:gap-6 text-muted-foreground text-sm @xl:text-base">
@@ -249,7 +249,7 @@
                             <span class="whitespace-nowrap">{t('rest')}: {formatDuration(recipe.resting_time, $_('recipes.h'), $_('recipes.min'))}</span>
                         </div>
                     {/if}
-                    <div class="flex items-center">
+                    <div class="col-span-2 flex items-center">
                         <Users size="20" class="mr-2 text-black dark:text-current" />
                         <span class="whitespace-nowrap mr-2">{t('servings')}:</span>
                         <div class="flex items-center gap-2">
@@ -258,7 +258,7 @@
                                     onclick={decreaseServings}
                                     disabled={selectedServings <= 1}
                                     aria-label={$_('recipe.decreaseServings')}
-                                    class="w-6 h-6 flex items-center justify-center rounded-full border border-border hover:bg-accent disabled:opacity-40 disabled:cursor-not-allowed hover:cursor-pointer transition-colors"
+                                    class="w-8 h-8 @xl:w-6 @xl:h-6 flex items-center justify-center rounded-full border border-border hover:bg-accent disabled:opacity-40 disabled:cursor-not-allowed hover:cursor-pointer transition-colors"
                             >
                                 <Minus size="14" />
                             </button>
@@ -267,7 +267,7 @@
                                     type="button"
                                     onclick={increaseServings}
                                     aria-label={$_('recipe.increaseServings')}
-                                    class="w-6 h-6 flex items-center justify-center rounded-full border border-border hover:bg-accent hover:cursor-pointer transition-colors"
+                                    class="w-8 h-8 @xl:w-6 @xl:h-6 flex items-center justify-center rounded-full border border-border hover:bg-accent hover:cursor-pointer transition-colors"
                             >
                                 <Plus size="14" />
                             </button>
@@ -291,9 +291,10 @@
                         {#each ingredientGroups as group}
                             <div>
                                 {#if group.label}
-                                    <h3 class="font-semibold text-card-foreground text-sm mb-2">{group.label}</h3>
+                                    <h3 class="font-semibold text-card-foreground text-sm mb-2 wrap-break-word">{group.label}</h3>
                                 {/if}
-                                <ul class="space-y-3">
+                                <!-- anywhere, not break-word: the name is a flex item, so its min-content must shrink too -->
+                                <ul class="space-y-3 wrap-anywhere">
                                     {#each group.items as ingredient}
                                         <li class="flex items-start">
                                             <div class="w-2 h-2 bg-primary rounded-full mt-2 mr-3 flex-shrink-0"></div>
@@ -339,10 +340,10 @@
                                     </div>
                                 {/if}
                                 <div class="flex-1 min-w-0 {done ? 'opacity-50' : ''}">
-                                    <div class="font-bold text-sm">
+                                    <div class="font-bold text-sm wrap-break-word">
                                         {step.title || `Step ${index + 1}`}
                                     </div>
-                                    <p class="text-card-foreground leading-relaxed pl-4 whitespace-pre-line {done ? 'line-through' : ''}">{step.description}</p>
+                                    <p class="text-card-foreground leading-relaxed pl-4 whitespace-pre-line wrap-break-word {done ? 'line-through' : ''}">{step.description}</p>
                                     {@render stepFooter?.(step, index)}
                                 </div>
                                 {#if step.picture}

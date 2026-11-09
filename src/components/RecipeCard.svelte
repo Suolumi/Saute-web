@@ -189,7 +189,7 @@
 
     <div class="p-6 flex-1 flex flex-col">
         <div class="flex items-start justify-between mb-3">
-            <h3 class="text-xl font-semibold text-card-foreground text-balance">{#if recipe.title}<HighlightText text={recipe.title} query={highlightQuery} />{:else}{$_('recipeCard.title')}{/if}</h3>
+            <h3 class="text-xl font-semibold text-card-foreground text-balance min-w-0 wrap-break-word">{#if recipe.title}<HighlightText text={recipe.title} query={highlightQuery} />{:else}{$_('recipeCard.title')}{/if}</h3>
             <div class="flex items-center gap-2 ml-2 flex-shrink-0">
                 {#if (recipe.family_size ?? 0) > 1}
                     <span class="inline-flex items-center gap-1 bg-primary/10 text-primary px-2 py-1 rounded-full text-sm font-medium whitespace-nowrap">
@@ -209,7 +209,7 @@
             </div>
         </div>
 
-        <p class="text-muted-foreground mb-4 text-pretty whitespace-pre-line">{recipe.description ? (truncateDescription && recipe.description.length > 200 ? recipe.description.slice(0, 200) + '...' : recipe.description) : $_('recipeCard.description')}</p>
+        <p class="text-muted-foreground mb-4 text-pretty whitespace-pre-line wrap-break-word">{recipe.description ? (truncateDescription && recipe.description.length > 200 ? recipe.description.slice(0, 200) + '...' : recipe.description) : $_('recipeCard.description')}</p>
 
         <TagBadges slugs={recipe.tags} fit />
 
@@ -223,7 +223,7 @@
                             class="inline-flex items-center gap-1.5 text-left text-primary hover:underline"
                     >
                         <CornerDownRight class="w-4 h-4 flex-none" />
-                        <span>{$_('tags.variationMatches', {values: {title: match.title}})}</span>
+                        <span class="min-w-0 wrap-break-word">{$_('tags.variationMatches', {values: {title: match.title}})}</span>
                     </button>
                 {/each}
             </div>
@@ -231,7 +231,7 @@
 
     </div>
     <div class="px-6 pb-6 flex items-center justify-between text-sm text-muted-foreground">
-        <div class="flex justify-center items-center gap-x-2">
+        <div class="flex justify-center items-center gap-x-2 min-w-0">
             {#if recipe.author.picture}
                 <img
                         src={`${$serverUrl}/pictures/${recipe.author.picture}` || "/placeholder.svg"}
@@ -243,7 +243,7 @@
                     {recipe.author.username.charAt(0) || "?"}
                 </div>
             {/if}
-            <span class="font-medium text-black dark:text-white">{$_('recipeCard.by')} {recipe.author?.username || 'Author Name'}</span>
+            <span class="font-medium text-black dark:text-white min-w-0 wrap-break-word">{$_('recipeCard.by')} {recipe.author?.username || 'Author Name'}</span>
         </div>
         <div class="flex items-center space-x-4">
         {#if recipe.category !== 'diy' || totalTime > 0}
