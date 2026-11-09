@@ -242,9 +242,9 @@
                         <h3 class="text-sm font-semibold text-card-foreground mb-2">{$_('recipe.nutrition.perIngredient')}</h3>
                         <ul class="divide-y divide-border rounded-lg border border-border overflow-hidden">
                             {#each breakdown as row}
-                                <li class="flex items-center justify-between gap-3 px-4 py-2.5">
-                                    <span class="text-sm text-card-foreground min-w-0 wrap-break-word">{row.label}</span>
-                                    <div class="text-right shrink-0">
+                                <li class="flex flex-wrap items-center justify-between gap-x-3 gap-y-1 px-4 py-2.5">
+                                    <span class="flex-1 min-w-32 text-sm text-card-foreground wrap-break-word">{row.label}</span>
+                                    <div class="ml-auto text-right shrink-0">
                                         <span class="text-sm font-medium text-card-foreground">{Math.round(row.line.kcal)} {$_('recipe.nutrition.kcalShort')}</span>
                                         <p class="text-xs text-muted-foreground">
                                             {row.line.protein_g}{$_('recipe.nutrition.gShort')} {$_('recipe.nutrition.proteinShort')} ·

@@ -991,6 +991,7 @@
                           bind:value={formData.description}
                           placeholder={t('description.placeholder')}
                           rows={3}
+                          autoGrow
                       />
                     </div>
                     <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
@@ -1071,7 +1072,7 @@
                                 <button
                                     type="button"
                                     onclick={() => startRename(section)}
-                                    class="flex items-center justify-center w-7 h-7 rounded-md text-muted-foreground hover:text-foreground hover:bg-accent transition-colors"
+                                    class="flex items-center justify-center w-8 h-8 rounded-md text-muted-foreground hover:text-foreground hover:bg-accent transition-colors"
                                     aria-label={$_('edit.ingredients.renameCategory')}
                                     title={$_('edit.ingredients.renameCategory')}
                                 >
@@ -1411,6 +1412,7 @@
                                       bind:value={row.description}
                                       placeholder={t('instructions.description.placeholder')}
                                       rows={2}
+                                      autoGrow
                                   />
                                 </div>
                               </div>
