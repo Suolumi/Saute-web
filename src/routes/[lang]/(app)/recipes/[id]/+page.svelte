@@ -73,10 +73,14 @@
         })
     })
 
+    // The effect depends on these only, so switching between versions of one
+    // family keeps the chips instead of refetching them.
+    let familyId = $derived(recipe?.family_id)
+    let familySize = $derived(recipe?.family_size ?? 1)
+
     $effect(() => {
-        const familyId = recipe?.family_id
         familyVersions = []
-        if (!familyId || !recipe || recipe.family_size <= 1)
+        if (!familyId || familySize <= 1)
             return
         let stale = false
         getFamily(familyId, $locale ?? undefined).then(({response, data}) => {

@@ -34,6 +34,15 @@
         choiceMade = false
         seedRecipe = undefined
         sourceFamilyId = undefined
+        if (!variationOf)
+            return
+        // Needed on both the copy and the blank path, so fetched up front.
+        let stale = false
+        getRecipe(variationOf, $locale ?? undefined).then(({response, data}) => {
+            if (!stale && response.ok && data)
+                sourceFamilyId = data.family_id
+        })
+        return () => { stale = true }
     })
 
     function recipeFormFromSource(source: Recipe): RecipeForm {
@@ -65,10 +74,9 @@
             return
         $createRecipeCache = null
         const {response, data} = await getRecipe(variationOf, $locale ?? undefined)
-        if (response.ok && data) {
+        if (response.ok && data)
             seedRecipe = recipeFormFromSource(data)
-            sourceFamilyId = data.family_id
-        } else
+        else
             toastError(apiErrorMessage(data, $_('create.toasts.save')))
         choiceMade = true
     }
