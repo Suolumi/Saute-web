@@ -5,30 +5,33 @@ import VersionSwitcher from './VersionSwitcher.svelte';
 import type {RecipePreview} from '$lib/recipes';
 
 beforeAll(async () => {
-    addMessages('en', {recipe: {versions: {label: 'Versions', original: 'Original', add: 'Add yours'}}});
+    addMessages('en', {recipe: {versions: {label: 'Versions', add: 'Add yours'}}});
     await init({fallbackLocale: 'en', initialLocale: 'en'});
 });
 
-const root = {id: 'r', title: 'Lasagna', author: {username: 'flo'}} as RecipePreview;
-const variations = [{id: 'v', title: 'Veggie', author: {username: 'ana'}, variation_of: 'r'} as RecipePreview];
+const version = (id: string, title: string, username: string) => ({id, title, author: {username}} as RecipePreview);
+// Newest first, as the API returns them.
+const versions = [version('c', 'Cheesy', 'cat'), version('b', 'Veggie', 'ana'), version('a', 'Lasagna', 'flo')];
 
 describe('VersionSwitcher', () => {
-    it('links each version and marks the current one', async () => {
-        const screen = render(VersionSwitcher, {root, variations, currentId: 'v'});
-        const original = screen.getByRole('link', {name: 'Original'});
-        await expect.element(original).toHaveAttribute('href', '/en/recipes/r');
-        await expect.element(original).not.toHaveAttribute('aria-current');
+    it('renders every version as title and author in the given order, with no original', async () => {
+        const screen = render(VersionSwitcher, {versions, currentId: 'b'});
+        const links = Array.from(screen.container.querySelectorAll('a')).map(a => a.textContent?.trim());
+        expect(links).toEqual(['Cheesy · cat', 'Veggie · ana', 'Lasagna · flo']);
+        expect(screen.container.textContent).not.toContain('Original');
         await expect.element(screen.getByRole('link', {name: 'Veggie · ana'})).toHaveAttribute('aria-current', 'page');
+        await expect.element(screen.getByRole('link', {name: 'Lasagna · flo'})).not.toHaveAttribute('aria-current');
+        await expect.element(screen.getByRole('link', {name: 'Lasagna · flo'})).toHaveAttribute('href', '/en/recipes/a');
     });
 
     it('shows Add yours only with onAdd, and calls it', async () => {
-        const without = render(VersionSwitcher, {root, variations, currentId: 'r'});
-        await expect.element(without.getByRole('link', {name: 'Original'})).toBeVisible();
+        const without = render(VersionSwitcher, {versions, currentId: 'a'});
+        await expect.element(without.getByRole('link', {name: 'Lasagna · flo'})).toBeVisible();
         expect(without.container.querySelector('button')).toBeNull();
         without.unmount();
 
         const onAdd = vi.fn();
-        const screen = render(VersionSwitcher, {root, variations, currentId: 'r', onAdd});
+        const screen = render(VersionSwitcher, {versions, currentId: 'a', onAdd});
         (screen.getByRole('button', {name: 'Add yours'}).element() as HTMLElement).click();
         expect(onAdd).toHaveBeenCalledOnce();
     });

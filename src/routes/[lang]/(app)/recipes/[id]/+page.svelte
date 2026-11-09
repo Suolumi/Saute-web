@@ -37,12 +37,7 @@
     const { data } = $props()
     let recipe: Recipe | null | undefined = $state(data.recipe)
     let selectedServings = $state(data.recipe?.quantity ?? 1)
-    let familyRoot: RecipePreview | null = $state(null)
-    let familyVariations: RecipePreview[] = $state([])
-
-    // The recipe currently viewed may itself be a variation; siblings are
-    // always fetched relative to the family root, never the variation.
-    let rootId = $derived(recipe?.variation_of ?? recipe?.id)
+    let familyVersions: RecipePreview[] = $state([])
 
     $effect(() => {
         if (!id)
@@ -79,21 +74,14 @@
     })
 
     $effect(() => {
-        if (!rootId) {
-            familyRoot = null
-            familyVariations = []
+        const familyId = recipe?.family_id
+        familyVersions = []
+        if (!familyId || !recipe || recipe.family_size <= 1)
             return
-        }
-        familyRoot = null
-        familyVariations = []
         let stale = false
-        getFamily(rootId, $locale ?? undefined).then(({root, variations}) => {
-            if (stale)
-                return
-            if (root.response.ok && root.data && variations.response.ok && variations.data) {
-                familyRoot = {...root.data, pictures: root.data.pictures.map(p => p.filename)}
-                familyVariations = variations.data.items
-            }
+        getFamily(familyId, $locale ?? undefined).then(({response, data}) => {
+            if (!stale && response.ok && data)
+                familyVersions = data.items
         })
         return () => { stale = true }
     })
@@ -118,8 +106,8 @@
     }
 
     function submitVariation() {
-        if (rootId)
-            goto(`/${$locale}/create?variation_of=${rootId}`)
+        if (recipe)
+            goto(`/${$locale}/create?variation_of=${recipe.id}`)
     }
 
     function suggestTranslationFix() {
@@ -364,8 +352,8 @@
             {/snippet}
 
             {#snippet versions()}
-                {#if familyRoot && familyVariations.length > 0}
-                    <VersionSwitcher root={familyRoot} variations={familyVariations} currentId={recipe!.id} onAdd={$user ? submitVariation : undefined} />
+                {#if familyVersions.length > 1}
+                    <VersionSwitcher versions={familyVersions} currentId={recipe!.id} onAdd={$user ? submitVariation : undefined} />
                 {/if}
             {/snippet}
 
@@ -396,7 +384,7 @@
                 >
                     <Share2 size="20" />
                 </button>
-                {#if $user && familyVariations.length === 0}
+                {#if $user && recipe?.family_size === 1}
                     <button
                             onclick={submitVariation}
                             class="bg-background hover:cursor-pointer hover:bg-accent border-2 border-primary text-primary px-3 py-2 rounded-lg transition-all flex items-center gap-2 shadow-sm hover:shadow-md whitespace-nowrap"

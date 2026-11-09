@@ -10,8 +10,8 @@
 
     let expanded = $state(false);
     let loading = $state(false);
-    let familyRoot: Recipe | null = $state(null);
-    let familyVariations: RecipePreview[] = $state([]);
+    let loaded = $state(false);
+    let familyVersions: RecipePreview[] = $state([]);
     let selectedId: string | null = $state(null);
     let selectedRecipe = $state<Recipe | null>(null);
     let variantChosen = $state(false);
@@ -25,21 +25,24 @@
 
     async function toggle() {
         expanded = !expanded;
-        if (expanded && !familyRoot)
+        if (expanded && !loaded)
             await load();
     }
 
     async function load() {
         loading = true;
         try {
-            const {root, variations} = await getFamily(refId, $locale ?? undefined);
-            if (root.response.ok && root.data) {
-                familyRoot = root.data;
-                selectedId = root.data.id;
-                selectedRecipe = root.data;
+            const {response, data} = await getRecipe(refId, $locale ?? undefined);
+            if (!response.ok || !data)
+                return;
+            selectedId = data.id;
+            selectedRecipe = data;
+            loaded = true;
+            if (data.family_size > 1) {
+                const family = await getFamily(data.family_id, $locale ?? undefined);
+                if (family.response.ok && family.data)
+                    familyVersions = family.data.items;
             }
-            if (variations.response.ok && variations.data)
-                familyVariations = variations.data.items;
         } finally {
             loading = false;
         }
@@ -50,10 +53,6 @@
         if (id === selectedId)
             return;
         selectedId = id;
-        if (familyRoot && id === familyRoot.id) {
-            selectedRecipe = familyRoot;
-            return;
-        }
         selectedRecipe = null;
         const {response, data} = await getRecipe(id, $locale ?? undefined);
         if (response.ok && data)
@@ -101,26 +100,18 @@
         <div class="mt-2 pl-3 pt-2 border-l-2 border-t-2 border-border">
             {#if loading}
                 <p class="text-xs text-muted-foreground">…</p>
-            {:else if familyRoot}
-                {#if familyVariations.length > 0}
+            {:else if loaded}
+                {#if familyVersions.length > 1}
                     <div class="mb-2">
                         <div class="flex flex-wrap gap-1.5">
-                            <button
-                                    type="button"
-                                    onclick={() => selectVariant(familyRoot!.id)}
-                                    class="flex flex-col items-start leading-tight text-xs px-2 py-1 rounded-full border transition-colors hover:cursor-pointer {selectedId === familyRoot.id ? 'bg-primary text-primary-foreground border-primary' : 'border-border text-muted-foreground hover:text-foreground'}"
-                            >
-                                <span>{familyRoot.title}</span>
-                                <span class="text-[0.65rem] opacity-70">{$_('recipeCard.by')} {familyRoot.author?.username}</span>
-                            </button>
-                            {#each familyVariations as variation (variation.id)}
+                            {#each familyVersions as version (version.id)}
                                 <button
                                         type="button"
-                                        onclick={() => selectVariant(variation.id)}
-                                        class="flex flex-col items-start leading-tight text-xs px-2 py-1 rounded-full border transition-colors hover:cursor-pointer {selectedId === variation.id ? 'bg-primary text-primary-foreground border-primary' : 'border-border text-muted-foreground hover:text-foreground'}"
+                                        onclick={() => selectVariant(version.id)}
+                                        class="flex flex-col items-start leading-tight text-xs px-2 py-1 rounded-full border transition-colors hover:cursor-pointer {selectedId === version.id ? 'bg-primary text-primary-foreground border-primary' : 'border-border text-muted-foreground hover:text-foreground'}"
                                 >
-                                    <span>{variation.title}</span>
-                                    <span class="text-[0.65rem] opacity-70">{$_('recipeCard.by')} {variation.author?.username}</span>
+                                    <span>{version.title}</span>
+                                    <span class="text-[0.65rem] opacity-70">{$_('recipeCard.by')} {version.author?.username}</span>
                                 </button>
                             {/each}
                         </div>

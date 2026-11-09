@@ -65,7 +65,7 @@
                 recipe = recipeFormFromSource(data, fullPictureAccess)
                 sourceLocale = data.source_locale
                 pictureAttribution = fullPictureAccess ? data.pictures : []
-                excludeFamily = data.variation_of ?? data.id
+                excludeFamily = data.family_id
                 author = data.author
             }
         })

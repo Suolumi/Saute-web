@@ -203,11 +203,6 @@
 
             {#if versions}
                 {@render versions()}
-            {:else if recipe.variation_of}
-                <p class="text-sm text-muted-foreground mb-4">
-                    {$_('recipe.variationBanner')}
-                    <a href={`/${$locale}/recipes/${recipe.variation_of}`} class="text-primary hover:underline font-medium">{$_('recipe.viewOriginal')}</a>
-                </p>
             {/if}
 
             {#if recipe.tags?.length}

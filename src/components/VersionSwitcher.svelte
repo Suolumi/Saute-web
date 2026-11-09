@@ -3,11 +3,11 @@
     import {_, locale} from "svelte-i18n";
     import {Plus} from "@lucide/svelte";
 
+    // versions are every member of the family, rendered in the given order.
     // onAdd, when given, adds a trailing "Add yours" chip that starts a new
-    // variation of root.
-    let {root, variations, currentId, onAdd}: {
-        root: RecipePreview,
-        variations: RecipePreview[],
+    // version of the family.
+    let {versions, currentId, onAdd}: {
+        versions: RecipePreview[],
         currentId: string,
         onAdd?: () => void,
     } = $props();
@@ -17,14 +17,14 @@
 
 <div class="flex flex-wrap items-center gap-2 mb-4">
     <span class="text-sm text-muted-foreground mr-1">{$_('recipe.versions.label')}</span>
-    {#each [root, ...variations] as version (version.id)}
+    {#each versions as version (version.id)}
         {@const current = version.id === currentId}
         <a
                 href={`/${$locale}/recipes/${version.id}`}
                 aria-current={current ? 'page' : undefined}
                 class="{chipClass} {current ? 'bg-primary text-primary-foreground' : 'bg-muted text-foreground hover:bg-accent'}"
         >
-            {version.id === root.id ? $_('recipe.versions.original') : `${version.title} · ${version.author?.username ?? ''}`}
+            {`${version.title} · ${version.author?.username ?? ''}`}
         </a>
     {/each}
     {#if onAdd}

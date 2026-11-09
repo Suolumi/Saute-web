@@ -20,6 +20,7 @@
     let categoryParam = $derived((page.url.searchParams.get('category') as RecipeCategory | null) ?? 'food')
     let choiceMade = $state(false)
     let seedRecipe = $state<RecipeForm | undefined>(undefined)
+    let sourceFamilyId = $state<string | undefined>(undefined)
     // Plain create (no variation_of) never needs a choice; a variation
     // target blocks rendering the form until "start blank"/"start from a
     // copy" is picked.
@@ -32,6 +33,7 @@
         void variationOf
         choiceMade = false
         seedRecipe = undefined
+        sourceFamilyId = undefined
     })
 
     function recipeFormFromSource(source: Recipe): RecipeForm {
@@ -63,9 +65,10 @@
             return
         $createRecipeCache = null
         const {response, data} = await getRecipe(variationOf, $locale ?? undefined)
-        if (response.ok && data)
+        if (response.ok && data) {
             seedRecipe = recipeFormFromSource(data)
-        else
+            sourceFamilyId = data.family_id
+        } else
             toastError(apiErrorMessage(data, $_('create.toasts.save')))
         choiceMade = true
     }
@@ -115,7 +118,7 @@
     <RecipeEdit
             onSubmit={submit}
             recipe={seedRecipe}
-            excludeFamily={variationOf}
+            excludeFamily={sourceFamilyId}
             category={effectiveCategory}
             headLabel={effectiveCategory === 'diy' ? $_('diyEdit.headLabel') : $_('create.headLabel')}
             commentLabel={effectiveCategory === 'diy' ? $_('diyEdit.commentLabel') : $_('create.commentLabel')}
