@@ -37,6 +37,7 @@
     import {getUnitAliases, type IngredientNutritionLink} from "$lib/nutrition";
     import {loadNutritionReferenceData, withLink, type LoadedNutritionReferenceData} from "$lib/nutritionCompute";
     import {foodMatcher} from "$lib/foods";
+    import {createEdgeAutoScroll, type PointerPoint} from "$lib/edgeAutoScroll";
     import RecipeNutritionPanel from "./RecipeNutritionPanel.svelte";
     import {Trash2, GripVertical, EllipsisVertical, Plus, Pencil, Link2} from "@lucide/svelte";
 
@@ -393,9 +394,17 @@
         stepDropIndicator = null;
     }
 
+    const stepAutoScroll = createEdgeAutoScroll(updateStepDropIndicator);
+
     function handleStepDragPointerMove(e: PointerEvent) {
         if (!draggingStepUid) return;
         stepDragPos = {x: e.clientX + 14, y: e.clientY + 14};
+        stepAutoScroll.move(e);
+        updateStepDropIndicator(e);
+    }
+
+    function updateStepDropIndicator(e: PointerPoint) {
+        if (!draggingStepUid) return;
         let best: { uid: string, mid: number } | null = null;
         let bestDist = Infinity;
         for (const row of document.querySelectorAll<HTMLElement>('[data-step-row]')) {
@@ -413,6 +422,7 @@
     }
 
     function handleStepDragPointerUp() {
+        stepAutoScroll.stop();
         if (!draggingStepUid) return;
         const draggedUid = draggingStepUid;
         const drop = stepDropIndicator;
@@ -767,10 +777,17 @@
         dropIndicator = null;
     }
 
+    const dragAutoScroll = createEdgeAutoScroll(updateDropIndicator);
+
     function handleDragPointerMove(e: PointerEvent) {
         if (!dragging) return;
         dragPos = {x: e.clientX + 14, y: e.clientY + 14};
+        dragAutoScroll.move(e);
+        updateDropIndicator(e);
+    }
 
+    function updateDropIndicator(e: PointerPoint) {
+        if (!dragging) return;
         if (dragging.type === 'ingredient') {
             const dragged = dragging.ingredient;
             let best: { sectionId: string, item: Ingredient, mid: number } | null = null;
@@ -820,6 +837,7 @@
     }
 
     function handleDragPointerUp() {
+        dragAutoScroll.stop();
         if (!dragging) return;
         const drag = dragging;
         const drop = dropIndicator;
