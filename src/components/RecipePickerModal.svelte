@@ -25,28 +25,27 @@
         // ingredient picking, linking a recipe as a variation).
         title?: string;
         description?: string;
-        // flat lists every matching recipe ungrouped - roots AND variations
-        // alike (own_recipes, with no author filter) - instead of the
-        // default family-collapsed listing, which never surfaces a
-        // variation at all. Used by the admin console, where a variation
-        // needs to be selectable (e.g. to detach it back to standalone).
+        // flat lists every matching recipe ungrouped - every version of
+        // every family (own_recipes, with no author filter) - instead of the
+        // default family-collapsed listing, which shows each family once as
+        // its newest matching version. Used by the admin console, where any
+        // version needs to be selectable (e.g. to detach it back to
+        // standalone).
         flat?: boolean;
-        // excludeRecipeIds hides these exact recipe/variation ids from
-        // results and from a family's drill-in list - used by the shopping
-        // list picker so a recipe already on the list can't be
-        // accidentally re-picked and replaced (losing an edited servings
-        // count). A root whose id isn't itself excluded still appears even
-        // if one of its variations is, so the other variations stay
-        // reachable.
+        // excludeRecipeIds hides these exact recipe ids from results and from
+        // a family's drill-in list - used by the shopping list picker so a
+        // recipe already on the list can't be accidentally re-picked and
+        // replaced (losing an edited servings count). A family row stays
+        // even when its own (displayed) version is excluded, so the other
+        // versions stay reachable through the drill-in.
         excludeRecipeIds?: string[];
         // multiSelect switches from "pick one, close immediately" to
         // checkbox selection across possibly multiple searches, confirmed
-        // via a footer button. A family (root with variations) drills into
-        // its own variation-picking view instead of being added directly,
-        // since each variation can have different ingredients.
+        // via a footer button. A family (more than one version) drills into
+        // its own version-picking view instead of being added directly,
+        // since each version can have different ingredients.
         multiSelect?: boolean;
-        // tagFilter shows tag chips under the search box. A family that
-        // matches only through a variation lists that variation under it.
+        // tagFilter shows tag chips under the search box.
         tagFilter?: boolean;
         onClose: () => void;
         onSelect?: (recipe: RecipePreview) => void;
@@ -70,11 +69,14 @@
 
     let selected: Map<string, RecipePreview> = $state(new Map());
 
-    let drillRoot: RecipePreview | null = $state(null);
-    let drillVariations: RecipePreview[] = $state([]);
+    let drillFamily: RecipePreview | null = $state(null);
+    let drillVersions: RecipePreview[] = $state([]);
     let drillLoading = $state(false);
 
     const excluded = $derived(new Set(excludeRecipeIds ?? []));
+    // A family row may stand for an excluded version; only standalone rows
+    // are dropped by id (the drill-in list filters the members).
+    const visibleResults = $derived(results.filter(r => r.family_size > 1 || !excluded.has(r.id)));
 
     function fetchPage(term: string, offset: number, replace: boolean) {
         const id = ++searchId;
@@ -136,8 +138,8 @@
     $effect(() => {
         if (!open) {
             selected = new Map();
-            drillRoot = null;
-            drillVariations = [];
+            drillFamily = null;
+            drillVersions = [];
         }
     });
 
@@ -161,6 +163,8 @@
 
     function handleRowClick(recipe: RecipePreview) {
         if (!multiSelect) {
+            if (excluded.has(recipe.id))
+                return;
             select(recipe);
             return;
         }
@@ -172,13 +176,13 @@
     }
 
     async function openDrill(preview: RecipePreview) {
-        drillRoot = preview;
-        drillVariations = [];
+        drillFamily = preview;
+        drillVersions = [];
         drillLoading = true;
         try {
             const {response, data} = await getFamily(preview.family_id, $locale ?? undefined);
             if (response.ok && data) {
-                drillVariations = data.items;
+                drillVersions = data.items;
             } else {
                 toastError($_('edit.ingredients.recipePicker.error'));
             }
@@ -188,8 +192,8 @@
     }
 
     function closeDrill() {
-        drillRoot = null;
-        drillVariations = [];
+        drillFamily = null;
+        drillVersions = [];
     }
 
     function confirmSelection() {
@@ -246,7 +250,7 @@
 {/snippet}
 
 <Modal
-        open={open && !drillRoot}
+        open={open && !drillFamily}
         title={title ?? $_('edit.ingredients.recipePicker.title')}
         description={description ?? $_('edit.ingredients.recipePicker.description')}
         {onClose}
@@ -266,10 +270,10 @@
     <div class="mt-3 max-h-[50vh] overflow-y-auto flex flex-col gap-1">
         {#if loading}
             <div class="py-8 text-center text-muted-foreground">…</div>
-        {:else if searched && results.filter(r => !excluded.has(r.id)).length === 0}
+        {:else if searched && visibleResults.length === 0}
             <div class="py-8 text-center text-muted-foreground">{$_('edit.ingredients.recipePicker.noResults')}</div>
         {:else}
-            {#each results.filter(r => !excluded.has(r.id)) as recipe (recipe.id)}
+            {#each visibleResults as recipe (recipe.id)}
                 {@render recipeRow(recipe, {selectable: true, isSelected: isSelected(recipe), onClick: () => handleRowClick(recipe)})}
             {/each}
             {#if searched && hasMore}
@@ -284,7 +288,7 @@
 
 {#if multiSelect}
     <Modal
-            open={open && !!drillRoot}
+            open={open && !!drillFamily}
             title={$_('edit.ingredients.recipePicker.chooseVariation')}
             description={$_('edit.ingredients.recipePicker.chooseVariationDescription')}
             onClose={closeDrill}
@@ -300,9 +304,9 @@
         <div class="max-h-[50vh] overflow-y-auto flex flex-col gap-1">
             {#if drillLoading}
                 <div class="py-8 text-center text-muted-foreground">…</div>
-            {:else if drillRoot}
-                {#each drillVariations as variation (variation.id)}
-                    {@render recipeRow(variation, {selectable: !excluded.has(variation.id), isSelected: isSelected(variation), onClick: () => toggleSelected(variation)})}
+            {:else if drillFamily}
+                {#each drillVersions.filter(v => !excluded.has(v.id)) as variation (variation.id)}
+                    {@render recipeRow(variation, {selectable: true, isSelected: isSelected(variation), onClick: () => toggleSelected(variation)})}
                 {/each}
             {/if}
         </div>
