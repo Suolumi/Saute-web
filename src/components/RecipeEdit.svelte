@@ -1048,7 +1048,7 @@
                                   onpointermove={handleDragPointerMove}
                                   onpointerup={handleDragPointerUp}
                                   onpointercancel={handleDragPointerUp}
-                                  class="flex items-center justify-center w-7 h-7 rounded-md text-muted-foreground hover:text-foreground hover:bg-accent cursor-grab touch-none transition-colors"
+                                  class="flex items-center justify-center w-8 h-8 rounded-md text-muted-foreground hover:text-foreground hover:bg-accent cursor-grab touch-none transition-colors"
                                   aria-label="Reorder category"
                               >
                                 <GripVertical class="w-4 h-4" />
@@ -1064,7 +1064,7 @@
                                         if (e.key === 'Escape') cancelSectionEdit();
                                     }}
                                     placeholder={$_('edit.ingredients.categoryNamePlaceholder')}
-                                    class="max-w-[240px] py-1.5 px-2 text-sm font-semibold"
+                                    class="max-w-[240px] py-1.5 px-2 text-base sm:text-sm font-semibold"
                                 />
                               {:else}
                                 <span class="font-semibold text-sm text-foreground px-1 py-1">{section.name}</span>
@@ -1109,7 +1109,7 @@
                                     data-row
                                     data-section={section.id}
                                     data-row-index={rowIndex}
-                                    class="flex flex-col sm:grid sm:grid-cols-12 gap-2 sm:items-center p-2 rounded-lg border border-border bg-card transition-opacity touch-none {isRowDragged(ingredient) ? 'opacity-35' : ''}"
+                                    class="flex flex-col sm:grid sm:grid-cols-12 gap-2 sm:items-center p-2 rounded-lg border border-border bg-card transition-opacity {isRowDragged(ingredient) ? 'opacity-35' : ''}"
                                 >
                                   <!-- Mobile-only control bar: keeps the drag handle/menu/remove off the
                                        name and quantity rows below, instead of squeezing every row to
@@ -1327,7 +1327,7 @@
                           }}
                           placeholder={$_('edit.ingredients.addCategory')}
                           aria-label={$_('edit.ingredients.addCategory')}
-                          class="flex-1 py-1.5 px-2 text-sm font-semibold border-0 bg-transparent focus:ring-0"
+                          class="flex-1 py-1.5 px-2 text-base sm:text-sm font-semibold border-0 bg-transparent focus:ring-0"
                       />
                     </div>
                   </div>
@@ -1347,7 +1347,7 @@
                           <div
                               data-step-row
                               data-step-uid={row.uid}
-                              class="rounded-lg border border-border p-4 touch-none transition-opacity {draggingStepUid === row.uid ? 'opacity-35' : ''}"
+                              class="rounded-lg border border-border p-3 sm:p-4 transition-opacity {draggingStepUid === row.uid ? 'opacity-35' : ''}"
                           >
                             <div class="flex items-center gap-2 mb-3">
                               {#if isPlaceholder}
@@ -1380,7 +1380,7 @@
                             </div>
                             <div class="flex flex-col sm:flex-row gap-3 items-stretch sm:items-start">
                               <div class="flex-1 min-w-0 space-y-2">
-                                <div class="flex gap-3">
+                                <div class="flex flex-col sm:flex-row gap-3">
                                   <div class="flex-1 min-w-0 flex flex-col justify-end">
                                     <Label for={`step-title-${row.uid}`}>{$_('edit.instructions.title.label')}</Label>
                                     <Input
@@ -1390,7 +1390,7 @@
                                         placeholder={t('instructions.title.placeholder')}
                                     />
                                   </div>
-                                  <div class="w-36 sm:w-48 flex-shrink-0 flex flex-col justify-end">
+                                  <div class="sm:w-48 flex-shrink-0 flex flex-col justify-end">
                                     <div class="flex items-center gap-1.5 mb-2">
                                       <Label for={`step-timer-${row.uid}`} class="mb-0!">{$_('edit.instructions.timer.label')}</Label>
                                       <InfoTip text={$_('edit.instructions.timer.hint')} label={$_('edit.instructions.timer.infoAria')} />
@@ -1427,9 +1427,9 @@
                                         type="button"
                                         onclick={() => removeStepPicture(row.uid)}
                                         aria-label={$_('edit.instructions.photo.remove')}
-                                        class="absolute -top-2 -right-2 bg-destructive text-destructive-foreground rounded-full w-6 h-6 flex items-center justify-center text-sm opacity-0 group-hover:opacity-100 transition-opacity"
+                                        class="absolute -top-3 -right-3 w-8 h-8 flex items-center justify-center opacity-100 [@media(hover:hover)]:opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 transition-opacity"
                                     >
-                                      ×
+                                      <span class="bg-destructive text-destructive-foreground rounded-full w-6 h-6 flex items-center justify-center text-sm">×</span>
                                     </button>
                                   </div>
                                 {:else}
@@ -1482,9 +1482,10 @@
                             <button
                                 type="button"
                                 onclick={() => removePicture(index)}
-                                class="absolute -top-2 -right-2 bg-destructive text-destructive-foreground rounded-full w-6 h-6 flex items-center justify-center text-sm opacity-0 group-hover:opacity-100 transition-opacity"
+                                aria-label={$_('edit.instructions.photo.remove')}
+                                class="absolute -top-3 -right-3 w-8 h-8 flex items-center justify-center opacity-100 [@media(hover:hover)]:opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 transition-opacity"
                             >
-                              ×
+                              <span class="bg-destructive text-destructive-foreground rounded-full w-6 h-6 flex items-center justify-center text-sm">×</span>
                             </button>
                           </div>
                         {/each}
@@ -1498,9 +1499,10 @@
                             <button
                                 type="button"
                                 onclick={() => removePendingPicture(index)}
-                                class="absolute -top-2 -right-2 bg-destructive text-destructive-foreground rounded-full w-6 h-6 flex items-center justify-center text-sm opacity-0 group-hover:opacity-100 transition-opacity"
+                                aria-label={$_('edit.instructions.photo.remove')}
+                                class="absolute -top-3 -right-3 w-8 h-8 flex items-center justify-center opacity-100 [@media(hover:hover)]:opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 transition-opacity"
                             >
-                              ×
+                              <span class="bg-destructive text-destructive-foreground rounded-full w-6 h-6 flex items-center justify-center text-sm">×</span>
                             </button>
                           </div>
                         {/each}
