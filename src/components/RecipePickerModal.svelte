@@ -272,7 +272,7 @@
             type="text"
             bind:value={query}
             placeholder={$_('edit.ingredients.recipePicker.searchPlaceholder')}
-            class="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring"
+            class="w-full rounded-lg border border-border bg-background px-3 py-2 text-base sm:text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring"
     />
     {#if showTagFilter}
         <div class="mt-3">

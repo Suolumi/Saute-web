@@ -309,7 +309,7 @@
                     >
                         <ChevronRight class="w-4 h-4" />
                     </button>
-                    <button onclick={goToday} class="ml-1 px-3 py-1 rounded-full border border-border text-xs font-semibold text-muted-foreground hover:bg-muted">
+                    <button onclick={goToday} class="ml-1 h-8 px-3 rounded-full border border-border text-xs font-semibold text-muted-foreground hover:bg-muted">
                         {$_('mealPlanning.today')}
                     </button>
                 </div>
@@ -323,7 +323,7 @@
                                 onclick={decreaseWeekDefault}
                                 disabled={!$mealPlanDefaultServings || $mealPlanDefaultServings <= 1}
                                 aria-label={$_('recipe.decreaseServings')}
-                                class="w-6 h-6 rounded-full border border-border flex items-center justify-center hover:bg-muted disabled:opacity-40 disabled:cursor-not-allowed hover:cursor-pointer"
+                                class="w-8 h-8 rounded-full border border-border flex items-center justify-center hover:bg-muted disabled:opacity-40 disabled:cursor-not-allowed hover:cursor-pointer"
                         >
                             <Minus class="w-3 h-3" />
                         </button>
@@ -331,13 +331,13 @@
                                 value={$mealPlanDefaultServings}
                                 placeholder="—"
                                 onSet={setWeekDefault}
-                                class="text-sm font-bold text-foreground w-8 text-center"
+                                class="text-base sm:text-sm font-bold text-foreground w-8 text-center"
                         />
                         <button
                                 type="button"
                                 onclick={increaseWeekDefault}
                                 aria-label={$_('recipe.increaseServings')}
-                                class="w-6 h-6 rounded-full border border-border flex items-center justify-center hover:bg-muted hover:cursor-pointer"
+                                class="w-8 h-8 rounded-full border border-border flex items-center justify-center hover:bg-muted hover:cursor-pointer"
                         >
                             <Plus class="w-3 h-3" />
                         </button>
@@ -364,7 +364,7 @@
                             type="text"
                             bind:value={sidebarQuery}
                             placeholder={$_('mealPlanning.searchPlaceholder')}
-                            class="w-full pl-8 pr-2 py-1.5 rounded-lg border border-border bg-background text-sm"
+                            class="w-full pl-8 pr-2 py-1.5 rounded-lg border border-border bg-background text-base sm:text-sm"
                     />
                 </div>
                 <div class="flex-1 min-h-0 overflow-y-auto -mx-2">
@@ -445,11 +445,11 @@
 
         <!-- Mobile: day tabs + a single-day agenda -->
         <div class="lg:hidden">
-            <div class="flex gap-2 overflow-x-auto pb-2 -mx-4 px-4">
+            <div class="grid grid-cols-7 gap-1.5 pb-2">
                 {#each dayHeaders as day, i}
                     <button
                             onclick={() => selectedDayIndex = i}
-                            class="flex-shrink-0 w-12 flex flex-col items-center gap-1 py-2 rounded-2xl border {i === selectedDayIndex ? 'bg-primary text-primary-foreground border-primary' : 'bg-card text-foreground border-border'}"
+                            class="min-w-0 flex flex-col items-center gap-1 py-2 rounded-2xl border {i === selectedDayIndex ? 'bg-primary text-primary-foreground border-primary' : 'bg-card text-foreground border-border'}"
                     >
                         <span class="text-[10px] font-bold">{day.dow}</span>
                         <span class="text-base font-semibold">{day.num}</span>

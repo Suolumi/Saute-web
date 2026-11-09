@@ -386,7 +386,7 @@
                         {$_('admin.console.pathLabel')}
                     </label>
                     <Input
-                            id="console-path" type="text" class="font-mono text-sm"
+                            id="console-path" type="text" class="font-mono text-base sm:text-sm"
                             value={pathQueryText}
                             oninput={(e: Event) => onPathQueryTextInput((e.currentTarget as HTMLInputElement).value)}
                     />
@@ -404,7 +404,7 @@
                                     <Input
                                             id={`console-field-${param.name}`}
                                             type={param.type === 'int' ? 'number' : 'text'}
-                                            class="font-mono text-sm flex-1"
+                                            class="font-mono text-base sm:text-sm flex-1"
                                             value={fieldValues[param.name] ?? ''}
                                             oninput={(e: Event) => onFieldInput(param, (e.currentTarget as HTMLInputElement).value)}
                                     />
@@ -434,7 +434,7 @@
                                 id="console-body"
                                 bind:value={bodyText}
                                 rows="8"
-                                class="w-full px-4 py-3 bg-input border border-border rounded-lg text-foreground font-mono text-sm focus:outline-none focus:ring-2 focus:ring-ring focus:border-transparent"
+                                class="w-full px-4 py-3 bg-input border border-border rounded-lg text-foreground font-mono text-base sm:text-sm focus:outline-none focus:ring-2 focus:ring-ring focus:border-transparent"
                         ></textarea>
                         {#if bodyError}
                             <p class="text-sm text-destructive mt-1">{bodyError}</p>
@@ -519,7 +519,7 @@
                                 readonly
                                 value={JSON.stringify(result, null, 2)}
                                 rows="8"
-                                class="w-full px-4 py-3 bg-muted border border-border rounded-lg text-foreground font-mono text-sm focus:outline-none"
+                                class="w-full px-4 py-3 bg-muted border border-border rounded-lg text-foreground font-mono text-base sm:text-sm focus:outline-none"
                         ></textarea>
                     </div>
                 {/if}

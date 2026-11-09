@@ -244,7 +244,7 @@
                         bind:value={search}
                         aria-label={$_('feedback.filters.search')}
                         placeholder={$_('feedback.filters.search')}
-                        class="h-10 w-full rounded-lg border border-border bg-input pl-9 pr-3 text-sm text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring"
+                        class="h-10 w-full rounded-lg border border-border bg-input pl-9 pr-3 text-base sm:text-sm text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring"
                 />
             </div>
         </div>

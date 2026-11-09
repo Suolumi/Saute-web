@@ -99,7 +99,7 @@
                         <button
                                 type="button"
                                 onclick={() => showPassword = !showPassword}
-                                class="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
+                                class="absolute right-1 top-1/2 -translate-y-1/2 p-2 text-muted-foreground hover:text-foreground transition-colors"
                                 aria-label={showPassword ? "Hide password" : "Show password"}
                         >
                             {#if showPassword}
@@ -123,7 +123,7 @@
                         <button
                                 type="button"
                                 onclick={() => showPassword = !showPassword}
-                                class="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
+                                class="absolute right-1 top-1/2 -translate-y-1/2 p-2 text-muted-foreground hover:text-foreground transition-colors"
                                 aria-label={showPassword ? "Hide password" : "Show password"}
                         >
                             {#if showPassword}

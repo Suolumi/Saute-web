@@ -116,8 +116,8 @@
 <div class="space-y-4">
     <div class="flex flex-col sm:flex-row sm:items-center gap-3">
         <h1 class="text-2xl font-bold text-foreground">{$_('admin.users.title')} ({total})</h1>
-        <form class="ml-auto flex gap-2" onsubmit={(e) => { e.preventDefault(); search_(); }}>
-            <Input type="search" bind:value={search} placeholder={$_('admin.users.searchPlaceholder')} class="w-56" />
+        <form class="sm:ml-auto flex gap-2" onsubmit={(e) => { e.preventDefault(); search_(); }}>
+            <Input type="search" bind:value={search} placeholder={$_('admin.users.searchPlaceholder')} class="min-w-0 flex-1 sm:w-56 sm:flex-none" />
             <Button type="submit" variant="outline">{$_('admin.users.search')}</Button>
         </form>
     </div>
@@ -133,8 +133,12 @@
                             {target.username.charAt(0)}
                         </div>
                     {/if}
-                    <span class="absolute inset-0 rounded-full bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                    <span class="absolute inset-0 rounded-full bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity hidden [@media(hover:hover)]:flex items-center justify-center">
                         <Camera color="white" class="w-4 h-4" />
+                    </span>
+                    <!-- Touch screens have no hover: show a persistent badge instead. -->
+                    <span class="absolute -bottom-1 -right-1 w-5 h-5 rounded-full bg-primary text-primary-foreground border-2 border-card flex [@media(hover:hover)]:hidden items-center justify-center">
+                        <Camera class="w-3 h-3" />
                     </span>
                 </button>
                 <input
@@ -151,7 +155,7 @@
                         <p class="font-medium text-card-foreground truncate"><HighlightText text={target.username} query={search} /></p>
                         <span class="inline-flex items-center gap-1 text-xs font-mono text-muted-foreground bg-muted px-2 py-0.5 rounded flex-shrink-0">
                             {target.id}
-                            <button type="button" onclick={() => copyId(target.id)} aria-label={$_('admin.users.copyId')} class="hover:text-foreground hover:cursor-pointer">
+                            <button type="button" onclick={() => copyId(target.id)} aria-label={$_('admin.users.copyId')} class="p-2.5 -m-2.5 hover:text-foreground hover:cursor-pointer">
                                 {#if copiedId === target.id}
                                     <Check class="w-3 h-3" />
                                 {:else}

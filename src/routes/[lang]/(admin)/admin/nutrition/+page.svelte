@@ -218,18 +218,18 @@
 <div class="space-y-4">
     <h1 class="text-2xl font-bold text-foreground">{$_('admin.nutrition.title')}</h1>
 
-    <div class="flex gap-2 border-b border-border">
+    <div class="flex gap-2 border-b border-border overflow-x-auto scrollbar-hide">
         <button
                 type="button"
                 onclick={() => activeTab = 'links'}
-                class="px-3 py-2 text-sm font-medium border-b-2 transition-colors hover:cursor-pointer {activeTab === 'links' ? 'border-primary text-primary' : 'border-transparent text-muted-foreground hover:text-foreground'}"
+                class="px-3 py-2 text-sm font-medium border-b-2 transition-colors hover:cursor-pointer shrink-0 whitespace-nowrap {activeTab === 'links' ? 'border-primary text-primary' : 'border-transparent text-muted-foreground hover:text-foreground'}"
         >
             {$_('admin.nutrition.tabLinks')}
         </button>
         <button
                 type="button"
                 onclick={() => activeTab = 'pending'}
-                class="px-3 py-2 text-sm font-medium border-b-2 transition-colors hover:cursor-pointer {activeTab === 'pending' ? 'border-primary text-primary' : 'border-transparent text-muted-foreground hover:text-foreground'}"
+                class="px-3 py-2 text-sm font-medium border-b-2 transition-colors hover:cursor-pointer shrink-0 whitespace-nowrap {activeTab === 'pending' ? 'border-primary text-primary' : 'border-transparent text-muted-foreground hover:text-foreground'}"
         >
             {$_('admin.nutrition.tabPending')}
         </button>

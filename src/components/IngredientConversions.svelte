@@ -37,7 +37,7 @@
                 type="button"
                 aria-expanded={open}
                 onclick={() => open = !open}
-                class="text-left text-card-foreground underline decoration-dotted decoration-muted-foreground underline-offset-4 hover:cursor-pointer"
+                class="-my-1.5 py-1.5 text-left text-card-foreground underline decoration-dotted decoration-muted-foreground underline-offset-4 hover:cursor-pointer"
         >
             {@render children()}
         </button>

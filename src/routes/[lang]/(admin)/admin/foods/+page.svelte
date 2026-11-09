@@ -125,13 +125,13 @@
     }
 
     const tabClass = (active: boolean) =>
-        `px-3 py-2 text-sm font-medium border-b-2 transition-colors hover:cursor-pointer ${active ? 'border-primary text-primary' : 'border-transparent text-muted-foreground hover:text-foreground'}`;
+        `px-3 py-2 text-sm font-medium border-b-2 transition-colors hover:cursor-pointer shrink-0 whitespace-nowrap ${active ? 'border-primary text-primary' : 'border-transparent text-muted-foreground hover:text-foreground'}`;
 </script>
 
 <div class="space-y-4">
     <h1 class="text-2xl font-bold text-foreground">{$_('admin.foods.title')}</h1>
 
-    <div class="flex gap-2 border-b border-border">
+    <div class="flex gap-2 border-b border-border overflow-x-auto scrollbar-hide">
         <button type="button" onclick={() => activeTab = 'foods'} class={tabClass(activeTab === 'foods')}>{$_('admin.foods.tabFoods')} ({foods.length})</button>
         <button type="button" onclick={() => activeTab = 'units'} class={tabClass(activeTab === 'units')}>{$_('admin.foods.tabUnits')} ({units.length})</button>
     </div>
@@ -218,7 +218,7 @@
                 <div>
                     <Label for="food-subs-{l}">{$_('admin.foods.substitutes')} ({l})</Label>
                     <textarea id="food-subs-{l}" rows="2" bind:value={foodForm.substitutes[l]}
-                              class="w-full px-3 py-2 bg-input border border-border rounded-lg text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-ring"></textarea>
+                              class="w-full px-3 py-2 bg-input border border-border rounded-lg text-base sm:text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-ring"></textarea>
                 </div>
             {/each}
         </div>

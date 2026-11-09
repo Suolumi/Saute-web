@@ -29,7 +29,7 @@
             <button
                     onclick={onRemove}
                     aria-label={$_('mealPlanning.removeMeal')}
-                    class="absolute top-1.5 right-1.5 w-5 h-5 rounded-full bg-background/80 flex items-center justify-center text-muted-foreground hover:text-destructive"
+                    class="absolute top-1.5 right-1.5 w-5 h-5 after:absolute after:-inset-1.5 rounded-full bg-background/80 flex items-center justify-center text-muted-foreground hover:text-destructive"
             >
                 <X class="w-3 h-3" />
             </button>
@@ -46,7 +46,7 @@
                         type="button"
                         onclick={onEditServings}
                         aria-label={$_('mealPlanning.editServings')}
-                        class="relative mt-1 text-[10px] font-semibold text-muted-foreground bg-muted rounded-full px-1.5 py-0.5 inline-block hover:bg-border hover:cursor-pointer"
+                        class="relative mt-1 after:absolute after:-inset-y-2 after:-inset-x-1 text-[10px] font-semibold text-muted-foreground bg-muted rounded-full px-1.5 py-0.5 inline-block hover:bg-border hover:cursor-pointer"
                 >
                     {$_('mealPlanning.servings', {values: {count: servings}})}
                     {#if overridden}
@@ -70,7 +70,7 @@
                         type="button"
                         onclick={onEditServings}
                         aria-label={$_('mealPlanning.editServings')}
-                        class="relative mt-1 text-xs font-semibold text-muted-foreground bg-muted rounded-full px-2 py-0.5 inline-block hover:bg-border hover:cursor-pointer"
+                        class="relative mt-1 after:absolute after:-inset-y-2 after:-inset-x-1 text-xs font-semibold text-muted-foreground bg-muted rounded-full px-2 py-0.5 inline-block hover:bg-border hover:cursor-pointer"
                 >
                     {$_('mealPlanning.servings', {values: {count: servings}})}
                     {#if overridden}

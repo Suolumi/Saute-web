@@ -37,6 +37,19 @@
     function isActive(suffix: string) {
         return $page.url.pathname === tabHref(suffix);
     }
+
+    let nav = $state<HTMLElement>();
+
+    // The tab row scrolls horizontally on narrow screens; keep the active tab visible.
+    $effect(() => {
+        void $page.url.pathname;
+        const active = nav?.querySelector<HTMLElement>('[aria-current="page"]');
+        if (!nav || !active)
+            return;
+        const left = active.offsetLeft - nav.offsetLeft;
+        if (left < nav.scrollLeft || left + active.offsetWidth > nav.scrollLeft + nav.clientWidth)
+            nav.scrollLeft = left - (nav.clientWidth - active.offsetWidth) / 2;
+    });
 </script>
 
 {#if loading}
@@ -48,12 +61,13 @@
     </div>
 {:else}
     <div class="max-w-page mx-auto px-4 py-6">
-        <nav class="flex gap-2 mb-6 border-b border-border">
+        <nav bind:this={nav} class="flex gap-2 mb-6 border-b border-border overflow-x-auto scrollbar-hide">
             {#each tabs as [key, suffix] (suffix)}
                 <button
                         type="button"
                         onclick={() => goto(tabHref(suffix))}
-                        class="px-3 py-2 text-sm font-medium border-b-2 transition-colors hover:cursor-pointer flex items-center gap-1.5 {isActive(suffix) ? 'border-primary text-primary' : 'border-transparent text-muted-foreground hover:text-foreground'}"
+                        aria-current={isActive(suffix) ? 'page' : undefined}
+                        class="px-3 py-2 text-sm font-medium border-b-2 transition-colors hover:cursor-pointer flex items-center gap-1.5 shrink-0 whitespace-nowrap {isActive(suffix) ? 'border-primary text-primary' : 'border-transparent text-muted-foreground hover:text-foreground'}"
                 >
                     {$_(key)}
                     {#if suffix === '/translations' && $pendingTranslationSuggestionCount > 0}

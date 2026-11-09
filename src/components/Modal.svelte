@@ -1,3 +1,9 @@
+<script lang="ts" module>
+    // Shared across instances so nested modals only restore body scroll when the last one closes.
+    let openCount = 0;
+    let previousOverflow = '';
+</script>
+
 <script lang="ts">
     import type {Snippet} from 'svelte';
 
@@ -27,6 +33,19 @@
         style = ''
     }: Props = $props();
 
+    $effect(() => {
+        if (!open)
+            return;
+        if (openCount++ === 0) {
+            previousOverflow = document.body.style.overflow;
+            document.body.style.overflow = 'hidden';
+        }
+        return () => {
+            if (--openCount === 0)
+                document.body.style.overflow = previousOverflow;
+        };
+    });
+
     function handleBackdropClick(event: MouseEvent): void {
         if (!closeOnBackdrop) {
             return;
@@ -53,7 +72,7 @@
             role="presentation"
     >
         <div
-                class="w-full max-w-lg rounded-lg border border-border bg-card text-card-foreground shadow-xl flex flex-col overflow-hidden {className}"
+                class="w-full max-w-lg max-h-[calc(100dvh-2rem)] rounded-lg border border-border bg-card text-card-foreground shadow-xl flex flex-col overflow-hidden {className}"
                 {style}
                 role="dialog"
                 aria-modal="true"
@@ -82,7 +101,7 @@
                 {/if}
             </div>
 
-            <div class="px-6 py-4 flex-1 overflow-y-auto">
+            <div class="px-6 py-4 flex-1 min-h-0 overflow-y-auto overscroll-contain">
                 {@render children()}
             </div>
 

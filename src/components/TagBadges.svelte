@@ -76,7 +76,7 @@
                         type="button"
                         onclick={expand}
                         onkeydown={(e) => e.key === 'Enter' && expand(e)}
-                        class="{moreClasses} text-muted-foreground hover:text-foreground hover:border-foreground/40"
+                        class="{moreClasses} relative after:absolute after:-inset-1.5 text-muted-foreground hover:text-foreground hover:border-foreground/40"
                         aria-label={$_('tags.showMore', {values: {count: hiddenCount}})}
                 >
                     +{hiddenCount}

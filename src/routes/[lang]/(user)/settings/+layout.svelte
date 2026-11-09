@@ -98,9 +98,12 @@
                     </div>
                 {/if}
 
-                <!-- Upload overlay on hover -->
-                <span class="absolute inset-0 rounded-full bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                <!-- Upload overlay on hover; touch screens get a persistent badge instead -->
+                <span class="absolute inset-0 rounded-full bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity hidden [@media(hover:hover)]:flex items-center justify-center">
                     <Camera color="white" />
+                </span>
+                <span class="absolute bottom-0 right-0 w-8 h-8 rounded-full bg-primary text-primary-foreground border-2 border-background flex [@media(hover:hover)]:hidden items-center justify-center">
+                    <Camera size="16" />
                 </span>
             </button>
             <input
@@ -143,8 +146,11 @@
                                 {($user?.username ?? '?').charAt(0)}
                             </div>
                         {/if}
-                        <span class="absolute inset-0 rounded-full bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                        <span class="absolute inset-0 rounded-full bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity hidden [@media(hover:hover)]:flex items-center justify-center">
                             <Camera size="16" color="white" />
+                        </span>
+                        <span class="absolute -bottom-1 -right-1 w-5 h-5 rounded-full bg-primary text-primary-foreground border-2 border-card flex [@media(hover:hover)]:hidden items-center justify-center">
+                            <Camera size="12" />
                         </span>
                     </button>
                     <Button type="button" variant="outline" size="sm" onclick={triggerFileInput}>

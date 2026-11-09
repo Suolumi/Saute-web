@@ -276,12 +276,12 @@
                 {/if}
                 <div class="md:hidden">
                     <Drawer.Root shouldScaleBackground direction="right" bind:open={drawerOpen}>
-                        <Drawer.Trigger class="relative flex items-center justify-center text-foreground hover:text-primary" aria-label="Menu">
+                        <Drawer.Trigger class="relative -mr-2 flex h-10 w-10 items-center justify-center text-foreground hover:text-primary" aria-label="Menu">
                             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
                             </svg>
                             {#if feedbackUnreadCount > 0}
-                                <span class="absolute -top-0.5 -right-0.5 h-2 w-2 rounded-full bg-destructive ring-2 ring-card"></span>
+                                <span class="absolute top-1.5 right-1.5 h-2 w-2 rounded-full bg-destructive ring-2 ring-card"></span>
                             {/if}
                         </Drawer.Trigger>
                         <Drawer.Portal>

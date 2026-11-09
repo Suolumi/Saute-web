@@ -60,7 +60,7 @@
             type="text"
             bind:value={query}
             placeholder={$_('admin.console.userPicker.searchPlaceholder')}
-            class="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring"
+            class="w-full rounded-lg border border-border bg-background px-3 py-2 text-base sm:text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring"
     />
     <div class="mt-3 max-h-[50vh] overflow-y-auto flex flex-col gap-1">
         {#if loading}
