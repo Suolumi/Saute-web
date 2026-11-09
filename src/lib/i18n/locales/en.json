@@ -59,7 +59,6 @@
     "favorite": "Add to favorites",
     "unfavorite": "Remove from favorites",
     "favoriteError": "Couldn't update favorite",
-    "variationCount": "{count} variations",
     "familySize": "{count} versions",
     "diyBadge": "DIY"
   },
@@ -215,17 +214,17 @@
       "menu": "Actions",
       "edit": "Edit",
       "remove": "Remove",
-      "linkAsVariation": "Link as variation"
+      "linkAsVariation": "Link as a version"
     },
     "linkVariation": {
-      "pickerTitle": "Link as a variation",
-      "pickerDescription": "Search for the recipe this one should become a variation of.",
-      "confirmTitle": "Link \"{title}\" as a variation of \"{target}\"?",
-      "confirmDescription": "This can't be undone from the website - the recipe will show up under {target}'s versions instead of on its own.",
+      "pickerTitle": "Link as a version",
+      "pickerDescription": "Search for the recipe whose family this one should join.",
+      "confirmTitle": "Link \"{title}\" as a version of \"{target}\"?",
+      "confirmDescription": "This can't be undone from the website - the recipe will join {target}'s family instead of standing on its own.",
       "cancel": "Cancel",
       "confirm": "Link recipe",
-      "success": "Recipe linked as a variation",
-      "error": "Couldn't link this recipe as a variation"
+      "success": "Recipe linked as a version",
+      "error": "Couldn't link this recipe as a version"
     }
   },
   "recipe": {
@@ -253,12 +252,9 @@
     "notFound": "Recipe not found",
     "versions": {
       "label": "Versions",
-      "original": "Original",
       "add": "Add yours"
     },
-    "variationBanner": "This is a variation of another recipe.",
-    "viewOriginal": "View the original",
-    "submitVariation": "Submit a variation",
+    "submitVariation": "Submit a version",
     "share": "Share",
     "linkCopied": "Link copied to clipboard",
     "shareError": "Could not share this recipe",
@@ -326,13 +322,13 @@
       "placeholder": "e.g. Grandma's Apple Pie"
     },
     "duplicateNudge": {
-      "title": "Found something similar - did you mean to submit a variation?",
+      "title": "Found something similar - did you mean to submit a version?",
       "dismiss": "Dismiss",
       "viewMatch": "View {title}",
       "confirmTitle": "Discard this draft?",
-      "confirmDescription": "Submitting a variation starts a new form from that recipe - the description, ingredients, steps, and photos you've entered here will be lost.",
+      "confirmDescription": "Submitting a version starts a new form from that recipe - the description, ingredients, steps, and photos you've entered here will be lost.",
       "confirmCancel": "Keep editing",
-      "confirmContinue": "Submit a variation instead"
+      "confirmContinue": "Submit a version instead"
     },
     "type": {
       "label": "Type"
@@ -362,7 +358,6 @@
         "searchPlaceholder": "Search recipes...",
         "noResults": "No recipes found",
         "error": "Couldn't search recipes",
-        "variationBadge": "Variation",
         "cancel": "Cancel",
         "alreadyAdded": "Already on your list",
         "addSelected": "Add {count} selected",
@@ -479,7 +474,7 @@
     "noStep": "No instructions added yet...",
     "variationChoice": {
       "title": "How would you like to start?",
-      "description": "You're creating a variation of an existing recipe. Pictures are never copied - you'll add your own.",
+      "description": "You're creating a new version of an existing recipe. Pictures are never copied - you'll add your own.",
       "copyOption": "Start from a copy",
       "blankOption": "Start blank"
     }
@@ -832,7 +827,6 @@
     "recipes": {
       "title": "Recipes",
       "searchPlaceholder": "Search recipes...",
-      "variationBadge": "Variation",
       "favorites": "{count} favorites",
       "edit": "Edit",
       "retranslate": "Retranslate",
@@ -850,7 +844,6 @@
     "diy": {
       "title": "DIY",
       "searchPlaceholder": "Search DIY projects...",
-      "variationBadge": "Variation",
       "favorites": "{count} favorites",
       "edit": "Edit",
       "retranslate": "Retranslate",
@@ -1081,11 +1074,11 @@
     "items": {
       "tags": {
         "title": "Diet & Practical Tags",
-        "description": "Recipes carry tags like vegan, gluten-free or one-pot. Filter by them with the Tags button on the recipe lists, your favorites and your own recipes, or in the meal planner's recipe picker; each version is matched on its own tags, or, with Group versions on, a family shows up when its original or one of its variations has every tag you picked."
+        "description": "Recipes carry tags like vegan, gluten-free or one-pot. Filter by them with the Tags button on the recipe lists, your favorites and your own recipes, or in the meal planner's recipe picker; each version is matched on its own tags, or, with Group versions on, a family shows up once, as its newest version that has every tag you picked."
       },
       "variations": {
-        "title": "Recipe Variations",
-        "description": "Cooked someone else's recipe your own way? Hit \"Submit a variation\" on its page. Every version gets its own card in the listings, and the recipe page lets you switch between them."
+        "title": "Recipe Versions",
+        "description": "Cooked someone else's recipe your own way? Hit \"Submit a version\" on any version's page. Every version gets its own card in the listings; with Group versions on, a family shows its newest version. The recipe page lets you switch between them."
       },
       "recipeRef": {
         "title": "Recipe-Linked Ingredients",
@@ -1108,8 +1101,8 @@
         "description": "Favorite as many recipes or DIY projects as you like with the heart icon — it's private and never affects a recipe's ranking for anyone else — then find them all, a running picture of your taste, under Settings › My Favorites."
       },
       "linkVariation": {
-        "title": "Link an Existing Recipe as a Variation",
-        "description": "Posted a recipe separately and want it folded into a family later? Link it as a variation from Settings › My Recipes."
+        "title": "Link an Existing Recipe as a Version",
+        "description": "Posted a recipe separately and want it folded into a family later? Link it as a version of another recipe from Settings › My Recipes."
       },
       "mcp": {
         "title": "Connect an AI Assistant",
@@ -1156,7 +1149,6 @@
       "practical": "Practical"
     },
     "showMore": "Show {count} more tags",
-    "variationMatches": "{title} matches your tags",
     "editLabel": "Tags",
     "editHint": "Pick what applies. Ticking a tag also ticks the ones it implies (vegan includes vegetarian).",
     "lockedHint": "Implied by another tag you picked"
@@ -1185,7 +1177,7 @@
     },
     "picker": {
       "title": "Add recipes to your shopping list",
-      "description": "Search and select recipes - pick a specific version for recipes with multiple variations."
+      "description": "Search and select recipes - pick a specific version for recipes with multiple versions."
     },
     "summary": "{recipes} recipes · {items} items",
     "share": {
