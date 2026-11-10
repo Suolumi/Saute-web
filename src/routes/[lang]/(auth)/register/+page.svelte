@@ -6,7 +6,7 @@
     import {accessToken, refreshToken} from '$lib/stores';
 
     import {goto} from "$app/navigation";
-    import {register, type RegisterRequest} from "$lib/auth";
+    import {isPasswordValid, register, type RegisterRequest} from "$lib/auth";
     import {toastApiError, toastError, toastSuccess} from "$lib/utils";
     import {_, locale} from "svelte-i18n";
     import {EyeIcon, EyeOff} from "@lucide/svelte";
@@ -32,7 +32,7 @@
             return;
         }
 
-        if (!/^(?=.*[0-9])(?=.*[^A-Za-z0-9]).{12,}$/.test(password)) {
+        if (!isPasswordValid(password)) {
             error = $_('register.errors.password');
             return;
         }

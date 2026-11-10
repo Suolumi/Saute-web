@@ -5,7 +5,7 @@
     import PageMeta from '../../../../../components/PageMeta.svelte';
     import {goto} from "$app/navigation";
     import {_, locale} from "svelte-i18n";
-    import {resetPassword} from "$lib/auth";
+    import {isPasswordValid, resetPassword} from "$lib/auth";
     import {page} from "$app/state";
     import {toastApiError, toastError, toastSuccess} from "$lib/utils";
     import {EyeIcon, EyeOff} from "@lucide/svelte";
@@ -24,7 +24,7 @@
             return;
         }
 
-        if (!/^(?=.*[0-9])(?=.*[^A-Za-z0-9]).{12,}$/.test(password)) {
+        if (!isPasswordValid(password)) {
             message = $_('register.errors.password')
             return;
         }

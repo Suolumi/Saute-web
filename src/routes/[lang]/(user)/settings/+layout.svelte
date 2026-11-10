@@ -7,7 +7,8 @@
     import {goto} from '$app/navigation';
     import {serverUrl, user} from "$lib/stores";
     import {updateSelf, updateUserPicture, type UserSettingsForm} from "$lib/user";
-    import {toastApiError} from "$lib/utils";
+    import {toastApiError, toastError} from "$lib/utils";
+    import {isPasswordValid} from "$lib/auth";
     import {locale, _} from "svelte-i18n";
     import {Camera} from '@lucide/svelte';
 
@@ -48,6 +49,8 @@
 
     function updateProfile(event: Event) {
         event.preventDefault();
+        if (userForm.password && !isPasswordValid(userForm.password))
+            return toastError($_('settings.errors.update'), $_('register.errors.password'));
         updateSelf(userForm).then(({response, data}) => {
             if (response.ok && data)
                 user.set(data)

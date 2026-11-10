@@ -1,5 +1,11 @@
 import {apiFetch, apiFetchJson} from "$lib/api";
 
+// isPasswordValid mirrors the API's utils.IsPasswordValid: at least 12 characters,
+// a digit and a character that is neither an ASCII letter nor a digit.
+export function isPasswordValid(password: string): boolean {
+    return [...password].length >= 12 && /[0-9]/.test(password) && /[^A-Za-z0-9]/.test(password)
+}
+
 export type LoginRequest = {
     id: string
     password: string
