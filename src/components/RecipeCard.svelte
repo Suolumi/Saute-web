@@ -1,10 +1,10 @@
 <script lang="ts">
-    import {favoriteRecipe, formatDuration, getRecipe, recipeTypeColors, unfavoriteRecipe} from '$lib/recipes';
+    import {favoriteRecipe, formatDuration, getFamily, getRecipe, recipeTypeColors, unfavoriteRecipe} from '$lib/recipes';
     import {goto} from "$app/navigation";
     import type {RecipePreview} from "$lib/recipes";
     import emblaCarouselSvelte from "embla-carousel-svelte";
     import {
-        ArrowLeft, ArrowRight, Heart, Layers,
+        ArrowLeft, ArrowRight, Heart, Layers, Plus,
     } from "@lucide/svelte";
     import {serverUrl, user} from "$lib/stores";
     import {locale, _} from "svelte-i18n";
@@ -13,6 +13,8 @@
     import HighlightText from "./HighlightText.svelte";
     import TagBadges from "./TagBadges.svelte";
     import RecipePlaceholder from "./RecipePlaceholder.svelte";
+    import Modal from "./Modal.svelte";
+    import RecipeCard from "./RecipeCard.svelte";
 
     // onFavoriteChange, when given, fires after a successful favorite toggle
     // - the My Favorites tab uses it to drop a card the moment it's
@@ -25,7 +27,10 @@
     // matches a search box driving this card's listing (e.g. RecipeFilters'
     // searchTerm) - omitted entirely for cards shown outside a search
     // context (related-recipe sections, etc.).
-    let { recipe, disabled = false, onFavoriteChange, truncateDescription = true, highlightQuery = '' }: { recipe: RecipePreview, disabled?: boolean, onFavoriteChange?: (favorite: boolean) => void, truncateDescription?: boolean, highlightQuery?: string } = $props();
+    // versionPicker makes a click on a card with several versions open a
+    // modal listing them instead of navigating - set by the family-collapsed
+    // ("Group versions") listings, where one card stands for the whole family.
+    let { recipe, disabled = false, onFavoriteChange, truncateDescription = true, highlightQuery = '', versionPicker = false }: { recipe: RecipePreview, disabled?: boolean, onFavoriteChange?: (favorite: boolean) => void, truncateDescription?: boolean, highlightQuery?: string, versionPicker?: boolean } = $props();
     let emblaApi: any = $state();
     let lightboxOpen = $state(false);
     let lightboxIndex = $state(0);
@@ -41,9 +46,38 @@
         goto(`/${$locale}/recipes/${id}`);
     }
 
+    let pickerOpen = $state(false);
+    let pickerLoading = $state(false);
+    let familyVersions: RecipePreview[] = $state([]);
+
     function handleClick() {
-        if (!disabled)
-            viewRecipe(recipe.id);
+        if (disabled)
+            return;
+        if (versionPicker && recipe.family_size > 1) {
+            openPicker();
+            return;
+        }
+        viewRecipe(recipe.id);
+    }
+
+    async function openPicker() {
+        pickerOpen = true;
+        pickerLoading = true;
+        familyVersions = [];
+        try {
+            const {response, data} = await getFamily(recipe.family_id, $locale ?? undefined);
+            if (response.ok && data)
+                familyVersions = data.items ?? [];
+            else
+                toastError($_('versionPicker.error'));
+        } finally {
+            pickerLoading = false;
+        }
+    }
+
+    function submitVersion() {
+        pickerOpen = false;
+        goto(`/${$locale}/create?variation_of=${recipe.id}`);
     }
 
     function updateScrollState() {
@@ -239,6 +273,34 @@
         alt={recipe.title || 'Recipe Title'}
         onClose={() => lightboxOpen = false}
 />
+
+{#if versionPicker}
+    <Modal
+            open={pickerOpen}
+            title={$_('versionPicker.title')}
+            description={$_('versionPicker.description')}
+            onClose={() => pickerOpen = false}
+            class="md:max-w-5xl"
+    >
+        {#if pickerLoading}
+            <div class="py-8 text-center text-muted-foreground">…</div>
+        {:else}
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {#each familyVersions as version (version.id)}
+                    <RecipeCard recipe={version} />
+                {/each}
+                <button
+                        type="button"
+                        onclick={submitVersion}
+                        class="flex flex-col items-center justify-center gap-2 rounded-lg border-2 border-dashed border-border p-6 text-muted-foreground hover:border-primary hover:text-primary transition-colors hover:cursor-pointer min-h-[160px]"
+                >
+                    <Plus size="28" />
+                    <span class="font-medium text-center">{$_('versionPicker.createTile')}</span>
+                </button>
+            </div>
+        {/if}
+    </Modal>
+{/if}
 
 <style>
     @keyframes heart-bump {

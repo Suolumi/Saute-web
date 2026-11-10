@@ -62,6 +62,12 @@
     "familySize": "{count} versions",
     "diyBadge": "DIY"
   },
+  "versionPicker": {
+    "title": "Choisissez une version",
+    "description": "Cette recette a plusieurs versions proposées par différentes personnes.",
+    "createTile": "Proposer votre propre version",
+    "error": "Impossible de charger les versions de cette recette"
+  },
   "home": {
     "mainText": "Qu'y a-t-il au menu aujourd'hui ?",
     "secondaryText": "Peut-être ça, ou ça ! Ou alors...",
@@ -1078,7 +1084,7 @@
       },
       "variations": {
         "title": "Versions de recette",
-        "description": "Vous avez cuisiné la recette de quelqu'un d'autre à votre façon ? Utilisez « Proposer une version » sur la page de n'importe quelle version. Chaque version a sa propre carte dans les listes ; avec Regrouper les versions, une famille affiche sa version la plus récente. La page de la recette permet de passer de l'une à l'autre."
+        "description": "Vous avez cuisiné la recette de quelqu'un d'autre à votre façon ? Utilisez « Proposer une version » sur la page de n'importe quelle version. Chaque version a sa propre carte dans les listes ; avec Regrouper les versions, une famille affiche sa version la plus récente, et un clic dessus vous laisse choisir la version à ouvrir. La page de la recette permet de passer de l'une à l'autre."
       },
       "recipeRef": {
         "title": "Ingrédients liés à une recette",

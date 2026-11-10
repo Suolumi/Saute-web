@@ -62,6 +62,12 @@
     "familySize": "{count} versions",
     "diyBadge": "DIY"
   },
+  "versionPicker": {
+    "title": "Choose a version",
+    "description": "This recipe has several versions, submitted by different people.",
+    "createTile": "Submit your own version",
+    "error": "Couldn't load this recipe's versions"
+  },
   "home": {
     "mainText": "What's on the menu today?",
     "secondaryText": "Maybe this, or that ! Or how about...",
@@ -1078,7 +1084,7 @@
       },
       "variations": {
         "title": "Recipe Versions",
-        "description": "Cooked someone else's recipe your own way? Hit \"Submit a version\" on any version's page. Every version gets its own card in the listings; with Group versions on, a family shows its newest version. The recipe page lets you switch between them."
+        "description": "Cooked someone else's recipe your own way? Hit \"Submit a version\" on any version's page. Every version gets its own card in the listings; with Group versions on, a family shows its newest version, and clicking it lets you pick which version to open. The recipe page lets you switch between them."
       },
       "recipeRef": {
         "title": "Recipe-Linked Ingredients",

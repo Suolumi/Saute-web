@@ -11,19 +11,24 @@ vi.mock('$lib/stores', async () => {
     const {writable} = await import('svelte/store');
     return {user: writable(null), serverUrl: writable('http://api.test')};
 });
+const familyItems: Partial<RecipePreview>[] = [];
 vi.mock('$lib/api', () => ({
-    apiFetchJson: async () => ({response: {ok: true}, data: {items: []}}),
+    apiFetchJson: async () => ({response: {ok: true}, data: {items: familyItems}}),
 }));
 
 beforeAll(async () => {
     addMessages('en', {
         recipeCard: {familySize: '{count} versions', diyBadge: 'DIY', title: 'Untitled', description: 'No description', noPicture: 'No picture yet'},
         recipes: {types: {dish: 'Dish'}},
+        versionPicker: {title: 'Choose a version', description: 'Several versions', createTile: 'Submit your own version', error: 'Error'},
     });
     await init({fallbackLocale: 'en', initialLocale: 'en'});
 });
 
-beforeEach(() => vi.mocked(goto).mockClear());
+beforeEach(() => {
+    vi.mocked(goto).mockClear();
+    familyItems.length = 0;
+});
 
 function preview(overrides: Partial<RecipePreview>): RecipePreview {
     return {
@@ -57,6 +62,35 @@ describe('RecipeCard', () => {
 
     it('opens the recipe directly even when it has variations', async () => {
         const screen = render(RecipeCard, {recipe: preview({family_size: 3})});
+        (screen.getByText('Lasagna').element() as HTMLElement).click();
+        expect(goto).toHaveBeenCalledWith('/en/recipes/r1');
+    });
+
+    it('lists the family versions in a picker when versionPicker is set', async () => {
+        familyItems.push(
+            preview({id: 'r2', title: 'Spicy lasagna', family_size: 2}),
+            preview({id: 'r1', title: 'Lasagna', family_size: 2}),
+        );
+        const screen = render(RecipeCard, {recipe: preview({family_size: 2}), versionPicker: true});
+        (screen.getByText('Lasagna').element() as HTMLElement).click();
+        await expect.element(screen.getByText('Choose a version')).toBeVisible();
+        expect(goto).not.toHaveBeenCalled();
+
+        (screen.getByText('Spicy lasagna').element() as HTMLElement).click();
+        expect(goto).toHaveBeenCalledWith('/en/recipes/r2');
+    });
+
+    it('submits a new version from the picker', async () => {
+        const screen = render(RecipeCard, {recipe: preview({family_size: 2}), versionPicker: true});
+        (screen.getByText('Lasagna').element() as HTMLElement).click();
+        const tile = screen.getByText('Submit your own version');
+        await expect.element(tile).toBeVisible();
+        (tile.element() as HTMLElement).click();
+        expect(goto).toHaveBeenCalledWith('/en/create?variation_of=r1');
+    });
+
+    it('opens a standalone recipe directly even with versionPicker set', async () => {
+        const screen = render(RecipeCard, {recipe: preview({family_size: 1}), versionPicker: true});
         (screen.getByText('Lasagna').element() as HTMLElement).click();
         expect(goto).toHaveBeenCalledWith('/en/recipes/r1');
     });

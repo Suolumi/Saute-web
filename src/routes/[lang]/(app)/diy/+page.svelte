@@ -133,7 +133,7 @@
 
     <div class="grid grid-cols-cards gap-6">
         {#each recipes as recipe (recipe.id)}
-            <RecipeCard {recipe} highlightQuery={searchTerm} />
+            <RecipeCard {recipe} highlightQuery={searchTerm} versionPicker={$collapseFamilies} />
         {/each}
     </div>
 

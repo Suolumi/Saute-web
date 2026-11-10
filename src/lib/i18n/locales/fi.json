@@ -62,6 +62,12 @@
     "familySize": "{count} versiota",
     "diyBadge": "DIY"
   },
+  "versionPicker": {
+    "title": "Valitse versio",
+    "description": "Tällä reseptillä on useita eri henkilöiden lähettämiä versioita.",
+    "createTile": "Ehdota omaa versiota",
+    "error": "Reseptin versioiden lataaminen epäonnistui"
+  },
   "home": {
     "mainText": "Mitä on tänään ruokalistalla?",
     "secondaryText": "Ehkä tätä, tai tuota! Tai entäpä...",
@@ -1078,7 +1084,7 @@
       },
       "variations": {
         "title": "Reseptien versiot",
-        "description": "Valmistitko jonkun toisen reseptin omalla tavallasi? Käytä minkä tahansa version sivulla \"Ehdota versiota\". Jokainen versio näkyy listauksissa omana korttinaan; kun versiot on ryhmitelty, reseptiperhe näyttää uusimman versionsa. Reseptin sivulla voit vaihtaa versioiden välillä."
+        "description": "Valmistitko jonkun toisen reseptin omalla tavallasi? Käytä minkä tahansa version sivulla \"Ehdota versiota\". Jokainen versio näkyy listauksissa omana korttinaan; kun versiot on ryhmitelty, reseptiperhe näyttää uusimman versionsa, ja sitä klikkaamalla voit valita avattavan version. Reseptin sivulla voit vaihtaa versioiden välillä."
       },
       "recipeRef": {
         "title": "Reseptiin linkitetyt raaka-aineet",
