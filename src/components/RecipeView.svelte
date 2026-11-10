@@ -19,6 +19,7 @@
     import Lightbox from "./Lightbox.svelte";
     import RecipeRefIngredient from "./RecipeRefIngredient.svelte";
     import IngredientConversions from "./IngredientConversions.svelte";
+    import RecipePlaceholder from "./RecipePlaceholder.svelte";
 
     // RecipeView renders a recipe the way its published page shows it. The
     // detail page feeds it the published recipe and fills the snippets with
@@ -177,7 +178,7 @@
                         {/each}
                     </div>
                 {:else}
-                    <p class="embla__slide flex items-center justify-center h-full border-b border-b-border">{$_('recipeCard.noPicture')}</p>
+                    <RecipePlaceholder kind={recipe.kind} category={recipe.category} class="max-h-[60vh]" />
                 {/if}
             </div>
 
