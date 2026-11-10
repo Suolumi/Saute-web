@@ -14,8 +14,7 @@
     import TagChip from '../../../../../components/TagChip.svelte';
     import {RecipeCategories, type RecipeCategory} from '$lib/recipes';
     import {locales} from '$lib/i18n';
-    import {apiErrorMessage} from '$lib/api';
-    import {toastError, toastSuccess} from '$lib/utils';
+    import {toastApiError, toastSuccess} from '$lib/utils';
 
     const groups = $derived(groupTags([...$allTags.values()], $locale));
 
@@ -86,7 +85,7 @@
             : await createTag({...body, slug: form.slug.trim()});
         saving = false;
         if (!response.ok) {
-            toastError(apiErrorMessage(data, $_('admin.tags.saveError')));
+            toastApiError($_('admin.tags.saveError'), response, data);
             return;
         }
         if (data.backfilled > 0)
@@ -104,7 +103,7 @@
         const {response, data} = await deleteTag(deleting.slug);
         deleting = null;
         if (!response.ok) {
-            toastError(apiErrorMessage(data, $_('admin.tags.deleteError')));
+            toastApiError($_('admin.tags.deleteError'), response, data);
             return;
         }
         toastSuccess($_('admin.tags.deleted'));

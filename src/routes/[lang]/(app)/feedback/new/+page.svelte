@@ -5,8 +5,7 @@
     import {page} from "$app/state";
     import {ChevronLeft} from "@lucide/svelte";
     import {accessToken} from "$lib/stores";
-    import {apiErrorMessage} from "$lib/api";
-    import {toastError} from "$lib/utils";
+    import {toastApiError, toastError} from "$lib/utils";
     import {createFeedback, parseFeedbackLink, type FeedbackForm as Form} from "$lib/feedback";
     import FeedbackForm from "../../../../../components/FeedbackForm.svelte";
     import PageMeta from "../../../../../components/PageMeta.svelte";
@@ -38,7 +37,7 @@
         if (response.ok && data)
             goto(`/${$locale}/feedback?open=${data.id}`);
         else
-            toastError(apiErrorMessage(data, $_('feedback.toasts.save')));
+            toastApiError($_('feedback.toasts.save'), response, data);
     }
 </script>
 

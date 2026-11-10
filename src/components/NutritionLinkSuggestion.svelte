@@ -4,8 +4,7 @@
     import {submitNutritionLinkSuggestion, requiredNutritionField, parsePositiveNumberInput, type IngredientNutritionLink, type UnitAlias} from '$lib/nutrition';
     import {foodKeywords, foodName, type Food, type FoodMatcher} from '$lib/foods';
     import type {ToolboxUnit} from '$lib/toolbox';
-    import {toastError, toastSuccess} from '$lib/utils';
-    import {apiErrorMessage} from '$lib/api';
+    import {toastApiError, toastSuccess} from '$lib/utils';
     import IngredientCombobox from './toolbox/IngredientCombobox.svelte';
     import Button from './Button.svelte';
     import Input from './Input.svelte';
@@ -147,7 +146,7 @@
                 toastSuccess($_('edit.ingredients.nutritionLink.success'));
             }
         } else {
-            toastError(apiErrorMessage(data, $_('edit.ingredients.nutritionLink.error')));
+            toastApiError($_('edit.ingredients.nutritionLink.error'), response, data);
         }
     }
 

@@ -1,8 +1,7 @@
 <script lang="ts">
     import {_, locale} from "svelte-i18n";
     import {Languages} from "@lucide/svelte";
-    import {apiErrorMessage} from "$lib/api";
-    import {toastError, toastSuccess} from "$lib/utils";
+    import {toastApiError, toastSuccess} from "$lib/utils";
     import {languageName, sameLanguage, translateFeedback, type Feedback, type FeedbackTranslation} from "$lib/feedback";
 
     // translation is the text to show instead of the original, or null to
@@ -35,7 +34,7 @@
         const {response, data} = await translateFeedback(item.id, viewerLocale);
         loading = false;
         if (!response.ok) {
-            toastError(apiErrorMessage(data, $_('feedback.translate.error')));
+            toastApiError($_('feedback.translate.error'), response, data);
             return;
         }
         knownSource = data.source_locale;

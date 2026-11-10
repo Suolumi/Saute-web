@@ -11,8 +11,7 @@
         type IngredientNutritionLink, type SubmitNutritionLinkResult, type UnitAlias
     } from '$lib/nutrition';
     import {foodKeywords, foodName, type Food} from '$lib/foods';
-    import {toastError, toastSuccess} from '$lib/utils';
-    import {apiErrorMessage} from '$lib/api';
+    import {toastApiError, toastSuccess} from '$lib/utils';
 
     // NutritionFixModal is the self-service "help complete this recipe's
     // nutrition data" entry point on the recipe detail page's Nutrition
@@ -96,7 +95,7 @@
             onResult(data);
             onClose();
         } else {
-            toastError(apiErrorMessage(data, $_('recipe.nutrition.fix.error')));
+            toastApiError($_('recipe.nutrition.fix.error'), response, data);
         }
     }
 </script>

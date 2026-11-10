@@ -20,7 +20,7 @@
         buildShoppingListShareText,
         capitalizeIngredientHeading,
     } from '$lib/shoppingList';
-    import {toastError, toastSuccess} from '$lib/utils';
+    import {toastApiError, toastError, toastSuccess} from '$lib/utils';
     import {ShoppingCart, Plus, Minus, X, ChefHat, Share2} from '@lucide/svelte';
 
     let pickerOpen = $state(false);
@@ -36,7 +36,7 @@
             if (response.ok && data)
                 addRecipeToShoppingList(data.id, data.title, data.quantity, data.pictures[0]?.filename, data.ingredients);
             else
-                toastError($_('shoppingList.addError'));
+                toastApiError($_('shoppingList.addError'), response, data);
         }
     }
 

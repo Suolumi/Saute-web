@@ -7,7 +7,7 @@
     import {_, locale} from "svelte-i18n";
     import {resetPassword} from "$lib/auth";
     import {page} from "$app/state";
-    import {toastError, toastSuccess} from "$lib/utils";
+    import {toastApiError, toastError, toastSuccess} from "$lib/utils";
     import {EyeIcon, EyeOff} from "@lucide/svelte";
 
     let password = $state('');
@@ -32,8 +32,10 @@
         const response = await resetPassword({password}, page.params.token ?? '')
         if (response.ok) {
             toastSuccess($_('reset.success'))
+        } else if (response.status === 401) {
+            toastError($_('reset.error'), $_('reset.expired'))
         } else {
-            toastError($_('reset.error'))
+            toastApiError($_('reset.error'), response)
         }
     }
 

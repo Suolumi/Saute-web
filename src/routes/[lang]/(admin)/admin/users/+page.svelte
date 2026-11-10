@@ -9,8 +9,7 @@
         adminDeleteUser, adminUpdateUserPicture, type AdminUser
     } from '$lib/admin';
     import {serverUrl, user as currentUser} from '$lib/stores';
-    import {apiErrorMessage} from '$lib/api';
-    import {toastError, toastSuccess} from '$lib/utils';
+    import {toastApiError, toastSuccess} from '$lib/utils';
     import {Camera, Copy, Check} from '@lucide/svelte';
 
     const PAGE_SIZE = 20;
@@ -38,7 +37,7 @@
                 users = data.items;
                 total = data.length;
             } else {
-                toastError($_('admin.errors.loadUsers'));
+                toastApiError($_('admin.errors.loadUsers'), response, data);
             }
         });
     }
@@ -58,7 +57,7 @@
                 users = users.map(u => u.id === target.id ? data : u);
                 toastSuccess($_('admin.users.statusUpdated'));
             } else {
-                toastError(apiErrorMessage(data, $_('admin.errors.setAdminStatus')));
+                toastApiError($_('admin.errors.setAdminStatus'), response, data);
             }
         });
     }
@@ -68,7 +67,7 @@
             if (response.ok)
                 toastSuccess($_('admin.users.resetSent'));
             else
-                toastError(apiErrorMessage(data, $_('admin.errors.sendPasswordReset')));
+                toastApiError($_('admin.errors.sendPasswordReset'), response, data);
         });
     }
 
@@ -77,7 +76,7 @@
             if (response.ok)
                 toastSuccess($_('admin.users.mcpRevoked'));
             else
-                toastError(apiErrorMessage(data, $_('admin.errors.revokeMcpToken')));
+                toastApiError($_('admin.errors.revokeMcpToken'), response, data);
         });
     }
 
@@ -94,7 +93,7 @@
             if (response.ok && data) {
                 users = users.map(u => u.id === target.id ? {...u, picture: data.id} : u);
             } else {
-                toastError($_('admin.errors.updatePicture'));
+                toastApiError($_('admin.errors.updatePicture'), response, data);
             }
         });
     }
@@ -105,7 +104,7 @@
                 users = users.filter(u => u.id !== deleteModal.id);
                 toastSuccess($_('admin.users.deleted'));
             } else {
-                toastError(apiErrorMessage(data, $_('admin.errors.deleteUser')));
+                toastApiError($_('admin.errors.deleteUser'), response, data);
             }
         }).finally(() => {
             deleteModal = {isOpen: false, id: '', username: ''};

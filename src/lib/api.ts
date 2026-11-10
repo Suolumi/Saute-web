@@ -9,10 +9,50 @@ export type ApiError = {
     request_id?: string
 }
 
+export const NETWORK_ERROR_CODE = 'network_error'
+
 export function apiErrorMessage(data: unknown, fallback: string): string {
     if (data && typeof data === 'object' && 'error' in data && typeof data.error === 'string' && data.error.length > 0)
         return data.error
     return fallback
+}
+
+export type ApiErrorReason = {key: string} | {detail: string} | null
+
+// apiErrorReason explains why a request failed: an i18n key under `apiErrors`,
+// or the server's own message for validation-style errors, whose text is
+// specific to the request (English only).
+export function apiErrorReason(response: Response, data?: unknown): ApiErrorReason {
+    const body = data && typeof data === 'object' ? data as ApiError : {}
+    if (body.code === NETWORK_ERROR_CODE)
+        return {key: 'apiErrors.network'}
+    switch (response.status) {
+        case 401:
+            return {key: 'apiErrors.unauthorized'}
+        case 403:
+            return {key: 'apiErrors.forbidden'}
+        case 404:
+            return {key: 'apiErrors.notFound'}
+        case 413:
+            return {key: 'apiErrors.tooLarge'}
+        case 429:
+            return {key: 'apiErrors.rateLimited'}
+    }
+    if (response.status >= 500)
+        return {key: 'apiErrors.server'}
+    if (typeof body.error === 'string' && body.error.trim() !== '')
+        return {detail: body.error.trim()}
+    return null
+}
+
+// A failed fetch (offline, DNS, CORS, server down) becomes a 503 carrying
+// NETWORK_ERROR_CODE, so callers' `!response.ok` branches handle it instead of
+// an unhandled rejection.
+function networkErrorResponse(): Response {
+    return new Response(JSON.stringify({error: '', code: NETWORK_ERROR_CODE}), {
+        status: 503,
+        headers: {'Content-Type': 'application/json'},
+    })
 }
 
 function buildRequest(
@@ -65,6 +105,10 @@ function buildRequest(
                 ? body
                 : JSON.stringify(body)
             : undefined,
+    }).catch((e: unknown) => {
+        if (e instanceof DOMException && e.name === 'AbortError')
+            throw e
+        return networkErrorResponse()
     });
 }
 
@@ -80,6 +124,9 @@ export async function refreshAccessToken(f: FetchFn = fetch) {
         f
     );
 
+    // Only a rejected refresh token signs the user out, not an unreachable server.
+    if (response.status >= 500)
+        return;
     if (!response.ok) {
         user.set(null);
         return;

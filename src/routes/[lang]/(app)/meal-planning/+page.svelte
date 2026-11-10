@@ -31,7 +31,7 @@
         type MealType,
     } from '$lib/mealPlanning';
     import {addRecipeToShoppingList, setRecipeServings} from '$lib/shoppingList';
-    import {toastError, toastSuccess, pictureUrl} from '$lib/utils';
+    import {toastApiError, toastSuccess, pictureUrl} from '$lib/utils';
     import {ChevronLeft, ChevronRight, ShoppingCart, Search, Coffee, Sandwich, UtensilsCrossed, Minus, Plus} from '@lucide/svelte';
 
     const MEAL_META: Record<MealType, { icon: typeof Coffee; labelKey: string }> = {
@@ -255,7 +255,7 @@
             return;
         addingToShoppingList = true;
         const fetched = await Promise.all(weekEntries.map(e => getRecipe(e.recipeId, $locale ?? undefined)));
-        let ok = true;
+        let failure: Response | undefined;
         fetched.forEach(({response, data}, i) => {
             const planEntry = weekEntries[i];
             if (response.ok && data) {
@@ -267,15 +267,15 @@
                 if (planServings !== data.quantity)
                     setRecipeServings(data.id, planServings);
             } else {
-                ok = false;
+                failure ??= response;
             }
         });
         addingToShoppingList = false;
-        if (ok) {
+        if (!failure) {
             toastSuccess($_('mealPlanning.addedToShoppingList'));
             goto(`/${$locale}/shopping-list`);
         } else {
-            toastError($_('mealPlanning.addToShoppingListError'));
+            toastApiError($_('mealPlanning.addToShoppingListError'), failure);
         }
     }
 </script>

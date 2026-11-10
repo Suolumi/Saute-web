@@ -8,8 +8,7 @@
     import {user} from "$lib/stores";
     import {tags as allTags, tagsForCategory} from "$lib/tags";
     import { SquarePen, Trash, MoreVertical, Link2, SearchX } from '@lucide/svelte';
-    import {toastError, toastSuccess} from "$lib/utils";
-    import {apiErrorMessage} from "$lib/api";
+    import {toastApiError, toastError, toastSuccess} from "$lib/utils";
     import {locale, _} from "svelte-i18n";
     import Modal from "../../../../components/Modal.svelte";
     import {deleteRecipe} from "$lib/recipes";
@@ -82,7 +81,7 @@
                 );
                 linkConfirm = {isOpen: false, recipe: null, target: null};
             } else {
-                toastError(apiErrorMessage(data, $_('settings.linkVariation.error')));
+                toastApiError($_('settings.linkVariation.error'), response, data);
             }
         }).finally(() => {
             linking = false;
@@ -95,7 +94,7 @@
                 toastSuccess($_('settings.delete.success'))
                 userRecipes = userRecipes.filter(e => e.id !== id)
             } else {
-                toastError($_('settings.errors.delete'));
+                toastApiError($_('settings.errors.delete'), response);
             }
         }).catch(err => {
             console.log(err)
@@ -150,7 +149,7 @@
             if (response.ok && data)
                 userRecipes = data.items
             else
-                toastError($_('settings.errors.getRecipes'))
+                toastApiError($_('settings.errors.getRecipes'), response, data)
         })
     })
 

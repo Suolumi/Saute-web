@@ -7,7 +7,7 @@
 
     import {goto} from "$app/navigation";
     import {register, type RegisterRequest} from "$lib/auth";
-    import {toastError, toastSuccess} from "$lib/utils";
+    import {toastApiError, toastError, toastSuccess} from "$lib/utils";
     import {_, locale} from "svelte-i18n";
     import {EyeIcon, EyeOff} from "@lucide/svelte";
 
@@ -50,8 +50,10 @@
             refreshToken.set(data.refresh_token);
             toastSuccess($_('register.toasts.success'));
             await goto(`/${$locale}/home`)
+        } else if (response.status === 409) {
+            toastError($_('register.toasts.error'), $_('register.toasts.taken'));
         } else {
-            toastError($_('register.toasts.error'));
+            toastApiError($_('register.toasts.error'), response, data);
         }
     }
 </script>

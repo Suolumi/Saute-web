@@ -4,7 +4,7 @@
     import {getAdminUsers, type AdminUser} from '$lib/admin';
     import {serverUrl} from '$lib/stores';
     import {_} from 'svelte-i18n';
-    import {toastError} from '$lib/utils';
+    import {toastApiError} from '$lib/utils';
 
     interface Props {
         open: boolean;
@@ -38,7 +38,7 @@
                     if (response.ok && data)
                         results = data.items;
                     else
-                        toastError($_('admin.console.userPicker.error'));
+                        toastApiError($_('admin.console.userPicker.error'), response, data);
                 });
         }, 250);
         return () => clearTimeout(timeout);

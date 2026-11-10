@@ -106,7 +106,8 @@
     },
     "toasts": {
       "success": "Successfully logged in.",
-      "error": "Failed to login."
+      "error": "Couldn't sign in",
+      "wrongCredentials": "Wrong username or password"
     },
     "meta": {
       "title": "Login",
@@ -135,7 +136,8 @@
     },
     "toasts": {
       "success": "Successfully registered !",
-      "error": "Failed to register."
+      "error": "Couldn't create your account",
+      "taken": "This username or email is already taken"
     },
     "meta": {
       "title": "Register",
@@ -165,9 +167,9 @@
   },
   "settings": {
     "errors": {
-      "update": "Error while updating profile.",
-      "getRecipes": "Server error, couldn't get recipes.",
-      "delete": "Error while deleting recipe"
+      "update": "Couldn't update your profile",
+      "getRecipes": "Couldn't load your recipes",
+      "delete": "Couldn't delete this recipe"
     },
     "meta": {
       "title": "Settings",
@@ -314,7 +316,8 @@
         "error": "Couldn't submit this"
       }
     },
-    "substitutes": "Substitutes"
+    "substitutes": "Substitutes",
+    "loadError": "Couldn't load this recipe"
   },
   "edit": {
     "toasts": {
@@ -466,7 +469,7 @@
   },
   "create": {
     "toasts": {
-      "save": "Failed to create recipe",
+      "save": "Couldn't create the recipe",
       "noAccount": "You need to create an account first",
       "negativeNumber": "Quantities / times can't be negative"
     },
@@ -590,7 +593,8 @@
     "remember": "Remember your password?",
     "back": "Back to sign in",
     "sent": "Email sent",
-    "failed": "Error while sending the mail"
+    "failed": "Couldn't send the email",
+    "empty": "Enter your email address or username"
   },
   "reset": {
     "meta": {
@@ -609,7 +613,8 @@
     },
     "submit": "Reset password",
     "success": "Password successfully reset",
-    "error": "Error while trying to reset the password"
+    "error": "Couldn't reset your password",
+    "expired": "This reset link is invalid or has expired. Request a new one."
   },
   "diyHome": {
     "meta": {
@@ -1377,5 +1382,14 @@
       "same": "This feedback is already in your language.",
       "error": "Could not translate this feedback"
     }
+  },
+  "apiErrors": {
+    "network": "Can't reach the server. Check your connection and try again.",
+    "unauthorized": "Sign in and try again.",
+    "forbidden": "You don't have permission to do this.",
+    "notFound": "It doesn't exist anymore.",
+    "tooLarge": "The file is too large.",
+    "rateLimited": "Too many attempts. Wait a moment and try again.",
+    "server": "Something went wrong on our side. Try again later."
   }
 }

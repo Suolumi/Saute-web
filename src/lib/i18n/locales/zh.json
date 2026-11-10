@@ -106,7 +106,8 @@
     },
     "toasts": {
       "success": "登录成功。",
-      "error": "登录失败。"
+      "error": "无法登录",
+      "wrongCredentials": "用户名或密码错误"
     },
     "meta": {
       "title": "登录",
@@ -135,7 +136,8 @@
     },
     "toasts": {
       "success": "注册成功！",
-      "error": "注册失败。"
+      "error": "无法创建账户",
+      "taken": "该用户名或邮箱已被使用"
     },
     "meta": {
       "title": "注册",
@@ -165,9 +167,9 @@
   },
   "settings": {
     "errors": {
-      "update": "更新个人资料时出错。",
-      "getRecipes": "服务器错误，无法获取食谱。",
-      "delete": "删除食谱时出错"
+      "update": "无法更新个人资料",
+      "getRecipes": "无法加载你的食谱",
+      "delete": "无法删除此食谱"
     },
     "meta": {
       "title": "设置",
@@ -314,7 +316,8 @@
         "error": "无法提交"
       }
     },
-    "substitutes": "替代品"
+    "substitutes": "替代品",
+    "loadError": "无法加载此食谱"
   },
   "edit": {
     "toasts": {
@@ -466,7 +469,7 @@
   },
   "create": {
     "toasts": {
-      "save": "创建食谱失败",
+      "save": "无法创建食谱",
       "noAccount": "你需要先创建一个账户",
       "negativeNumber": "数量/时间不能为负数"
     },
@@ -590,7 +593,8 @@
     "remember": "想起密码了？",
     "back": "返回登录",
     "sent": "邮件已发送",
-    "failed": "发送邮件时出错"
+    "failed": "无法发送邮件",
+    "empty": "请输入邮箱地址或用户名"
   },
   "reset": {
     "meta": {
@@ -609,7 +613,8 @@
     },
     "submit": "重置密码",
     "success": "密码重置成功",
-    "error": "重置密码时出错"
+    "error": "无法重置密码",
+    "expired": "此重置链接无效或已过期，请重新申请。"
   },
   "diyHome": {
     "meta": {
@@ -1389,5 +1394,14 @@
       "same": "这条反馈已经是你的语言。",
       "error": "无法翻译这条反馈"
     }
+  },
+  "apiErrors": {
+    "network": "无法连接服务器。请检查网络后重试。",
+    "unauthorized": "请登录后重试。",
+    "forbidden": "你没有权限执行此操作。",
+    "notFound": "该内容已不存在。",
+    "tooLarge": "文件太大。",
+    "rateLimited": "尝试次数过多，请稍后再试。",
+    "server": "服务器出了点问题，请稍后再试。"
   }
 }

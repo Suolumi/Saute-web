@@ -5,8 +5,7 @@
     import {page} from "$app/state";
     import {ChevronLeft} from "@lucide/svelte";
     import {accessToken} from "$lib/stores";
-    import {apiErrorMessage} from "$lib/api";
-    import {toastError} from "$lib/utils";
+    import {toastApiError, toastError} from "$lib/utils";
     import {getFeedback, updateFeedback, type Feedback, type FeedbackForm as Form} from "$lib/feedback";
     import FeedbackForm from "../../../../../../components/FeedbackForm.svelte";
     import PageMeta from "../../../../../../components/PageMeta.svelte";
@@ -22,7 +21,12 @@
         }
         const {response, data} = await getFeedback(page.params.id ?? '');
         if (!response.ok || !data.mine || data.status !== 'open') {
-            toastError($_(response.ok ? 'feedback.toasts.notEditable' : 'feedback.toasts.notFound'));
+            if (response.ok)
+                toastError($_('feedback.toasts.notEditable'));
+            else if (response.status === 404)
+                toastError($_('feedback.toasts.notFound'));
+            else
+                toastApiError($_('feedback.toasts.load'), response, data);
             goto(boardHref);
             return;
         }
@@ -34,7 +38,7 @@
         if (response.ok && data)
             goto(boardHref);
         else
-            toastError(apiErrorMessage(data, $_('feedback.toasts.save')));
+            toastApiError($_('feedback.toasts.save'), response, data);
     }
 </script>
 

@@ -7,7 +7,7 @@
     import {goto} from '$app/navigation';
     import {serverUrl, user} from "$lib/stores";
     import {updateSelf, updateUserPicture, type UserSettingsForm} from "$lib/user";
-    import {toastError} from "$lib/utils";
+    import {toastApiError} from "$lib/utils";
     import {locale, _} from "svelte-i18n";
     import {Camera} from '@lucide/svelte';
 
@@ -52,7 +52,7 @@
             if (response.ok && data)
                 user.set(data)
             else
-                toastError($_('settings.errors.update'));
+                toastApiError($_('settings.errors.update'), response, data);
         })
     }
 

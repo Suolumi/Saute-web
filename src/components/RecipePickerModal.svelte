@@ -8,7 +8,7 @@
     import {tags as allTags, tagsForCategory} from '$lib/tags';
     import {serverUrl} from '$lib/stores';
     import {locale, _} from 'svelte-i18n';
-    import {toastError} from '$lib/utils';
+    import {toastApiError} from '$lib/utils';
 
     interface Props {
         open: boolean;
@@ -96,7 +96,7 @@
                     hasMore = data.items.length === PAGE_SIZE;
                 } else {
                     hasMore = false;
-                    toastError($_('edit.ingredients.recipePicker.error'));
+                    toastApiError($_('edit.ingredients.recipePicker.error'), response, data);
                 }
             });
     }
@@ -184,7 +184,7 @@
             if (response.ok && data) {
                 drillVersions = data.items;
             } else {
-                toastError($_('edit.ingredients.recipePicker.error'));
+                toastApiError($_('edit.ingredients.recipePicker.error'), response, data);
             }
         } finally {
             drillLoading = false;

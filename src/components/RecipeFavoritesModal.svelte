@@ -4,7 +4,7 @@
     import {getAdminRecipeFavorites, type RecipeFavoriter} from '$lib/admin';
     import {serverUrl} from '$lib/stores';
     import {_} from 'svelte-i18n';
-    import {toastError} from '$lib/utils';
+    import {toastApiError} from '$lib/utils';
 
     const PAGE_SIZE = 20;
 
@@ -31,7 +31,7 @@
                     users = data.items;
                     total = data.length;
                 } else {
-                    toastError($_('admin.favoritesModal.loadError'));
+                    toastApiError($_('admin.favoritesModal.loadError'), response, data);
                 }
             });
     }

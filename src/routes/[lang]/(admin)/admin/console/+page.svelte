@@ -11,8 +11,7 @@
         type AdminRouteDescriptor, type AdminRouteParam, type AdminRouteCategory, type AdminUser
     } from '$lib/admin';
     import type {RecipePreview} from '$lib/recipes';
-    import {toastError, toastSuccess} from '$lib/utils';
-    import {apiErrorMessage} from '$lib/api';
+    import {toastApiError, toastSuccess} from '$lib/utils';
     import {Search, Image as ImageIcon} from '@lucide/svelte';
 
     const CATEGORY_ORDER: AdminRouteCategory[] = ['users', 'recipes', 'translations', 'toolbox', 'nutrition', 'tags', 'feedback', 'system'];
@@ -61,7 +60,7 @@
             if (response.ok && data)
                 routes = data;
             else
-                toastError($_('admin.console.loadError'));
+                toastApiError($_('admin.console.loadError'), response, data);
         });
     });
 
@@ -332,7 +331,7 @@
             if (response.ok)
                 toastSuccess($_('admin.console.success'));
             else
-                toastError(apiErrorMessage(data, $_('admin.console.error')));
+                toastApiError($_('admin.console.error'), response, data);
         }).finally(() => {
             submitting = false;
         });

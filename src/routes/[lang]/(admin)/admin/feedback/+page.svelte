@@ -1,8 +1,7 @@
 <script lang="ts">
     import {_, locale} from "svelte-i18n";
     import {serverUrl} from "$lib/stores";
-    import {apiErrorMessage} from "$lib/api";
-    import {pictureUrl, toastError, toastSuccess} from "$lib/utils";
+    import {pictureUrl, toastApiError, toastSuccess} from "$lib/utils";
     import {
         adminListFeedback, adminMarkFeedbackSeen, adminSetFeedbackStatus, deleteFeedback, feedbackLinkLabel,
         pendingFeedbackCount, refreshPendingFeedbackCount, relativeTime, type Feedback, type FeedbackAdminTab, type FeedbackStatus, type FeedbackTranslation
@@ -36,7 +35,7 @@
     async function load(append = false) {
         const {response, data} = await adminListFeedback(tab, PAGE_SIZE, append ? items.length : 0);
         if (!response.ok) {
-            toastError(apiErrorMessage(data, $_('admin.feedback.toasts.load')));
+            toastApiError($_('admin.feedback.toasts.load'), response, data);
             return;
         }
         items = append ? [...items, ...data.items] : data.items;
@@ -68,7 +67,7 @@
             return;
         const {response, data} = await adminSetFeedbackStatus(selected.id, status);
         if (!response.ok) {
-            toastError(apiErrorMessage(data, $_('admin.feedback.toasts.status')));
+            toastApiError($_('admin.feedback.toasts.status'), response, data);
             return;
         }
         selected = data;
@@ -83,7 +82,7 @@
             return;
         const {response, data} = await deleteFeedback(selected.id);
         if (!response.ok) {
-            toastError(apiErrorMessage(data, $_('admin.feedback.toasts.delete')));
+            toastApiError($_('admin.feedback.toasts.delete'), response, data);
             return;
         }
         selected = null;

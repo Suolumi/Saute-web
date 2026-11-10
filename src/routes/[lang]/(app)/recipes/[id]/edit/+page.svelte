@@ -5,8 +5,7 @@
     import {goto} from "$app/navigation";
     import {onMount} from "svelte";
     import {page} from "$app/state";
-    import {toastError} from "$lib/utils";
-    import {apiErrorMessage} from "$lib/api";
+    import {toastApiError} from "$lib/utils";
     import {locale, _} from "svelte-i18n";
     import {editRecipeCache, serverUrl, user} from "$lib/stores";
     import PageMeta from "../../../../../../components/PageMeta.svelte";
@@ -53,7 +52,7 @@
             $editRecipeCache = null
             goto(`/${$locale}/recipes/${data.id}`)
         } else
-            toastError(apiErrorMessage(data, recipe?.category === 'diy' ? $_('diyEdit.toasts.save') : $_('edit.toasts.save')))
+            toastApiError(recipe?.category === 'diy' ? $_('diyEdit.toasts.save') : $_('edit.toasts.save'), response, data)
     }
 
     onMount(() => {

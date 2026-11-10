@@ -2,8 +2,7 @@
     import {_} from 'svelte-i18n';
     import Button from '../../../../components/Button.svelte';
     import {getAdminStats, cleanupImages, type AdminStats} from '$lib/admin';
-    import {toastError, toastSuccess} from '$lib/utils';
-    import {apiErrorMessage} from '$lib/api';
+    import {toastApiError, toastSuccess} from '$lib/utils';
 
     let stats: AdminStats | null = $state(null);
     let cleaning = $state(false);
@@ -13,7 +12,7 @@
             if (response.ok && data)
                 stats = data;
             else
-                toastError($_('admin.errors.loadStats'));
+                toastApiError($_('admin.errors.loadStats'), response, data);
         });
     }
 
@@ -28,7 +27,7 @@
                 const total = Object.values(data.removed).reduce((a, b) => a + b, 0);
                 toastSuccess($_('admin.dashboard.cleanupSuccess', {values: {count: total}}));
             } else {
-                toastError(apiErrorMessage(data, $_('admin.errors.cleanup')));
+                toastApiError($_('admin.errors.cleanup'), response, data);
             }
         }).finally(() => {
             cleaning = false;

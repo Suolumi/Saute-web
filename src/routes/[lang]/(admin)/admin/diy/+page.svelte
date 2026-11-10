@@ -11,8 +11,7 @@
     import {getAdminRecipes, retranslateRecipe} from '$lib/admin';
     import {deleteRecipe, type RecipePreview} from '$lib/recipes';
     import {serverUrl} from '$lib/stores';
-    import {apiErrorMessage} from '$lib/api';
-    import {toastError, toastSuccess} from '$lib/utils';
+    import {toastApiError, toastSuccess} from '$lib/utils';
 
     const PAGE_SIZE = 20;
 
@@ -40,7 +39,7 @@
                 recipes = data.items;
                 total = data.length;
             } else {
-                toastError($_('admin.errors.loadDiy'));
+                toastApiError($_('admin.errors.loadDiy'), response, data);
             }
         });
     }
@@ -63,7 +62,7 @@
                 recipes = recipes.filter(r => r.id !== deleteModal.id);
                 toastSuccess($_('admin.diy.deleted'));
             } else {
-                toastError(apiErrorMessage(data, $_('admin.errors.deleteDiy')));
+                toastApiError($_('admin.errors.deleteDiy'), response, data);
             }
         }).finally(() => {
             deleteModal = {isOpen: false, id: '', title: ''};
@@ -75,7 +74,7 @@
             if (response.ok)
                 toastSuccess($_('admin.recipes.retranslateScheduled'));
             else
-                toastError(apiErrorMessage(data, $_('admin.errors.retranslate')));
+                toastApiError($_('admin.errors.retranslate'), response, data);
         });
     }
 </script>

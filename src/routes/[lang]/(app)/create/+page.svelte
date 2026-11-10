@@ -8,8 +8,7 @@
     import PageMeta from "../../../../components/PageMeta.svelte";
     import {onMount, untrack} from "svelte";
     import {accessToken, createRecipeCache} from "$lib/stores";
-    import {toastError} from "$lib/utils";
-    import {apiErrorMessage} from "$lib/api";
+    import {toastApiError, toastError} from "$lib/utils";
     import {locale, _} from "svelte-i18n";
 
     let variationOf = $derived(page.url.searchParams.get('variation_of') ?? undefined)
@@ -78,7 +77,7 @@
         if (response.ok && data)
             seedRecipe = recipeFormFromSource(data)
         else
-            toastError(apiErrorMessage(data, $_('create.toasts.save')))
+            toastApiError($_('create.toasts.save'), response, data)
         choiceMade = true
     }
 
@@ -95,7 +94,7 @@
             $createRecipeCache = null
             goto(`/${$locale}/recipes/${data.id}`)
         } else
-            toastError(apiErrorMessage(data, recipe.category === 'diy' ? $_('diyEdit.toasts.create') : $_('create.toasts.save')));
+            toastApiError(recipe.category === 'diy' ? $_('diyEdit.toasts.create') : $_('create.toasts.save'), response, data);
     }
 
     onMount(() => {

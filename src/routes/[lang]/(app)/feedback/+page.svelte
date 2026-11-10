@@ -5,8 +5,7 @@
     import {page} from "$app/state";
     import {CheckCircle2, ChevronRight, Plus, Search, User as UserIcon, X} from "@lucide/svelte";
     import {user} from "$lib/stores";
-    import {apiErrorMessage} from "$lib/api";
-    import {toastError, toastSuccess} from "$lib/utils";
+    import {toastApiError, toastError, toastSuccess} from "$lib/utils";
     import {
         acknowledgeFeedback, deleteFeedback, feedbackUpdates, getFeedback, listFeedback, voteFeedback,
         type Feedback, type FeedbackType, type ListFeedbackParams
@@ -70,7 +69,8 @@
         if (current !== generation)
             return;
         if (!open.response.ok || !closed.response.ok) {
-            toastError($_('feedback.toasts.load'));
+            const failed = open.response.ok ? closed : open;
+            toastApiError($_('feedback.toasts.load'), failed.response, failed.data);
             return;
         }
         openItems = open.data.items;
@@ -114,7 +114,10 @@
     async function openFromLink(id: string) {
         const {response, data} = await getFeedback(id);
         if (!response.ok) {
-            toastError($_('feedback.toasts.notFound'));
+            if (response.status === 404)
+                toastError($_('feedback.toasts.notFound'));
+            else
+                toastApiError($_('feedback.toasts.load'), response, data);
             return;
         }
         pinned = data;
@@ -163,7 +166,7 @@
         if (response.ok && data)
             replaceItem(data);
         else
-            toastError(apiErrorMessage(data, $_('feedback.toasts.vote')));
+            toastApiError($_('feedback.toasts.vote'), response, data);
     }
 
     async function confirmDelete() {
@@ -173,7 +176,7 @@
             return;
         const {response, data} = await deleteFeedback(item.id);
         if (!response.ok) {
-            toastError(apiErrorMessage(data, $_('feedback.toasts.delete')));
+            toastApiError($_('feedback.toasts.delete'), response, data);
             return;
         }
         if (pinned?.id === item.id)

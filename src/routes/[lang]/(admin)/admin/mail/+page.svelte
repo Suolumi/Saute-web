@@ -13,7 +13,7 @@
         type AdminMail,
         type MailBroadcastStatus
     } from '$lib/admin';
-    import {toastError, toastSuccess} from '$lib/utils';
+    import {toastApiError, toastSuccess} from '$lib/utils';
     import {apiErrorMessage} from '$lib/api';
 
     const POLL_MS = 2000;
@@ -96,7 +96,7 @@
             if (response.ok)
                 toastSuccess($_('admin.mail.testSent'));
             else
-                toastError(apiErrorMessage(data, $_('admin.mail.errors.send')));
+                toastApiError($_('admin.mail.errors.send'), response, data);
         }).finally(() => {
             sendingTest = false;
         });
@@ -110,7 +110,7 @@
                 confirming = false;
                 toastSuccess($_('admin.mail.started'));
             } else {
-                toastError(apiErrorMessage(data, $_('admin.mail.errors.send')));
+                toastApiError($_('admin.mail.errors.send'), response, data);
             }
         }).finally(() => {
             starting = false;

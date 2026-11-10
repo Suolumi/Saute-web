@@ -17,8 +17,7 @@
     import {getIngredientNutritionLinks, getUnitAliases, type IngredientNutritionLink, type UnitAlias} from '$lib/nutrition';
     import {foodKeywords, foodName, getFoods, type Food} from '$lib/foods';
     import {getToolboxUnits, type ToolboxUnit} from '$lib/toolbox';
-    import {apiErrorMessage} from '$lib/api';
-    import {toastError, toastSuccess} from '$lib/utils';
+    import {toastApiError, toastSuccess} from '$lib/utils';
 
     // admin/nutrition has two tabs: "Links" is direct CRUD over the live
     // ingredient_nutrition_links/unit_aliases tables (an admin's own edits
@@ -102,7 +101,7 @@
             linkModalOpen = false;
             loadLinksTab();
         } else {
-            toastError(apiErrorMessage(data, $_('admin.nutrition.linkSaveError')));
+            toastApiError($_('admin.nutrition.linkSaveError'), response, data);
         }
     }
 
@@ -137,7 +136,7 @@
             aliasModalOpen = false;
             loadLinksTab();
         } else {
-            toastError(apiErrorMessage(data, $_('admin.nutrition.aliasSaveError')));
+            toastApiError($_('admin.nutrition.aliasSaveError'), response, data);
         }
     }
 
@@ -159,7 +158,7 @@
             else aliases = aliases.filter(a => a.id !== id);
             toastSuccess($_(kind === 'link' ? 'admin.nutrition.linkDeleted' : 'admin.nutrition.aliasDeleted'));
         } else {
-            toastError(apiErrorMessage(data, $_('admin.nutrition.deleteError')));
+            toastApiError($_('admin.nutrition.deleteError'), response, data);
         }
         deleteModal = {...deleteModal, open: false};
     }
@@ -174,7 +173,7 @@
             if (response.ok && data)
                 items = data.items;
             else
-                toastError($_('admin.errors.loadNutrition'));
+                toastApiError($_('admin.errors.loadNutrition'), response, data);
         });
     }
 
@@ -192,7 +191,7 @@
                 toastSuccess($_('admin.nutrition.approved'));
                 refreshPendingNutritionSuggestionCount();
             } else {
-                toastError(apiErrorMessage(data, $_('admin.errors.resolveNutrition')));
+                toastApiError($_('admin.errors.resolveNutrition'), response, data);
             }
         }).finally(() => {
             delete resolving[item.id];
@@ -207,7 +206,7 @@
                 toastSuccess($_('admin.nutrition.rejected'));
                 refreshPendingNutritionSuggestionCount();
             } else {
-                toastError(apiErrorMessage(data, $_('admin.errors.resolveNutrition')));
+                toastApiError($_('admin.errors.resolveNutrition'), response, data);
             }
         }).finally(() => {
             delete resolving[item.id];

@@ -5,8 +5,7 @@
     import {goto} from "$app/navigation";
     import {onMount} from "svelte";
     import {accessToken, serverUrl} from "$lib/stores";
-    import {toastError, toastSuccess} from "$lib/utils";
-    import {apiErrorMessage} from "$lib/api";
+    import {toastApiError, toastError, toastSuccess} from "$lib/utils";
     import {generateMcpToken, revokeMcpAccess} from "$lib/mcp";
     import {locale, _} from "svelte-i18n";
     import {Copy, Check, Sparkles} from "@lucide/svelte";
@@ -63,7 +62,7 @@
         if (response.ok && data)
             token = data.token
         else
-            toastError(apiErrorMessage(data, $_('connectAi.toasts.generateError')))
+            toastApiError($_('connectAi.toasts.generateError'), response, data)
     }
 
     async function disconnect() {
@@ -75,7 +74,7 @@
             token = null
             toastSuccess($_('connectAi.toasts.disconnectSuccess'))
         } else
-            toastError(apiErrorMessage(data, $_('connectAi.toasts.disconnectError')))
+            toastApiError($_('connectAi.toasts.disconnectError'), response, data)
     }
 
     async function copy(text: string, field: 'url' | 'token' | 'claudeCli' | 'chatgptCli' | 'opencodeBrew' | 'opencodeNpmInstall' | 'opencodeConfig') {

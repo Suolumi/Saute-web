@@ -8,7 +8,7 @@
     } from "@lucide/svelte";
     import {serverUrl, user} from "$lib/stores";
     import {locale, _} from "svelte-i18n";
-    import {toastError, pictureUrl} from "$lib/utils";
+    import {toastApiError, pictureUrl} from "$lib/utils";
     import Lightbox from "./Lightbox.svelte";
     import HighlightText from "./HighlightText.svelte";
     import TagBadges from "./TagBadges.svelte";
@@ -69,7 +69,7 @@
             if (response.ok && data)
                 familyVersions = data.items ?? [];
             else
-                toastError($_('versionPicker.error'));
+                toastApiError($_('versionPicker.error'), response, data);
         } finally {
             pickerLoading = false;
         }
@@ -125,15 +125,13 @@
         heartBump = true;
         const wasFavorite = recipe.favorite;
         recipe = {...recipe, favorite: !wasFavorite, favorite_count: recipe.favorite_count + (wasFavorite ? -1 : 1)};
-        try {
-            const {response} = wasFavorite ? await unfavoriteRecipe(recipe.id) : await favoriteRecipe(recipe.id);
-            if (!response.ok)
-                throw new Error('favorite request failed');
+        const {response} = wasFavorite ? await unfavoriteRecipe(recipe.id) : await favoriteRecipe(recipe.id);
+        if (response.ok) {
             onFavoriteChange?.(!wasFavorite);
-        } catch {
-            recipe = {...recipe, favorite: wasFavorite, favorite_count: recipe.favorite_count + (wasFavorite ? 1 : -1)};
-            toastError($_('recipeCard.favoriteError'));
+            return;
         }
+        recipe = {...recipe, favorite: wasFavorite, favorite_count: recipe.favorite_count + (wasFavorite ? 1 : -1)};
+        toastApiError($_('recipeCard.favoriteError'), response);
     }
 
     const typeColorClass = $derived(recipeTypeColors[recipe.kind] || "bg-gray-100 text-gray-800 dark:bg-gray-900/20 dark:text-gray-300");

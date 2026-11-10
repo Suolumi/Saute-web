@@ -4,8 +4,7 @@
     import Button from '../../../../../components/Button.svelte';
     import Select from '../../../../../components/Select.svelte';
     import {approveTranslationSuggestion, getTranslationSuggestions, rejectTranslationSuggestion, refreshPendingTranslationSuggestionCount, type TranslationSuggestionView} from '$lib/admin';
-    import {apiErrorMessage} from '$lib/api';
-    import {toastError, toastSuccess} from '$lib/utils';
+    import {toastApiError, toastError, toastSuccess} from '$lib/utils';
 
     type DiffRow = { label: string, current: string, suggested: string }
 
@@ -18,7 +17,7 @@
             if (response.ok && data)
                 items = data.items;
             else
-                toastError($_('admin.errors.loadTranslations'));
+                toastApiError($_('admin.errors.loadTranslations'), response, data);
         });
     }
 
@@ -73,7 +72,7 @@
             } else if (response.status === 409) {
                 toastError($_('admin.translations.staleError'));
             } else {
-                toastError(apiErrorMessage(data, $_('admin.errors.resolveTranslation')));
+                toastApiError($_('admin.errors.resolveTranslation'), response, data);
             }
         }).finally(() => {
             delete resolving[item.id];
@@ -88,7 +87,7 @@
                 toastSuccess($_('admin.translations.rejected'));
                 refreshPendingTranslationSuggestionCount();
             } else {
-                toastError(apiErrorMessage(data, $_('admin.errors.resolveTranslation')));
+                toastApiError($_('admin.errors.resolveTranslation'), response, data);
             }
         }).finally(() => {
             delete resolving[item.id];

@@ -5,8 +5,7 @@
     import {locale, _} from "svelte-i18n";
     import {getRecipe, submitTranslationSuggestion, type Recipe} from "$lib/recipes";
     import type {SuggestedTranslationFields} from "../../../../../../components/SuggestTranslationFix.svelte";
-    import {toastError, toastSuccess} from "$lib/utils";
-    import {apiErrorMessage} from "$lib/api";
+    import {toastApiError, toastError, toastSuccess} from "$lib/utils";
     import SuggestTranslationFix from "../../../../../../components/SuggestTranslationFix.svelte";
     import PageMeta from "../../../../../../components/PageMeta.svelte";
 
@@ -44,7 +43,7 @@
         } else if (response.status === 409) {
             toastError($_('recipe.suggestFixDuplicate'))
         } else {
-            toastError(apiErrorMessage(data, $_('recipe.suggestFixError')))
+            toastApiError($_('recipe.suggestFixError'), response, data)
         }
     }
 </script>

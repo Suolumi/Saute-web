@@ -6,7 +6,7 @@
     import {goto} from "$app/navigation";
     import {login, type LoginRequest} from "$lib/auth";
     import {accessToken, refreshToken} from "$lib/stores";
-    import {toastError, toastSuccess} from "$lib/utils";
+    import {toastApiError, toastError, toastSuccess} from "$lib/utils";
     import {locale, _} from "svelte-i18n";
     import {EyeIcon, EyeOff} from "@lucide/svelte";
 
@@ -34,8 +34,10 @@
             refreshToken.set(data.refresh_token);
             toastSuccess($_('login.toasts.success'));
             await goto(`/${$locale}/home`)
-        } else
-            toastError($_('login.toasts.error'));
+        } else if (response.status === 401)
+            toastError($_('login.toasts.error'), $_('login.toasts.wrongCredentials'));
+        else
+            toastApiError($_('login.toasts.error'), response, data);
     }
 
     function goToRegister() {

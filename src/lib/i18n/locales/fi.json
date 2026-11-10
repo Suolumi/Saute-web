@@ -106,7 +106,8 @@
     },
     "toasts": {
       "success": "Kirjautuminen onnistui.",
-      "error": "Kirjautuminen epäonnistui."
+      "error": "Kirjautuminen ei onnistunut",
+      "wrongCredentials": "Väärä käyttäjänimi tai salasana"
     },
     "meta": {
       "title": "Kirjaudu sisään",
@@ -135,7 +136,8 @@
     },
     "toasts": {
       "success": "Rekisteröinti onnistui!",
-      "error": "Rekisteröinti epäonnistui."
+      "error": "Tilin luominen ei onnistunut",
+      "taken": "Tämä käyttäjänimi tai sähköposti on jo käytössä"
     },
     "meta": {
       "title": "Rekisteröidy",
@@ -165,9 +167,9 @@
   },
   "settings": {
     "errors": {
-      "update": "Virhe profiilia päivitettäessä.",
-      "getRecipes": "Palvelinvirhe, reseptejä ei voitu hakea.",
-      "delete": "Virhe reseptiä poistettaessa"
+      "update": "Profiilin päivittäminen ei onnistunut",
+      "getRecipes": "Reseptejäsi ei voitu ladata",
+      "delete": "Reseptin poistaminen ei onnistunut"
     },
     "meta": {
       "title": "Asetukset",
@@ -314,7 +316,8 @@
         "error": "Lähettäminen epäonnistui"
       }
     },
-    "substitutes": "Korvikkeet"
+    "substitutes": "Korvikkeet",
+    "loadError": "Reseptiä ei voitu ladata"
   },
   "edit": {
     "toasts": {
@@ -466,7 +469,7 @@
   },
   "create": {
     "toasts": {
-      "save": "Reseptin luominen epäonnistui",
+      "save": "Reseptin luominen ei onnistunut",
       "noAccount": "Sinun täytyy ensin luoda tili",
       "negativeNumber": "Määrät / ajat eivät voi olla negatiivisia"
     },
@@ -590,7 +593,8 @@
     "remember": "Muistatko salasanasi?",
     "back": "Takaisin kirjautumiseen",
     "sent": "Sähköposti lähetetty",
-    "failed": "Virhe sähköpostia lähettäessä"
+    "failed": "Sähköpostin lähettäminen ei onnistunut",
+    "empty": "Syötä sähköpostiosoitteesi tai käyttäjänimesi"
   },
   "reset": {
     "meta": {
@@ -609,7 +613,8 @@
     },
     "submit": "Nollaa salasana",
     "success": "Salasana nollattu onnistuneesti",
-    "error": "Virhe salasanaa nollattaessa"
+    "error": "Salasanan nollaaminen ei onnistunut",
+    "expired": "Tämä nollauslinkki on virheellinen tai vanhentunut. Pyydä uusi."
   },
   "diyHome": {
     "meta": {
@@ -1377,5 +1382,14 @@
       "same": "Tämä palaute on jo sinun kielelläsi.",
       "error": "Palautteen kääntäminen epäonnistui"
     }
+  },
+  "apiErrors": {
+    "network": "Palvelimeen ei saada yhteyttä. Tarkista yhteytesi ja yritä uudelleen.",
+    "unauthorized": "Kirjaudu sisään ja yritä uudelleen.",
+    "forbidden": "Sinulla ei ole oikeutta tehdä tätä.",
+    "notFound": "Tätä ei ole enää olemassa.",
+    "tooLarge": "Tiedosto on liian suuri.",
+    "rateLimited": "Liian monta yritystä. Odota hetki ja yritä uudelleen.",
+    "server": "Jotain meni vikaan meidän päässämme. Yritä myöhemmin uudelleen."
   }
 }

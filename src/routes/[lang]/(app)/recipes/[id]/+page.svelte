@@ -18,7 +18,7 @@
     import {Heart, Plus, Coffee, Camera, Share2, X, Pencil, Timer} from "@lucide/svelte";
     import {serverUrl, user} from "$lib/stores";
     import {_, locale} from "svelte-i18n";
-    import {pictureUrl, toastError, toastSuccess} from "$lib/utils";
+    import {pictureUrl, toastApiError, toastError, toastSuccess} from "$lib/utils";
     import VersionSwitcher from "../../../../../components/VersionSwitcher.svelte";
     import AdHocTimerModal from "../../../../../components/AdHocTimerModal.svelte";
     import RecipeView from "../../../../../components/RecipeView.svelte";
@@ -48,7 +48,7 @@
                 recipe = data
                 selectedServings = data.quantity
             } else
-                toastError($_('settings.errors.getRecipes'))
+                toastApiError($_('recipe.loadError'), response, data)
         })
     })
 
@@ -175,16 +175,11 @@
         heartBump = true;
         const wasFavorite = recipe.favorite;
         recipe = {...recipe, favorite: !wasFavorite, favorite_count: recipe.favorite_count + (wasFavorite ? -1 : 1)};
-        try {
-            const {response} = wasFavorite ? await unfavoriteRecipe(recipe.id) : await favoriteRecipe(recipe.id);
-            if (!response.ok)
-                throw new Error('favorite request failed');
-        } catch {
-            if (!recipe)
-                return
-            recipe = {...recipe, favorite: wasFavorite, favorite_count: recipe.favorite_count + (wasFavorite ? 1 : -1)};
-            toastError($_('recipeCard.favoriteError'));
-        }
+        const {response} = wasFavorite ? await unfavoriteRecipe(recipe.id) : await favoriteRecipe(recipe.id);
+        if (response.ok || !recipe)
+            return
+        recipe = {...recipe, favorite: wasFavorite, favorite_count: recipe.favorite_count + (wasFavorite ? 1 : -1)};
+        toastApiError($_('recipeCard.favoriteError'), response);
     }
 
     let pictureInput: HTMLInputElement = $state()!;
@@ -227,7 +222,7 @@
             else if (response.status === 409)
                 toastError($_('recipe.addPhotoCapReached', {values: {count: PICTURE_CAP_PER_CONTRIBUTOR}}));
             else
-                toastError($_('recipe.addPhotoError'));
+                toastApiError($_('recipe.addPhotoError'), response, data);
         } catch {
             toastError($_('recipe.addPhotoError'));
         } finally {
@@ -268,7 +263,7 @@
                 recipe = data;
             else {
                 recipe = previous;
-                toastError($_('recipe.removePhotoError'));
+                toastApiError($_('recipe.removePhotoError'), response, data);
             }
         } catch {
             recipe = previous;

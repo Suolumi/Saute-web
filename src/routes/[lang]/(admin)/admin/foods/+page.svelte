@@ -15,8 +15,7 @@
     import {getToolboxUnits, type ToolboxUnit} from '$lib/toolbox';
     import {normalizeForMatch} from '$lib/highlight';
     import {parsePositiveNumberInput} from '$lib/nutrition';
-    import {apiErrorMessage} from '$lib/api';
-    import {toastError, toastSuccess} from '$lib/utils';
+    import {toastApiError, toastSuccess} from '$lib/utils';
 
     // admin/foods edits the food list nutrition and conversions match
     // ingredients against, and the units they understand. Every change
@@ -70,7 +69,7 @@
             foodModalOpen = false;
             load();
         } else {
-            toastError(apiErrorMessage(data, $_('admin.foods.saveError')));
+            toastApiError($_('admin.foods.saveError'), response, data);
         }
     }
 
@@ -104,7 +103,7 @@
             unitModalOpen = false;
             load();
         } else {
-            toastError(apiErrorMessage(data, $_('admin.foods.saveError')));
+            toastApiError($_('admin.foods.saveError'), response, data);
         }
     }
 
@@ -119,7 +118,7 @@
             else units = units.filter(u => u.id !== id);
             toastSuccess($_('admin.foods.deleted'));
         } else {
-            toastError(apiErrorMessage(data, $_('admin.foods.deleteError')));
+            toastApiError($_('admin.foods.deleteError'), response, data);
         }
         deleteModal = {...deleteModal, open: false};
     }

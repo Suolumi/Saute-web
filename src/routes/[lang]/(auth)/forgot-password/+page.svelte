@@ -5,7 +5,7 @@
     import PageMeta from '../../../../components/PageMeta.svelte';
     import {goto} from "$app/navigation";
     import {_, locale} from "svelte-i18n";
-    import {toastError, toastSuccess} from "$lib/utils";
+    import {toastApiError, toastError, toastSuccess} from "$lib/utils";
     import {forgotPassword} from "$lib/auth.js";
 
     let email = $state('');
@@ -19,7 +19,7 @@
         if (response.ok)
             toastSuccess($_('forgot.sent'))
         else
-            toastError($_('forgot.failed'))
+            toastApiError($_('forgot.failed'), response)
     }
 </script>
 

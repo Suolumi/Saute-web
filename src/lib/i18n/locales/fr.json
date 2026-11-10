@@ -106,7 +106,8 @@
     },
     "toasts": {
       "success": "Connexion réussie.",
-      "error": "Échec de la connexion."
+      "error": "Connexion impossible",
+      "wrongCredentials": "Nom d'utilisateur ou mot de passe incorrect"
     },
     "meta": {
       "title": "Connexion",
@@ -135,7 +136,8 @@
     },
     "toasts": {
       "success": "Inscription réussie !",
-      "error": "Échec de l'inscription."
+      "error": "Impossible de créer votre compte",
+      "taken": "Ce nom d'utilisateur ou cette adresse mail est déjà utilisé"
     },
     "meta": {
       "title": "Inscription",
@@ -165,9 +167,9 @@
   },
   "settings": {
     "errors": {
-      "update": "Erreur lors de la mise à jour du profil.",
-      "getRecipes": "Erreur serveur, impossible de récupérer les recettes.",
-      "delete": "Erreur lors de la suppression de la recette"
+      "update": "Impossible de mettre à jour votre profil",
+      "getRecipes": "Impossible de charger vos recettes",
+      "delete": "Impossible de supprimer cette recette"
     },
     "meta": {
       "title": "Paramètres",
@@ -314,7 +316,8 @@
         "error": "Impossible de soumettre"
       }
     },
-    "substitutes": "Substituts"
+    "substitutes": "Substituts",
+    "loadError": "Impossible de charger cette recette"
   },
   "edit": {
     "toasts": {
@@ -466,7 +469,7 @@
   },
   "create": {
     "toasts": {
-      "save": "Échec de la création de la recette",
+      "save": "Impossible de créer la recette",
       "noAccount": "Vous devez d'abord créer un compte",
       "negativeNumber": "Les quantités / durées ne peuvent pas être négatives"
     },
@@ -590,7 +593,8 @@
     "remember": "Vous avez retrouvé votre mot de passe?",
     "back": "Retour à la connexion",
     "sent": "Email envoyé",
-    "failed": "Erreur lors de l'envoi du mail"
+    "failed": "Impossible d'envoyer le mail",
+    "empty": "Entrez votre adresse mail ou nom d'utilisateur"
   },
   "reset": {
     "meta": {
@@ -609,7 +613,8 @@
     },
     "submit": "Réinitialiser le mot de passe",
     "success": "Mot de passe réinitialisé",
-    "error": "Erreur lors de la réinitialisation de mot de passe"
+    "error": "Impossible de réinitialiser votre mot de passe",
+    "expired": "Ce lien de réinitialisation est invalide ou a expiré. Demandez-en un nouveau."
   },
   "diyHome": {
     "meta": {
@@ -1377,5 +1382,14 @@
       "same": "Ce retour est déjà dans votre langue.",
       "error": "Impossible de traduire ce retour"
     }
+  },
+  "apiErrors": {
+    "network": "Impossible de joindre le serveur. Vérifiez votre connexion et réessayez.",
+    "unauthorized": "Connectez-vous et réessayez.",
+    "forbidden": "Vous n'avez pas l'autorisation de faire cela.",
+    "notFound": "Cet élément n'existe plus.",
+    "tooLarge": "Le fichier est trop volumineux.",
+    "rateLimited": "Trop de tentatives. Patientez un instant et réessayez.",
+    "server": "Un problème est survenu de notre côté. Réessayez plus tard."
   }
 }
