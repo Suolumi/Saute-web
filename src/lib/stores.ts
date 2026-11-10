@@ -3,6 +3,7 @@ import { persisted } from 'svelte-persisted-store';
 import { env } from '$env/dynamic/public';
 import type {User} from "$lib/user";
 import type {RecipeForm} from "$lib/recipes";
+import type {RecipeListFilters} from "$lib/recipeListFilters";
 
 export const jsonParser = {
     parse: (text: any) => {
@@ -40,6 +41,14 @@ export const darkMode = persisted<boolean>('darkMode', false, {
     serializer: jsonParser,
 })
 export const collapseFamilies = persisted<boolean>('collapseFamilies', false, {
+    serializer: jsonParser,
+})
+
+// The home and DIY listing filters, read back through restoreRecipeListFilters.
+export const homeFilters = persisted<Partial<RecipeListFilters>>('homeFilters', {}, {
+    serializer: jsonParser,
+})
+export const diyFilters = persisted<Partial<RecipeListFilters>>('diyFilters', {}, {
     serializer: jsonParser,
 })
 export const serverUrl = writable<string>(env.PUBLIC_SERVER_URL || 'https://recipes-api.suolumi.fr/api/v1')

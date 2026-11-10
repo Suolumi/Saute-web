@@ -6,7 +6,10 @@
     import PageMeta from '../../../../components/PageMeta.svelte';
     import {getRecipes, type GetRecipesRequest, type RecipePreview, type RecipeType, type TimePreset} from "$lib/recipes";
     import { shoppingList } from '$lib/shoppingList';
-    import { collapseFamilies, user } from '$lib/stores';
+    import { collapseFamilies, homeFilters, user } from '$lib/stores';
+    import { get } from 'svelte/store';
+    import { knownTags, restoreRecipeListFilters } from '$lib/recipeListFilters';
+    import { tags as allTags } from '$lib/tags';
     import { _, locale } from 'svelte-i18n';
     import { goto } from '$app/navigation';
     import { Plus, SearchX, ShoppingCart, CalendarDays } from '@lucide/svelte';
@@ -15,14 +18,26 @@
 
     const PAGE_SIZE = 24;
 
+    const saved = restoreRecipeListFilters(get(homeFilters));
+
     let searchTerm = $state('');
-    let selectedType = $state('all');
-    let author = $state('');
-    let ingredients: string[] = $state([]);
-    let tags: string[] = $state([]);
-    let timeBasis: 'prep' | 'total' = $state('total');
-    let timeTarget: TimePreset = $state('any');
-    let popular = $state(false);
+    let selectedType = $state(saved.selectedType);
+    let author = $state(saved.author);
+    let ingredients: string[] = $state(saved.ingredients);
+    let tags: string[] = $state(saved.tags);
+    let timeBasis: 'prep' | 'total' = $state(saved.timeBasis);
+    let timeTarget: TimePreset = $state(saved.timeTarget);
+    let popular = $state(saved.popular);
+
+    $effect(() => {
+        const known = knownTags(tags, $allTags);
+        if (known.length !== tags.length)
+            tags = known;
+    })
+
+    $effect(() => {
+        homeFilters.set({selectedType, author, ingredients, tags, timeBasis, timeTarget, popular});
+    })
 
     let recipes: RecipePreview[] = $state([])
     let totalCount: number | undefined = $state(undefined);

@@ -1,5 +1,8 @@
 <script lang="ts">
-    import {collapseFamilies} from '$lib/stores';
+    import {collapseFamilies, diyFilters} from '$lib/stores';
+    import { get } from 'svelte/store';
+    import { knownTags, restoreRecipeListFilters } from '$lib/recipeListFilters';
+    import { tags as allTags } from '$lib/tags';
     import { untrack } from 'svelte';
     import RecipeCard from '../../../../components/RecipeCard.svelte';
     import RecipeFilters from '../../../../components/RecipeFilters.svelte';
@@ -12,11 +15,23 @@
 
     const PAGE_SIZE = 24;
 
+    const saved = restoreRecipeListFilters(get(diyFilters));
+
     let searchTerm = $state('');
-    let author = $state('');
-    let ingredients: string[] = $state([]);
-    let tags: string[] = $state([]);
-    let popular = $state(false);
+    let author = $state(saved.author);
+    let ingredients: string[] = $state(saved.ingredients);
+    let tags: string[] = $state(saved.tags);
+    let popular = $state(saved.popular);
+
+    $effect(() => {
+        const known = knownTags(tags, $allTags);
+        if (known.length !== tags.length)
+            tags = known;
+    })
+
+    $effect(() => {
+        diyFilters.set({author, ingredients, tags, popular});
+    })
 
     let recipes: RecipePreview[] = $state([])
     let totalCount: number | undefined = $state(undefined);
